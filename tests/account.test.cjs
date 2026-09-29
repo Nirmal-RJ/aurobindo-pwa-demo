@@ -32,6 +32,16 @@ function account(stored = null, { hash = '#/', referrer = '', navigationType = '
 }
 
 
+test('Wrong Sample exit returns to Sample Preparation with profile while a fresh reload still gates', () => {
+  const profile = JSON.stringify({ username: 'Demo' });
+  const options = { hash: '#/games/sample-preparation', referrer: 'https://demo.test/app/wrong-sample.html' };
+  const app = account(profile, options);
+  assert.equal(app.render(), false);
+  assert.equal(app.location.hash, options.hash);
+  const reload = account(profile, { ...options, navigationType: 'reload' });
+  assert.equal(reload.location.hash, '#/welcome');
+});
+
 for (const registration of [false, true]) {
  test((registration ? 'registration' : 'login') + ' requires only a nonblank name and ignores disabled inputs', () => {
   const app = account();

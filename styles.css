@@ -53,11 +53,32 @@ html[lang="te"] .coming-copy h2,html[lang="hi"] .coming-copy h2{letter-spacing:0
 
 /* Four game posters: placeholder names stay editable until games are defined. */
 .is-games .coming-stage{min-height:0;display:block;padding:32px 38px 34px}
-.is-games .coming-copy h1{font-size:43px;margin:21px 0 10px}
+.is-games .coming-copy h1{font-size:43px;margin:0 0 10px}
 .is-games .coming-copy h2{font-size:25px;max-width:none;margin-bottom:12px}
 .is-games .coming-copy p{max-width:660px;font-size:13px}
-.is-games .coming-art,.is-games .home-cta,.is-games .coming-stage-foot{display:none}
+.is-games .coming-badge,.is-games .coming-art,.is-games .home-cta,.is-games .coming-stage-foot{display:none}
 .game-gallery{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:19px;margin-top:32px}
+.game-gallery .sample-category{grid-column:1/-1}
+.sample-category{display:flex;flex-direction:column;align-items:flex-start;gap:14px;padding:24px;border:1px solid #358b86;border-left:4px solid #67dfc7;border-radius:16px;background:linear-gradient(115deg,#173d40,#112b35);color:#f1fffc;text-decoration:none;transition:border-color .2s,box-shadow .2s}
+.sample-category:hover{border-color:#8cf4dd;box-shadow:0 8px 24px #0003}
+.sample-category:focus-visible{outline:3px solid #67dfc7;outline-offset:4px}
+.sample-category-meta{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;color:#9de8d8;font-size:10px;font-weight:750;letter-spacing:1.6px}
+.sample-category-count{padding:5px 9px;border:1px solid #8ddfc74d;border-radius:20px;font-size:11px;letter-spacing:0;white-space:nowrap}
+.sample-category-title{font-size:clamp(20px,3vw,27px);line-height:1.25;font-weight:800;letter-spacing:-.4px}
+.sample-category-description{max-width:480px;color:#b9d6d3;font-size:13px;line-height:1.65}
+.sample-category-action{display:flex;align-items:center;gap:24px;margin-top:4px;padding:11px 16px;border-radius:8px;background:#a0f0d7;color:#123b35;font-size:13px;font-weight:750}
+.sample-category-action>span{font-size:20px;line-height:1}
+#section-view.is-games .coming-stage{padding:4px 0 24px;border:0;border-bottom:1px solid var(--border);border-radius:0;background:none;box-shadow:none;color:var(--text);animation:none}
+#section-view.is-games .coming-stage::before,#section-view.is-games .coming-stage::after{display:none}
+#section-view.is-games .coming-copy h1{font-size:clamp(28px,4vw,40px);line-height:1.15;letter-spacing:-1px;margin:0 0 12px}
+#section-view.is-games .coming-copy h2{font-size:17px;font-weight:500;letter-spacing:0;margin:0;color:var(--muted)}
+#section-view.is-games .coming-copy h2:empty{display:none}
+#section-view.is-games .coming-copy p{display:none}
+.sample-preparation-gallery .card-title{line-height:1.3}
+@media(max-width:600px){.sample-category{padding:20px;gap:12px}}
+.sample-preparation-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:32px}
+.sample-preparation-gallery[hidden]{display:none}
+@media(max-width:600px){.sample-preparation-gallery{grid-template-columns:1fr}}
 .poster-version-title{position:absolute;left:12px;right:12px;top:12px;margin:0;padding:10px 8px;border-radius:10px;background:#163e3ff2;color:#fff;text-align:center;font-size:clamp(11px,1.3vw,17px);line-height:1.3;box-shadow:0 3px 12px #0003}
 .game-poster{position:relative;isolation:isolate;border-radius:20px;background:transparent;color:#fff;border:none;box-shadow:none;transition:transform .3s;text-decoration:none;display:block}
 .poster-card-wrap{position:relative;width:100%;aspect-ratio:507/685;border-radius:20px;overflow:hidden;box-shadow:0 10px 28px rgba(0,0,0,0.35);transition:transform .3s cubic-bezier(0.16,1,0.3,1),box-shadow .3s ease}
@@ -946,3 +967,19 @@ button:focus-visible,a:focus-visible{outline-color:#a35cee}
 .brand-demo{gap:9px}.demo-label{display:inline-block;background:#ffdb75;color:#30204c;border:1px solid #ffe8a5;border-radius:5px;padding:5px 8px;font-size:11px;line-height:1.1;font-weight:850;letter-spacing:1px;box-shadow:0 2px 8px #0002}
 .hero-demo-label{background:#ffdb75;color:#30204c;border:1px solid #ffe8a5;border-radius:5px;padding:5px 10px;font-size:12px;font-weight:850;letter-spacing:1.3px}
 @media(max-width:700px){#home-view .hero-demo-label{font-size:10px;line-height:1.1;padding:4px 9px}.demo-label{font-size:10px;padding:5px 7px}}
+
+/* Featured lab entry at the top of the games gallery. */
+.home-lab-feature{display:flex;align-items:center;gap:24px;border:1px solid #517b75;border-radius:16px;overflow:hidden;background:linear-gradient(110deg,#183c41,#112b35);color:#f3fffb;text-decoration:none;box-shadow:0 8px 24px #0002;transition:border-color .2s,box-shadow .2s}
+.game-gallery .home-lab-feature{grid-column:1/-1;margin-bottom:8px}
+.home-lab-feature:hover{border-color:#8cf4dd;box-shadow:0 8px 24px #0003}
+.home-lab-feature:focus-visible{outline:3px solid #67dfc7;outline-offset:4px}
+.home-lab-image{width:180px;min-height:142px;align-self:stretch;flex-shrink:0;background:linear-gradient(90deg,transparent,#183c4144),url("assets/sample-preparation-game-assets/bg-img.png") center/cover}
+.home-lab-copy{display:flex;flex:1;flex-direction:column;gap:8px;padding:20px 0}
+.home-lab-kicker{font-size:10px;letter-spacing:1.7px;color:#a0f0d7;font-weight:750}
+.home-lab-copy strong{font-size:25px;line-height:1.2;letter-spacing:-.5px}
+.home-lab-copy>span:last-child{font-size:13px;color:#bed6d3;line-height:1.5}
+.home-lab-action{display:flex;align-items:center;gap:18px;margin-right:24px;padding:12px 16px;background:#a0f0d7;color:#163b34;border-radius:8px;font-size:13px;font-weight:750;white-space:nowrap}
+.home-lab-feature:hover .home-lab-action{background:#c1ffe9}
+#home-view .activity-card{box-shadow:0 2px 0 color-mix(in srgb,var(--tile-start),#351651 20%);border-radius:14px}
+#home-view .card-description{line-height:1.6}
+@media(max-width:700px){.home-lab-feature{display:grid;grid-template-columns:88px minmax(0,1fr);gap:0 15px}.home-lab-image{width:88px;grid-row:1/3;min-height:160px}.home-lab-copy{padding:16px 14px 10px 0;gap:6px}.home-lab-kicker{font-size:8px;letter-spacing:1.2px}.home-lab-copy strong{font-size:20px}.home-lab-copy>span:last-child{font-size:11px}.home-lab-action{justify-self:start;margin:0 12px 16px 0;padding:9px 12px;font-size:11px;gap:20px}#home-view .card-description{font-size:12px}#home-view .card-tag{font-size:8px;letter-spacing:.5px}}

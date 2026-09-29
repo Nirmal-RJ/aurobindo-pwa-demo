@@ -20,11 +20,11 @@
       if (l === 'te' || l === 'hi' || l === 'en') document.documentElement.lang = l;
     } catch (_) { }
   </script>
-  <link rel="stylesheet" href="./styles.css?v=31">
+  <link rel="stylesheet" href="./styles.css?v=36">
   <script src="./tile-match.js?v=19" defer></script>
   <link rel="stylesheet" href="./account.css?v=6">
-  <script src="./account.js?v=9" defer></script>
-  <script src="./app.js?v=23" defer></script>
+  <script src="./account.js?v=10" defer></script>
+  <script src="./app.js?v=25" defer></script>
   <link rel="stylesheet" href="./leaderboard.css?v=5">
   <script src="./hero-carousel.js?v=2" defer></script>
 </head>
@@ -637,6 +637,14 @@
             aria-hidden="true">✦ ✦ ✦</span></div>
       </div>
       <section class="game-gallery" aria-label="Game posters" data-i18n-aria="gamePosters" hidden>
+        <a class="home-lab-feature" href="#/games/sample-preparation" lang="en">
+          <span class="home-lab-image" aria-hidden="true"></span>
+          <span class="home-lab-copy">
+            <span class="home-lab-kicker">STEP INTO THE LAB</span>
+            <strong>Sample Preparation</strong>
+          </span>
+          <span class="home-lab-action">Explore games <span aria-hidden="true">→</span></span>
+        </a>
         <a class="game-poster poster-one playable-poster" href="cleaning-solution.html"
           aria-labelledby="game-one-title">
           <div class="poster-card-wrap">
@@ -701,6 +709,22 @@
               <span class="poster-play-arrow" aria-hidden="true">↗</span>
             </div>
           </div>
+        </a>
+      </section>
+      <section id="sample-preparation-gallery" class="sample-preparation-gallery" aria-label="Sample Preparation games"
+        lang="en" hidden>
+        <a class="activity-card lavender" href="wrong-sample.html">
+          <span class="card-top"><span class="card-number">01</span><span class="card-tag">MEMORY
+              CHALLENGE</span></span>
+          <span class="card-title">Wrong sample selected</span>
+          <span class="card-bottom"><span class="card-tag">PLAY GAME</span><span
+              aria-hidden="true">&#8599;</span></span>
+        </a>
+        <a class="activity-card mint" href="#/games/sample-preparation/wrong-sample-weight">
+          <span class="card-top"><span class="card-number">02</span><span class="card-tag">COMING SOON</span></span>
+          <span class="card-title">Wrong sample weight</span>
+          <span class="card-bottom"><span class="card-tag">VIEW GAME</span><span
+              aria-hidden="true">&#8599;</span></span>
         </a>
       </section>
       <div class="page-teaser"><svg class="icon" aria-hidden="true">

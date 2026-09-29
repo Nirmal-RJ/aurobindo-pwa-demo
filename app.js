@@ -56,6 +56,9 @@ const pages = {
   fun: { route: 'fun-corner', color: 'coral', icon: 'masks' },
   league: { route: 'premier-league', color: 'gold', icon: 'trophy' },
   games: { route: 'games', color: 'lavender', icon: 'game' },
+  samplePreparation: { route: 'games/sample-preparation', color: 'lavender', icon: 'game', title: 'SAMPLE PREPARATION', description: 'Choose a game to explore.', parent: 'games' },
+  wrongSampleSelected: { route: 'games/sample-preparation/wrong-sample-selected', color: 'lavender', icon: 'game', title: 'Wrong sample selected', description: 'This game is coming soon.', parent: 'samplePreparation' },
+  wrongSampleWeight: { route: 'games/sample-preparation/wrong-sample-weight', color: 'lavender', icon: 'game', title: 'Wrong sample weight', description: 'This game is coming soon.', parent: 'samplePreparation' },
   scores: { route: 'score-board', color: 'mint', icon: 'chart' },
   about: { route: 'about', color: 'blue', icon: 'people' },
   photos: { route: 'photos', color: 'rose', icon: 'camera' }
@@ -225,13 +228,20 @@ document.querySelector('.language-control').addEventListener('focusout', event =
 document.querySelectorAll('[data-set-theme]').forEach(button => button.addEventListener('click', () => setTheme(button.dataset.setTheme)));
 function updatePageContent() {
   if (!activePage) return;
+  if (activePage === 'games/tile-match') return;
   if (activePage === 'scores') {
     document.title = `${translations[language].scoresTitle} · ${translations[language].footerBrand}`;
     return;
   }
   const dictionary = translations[language];
-  const [headline, description, teaser] = pageTranslations[language][activePage];
-  const copy = { title: dictionary[`${activePage}Title`], tag: dictionary[`${activePage}Tag`], headline, description, teaser };
+  const page = pages[activePage];
+  const [headline, description, teaser] = pageTranslations[language][activePage] || ['', page.description, ''];
+  const copy = { title: page.title || dictionary[`${activePage}Title`], tag: page.title ? 'SAMPLE PREPARATION' : dictionary[`${activePage}Tag`], headline, description, teaser };
+  const backText = page.parent === 'samplePreparation' ? 'Back to Sample Preparation' : page.parent === 'games' ? ({ en: 'Back to Games', te: 'ఆటలకు తిరిగి', hi: 'खेलों पर वापस' })[language] : dictionary.backHome;
+  document.querySelectorAll('#section-view .back-link, #section-view .home-cta').forEach(link => {
+    link.href = page.parent ? `#/${pages[page.parent].route}` : '#/';
+    link.querySelector('[data-i18n="backHome"]').textContent = backText;
+  });
   document.querySelectorAll('[data-page]').forEach(node => { node.textContent = copy[node.dataset.page]; });
   document.title = `${copy.title} · ${dictionary.footerBrand}`;
 }
@@ -245,6 +255,16 @@ function renderRoute(focus = true) {
   // Hash routes work on static hosting, in subdirectories, and offline.
   if (location.hash && !location.hash.startsWith('#/')) return;
   const route = location.hash.slice(2).replace(/\/$/, '');
+  if (route === 'games/sample-preparation/wrong-sample-selected') {
+    location.replace('wrong-sample.html');
+    return;
+  }
+  try {
+    if (screen.orientation) {
+      if (screen.orientation.unlock) screen.orientation.unlock();
+      if (screen.orientation.lock) screen.orientation.lock('portrait').catch(() => {});
+    }
+  } catch (_) {}
   const isTileMatch = route === 'games/tile-match';
   const next = isTileMatch ? null : (Object.keys(pages).find(key => pages[key].route === route) || null);
   setScoreboardTheme(next === 'scores');
@@ -288,8 +308,9 @@ function renderRoute(focus = true) {
     return;
   }
   if (next) {
-    section.className = `section-page ${pages[next].color}${next === 'games' ? ' is-games' : ''}`;
+    section.className = `section-page ${pages[next].color}${next === 'games' || next === 'samplePreparation' ? ' is-games' : ''}`;
     document.querySelector('.game-gallery').hidden = next !== 'games';
+    document.querySelector('#sample-preparation-gallery').hidden = next !== 'samplePreparation';
     document.querySelector('#page-icon').setAttribute('href', `#i-${pages[next].icon}`);
     updatePageContent();
     if (focus) { window.scrollTo(0, 0); document.querySelector('#page-title').focus({ preventScroll: true }); }
