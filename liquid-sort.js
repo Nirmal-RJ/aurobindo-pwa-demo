@@ -13,6 +13,11 @@
   let index = 0, mixture = {}, layers = [], results = [], deadline = 0, interval = null, playing = false;
   const effects = new Set();
   const total = () => chemicals.reduce((sum, name) => sum + mixture[name], 0);
+  const pourSize = name => {
+    const target = recipes[index].mix[name];
+    // Keep small ingredients precise and larger ingredients quick to fill.
+    return target ? [30, 25, 20, 15, 10, 5].find(amount => amount <= target / 2 && target % amount === 0) || 5 : 10;
+  };
   const recipeText = mix => chemicals.filter(name => mix[name]).map(name => `${name} ${mix[name]}%`).join(' · ') || 'Empty';
 
   function show(view) {
@@ -24,6 +29,11 @@
     effects.forEach(dispose => dispose());
   }
   function render() {
+    buttons.forEach(button => {
+      const amount = Math.min(pourSize(button.dataset.chemical), 100 - total());
+      button.querySelector('small').textContent = `+${amount}% / tap`;
+      button.setAttribute('aria-label', `Pour ${amount} percent ${button.dataset.chemical}`);
+    });
     $('mixture').innerHTML = layers.map(layer => `<span class="liquid-layer" style="height:${layer.amount}%;--chemical:${colors[layer.name]}"></span>`).join('');
     $('mixture').style.clipPath = `inset(${100 - total()}% 0 0)`;
     $('fill-total').innerHTML = `${total()}<span>% filled</span>`;
@@ -54,7 +64,7 @@
     $('timer').classList.toggle('urgent', remaining <= 10000);
     if (!remaining) finish(true);
   }
-  function animatePour(button, name) {
+  function animatePour(button, name, amount) {
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
     const source = button.querySelector('.tube');
     if (!source.animate) return;
@@ -135,7 +145,7 @@
       ]);
     }
     const dose = particle('pour-dose', mouthX + to.width / 2 + 10, to.top - top + 12);
-    dose.textContent = '+5%';
+    dose.textContent = `+${amount}%`;
     animate(dose, [
       { opacity: 0, transform: 'translateY(8px) scale(.8)' },
       { opacity: 0, transform: 'translateY(8px) scale(.8)', offset: .35 },
@@ -148,11 +158,13 @@
     if (!playing) return;
     tick();
     if (!playing || !chemicals.includes(name) || total() >= 100) return;
-    mixture[name] += 5;
-    if (layers.at(-1)?.name === name) layers.at(-1).amount += 5;
-    else layers.push({ name, amount: 5 });
-    render(); animatePour(button, name);
-    $('feedback').textContent = `Added 5% ${name}. ${total()}% filled. ${recipeText(mixture)}.`;
+    const amount = Math.min(pourSize(name), 100 - total());
+    mixture[name] += amount;
+    const lastLayer = layers[layers.length - 1];
+    if (lastLayer?.name === name) lastLayer.amount += amount;
+    else layers.push({ name, amount });
+    render(); animatePour(button, name, amount);
+    $('feedback').textContent = `Added ${amount}% ${name}. ${total()}% filled. ${recipeText(mixture)}.`;
     if (total() === 100) finish(false);
   }
   function finish(timedOut) {
@@ -187,7 +199,12 @@
   $('next').addEventListener('click', next);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
   window.addEventListener('pagehide', () => { clearInterval(interval); clearEffects(); });
-  window.addEventListener('resize', clearEffects);
+  let viewportWidth = window.innerWidth;
+  window.addEventListener('resize', () => {
+    // Mobile browser controls can change viewport height during a pour.
+    if (window.innerWidth !== viewportWidth) clearEffects();
+    viewportWidth = window.innerWidth;
+  });
   window.addEventListener('pageshow', event => {
     if (event.persisted && playing) { tick(); if (playing) interval = setInterval(tick, 100); }
   });

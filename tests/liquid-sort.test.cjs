@@ -19,7 +19,7 @@ function game({ animated = false, reducedMotion = false } = {}) {
     addEventListener(name, fn) { (this.events[name] ||= []).push(fn); }
     emit(name, args = {}) { (this.events[name] || []).forEach(fn => fn(args)); }
     setAttribute(name, value) { this.attributes[name] = value; }
-    querySelector() { return new Element(); }
+    querySelector(selector) { return (this.selectors ||= {})[selector] ||= new Element(); }
     cloneNode() { return new Element(); }
     getBoundingClientRect() { return { left: 80, top: 100, width: 30, height: 130 }; }
     append(child) { this.children.push(child); }
@@ -29,12 +29,13 @@ function game({ animated = false, reducedMotion = false } = {}) {
   const sources = ['Water', 'ACN', 'MeOH'].map(name => new Element({ chemical: name }));
   get('chemicals').querySelectorAll = () => sources;
   const document = new Element(), window = new Element();
+  window.innerWidth = 390; window.innerHeight = 750;
   document.getElementById = get;
   document.createElement = () => new Element();
   window.matchMedia = () => ({ matches: reducedMotion });
   let now = 0, serial = 0;
   const intervals = new Map();
-  vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../liquid-sort.js'), 'utf8'), {
+  vm.runInNewContext('Array.prototype.at = undefined;\n' + fs.readFileSync(path.join(__dirname, '../liquid-sort.js'), 'utf8'), {
     document, window, Date: { now: () => now },
     setInterval: fn => { intervals.set(++serial, fn); return serial; },
     clearInterval: id => intervals.delete(id)
@@ -48,20 +49,20 @@ function game({ animated = false, reducedMotion = false } = {}) {
   };
 }
 
-test('every click pours 5%; all four recipes score correctly in any pouring order', () => {
+test('question-based pours complete all four recipes correctly in any pouring order', () => {
   const g = game(); g.start();
   const rounds = [
-    [['MeOH', 1], ['ACN', 1], ['Water', 18]],
-    [['ACN', 16], ['Water', 4]],
-    [['MeOH', 10], ['Water', 10]],
-    [['Water', 6], ['ACN', 14]]
+    [['MeOH', 1], ['ACN', 1], ['Water', 3]],
+    [['ACN', 4], ['Water', 2]],
+    [['MeOH', 2], ['Water', 2]],
+    [['Water', 2], ['ACN', 7]]
   ];
   rounds.forEach((pours, i) => {
     assert.equal(g.get('progress').textContent, `ROUND ${i + 1} OF 4`);
     assert.equal(g.get('seconds').textContent, '30 sec');
     assert.match(g.get('fill-total').innerHTML, /^0</);
     g.pour(pours[0][0]);
-    assert.match(g.get('fill-total').innerHTML, /^5</);
+    assert.match(g.get('fill-total').innerHTML, new RegExp(`^${[5, 20, 25, 15][i]}<`));
     g.pour(pours[0][0], pours[0][1] - 1);
     pours.slice(1).forEach(([name, count]) => g.pour(name, count));
     assert.equal(g.get('game').dataset.outcome, 'correct');
@@ -93,10 +94,33 @@ test('incorrect full mixture cannot be edited and reports the original recipe', 
   assert.equal(g.get('seconds').textContent, '30 sec');
 });
 
+test('visible and accessible pour amounts follow the question and remaining capacity', () => {
+  const g = game({ animated: true }); g.start();
+  const water = g.sources[0], acn = g.sources[1];
+  assert.equal(water.querySelector('small').textContent, '+30% / tap');
+  assert.equal(acn.querySelector('small').textContent, '+5% / tap');
+  g.pour('Water', 3);
+  assert.equal(water.querySelector('small').textContent, '+10% / tap');
+  assert.equal(water.attributes['aria-label'], 'Pour 10 percent Water');
+  g.pour('Water');
+  assert.match(g.get('fill-total').innerHTML, /^100</);
+  assert.equal(g.get('game').children.filter(child => child.className === 'pour-dose').at(-1).textContent, '+10%');
+  g.next();
+  assert.equal(water.querySelector('small').textContent, '+10% / tap');
+  assert.equal(acn.querySelector('small').textContent, '+20% / tap');
+  assert.equal(acn.attributes['aria-label'], 'Pour 20 percent ACN');
+  g.pour('ACN');
+  assert.match(g.get('feedback').textContent, /^Added 20% ACN\. 20% filled\./);
+  assert.match(g.get('mixture').innerHTML, /height:20%/);
+  assert.equal(g.sources[2].querySelector('small').textContent, '+10% / tap');
+  g.pour('MeOH');
+  assert.match(g.get('composition').innerHTML, /MeOH <strong>10%/);
+});
+
 test('late taps are rejected even when browser timers have been throttled', () => {
   const g = game(); g.start(); g.pour('Water', 2); g.advance(30000, false); g.pour('ACN');
   assert.match(g.get('outcome').textContent, /Time’s up/);
-  assert.match(g.get('fill-total').innerHTML, /^10</);
+  assert.match(g.get('fill-total').innerHTML, /^60</);
   assert.equal(g.get('seconds').textContent, '0 sec');
   for (let i = 0; i < 3; i++) { g.next(); g.advance(30001); }
   g.next();
@@ -119,7 +143,7 @@ test('history restore and foregrounding reconcile the countdown; next cannot ski
 
 test('rapid animated pours count once each and changing rounds cancels all transient effects', () => {
   const g = game({ animated: true }); g.start();
-  g.pour('Water', 18); g.pour('ACN'); g.pour('MeOH');
+  g.pour('Water', 3); g.pour('ACN'); g.pour('MeOH');
   assert.equal(g.get('game').dataset.outcome, 'correct');
   assert.equal(g.get('running-score').textContent, 'Score 1 / 4');
   assert.ok(g.animations.length > 0);
@@ -133,14 +157,18 @@ test('rapid animated pours count once each and changing rounds cancels all trans
 test('reduced motion pours without animated effects; completed effects clean up independently', () => {
   const reduced = game({ animated: true, reducedMotion: true }); reduced.start(); reduced.pour('Water');
   assert.equal(reduced.animations.length, 0);
-  assert.match(reduced.get('fill-total').innerHTML, /^5</);
+  assert.match(reduced.get('fill-total').innerHTML, /^30</);
   const g = game({ animated: true }); g.start(); g.pour('Water');
   const completed = [...g.animations];
   g.pour('ACN');
   completed[0].onfinish();
   assert.ok(completed.every(animation => animation.cancelled));
   assert.ok(g.animations.slice(completed.length).every(animation => !animation.cancelled));
+  g.window.innerHeight = 670;
+  g.window.emit('resize');
+  assert.ok(g.animations.slice(completed.length).every(animation => !animation.cancelled));
+  g.window.innerWidth = 750;
   g.window.emit('resize');
   assert.ok(g.animations.every(animation => animation.cancelled));
-  assert.match(g.get('fill-total').innerHTML, /^10</);
+  assert.match(g.get('fill-total').innerHTML, /^35</);
 });
