@@ -260,9 +260,8 @@ function renderRoute(focus = true) {
     return;
   }
   try {
-    if (screen.orientation) {
-      if (screen.orientation.unlock) screen.orientation.unlock();
-      if (screen.orientation.lock) screen.orientation.lock('portrait').catch(() => {});
+    if (screen.orientation && typeof screen.orientation.lock === 'function') {
+      screen.orientation.lock('portrait').catch(() => {});
     }
   } catch (_) {}
   const isTileMatch = route === 'games/tile-match';

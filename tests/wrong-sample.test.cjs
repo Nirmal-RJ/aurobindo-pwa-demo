@@ -119,6 +119,11 @@ test('video ends into blackout then memory; a perfect game shows results and rep
   assert.equal(app.node('result-badge').textContent, 'MISSION ACCOMPLISHED');
   await app.node('replay').events.click();
   assert.equal(app.video.plays, 2); assert.equal(app.video.currentTime, 0); assert.equal(app.node('walkthrough').hidden, false);
+  assert.equal(app.node('skip-video').hidden, false);
+  app.node('skip-video').events.click();
+  assert.equal(app.node('skip-video').hidden, true);
+  app.advance(450);
+  assert.equal(app.node('game').hidden, false);
   assert.equal(app.node('bottles').children.length, 25);
   assert.equal(app.node('lab').scrollLeft, 0);
 });

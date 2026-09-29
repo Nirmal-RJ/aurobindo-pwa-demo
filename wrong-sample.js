@@ -77,30 +77,28 @@ if (typeof document !== 'undefined') (() => {
   const portrait = window.matchMedia('(orientation: portrait)');
   const assetRoot = 'assets/sample-preparation-game-assets/';
   let round = null, phase = 'intro', paused = false, lastTime = performance.now(), blackoutRemaining = 0;
-  let noteDelayRemaining = 0, pageAway = false, assetsReady = null, generation = 0;
+  let noteDelayRemaining = 0, pageAway = false, assetsReady = null, generation = 0, isReplay = false;
 
   function show(view) {
     $('app').dataset.view = view;
     ['intro', 'walkthrough', 'game', 'results'].forEach(id => { $(id).hidden = id !== view; });
   }
-  function exitToPortrait(targetUrl) {
+  async function exitToPortrait(targetUrl) {
     try {
-      if (document.fullscreenElement || document.webkitFullscreenElement) {
-        if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
-        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-      }
+      sessionStorage.setItem('aurobindo-force-portrait', '1');
     } catch (_) {}
 
+    // On Android, lock to portrait BEFORE exiting fullscreen (Chrome allows lock only while fullscreen/standalone)
+    if (screen.orientation && typeof screen.orientation.lock === 'function') {
+      try {
+        await screen.orientation.lock('portrait').catch(() => {});
+      } catch (_) {}
+    }
+
     try {
-      if (screen.orientation) {
-        if (screen.orientation.unlock) {
-          screen.orientation.unlock();
-        }
-        if (screen.orientation.lock) {
-          screen.orientation.lock('portrait').catch(() => {
-            screen.orientation?.unlock?.();
-          });
-        }
+      if (document.fullscreenElement || document.webkitFullscreenElement) {
+        if (document.exitFullscreen) await document.exitFullscreen().catch(() => {});
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
       }
     } catch (_) {}
 
@@ -187,14 +185,19 @@ if (typeof document !== 'undefined') (() => {
     if (current !== generation) return;
     round = new SampleGame.Round();
     noteDelayRemaining = 1000;
+    lastBenchKey = null;
     buildBottles(); buildList(); renderBench();
     $('start').disabled = false; setStatus('A silent lab walkthrough plays before every round.');
     $('walkthrough').classList.remove('blackout');
+    const skipBtn = $('skip-video');
+    if (skipBtn) skipBtn.hidden = !isReplay;
     $('video-recovery').hidden = true; video.load(); video.currentTime = 0;
     phase = 'video'; show('walkthrough'); lastTime = performance.now(); playVideo();
   }
   function videoEnded() {
     if (phase !== 'video') return;
+    const skipBtn = $('skip-video');
+    if (skipBtn) skipBtn.hidden = true;
     video.pause(); phase = 'blackout'; blackoutRemaining = 450;
     const fade = $('scene-fade');
     if (fade) fade.dataset.dark = 'true';
@@ -216,6 +219,8 @@ if (typeof document !== 'undefined') (() => {
       const img = document.createElement('img'); img.src = assetRoot + `bottle ${bottleType(chemical, index)}.png`; img.alt = ''; img.draggable = false;
       const label = document.createElement('span'); label.className = 'bottle-label';
       const formula = document.createElement('span'); formula.className = 'bottle-formula'; formula.textContent = chemical.formula;
+      if (chemical.formula.length >= 8) formula.classList.add('formula-long');
+      else if (chemical.formula.length >= 6) formula.classList.add('formula-medium');
       label.append(formula);
       button.append(img, label);
       button.addEventListener('click', () => selectBottle(chemical));
@@ -264,9 +269,13 @@ if (typeof document !== 'undefined') (() => {
     if (!round) return;
     results();
   }
+  let lastBenchKey = null;
   function renderBench() {
     const tray = $('table-tray');
     if (!tray) return;
+    const benchKey = round && round.bench ? round.bench.map(b => b.name).join('|') : '';
+    if (benchKey === lastBenchKey) return;
+    lastBenchKey = benchKey;
     tray.replaceChildren();
     for (let i = 0; i < 3; i++) {
       const bottle = round && round.bench ? round.bench[i] : null;
@@ -287,6 +296,8 @@ if (typeof document !== 'undefined') (() => {
         const formula = document.createElement('span');
         formula.className = 'bottle-formula';
         formula.textContent = bottle.formula;
+        if (bottle.formula.length >= 8) formula.classList.add('formula-long');
+        else if (bottle.formula.length >= 6) formula.classList.add('formula-medium');
         label.append(formula);
         const removeBtn = document.createElement('button');
         removeBtn.type = 'button';
@@ -485,7 +496,11 @@ if (typeof document !== 'undefined') (() => {
     }
     render();
   }
-  $('start').addEventListener('click', start); $('replay').addEventListener('click', start);
+  $('start').addEventListener('click', () => { isReplay = false; return start(); });
+  $('replay').addEventListener('click', () => { isReplay = true; return start(); });
+  $('skip-video')?.addEventListener('click', () => {
+    if (phase === 'video') videoEnded();
+  });
   $('fullscreen').addEventListener('click', toggleFullscreen);
   $('game-fullscreen').addEventListener('click', toggleFullscreen);
   $('check-samples')?.addEventListener('click', () => { if (round && round.phase === 'playing') checkSamples(); });
