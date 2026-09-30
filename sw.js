@@ -1,12 +1,14 @@
 const CACHE_PREFIX = 'aurobindo-shell-';
-const CACHE = `${CACHE_PREFIX}v72`;
-const ASSETS = ['./', './index.html', './styles.css?v=30', './app.js?v=18', './tile-match.js?v=19', './symptom-match.html', './symptom-match.css?v=18', './symptom-match.js?v=20', './chromatogram.html', './chromatogram.css?v=23', './chromatogram.js?v=22', './assets/toggle%20button.png', './assets/4%20arrow%20toggle%20outline.png', './assets/hpcl-logo-new.png', './assets/game-1-card.png', './assets/game-2-card.png', './assets/game-3-card.png', './assets/game-4-card.png', './logo.png', './icon.svg', './icons/icon-192.png', './icons/icon-512.png', './manifest.webmanifest'];
+const CACHE = `${CACHE_PREFIX}v99`;
+const ASSETS = ['./', './index.html', './styles.css?v=30', './app.js?v=18', './tile-match.js?v=23', './symptom-match.html', './symptom-match.css?v=18', './symptom-match.js?v=20', './chromatogram.html', './chromatogram.css?v=23', './chromatogram.js?v=22', './assets/toggle%20button.png', './assets/4%20arrow%20toggle%20outline.png', './assets/hpcl-logo-new.png', './assets/game-1-card.png', './assets/game-2-card.png', './assets/game-3-card.png', './assets/game-4-card.png', './logo.png', './icon.svg', './icons/icon-192.png', './icons/icon-512.png', './manifest.webmanifest'];
 ASSETS.push('./cleaning-solution.html', './cleaning-solution.css?v=7', './cleaning-solution.js?v=6');
-ASSETS.splice(ASSETS.indexOf('./styles.css?v=30'), 1, './styles.css?v=36');
+ASSETS.splice(ASSETS.indexOf('./styles.css?v=30'), 1, './styles.css?v=40');
 ASSETS.push('./liquid-sort.html', './liquid-sort.css?v=4', './liquid-sort.js?v=4', './assets/test-tube.png');
 ASSETS.splice(ASSETS.indexOf('./app.js?v=18'), 1, './app.js?v=25');
-ASSETS.push('./account.js?v=10', './account.css?v=6', './hero-carousel.js?v=2', './leaderboard.css?v=5');
+ASSETS.push('./account.js?v=11', './account.css?v=6', './hero-carousel.js?v=2', './leaderboard.css?v=5');
 ASSETS.push('./wrong-sample.html', './wrong-sample.css?v=16', './wrong-sample.js?v=15');
+ASSETS.push('./pill-perfect.html', './pill-perfect.css?v=23', './pill-perfect.js?v=23');
+ASSETS.push('./assets/tile-match-game-assets/card-front.png', './assets/tile-match-game-assets/card-back.png');
 ASSETS.push(...['bg-img.png', 'bottle%201.png', 'bottle%202.png', 'bottle%203.png'].map(file => `./assets/sample-preparation-game-assets/${file}`));
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));

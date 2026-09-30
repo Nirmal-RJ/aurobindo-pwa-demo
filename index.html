@@ -14,16 +14,15 @@
   <link rel="apple-touch-icon" href="./icons/icon-192.png">
   <link rel="manifest" href="./manifest.webmanifest">
   <script>
-
     try {
       const l = localStorage.getItem('aurobindo-language') || (document.cookie.match(/(?:^|;\s*)aurobindo-language=([^;]*)/) || [])[1];
       if (l === 'te' || l === 'hi' || l === 'en') document.documentElement.lang = l;
     } catch (_) { }
   </script>
-  <link rel="stylesheet" href="./styles.css?v=36">
-  <script src="./tile-match.js?v=19" defer></script>
+  <link rel="stylesheet" href="./styles.css?v=40">
+  <script src="./tile-match.js?v=23" defer></script>
   <link rel="stylesheet" href="./account.css?v=6">
-  <script src="./account.js?v=10" defer></script>
+  <script src="./account.js?v=11" defer></script>
   <script src="./app.js?v=25" defer></script>
   <link rel="stylesheet" href="./leaderboard.css?v=5">
   <script src="./hero-carousel.js?v=2" defer></script>
@@ -663,7 +662,7 @@
           aria-labelledby="game-liquid-title">
           <div class="poster-card-wrap">
             <img src="assets/game-1-card.png" alt="" class="poster-card-image" loading="lazy">
-            <h2 id="game-liquid-title" class="poster-version-title">Game 1 – Liquid Sort</h2>
+            <h2 id="game-liquid-title" class="poster-version-title">Liquid Sort</h2>
             <div class="poster-footer-bar playable">
               <span class="poster-status-dot"></span>
               <span data-i18n="playGame">PLAY GAME</span>
@@ -690,6 +689,19 @@
           <div class="poster-card-wrap">
             <img src="assets/game-3-card.png" alt="Game 3: Tile Match" class="poster-card-image" loading="lazy">
             <h2 id="game-three-title" class="sr-only" data-i18n="tileMatch">Tile Match</h2>
+            <div class="poster-footer-bar playable">
+              <span class="poster-status-dot"></span>
+              <span data-i18n="playGame">PLAY GAME</span>
+              <span class="poster-play-arrow" aria-hidden="true">↗</span>
+            </div>
+          </div>
+        </a>
+
+        <a class="game-poster poster-three poster-pill playable-poster" href="pill-perfect.html"
+          aria-labelledby="game-pill-title">
+          <div class="poster-card-wrap">
+            <img src="assets/game-3-card.png" alt="" class="poster-card-image" loading="lazy">
+            <h2 id="game-pill-title" class="poster-version-title">Pill Perfect</h2>
             <div class="poster-footer-bar playable">
               <span class="poster-status-dot"></span>
               <span data-i18n="playGame">PLAY GAME</span>
@@ -768,34 +780,36 @@
 
         <div id="tm-round" hidden>
           <div class="controls tm-controls">
-            <div class="star-list" aria-label="Rating">
-              <span class="star-item stars star-1">★</span>
-              <span class="star-item stars star-2">★</span>
-              <span class="star-item stars star-3">★</span>
-              <span class="moves-container">
-                <span class="moves-selector" id="tm-moves">0</span>
-                <span data-tm="moves">Moves</span>
-              </span>
+            <div class="tm-hud-bar">
+              <div class="star-list" aria-label="Rating">
+                <span class="star-item stars star-1">★</span>
+                <span class="star-item stars star-2">★</span>
+                <span class="star-item stars star-3">★</span>
+                <span class="moves-container"><span id="tm-moves">0</span><span class="moves-label"> <span data-tm="moves">Moves</span></span></span>
+              </div>
+              <div class="tm-score-pill">
+                <svg class="tm-hud-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                <span class="hud-label" data-tm="matched">Matched:</span>
+                <strong id="tm-score">0 / 5</strong>
+              </div>
+              <div class="tm-clock">
+                <svg class="tm-hud-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
+                <span class="hud-label" data-tm="timeLeft">Time:</span>
+                <strong id="tm-time" role="timer" aria-live="off">45s</strong>
+              </div>
+              <button class="refresh" id="tm-refresh" type="button" aria-label="Restart round" title="Restart">↻</button>
             </div>
-            <div class="time-container">
-              <span class="tm-score-pill"><span data-tm="matched">Matched</span>: <strong id="tm-score">0 /
-                  5</strong></span>
-              <span class="tm-clock"><span data-tm="timeLeft">Time</span>: <strong id="tm-time" role="timer"
-                  aria-live="off">45s</strong></span>
+            <div id="tm-timer" class="tm-timer" role="progressbar" aria-label="Time remaining" aria-valuemin="0"
+              aria-valuemax="45" aria-valuenow="45">
+              <div id="tm-timer-fill"></div>
             </div>
-            <button class="refresh" id="tm-refresh" type="button" aria-label="Restart round" title="Restart">↻</button>
           </div>
 
-          <p class="tm-instruction" data-tm="instruction">Match the SST parameter with its meaning.</p>
-
-          <div id="tm-timer" class="tm-timer" role="progressbar" aria-label="Time remaining" aria-valuemin="0"
-            aria-valuemax="45" aria-valuenow="45">
-            <div id="tm-timer-fill"></div>
-          </div>
-
-          <ul id="tm-grid" class="deck" aria-label="Matching cards deck"></ul>
+          <p class="tm-instruction" data-tm="instruction" hidden>Match the SST parameter with its meaning.</p>
 
           <p id="tm-feedback" class="tm-feedback" role="status" aria-live="polite" aria-atomic="true"></p>
+
+          <ul id="tm-grid" class="deck" aria-label="Matching cards deck"></ul>
         </div>
 
         <div id="tm-results" class="win tm-results" hidden>

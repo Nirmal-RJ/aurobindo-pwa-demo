@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#20134a">
+  <title>Pill Perfect · Aurobindo Pharma</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="pill-perfect.css?v=23">
+  <script src="pill-perfect.js?v=23" defer></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(regs => {
+        for (const reg of regs) reg.update();
+      });
+    }
+  </script>
+</head>
+<body>
+  <header class="header">
+    <a class="brand" href="index.html#/games"><img src="logo.png" alt="Aurobindo Pharma"><span>Pill Perfect<small id="edition">GAME 03 · SST CONNECTIONS</small></span></a>
+    <div class="controls">
+      <label class="sr-only" for="language">Language / भाषा / భాష</label>
+      <select id="language"><option value="en">English</option><option value="hi">हिन्दी</option><option value="te">తెలుగు</option></select>
+      <button id="sound" class="sound" type="button" aria-pressed="false" aria-label="Enable sound">♪ <span id="sound-label">Off</span></button>
+      <a id="back" href="index.html#/games">← Games</a>
+    </div>
+  </header>
+  <main id="app"></main>
+  <div id="announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+  <div id="effects" aria-hidden="true"></div>
+  <footer id="footer">A little practice. A lasting connection.</footer>
+</body>
+</html>

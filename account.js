@@ -15,7 +15,7 @@
       // A refresh is a new demo opening, even if its referrer is still a game.
       if (window.performance?.getEntriesByType('navigation')[0]?.type === 'reload') return false;
       const previous = new URL(document.referrer);
-      const games = location.hash === '#/games/sample-preparation' ? ['wrong-sample.html'] : ['cleaning-solution.html', 'liquid-sort.html', 'symptom-match.html', 'chromatogram.html'];
+      const games = location.hash === '#/games/sample-preparation' ? ['wrong-sample.html'] : ['cleaning-solution.html', 'liquid-sort.html', 'symptom-match.html', 'chromatogram.html', 'pill-perfect.html'];
       return games.some(file => {
         const game = new URL(file, location.href);
         return previous.origin === game.origin && previous.pathname === game.pathname;
