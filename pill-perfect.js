@@ -558,7 +558,7 @@ if (typeof document !== 'undefined') (() => {
       const clone = node.cloneNode(true); clone.removeAttribute('data-half'); clone.removeAttribute('disabled');
       clone.className = `half ${isRight ? 'meaning' : 'parameter'} flying-half`;
       clone.setAttribute('aria-hidden', 'true'); clone.tabIndex = -1;
-      clone.style.cssText = `left:${rect.left}px;top:${rect.top}px;width:${rect.width}px;height:${rect.height}px;font-size:${lesson ? 17 : 14}px;`;
+      clone.style.cssText = `left:${rect.left}px;top:${rect.top}px;width:${rect.width}px;height:${rect.height}px;`;
       $('effects').append(clone);
       if (lesson) node.style.opacity = '0';
       const x = centerX + (isRight ? 0 : -width) - rect.left;

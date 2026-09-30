@@ -561,4 +561,24 @@ body[data-phase=demo] .lesson-message { min-height: 176px; }
   }
 }
 
+/* Keep pill labels readable, including the compact mobile layouts above. */
+.half,
+.board .half,
+.lesson .capsule-stage .half,
+body[data-phase=demo] .capsule-stage .half {
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+@media (max-width:560px) {
+  .game .board {
+    grid-template-rows: repeat(5,minmax(80px,1fr));
+    min-height: 456px;
+  }
+  .board .half,
+  .lesson .capsule-stage .half {
+    min-height: 80px;
+  }
+}
+
 

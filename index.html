@@ -19,7 +19,7 @@
       if (l === 'te' || l === 'hi' || l === 'en') document.documentElement.lang = l;
     } catch (_) { }
   </script>
-  <link rel="stylesheet" href="./styles.css?v=42">
+  <link rel="stylesheet" href="./styles.css?v=43">
   <script src="./tile-match.js?v=23" defer></script>
   <link rel="stylesheet" href="./account.css?v=6">
   <script src="./account.js?v=11" defer></script>
@@ -723,18 +723,31 @@
       </section>
       <section id="sample-preparation-gallery" class="sample-preparation-gallery" aria-label="Sample Preparation games"
         lang="en" hidden>
-        <a class="activity-card lavender" href="wrong-sample.html">
-          <span class="card-top"><span class="card-number">01</span><span class="card-tag">MEMORY
-              CHALLENGE</span></span>
-          <span class="card-title">Wrong sample selected</span>
-          <span class="card-bottom"><span class="card-tag">PLAY GAME</span><span
-              aria-hidden="true">&#8599;</span></span>
+        <a class="game-poster poster-prep-one playable-poster" href="wrong-sample.html"
+          aria-labelledby="sample-prep-one-title">
+          <div class="poster-card-wrap">
+            <img src="assets/sample-prep-game-1.png" alt="Game 1: Wrong Sample Selected" class="poster-card-image"
+              loading="lazy">
+            <h2 id="sample-prep-one-title" class="sr-only">Wrong Sample Selected</h2>
+            <div class="poster-footer-bar playable">
+              <span class="poster-status-dot"></span>
+              <span data-i18n="playGame">PLAY GAME</span>
+              <span class="poster-play-arrow" aria-hidden="true">↗</span>
+            </div>
+          </div>
         </a>
-        <a class="activity-card mint" href="#/games/sample-preparation/wrong-sample-weight">
-          <span class="card-top"><span class="card-number">02</span><span class="card-tag">COMING SOON</span></span>
-          <span class="card-title">Wrong sample weight</span>
-          <span class="card-bottom"><span class="card-tag">VIEW GAME</span><span
-              aria-hidden="true">&#8599;</span></span>
+        <a class="game-poster poster-prep-two playable-poster" href="#/games/sample-preparation/wrong-sample-weight"
+          aria-labelledby="sample-prep-two-title">
+          <div class="poster-card-wrap">
+            <img src="assets/sample-prep-game-2.png" alt="Game 2: Wrong Sample Weight" class="poster-card-image"
+              loading="lazy">
+            <h2 id="sample-prep-two-title" class="sr-only">Wrong Sample Weight</h2>
+            <div class="poster-footer-bar playable">
+              <span class="poster-status-dot"></span>
+              <span data-i18n="comingSoon">COMING SOON</span>
+              <span class="poster-play-arrow" aria-hidden="true">↗</span>
+            </div>
+          </div>
         </a>
       </section>
       <div class="page-teaser"><svg class="icon" aria-hidden="true">
