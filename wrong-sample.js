@@ -640,6 +640,7 @@ if (typeof document !== 'undefined') (() => {
     let touchStartX = 0;
     let touchStartY = 0;
     let touchMoved = false;
+    let isTouchOnInteractive = false;
     let lastTapTime = 0;
     let gestureEndTimer = null;
 
@@ -652,13 +653,16 @@ if (typeof document !== 'undefined') (() => {
       if (gestureEndTimer) clearTimeout(gestureEndTimer);
       gestureEndTimer = setTimeout(() => {
         wasPinchOrPan = false;
-      }, 120);
+      }, 40);
     }
 
     // Touch events for mobile (Android & iPhone)
     lab.addEventListener('touchstart', e => {
       const hint = $('zoom-hint');
       if (hint && hint.classList && !hint.classList.contains('fade-out')) hint.classList.add('fade-out');
+
+      const target = e.target;
+      isTouchOnInteractive = !!(target && target.closest && target.closest('.bottle, .bench-bottle, .zoom-controls, .recall, #table-tray, .bench-slot, .bench-remove-btn'));
 
       if (e.touches && e.touches.length === 2) {
         markGesturing();
@@ -706,10 +710,10 @@ if (typeof document !== 'undefined') (() => {
           applyZoom(false);
         }
         if (typeof e.preventDefault === 'function') e.preventDefault();
-      } else if (e.touches && e.touches.length === 1 && zoomScale > 1.05) {
+      } else if (e.touches && e.touches.length === 1 && zoomScale > 1.05 && !isTouchOnInteractive) {
         const dx = e.touches[0].clientX - touchStartX;
         const dy = e.touches[0].clientY - touchStartY;
-        if (Math.hypot(dx, dy) > 6) {
+        if (Math.hypot(dx, dy) > 14) {
           touchMoved = true;
           markGesturing();
           panX = startPanX + dx;
@@ -726,19 +730,25 @@ if (typeof document !== 'undefined') (() => {
           applyZoom(true);
           endGesturing();
           startDist = 0;
+        } else {
+          wasPinchOrPan = false;
         }
-        const now = performance.now();
-        const isDoubleTap = (now - lastTapTime < 320) && !touchMoved && !wasPinchOrPan;
-        lastTapTime = now;
-        if (isDoubleTap && e.changedTouches && e.changedTouches[0]) {
-          const t = e.changedTouches[0];
-          markGesturing();
-          if (zoomScale > 1.2) {
-            resetZoom(true);
-          } else {
-            zoomAt(2.2, t.clientX, t.clientY, true);
+        if (!isTouchOnInteractive && !touchMoved && !wasPinchOrPan) {
+          const now = performance.now();
+          const isDoubleTap = (now - lastTapTime < 300);
+          lastTapTime = now;
+          if (isDoubleTap && e.changedTouches && e.changedTouches[0]) {
+            const t = e.changedTouches[0];
+            markGesturing();
+            if (zoomScale > 1.2) {
+              resetZoom(true);
+            } else {
+              zoomAt(2.2, t.clientX, t.clientY, true);
+            }
+            endGesturing();
           }
-          endGesturing();
+        } else {
+          lastTapTime = 0;
         }
       } else if (e.touches && e.touches.length === 1) {
         touchStartX = e.touches[0].clientX;
