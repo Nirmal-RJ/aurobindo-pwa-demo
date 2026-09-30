@@ -19,7 +19,7 @@
       if (l === 'te' || l === 'hi' || l === 'en') document.documentElement.lang = l;
     } catch (_) { }
   </script>
-  <link rel="stylesheet" href="./styles.css?v=40">
+  <link rel="stylesheet" href="./styles.css?v=42">
   <script src="./tile-match.js?v=23" defer></script>
   <link rel="stylesheet" href="./account.css?v=6">
   <script src="./account.js?v=11" defer></script>
@@ -661,8 +661,7 @@
         <a class="game-poster poster-one poster-liquid playable-poster" href="liquid-sort.html"
           aria-labelledby="game-liquid-title">
           <div class="poster-card-wrap">
-            <img src="assets/game-1-card.png" alt="" class="poster-card-image" loading="lazy">
-            <h2 id="game-liquid-title" class="poster-version-title">Liquid Sort</h2>
+            <img src="assets/game-1-card-liquid-sort.png" alt="" class="poster-card-image" loading="lazy">
             <div class="poster-footer-bar playable">
               <span class="poster-status-dot"></span>
               <span data-i18n="playGame">PLAY GAME</span>
@@ -700,8 +699,7 @@
         <a class="game-poster poster-three poster-pill playable-poster" href="pill-perfect.html"
           aria-labelledby="game-pill-title">
           <div class="poster-card-wrap">
-            <img src="assets/game-3-card.png" alt="" class="poster-card-image" loading="lazy">
-            <h2 id="game-pill-title" class="poster-version-title">Pill Perfect</h2>
+            <img src="assets/game-3-card-pill-perfect.png" alt="" class="poster-card-image" loading="lazy">
             <div class="poster-footer-bar playable">
               <span class="poster-status-dot"></span>
               <span data-i18n="playGame">PLAY GAME</span>
@@ -751,31 +749,144 @@
       </nav>
       <div class="tm-shell">
         <header class="header tm-header">
-          <div>
-            <span class="tm-kicker" data-tm="eyebrow">FIND THE CONNECTION</span>
+          <div class="tm-title-group">
+            <span class="tm-kicker" data-tm="eyebrow"><span class="kicker-spark">✨</span>FIND THE CONNECTION</span>
             <h1 id="tm-title" tabindex="-1" data-tm="title">Tile Match</h1>
           </div>
-          <svg class="tm-header-icon" aria-hidden="true">
-            <use href="#i-spark" />
-          </svg>
+          <div class="tm-header-badge" aria-hidden="true">
+            <svg class="tm-header-icon" aria-hidden="true">
+              <use href="#i-spark" />
+            </svg>
+          </div>
         </header>
 
         <div id="tm-intro" class="tm-intro">
           <div class="tm-intro-art" aria-hidden="true">
-            <div class="match-tiles">
-              <span>✦</span><span>●</span><span>◆</span><span>◆</span><span>✦</span><span>●</span><span>●</span><span>◆</span><span>✦</span>
+            <div class="tm-showcase">
+              <!-- Left Mini Card: SST Parameter -->
+              <div class="tm-showcase-card tm-card-param">
+                <div class="tm-card-glow"></div>
+                <div class="tm-card-inner">
+                  <span class="tm-card-badge">PARAMETER</span>
+                  <div class="tm-card-symbol">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                      stroke-linejoin="round">
+                      <polygon
+                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                      </polygon>
+                    </svg>
+                  </div>
+                  <strong class="tm-card-title">%RSD</strong>
+                  <span class="tm-card-sub">Peak Variation</span>
+                </div>
+              </div>
+
+              <!-- Central Energy Link Connector -->
+              <div class="tm-showcase-link">
+                <div class="tm-link-beam">
+                  <div class="tm-link-pulse"></div>
+                </div>
+                <div class="tm-link-core">
+                  <span class="tm-link-ring"></span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                  </svg>
+                  <span class="tm-link-tag">MATCH</span>
+                </div>
+              </div>
+
+              <!-- Right Mini Card: Meaning -->
+              <div class="tm-showcase-card tm-card-meaning">
+                <div class="tm-card-glow"></div>
+                <div class="tm-card-inner">
+                  <span class="tm-card-badge">DEFINITION</span>
+                  <div class="tm-card-symbol">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                      stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+                  <strong class="tm-card-title">Precision</strong>
+                  <span class="tm-card-sub">Measurement</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Floating Ambient Sparks -->
+            <div class="tm-showcase-sparkles">
+              <span class="sparkle sp-1">✦</span>
+              <span class="sparkle sp-2">◆</span>
+              <span class="sparkle sp-3">★</span>
+              <span class="sparkle sp-4">✦</span>
             </div>
           </div>
-          <h2 data-tm="introTitle">Make every match count.</h2>
-          <p class="tm-instruction" data-tm="instruction">Match the SST parameter with its meaning.</p>
-          <div class="tm-rules">
-            <span><strong>10</strong><span data-tm="tiles">tiles</span></span>
-            <span><strong>5</strong><span data-tm="pairs">pairs</span></span>
-            <span><strong>45</strong><span data-tm="seconds">seconds</span></span>
+
+          <div class="tm-intro-copy">
+            <h2 data-tm="introTitle">Make every match count.</h2>
+            <p class="tm-instruction" data-tm="instruction">Match the SST parameter with its meaning.</p>
           </div>
-          <button id="tm-play" class="game-start-btn tm-primary" type="button">
-            <span data-tm="play">Start Game</span> <span aria-hidden="true">▶</span>
-          </button>
+
+          <div class="tm-rules">
+            <div class="tm-rule-card tm-rule-tiles">
+              <div class="tm-rule-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <rect x="3" y="3" width="7" height="9" rx="1.5"></rect>
+                  <rect x="14" y="3" width="7" height="9" rx="1.5"></rect>
+                  <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+                  <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+                </svg>
+              </div>
+              <div class="tm-rule-content">
+                <strong>10</strong>
+                <span data-tm="tiles">tiles</span>
+              </div>
+            </div>
+
+            <div class="tm-rule-card tm-rule-pairs">
+              <div class="tm-rule-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path
+                    d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
+                  </path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </div>
+              <div class="tm-rule-content">
+                <strong>5</strong>
+                <span data-tm="pairs">pairs</span>
+              </div>
+            </div>
+
+            <div class="tm-rule-card tm-rule-time">
+              <div class="tm-rule-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+              <div class="tm-rule-content">
+                <strong>45</strong>
+                <span data-tm="seconds">seconds</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tm-intro-action">
+            <button id="tm-play" class="game-start-btn tm-primary" type="button">
+              <span class="btn-shine" aria-hidden="true"></span>
+              <span class="btn-content"><span data-tm="play">Start Game</span></span>
+              <span class="btn-arrow" aria-hidden="true">▶</span>
+            </button>
+            <div class="tm-hint-pill" aria-hidden="true">
+              <span class="tm-hint-icon">⚡</span>
+              <span>Memorize tile positions in 3s, then match pairs!</span>
+            </div>
+          </div>
         </div>
 
         <div id="tm-round" hidden>
@@ -785,19 +896,29 @@
                 <span class="star-item stars star-1">★</span>
                 <span class="star-item stars star-2">★</span>
                 <span class="star-item stars star-3">★</span>
-                <span class="moves-container"><span id="tm-moves">0</span><span class="moves-label"> <span data-tm="moves">Moves</span></span></span>
+                <span class="moves-container"><span id="tm-moves">0</span><span class="moves-label"> <span
+                      data-tm="moves">Moves</span></span></span>
               </div>
               <div class="tm-score-pill">
-                <svg class="tm-hud-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                <svg class="tm-hud-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+                </svg>
                 <span class="hud-label" data-tm="matched">Matched:</span>
                 <strong id="tm-score">0 / 5</strong>
               </div>
               <div class="tm-clock">
-                <svg class="tm-hud-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/></svg>
+                <svg class="tm-hud-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                    clip-rule="evenodd" />
+                </svg>
                 <span class="hud-label" data-tm="timeLeft">Time:</span>
                 <strong id="tm-time" role="timer" aria-live="off">45s</strong>
               </div>
-              <button class="refresh" id="tm-refresh" type="button" aria-label="Restart round" title="Restart">↻</button>
+              <button class="refresh" id="tm-refresh" type="button" aria-label="Restart round"
+                title="Restart">↻</button>
             </div>
             <div id="tm-timer" class="tm-timer" role="progressbar" aria-label="Time remaining" aria-valuemin="0"
               aria-valuemax="45" aria-valuenow="45">
