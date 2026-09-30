@@ -11,8 +11,8 @@
   <title>Wrong sample selected · Aurobindo Pharma</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="wrong-sample.css?v=10">
-  <script src="wrong-sample.js?v=10" defer></script>
+  <link rel="stylesheet" href="wrong-sample.css?v=15">
+  <script src="wrong-sample.js?v=14" defer></script>
 </head>
 
 <body>
@@ -27,11 +27,16 @@
         <div class="intro-copy">
           <span class="eyebrow">SAMPLE PREPARATION · MEMORY CHALLENGE</span>
           <h1 id="title">Wrong sample<br><em>selected.</em></h1>
-          <p class="intro-lead">The right sample starts with the right label</p>
-          <p>Pick required bottles and place them on your bench</p>
           <div class="facts"><span><b>3 sec</b> to memorise</span><span><b>60 sec</b> to find them</span><span><b>1</b>
               extra look</span></div>
-          <p class="rules">Results stay secret until you check. Bottles with the same formula are interchangeable.</p>
+          <div class="how-to">
+            <h2>How to Play</h2>
+            <ol>
+              <li><strong>Memorise the list:</strong> Review the 3 requested chemical formulas in 3 seconds before notes hide.</li>
+              <li><strong>Pick matching bottles:</strong> Find and place the 3 correct bottles on your bench within 60 seconds.</li>
+              <li><strong>Use your extra look:</strong> Tap the <em>Lab Notes</em> dossier if you need a reminder before checking samples.</li>
+            </ol>
+          </div>
           <button id="start" class="primary" type="button"><span aria-hidden="true">▶</span> Enter the lab</button>
         </div>
         <div class="intro-art" aria-hidden="true"><span class="lab-preview-badge">MISSION 01 · SAMPLE HUNT</span>
@@ -74,6 +79,12 @@
                 aria-hidden="true"></span><span class="shelf-rail rail-three" aria-hidden="true"></span>
               <div id="table-tray" class="table-tray" role="group" aria-label="Selected samples on the table"></div>
             </div>
+            <div id="zoom-controls" class="zoom-controls" aria-label="Zoom shelves">
+              <button id="zoom-in" class="zoom-btn" type="button" aria-label="Zoom in">+</button>
+              <button id="zoom-out" class="zoom-btn" type="button" aria-label="Zoom out" disabled>−</button>
+              <button id="zoom-reset" class="zoom-btn zoom-reset" type="button" aria-label="Reset zoom" hidden>1.0x ↺</button>
+            </div>
+            <div id="zoom-hint" class="zoom-hint" aria-hidden="true">🔍 Pinch to zoom</div>
           </div>
           <aside id="mission" class="mission" aria-label="Handwritten sample request" aria-hidden="true"
             data-open="false" inert>
@@ -92,6 +103,17 @@
               aria-hidden="true">LAB<br>NOTES</span><span id="recall-count" class="dossier-count"
               aria-hidden="true">1</span><span id="recall-label" class="dossier-caption">Open notes</span>
           </button>
+        </div>
+        <div id="game-briefing" class="game-briefing" role="dialog" aria-modal="true" aria-labelledby="briefing-title" hidden>
+          <div class="briefing-card">
+            <span class="eyebrow">LABORATORY READY</span>
+            <h2 id="briefing-title">Game start!</h2>
+            <p>Your <strong>Lab Notes list</strong> will pop up for <strong>3 seconds</strong> showing the 3 required chemical formulas. Memorise them before the notes hide!</p>
+            <p class="briefing-tip">💡 Need a reminder later? Tap the <em>Lab Notes</em> dossier on the right for 1 extra look.</p>
+            <button id="ready-start" class="primary" type="button">
+              <span aria-hidden="true">▶</span> Show notes list &amp; start
+            </button>
+          </div>
         </div>
         <nav class="game-toolbar" aria-label="Game controls">
           <a class="game-exit" href="index.html#/games/sample-preparation">← Exit</a>

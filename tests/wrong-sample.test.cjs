@@ -101,7 +101,12 @@ function browser() {
   const advance = ms => { time += ms; interval(); };
   const targets = () => node('targets').children.map(li => li.textContent);
   const clickBottle = name => node('bottles').children.find(b => b.dataset.name === name || b.dataset.formula === name).events.click();
-  async function start() { await node('start').events.click(); video.events.ended(); advance(450); }
+  async function start() {
+    await node('start').events.click();
+    video.events.ended();
+    advance(450);
+    if (node('ready-start')?.events?.click) await node('ready-start').events.click();
+  }
   return { node, video, document, window, portrait, advance, targets, clickBottle, start, elapse: ms => { time += ms; } };
 }
 
@@ -113,6 +118,9 @@ test('video ends into blackout then memory; a perfect game shows results and rep
   app.video.events.ended(); app.advance(449); assert.equal(app.node('walkthrough').hidden, false);
   app.advance(1); assert.equal(app.node('game').hidden, false);
   assert.equal(app.node('bottles').children.every(b => b.disabled), true);
+  assert.equal(app.node('game-briefing').hidden, false);
+  await app.node('ready-start').events.click();
+  assert.equal(app.node('game-briefing').hidden, true);
   app.advance(4000); app.targets().reverse().forEach(app.clickBottle);
   assert.equal(app.node('results').hidden, false); assert.equal(app.node('final-score').textContent, 300);
   assert.equal(app.node('results').dataset.outcome, 'success');
@@ -123,6 +131,7 @@ test('video ends into blackout then memory; a perfect game shows results and rep
   app.node('skip-video').events.click();
   assert.equal(app.node('skip-video').hidden, true);
   app.advance(450);
+  if (app.node('ready-start')?.events?.click) await app.node('ready-start').events.click();
   assert.equal(app.node('game').hidden, false);
   assert.equal(app.node('bottles').children.length, 25);
   assert.equal(app.node('lab').scrollLeft, 0);
@@ -183,8 +192,21 @@ test('results distinguish success from failed without partial results', async ()
 test('unavailable video offers a working game fallback; history restoration preserves remaining time', async () => {
   const app = browser(); await app.node('start').events.click();
   app.video.events.error(); assert.equal(app.node('continue-video').hidden, false);
-  app.node('continue-video').events.click(); app.advance(450); app.advance(5000);
+  app.node('continue-video').events.click(); app.advance(450);
+  if (app.node('ready-start')?.events?.click) await app.node('ready-start').events.click();
+  app.advance(5000);
   assert.equal(app.node('time').textContent, '59s');
   app.window.events.pagehide(); app.advance(90000); app.window.events.pageshow();
   assert.equal(app.node('time').textContent, '59s');
+});
+
+test('zoom controls and pinch-to-zoom adjust scale and reset cleanly', async () => {
+  const app = browser(); await app.start(); app.advance(4000);
+  assert.equal(app.node('zoom-out').disabled, true);
+  app.node('zoom-in').events.click();
+  assert.equal(app.node('zoom-out').disabled, false);
+  assert.equal(app.node('zoom-reset').hidden, false);
+  app.node('zoom-reset').events.click();
+  assert.equal(app.node('zoom-out').disabled, true);
+  assert.equal(app.node('zoom-reset').hidden, true);
 });

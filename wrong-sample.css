@@ -111,8 +111,78 @@ main {
     font-size: 15px
 }
 
-.intro p.rules {
-    font-size: 12px
+.how-to {
+    margin: 18px 0 24px;
+    max-width: 520px;
+}
+
+.how-to h2 {
+    font-size: 12px;
+    font-weight: 750;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #a0f0d7;
+    margin: 0 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.how-to h2::before {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #a0f0d7;
+    box-shadow: 0 0 8px #a0f0d7aa;
+}
+
+.how-to ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: howto-step;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.how-to li {
+    position: relative;
+    padding-left: 32px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: #beced4;
+}
+
+.how-to li::before {
+    counter-increment: howto-step;
+    content: counter(howto-step);
+    position: absolute;
+    left: 0;
+    top: 1px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #17353b;
+    border: 1px solid #3d6a6c;
+    color: #a0f0d7;
+    font-size: 11px;
+    font-weight: 750;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.how-to li strong {
+    color: #f1f7f6;
+    font-weight: 650;
+}
+
+.how-to li em {
+    color: #f5d68a;
+    font-style: normal;
 }
 
 .facts {
@@ -341,7 +411,7 @@ main {
     min-width: 1000px;
     height: 100%;
     container-type: size;
-    background: url("assets/sample-preparation-game-assets/bg-img.png") 28% top/138.5% 179.8% no-repeat
+    background: linear-gradient(rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.28)), url("assets/sample-preparation-game-assets/bg-img.png") 28% top/138.5% 179.8% no-repeat;
 }
 
 .bottles {
@@ -734,14 +804,31 @@ main {
         margin: 6px 0
     }
 
-    .intro p {
-        font-size: 12px;
-        margin: 8px 0
+    .how-to {
+        margin: 6px 0 10px;
     }
 
-    .intro p.rules {
+    .how-to h2 {
         font-size: 10px;
-        line-height: 1.4
+        margin-bottom: 5px;
+        letter-spacing: 1px;
+    }
+
+    .how-to ol {
+        gap: 4px;
+    }
+
+    .how-to li {
+        font-size: 11px;
+        line-height: 1.35;
+        padding-left: 24px;
+    }
+
+    .how-to li::before {
+        width: 16px;
+        height: 16px;
+        font-size: 9px;
+        top: 0;
     }
 
     .facts {
@@ -1009,7 +1096,11 @@ main {
     border-radius: 0;
     overflow: hidden;
     background: none;
-    container-type: normal
+    container-type: normal;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
 }
 
 #game .shelf-scene {
@@ -1018,9 +1109,12 @@ main {
     height: 100%;
     position: absolute;
     inset: 0;
-    background-position: center;
-    background-size: 100% 100%;
-    container-type: size
+    --bg-overlay-opacity: 0.5;
+    /* Adjust this value: 0.15 (lighter) to 0.50 (darker) */
+    background: linear-gradient(rgba(0, 0, 0, var(--bg-overlay-opacity)), rgba(0, 0, 0, var(--bg-overlay-opacity))), url("assets/sample-preparation-game-assets/bg-img.png") center/100% 100% no-repeat;
+    container-type: size;
+    touch-action: none;
+    will-change: transform;
 }
 
 #game .bottles {
@@ -1037,8 +1131,8 @@ main {
     width: 100%;
     height: 100%;
     min-width: 0;
-    touch-action: manipulation;
-    transition: opacity .25s, transform .25s
+    touch-action: none;
+    transition: opacity .25s, filter .25s
 }
 
 #game .bottle[data-on-bench="true"] {
@@ -1057,19 +1151,19 @@ main {
 }
 
 #game .bottle-label {
-    top: 46%;
-    width: 76%;
-    min-height: 38%;
+    top: 45%;
+    width: 86%;
+    min-height: 42%;
     padding: 1px 2px;
     gap: 0;
     box-sizing: border-box;
     overflow: hidden;
-    border: 1px solid #9cb1b9;
-    border-radius: 2px;
-    font-family: "Segoe UI", Arial, sans-serif;
-    box-shadow: 0 1px 1px #0003;
-    background: #f5f7f2;
-    color: #111;
+    border: 1.5px solid #627e8d;
+    border-radius: 3px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+    background: #ffffff;
+    color: #071720;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1082,22 +1176,22 @@ main {
     white-space: nowrap;
     text-overflow: clip;
     overflow: hidden;
-    font-size: clamp(5.5px, .9vw, 12px);
-    font-weight: 800;
+    font-size: clamp(9.5px, 1.45vw, 15px);
+    font-weight: 850;
     letter-spacing: -.2px;
-    color: #132833;
+    color: #071720;
     line-height: 1
 }
 
 #game .bottle-formula.formula-medium {
-    font-size: clamp(5px, .8vw, 10.5px);
-    letter-spacing: -.35px
+    font-size: clamp(8px, 1.2vw, 13px);
+    letter-spacing: -.3px
 }
 
 #game .bottle-formula.formula-long {
-    font-size: clamp(4.5px, .72vw, 9px);
-    letter-spacing: -.45px;
-    transform: scaleX(.96);
+    font-size: clamp(7.2px, 1.05vw, 11.5px);
+    letter-spacing: -.4px;
+    transform: scaleX(.97);
     transform-origin: center
 }
 
@@ -1197,16 +1291,17 @@ main {
 
 .bench-bottle .bottle-label {
     position: absolute;
-    top: 48%;
+    top: 45%;
     left: 50%;
     transform: translateX(-50%);
-    width: 80%;
-    min-height: 38%;
+    width: 86%;
+    min-height: 42%;
     box-sizing: border-box;
     overflow: hidden;
-    background: #fcfdfa;
-    border: 1px solid #758e99;
-    border-radius: 2px;
+    background: #ffffff;
+    border: 1.5px solid #627e8d;
+    border-radius: 3px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
     box-shadow: 0 2px 4px #0004;
     display: flex;
     align-items: center;
@@ -1221,21 +1316,21 @@ main {
     white-space: nowrap;
     text-overflow: clip;
     overflow: hidden;
-    font-size: clamp(5.5px, 1vw, 13px);
+    font-size: clamp(9.5px, 1.45vw, 15px);
     font-weight: 850;
-    color: #102631;
+    color: #071720;
     line-height: 1
 }
 
 .bench-bottle .bottle-formula.formula-medium {
-    font-size: clamp(5px, .88vw, 11px);
+    font-size: clamp(8px, 1.2vw, 13px);
     letter-spacing: -.3px
 }
 
 .bench-bottle .bottle-formula.formula-long {
-    font-size: clamp(4.5px, .78vw, 9.5px);
-    letter-spacing: -.45px;
-    transform: scaleX(.96);
+    font-size: clamp(7.2px, 1.05vw, 11.5px);
+    letter-spacing: -.4px;
+    transform: scaleX(.97);
     transform-origin: center
 }
 
@@ -1264,6 +1359,181 @@ main {
 .bench-bottle:focus-visible .bench-remove-btn {
     opacity: 1;
     transform: scale(1.05)
+}
+
+/* Shelves Zoom Controls & Floating UI */
+.zoom-controls {
+    position: absolute;
+    bottom: 14px;
+    left: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 25;
+    pointer-events: auto;
+}
+
+/* Game Start Briefing Overlay */
+.game-briefing {
+    position: absolute;
+    inset: 0;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(7, 18, 26, 0.82);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 16px;
+    animation: game-reveal 0.35s ease-out both;
+}
+
+.game-briefing[hidden] {
+    display: none !important;
+}
+
+.briefing-card {
+    background: linear-gradient(145deg, #112632, #0c1c25);
+    border: 1px solid rgba(160, 240, 215, 0.4);
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    max-width: 480px;
+    width: 100%;
+    padding: 26px 24px 22px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.briefing-card .eyebrow {
+    color: #e9c980;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.8px;
+    margin: 0;
+}
+
+.briefing-card h2 {
+    font-size: clamp(24px, 3.8vw, 32px);
+    margin: 0;
+    color: #fff;
+    font-weight: 850;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+}
+
+.briefing-card p {
+    color: #beced4;
+    font-size: 13.5px;
+    line-height: 1.5;
+    margin: 0;
+    max-width: 410px;
+}
+
+.briefing-card p strong {
+    color: #a0f0d7;
+}
+
+.briefing-tip {
+    font-size: 12.5px;
+    color: #a0f0d7;
+    background: rgba(16, 42, 47, 0.7);
+    border: 1px solid rgba(160, 240, 215, 0.3);
+    border-radius: 9px;
+    padding: 9px 14px;
+    margin: 4px 0 6px;
+    line-height: 1.45;
+}
+
+.briefing-tip em {
+    color: #f5d68a;
+    font-style: normal;
+    font-weight: 700;
+}
+
+.briefing-card .primary {
+    min-width: 220px;
+    margin-top: 4px;
+}
+
+.zoom-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid rgba(160, 240, 215, 0.35);
+    background: rgba(14, 30, 42, 0.88);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #a0f0d7;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+    touch-action: manipulation;
+    transition: background 0.15s, transform 0.15s, opacity 0.15s;
+    user-select: none;
+    -webkit-user-select: none;
+    padding: 0;
+}
+
+.zoom-btn:not(:disabled):hover {
+    background: rgba(32, 65, 80, 0.95);
+    transform: scale(1.06);
+}
+
+.zoom-btn:not(:disabled):active {
+    transform: scale(0.94);
+}
+
+.zoom-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.zoom-btn.zoom-reset {
+    width: auto;
+    min-width: 56px;
+    padding: 0 9px;
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: 0.5px;
+    color: #f5d68a;
+    border-color: rgba(245, 214, 138, 0.45);
+}
+
+.zoom-hint {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    z-index: 25;
+    pointer-events: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: rgba(10, 24, 35, 0.85);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(160, 240, 215, 0.3);
+    color: #a0f0d7;
+    font-size: 11px;
+    font-weight: 650;
+    letter-spacing: 0.3px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+    opacity: 1;
+    transition: opacity 0.5s ease-out;
+}
+
+.zoom-hint.fade-out {
+    opacity: 0;
 }
 
 @keyframes bench-place {
@@ -2354,6 +2624,10 @@ main {
     animation-delay: .35s
 }
 
+#intro .how-to {
+    animation: game-reveal .55s .25s both;
+}
+
 @keyframes specimen-float {
 
     0%,
@@ -2643,6 +2917,62 @@ main {
         bottom: 18px;
         left: 18px;
         font-size: 16px
+    }
+
+    .zoom-controls {
+        bottom: 8px;
+        left: 10px;
+        gap: 5px;
+    }
+
+    .briefing-card {
+        max-width: 440px;
+        padding: 14px 18px;
+        gap: 8px;
+        border-radius: 12px;
+    }
+
+    .briefing-card h2 {
+        font-size: 20px;
+    }
+
+    .briefing-card p {
+        font-size: 11.5px;
+        line-height: 1.4;
+    }
+
+    .briefing-tip {
+        font-size: 10.5px;
+        padding: 5px 10px;
+        margin: 2px 0 4px;
+        border-radius: 6px;
+    }
+
+    .briefing-card .primary {
+        min-height: 36px;
+        padding: 8px 18px;
+        font-size: 12px;
+        min-width: 180px;
+    }
+
+    .zoom-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 15px;
+        border-radius: 6px;
+    }
+
+    .zoom-btn.zoom-reset {
+        min-width: 46px;
+        font-size: 10px;
+        padding: 0 6px;
+    }
+
+    .zoom-hint {
+        top: 6px;
+        left: 8px;
+        padding: 4px 9px;
+        font-size: 9.5px;
     }
 }
 

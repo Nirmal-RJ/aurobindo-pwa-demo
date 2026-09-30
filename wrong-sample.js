@@ -76,7 +76,7 @@ if (typeof document !== 'undefined') (() => {
   const video = $('video');
   const portrait = window.matchMedia('(orientation: portrait)');
   const assetRoot = 'assets/sample-preparation-game-assets/';
-  let round = null, phase = 'intro', paused = false, lastTime = performance.now(), blackoutRemaining = 0;
+  let round = null, phase = 'intro', paused = false, briefingActive = false, lastTime = performance.now(), blackoutRemaining = 0;
   let noteDelayRemaining = 0, pageAway = false, assetsReady = null, generation = 0, isReplay = false;
 
   function show(view) {
@@ -184,7 +184,9 @@ if (typeof document !== 'undefined') (() => {
     }
     if (current !== generation) return;
     round = new SampleGame.Round();
-    noteDelayRemaining = 1000;
+    noteDelayRemaining = 0;
+    briefingActive = true;
+    if ($('game-briefing')) $('game-briefing').hidden = true;
     lastBenchKey = null;
     buildBottles(); buildList(); renderBench();
     $('start').disabled = false; setStatus('A silent lab walkthrough plays before every round.');
@@ -207,8 +209,80 @@ if (typeof document !== 'undefined') (() => {
   function bottleType(chemical, index) {
     return /Ammonium|Sodium|Potassium|Acetamide/.test(chemical.name) ? 3 : index % 2 + 1;
   }
+
+  let zoomScale = 1, panX = 0, panY = 0, wasPinchOrPan = false;
+
+  function applyZoom(animated = false) {
+    const lab = $('lab');
+    if (!lab) return;
+    const scene = (lab.querySelector && lab.querySelector('.shelf-scene')) || lab;
+
+    const rect = typeof lab.getBoundingClientRect === 'function'
+      ? lab.getBoundingClientRect()
+      : { left: 0, top: 0, width: lab.clientWidth || 1000, height: lab.clientHeight || 500 };
+    const labWidth = rect.width || lab.clientWidth || 1000;
+    const labHeight = rect.height || lab.clientHeight || 500;
+
+    zoomScale = Math.max(1, Math.min(3, zoomScale));
+
+    if (zoomScale <= 1.001) {
+      zoomScale = 1;
+      panX = 0;
+      panY = 0;
+    } else {
+      const minPanX = labWidth * (1 - zoomScale);
+      const minPanY = labHeight * (1 - zoomScale);
+      panX = Math.max(minPanX, Math.min(0, panX));
+      panY = Math.max(minPanY, Math.min(0, panY));
+    }
+
+    if (!scene.style) scene.style = {};
+    scene.style.transformOrigin = '0 0';
+    scene.style.transition = animated ? 'transform 0.22s cubic-bezier(0.2, 0.9, 0.3, 1)' : 'none';
+    scene.style.transform = `translate3d(${panX}px, ${panY}px, 0) scale(${zoomScale})`;
+
+    const zoomInBtn = $('zoom-in');
+    const zoomOutBtn = $('zoom-out');
+    const zoomResetBtn = $('zoom-reset');
+    if (zoomInBtn) zoomInBtn.disabled = zoomScale >= 2.95;
+    if (zoomOutBtn) zoomOutBtn.disabled = zoomScale <= 1.05;
+    if (zoomResetBtn) {
+      zoomResetBtn.hidden = zoomScale <= 1.05;
+      zoomResetBtn.textContent = `${zoomScale.toFixed(1)}x ↺`;
+    }
+  }
+
+  function zoomAt(newScale, clientX, clientY, animated = false) {
+    const lab = $('lab');
+    if (!lab) return;
+    const rect = typeof lab.getBoundingClientRect === 'function'
+      ? lab.getBoundingClientRect()
+      : { left: 0, top: 0, width: lab.clientWidth || 1000, height: lab.clientHeight || 500 };
+
+    newScale = Math.max(1, Math.min(3, newScale));
+    if (newScale === zoomScale && newScale === 1) return;
+
+    const currentScale = zoomScale;
+    const relX = clientX - rect.left;
+    const relY = clientY - rect.top;
+
+    panX = relX - ((relX - panX) / currentScale) * newScale;
+    panY = relY - ((relY - panY) / currentScale) * newScale;
+    zoomScale = newScale;
+
+    applyZoom(animated);
+  }
+
+  function resetZoom(animated = true) {
+    zoomScale = 1;
+    panX = 0;
+    panY = 0;
+    applyZoom(animated);
+  }
+
   function buildBottles() {
     $('lab').scrollLeft = 0;
+    resetZoom(false);
     $('bottles').replaceChildren();
     round.bottles.forEach((chemical, index) => {
       const button = document.createElement('button');
@@ -240,7 +314,7 @@ if (typeof document !== 'undefined') (() => {
   }
   function selectBottle(chemical) {
     tick();
-    if (paused || phase !== 'game' || round.phase !== 'playing') return;
+    if (briefingActive || wasPinchOrPan || paused || phase !== 'game' || round.phase !== 'playing') return;
     const existingIndex = round.bench.findIndex(b => b.name === chemical.name || b.formula === chemical.formula);
     if (existingIndex !== -1) {
       round.bench.splice(existingIndex, 1);
@@ -329,7 +403,7 @@ if (typeof document !== 'undefined') (() => {
     if ($('score')) $('score').textContent = round.score;
     $('time').textContent = `${Math.ceil(round.remaining / 1000)}s`;
     $('time').parentElement.classList.toggle('urgent', round.remaining <= 10000);
-    const listVisible = noteDelayRemaining <= 0 && round.listRemaining > 0;
+    const listVisible = !briefingActive && noteDelayRemaining <= 0 && round.listRemaining > 0;
     $('mission').dataset.open = String(listVisible);
     $('mission').setAttribute('aria-hidden', String(!listVisible));
     $('mission').inert = !listVisible;
@@ -346,7 +420,7 @@ if (typeof document !== 'undefined') (() => {
     }
     $('bottles').querySelectorAll('button').forEach(button => {
       const onBench = round.bench.some(b => b.name === button.dataset.name || b.formula === button.dataset.formula);
-      button.disabled = round.phase !== 'playing' || paused;
+      button.disabled = briefingActive || round.phase !== 'playing' || paused;
       button.dataset.onBench = String(onBench);
       button.setAttribute('aria-pressed', String(onBench));
       button.setAttribute('aria-label', `Sample ${button.dataset.formula}${onBench ? ', placed on bench' : ''}`);
@@ -355,6 +429,9 @@ if (typeof document !== 'undefined') (() => {
   }
   function results() {
     phase = 'results'; show('results');
+    briefingActive = false;
+    if ($('game-briefing')) $('game-briefing').hidden = true;
+    resetZoom(false);
     const benchPicks = [...(round.bench || [])];
     const availablePicks = [...benchPicks];
     let matchCount = 0;
@@ -451,16 +528,19 @@ if (typeof document !== 'undefined') (() => {
       blackoutRemaining -= elapsed;
       if (blackoutRemaining <= 0) {
         phase = 'game';
-        noteDelayRemaining = 1000;
+        briefingActive = true;
+        noteDelayRemaining = 0;
         show('game');
+        if ($('game-briefing')) $('game-briefing').hidden = false;
+        $('ready-start')?.focus?.({ preventScroll: true });
         render();
         const fade = $('scene-fade');
         if (fade) fade.dataset.dark = 'false';
-        $('game-title')?.focus?.({ preventScroll: true });
+        $('feedback').textContent = 'Laboratory ready. Tap "Show list & start" when you are ready to memorise.';
       }
       return;
     }
-    if (phase !== 'game') return;
+    if (phase !== 'game' || briefingActive) return;
     if (noteDelayRemaining > 0) {
       const consumed = Math.min(noteDelayRemaining, elapsed);
       noteDelayRemaining -= consumed;
@@ -498,6 +578,15 @@ if (typeof document !== 'undefined') (() => {
   }
   $('start').addEventListener('click', () => { isReplay = false; return start(); });
   $('replay').addEventListener('click', () => { isReplay = true; return start(); });
+  $('ready-start')?.addEventListener('click', () => {
+    if (!briefingActive || phase !== 'game') return;
+    briefingActive = false;
+    if ($('game-briefing')) $('game-briefing').hidden = true;
+    noteDelayRemaining = 1000;
+    lastTime = performance.now();
+    $('feedback').textContent = 'Study your formulas. The timer starts next.';
+    render();
+  });
   $('skip-video')?.addEventListener('click', () => {
     if (phase === 'video') videoEnded();
   });
@@ -538,6 +627,213 @@ if (typeof document !== 'undefined') (() => {
   document.addEventListener('visibilitychange', syncPause);
   window.addEventListener('pagehide', () => { pageAway = true; syncPause(); video.pause(); exitToPortrait(); });
   window.addEventListener('pageshow', () => { pageAway = false; syncPause(); });
+  function setupZoom() {
+    const lab = $('lab');
+    if (!lab || !lab.addEventListener) return;
+
+    let startDist = 0;
+    let startScale = 1;
+    let startMidX = 0;
+    let startMidY = 0;
+    let startPanX = 0;
+    let startPanY = 0;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchMoved = false;
+    let lastTapTime = 0;
+    let gestureEndTimer = null;
+
+    function markGesturing() {
+      wasPinchOrPan = true;
+      if (gestureEndTimer) clearTimeout(gestureEndTimer);
+    }
+
+    function endGesturing() {
+      if (gestureEndTimer) clearTimeout(gestureEndTimer);
+      gestureEndTimer = setTimeout(() => {
+        wasPinchOrPan = false;
+      }, 120);
+    }
+
+    // Touch events for mobile (Android & iPhone)
+    lab.addEventListener('touchstart', e => {
+      const hint = $('zoom-hint');
+      if (hint && hint.classList && !hint.classList.contains('fade-out')) hint.classList.add('fade-out');
+
+      if (e.touches && e.touches.length === 2) {
+        markGesturing();
+        startDist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        startScale = zoomScale;
+        startMidX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+        startMidY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+        startPanX = panX;
+        startPanY = panY;
+        if (typeof e.preventDefault === 'function') e.preventDefault();
+      } else if (e.touches && e.touches.length === 1) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        startPanX = panX;
+        startPanY = panY;
+        touchMoved = false;
+      }
+    }, { passive: false });
+
+    lab.addEventListener('touchmove', e => {
+      if (e.touches && e.touches.length === 2) {
+        markGesturing();
+        const currentDist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        if (startDist > 0) {
+          const factor = currentDist / startDist;
+          const targetScale = Math.max(1, Math.min(3, startScale * factor));
+          const currentMidX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+          const currentMidY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+
+          const rect = typeof lab.getBoundingClientRect === 'function'
+            ? lab.getBoundingClientRect()
+            : { left: 0, top: 0, width: lab.clientWidth || 1000, height: lab.clientHeight || 500 };
+          const relMidX = startMidX - rect.left;
+          const relMidY = startMidY - rect.top;
+
+          panX = relMidX - ((relMidX - startPanX) / startScale) * targetScale + (currentMidX - startMidX);
+          panY = relMidY - ((relMidY - startPanY) / startScale) * targetScale + (currentMidY - startMidY);
+          zoomScale = targetScale;
+          applyZoom(false);
+        }
+        if (typeof e.preventDefault === 'function') e.preventDefault();
+      } else if (e.touches && e.touches.length === 1 && zoomScale > 1.05) {
+        const dx = e.touches[0].clientX - touchStartX;
+        const dy = e.touches[0].clientY - touchStartY;
+        if (Math.hypot(dx, dy) > 6) {
+          touchMoved = true;
+          markGesturing();
+          panX = startPanX + dx;
+          panY = startPanY + dy;
+          applyZoom(false);
+          if (typeof e.preventDefault === 'function') e.preventDefault();
+        }
+      }
+    }, { passive: false });
+
+    lab.addEventListener('touchend', e => {
+      if (e.touches && e.touches.length === 0) {
+        if (touchMoved || startDist > 0) {
+          applyZoom(true);
+          endGesturing();
+          startDist = 0;
+        }
+        const now = performance.now();
+        const isDoubleTap = (now - lastTapTime < 320) && !touchMoved && !wasPinchOrPan;
+        lastTapTime = now;
+        if (isDoubleTap && e.changedTouches && e.changedTouches[0]) {
+          const t = e.changedTouches[0];
+          markGesturing();
+          if (zoomScale > 1.2) {
+            resetZoom(true);
+          } else {
+            zoomAt(2.2, t.clientX, t.clientY, true);
+          }
+          endGesturing();
+        }
+      } else if (e.touches && e.touches.length === 1) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        startPanX = panX;
+        startPanY = panY;
+        touchMoved = false;
+        startDist = 0;
+      }
+    });
+
+    lab.addEventListener('touchcancel', () => {
+      applyZoom(true);
+      endGesturing();
+      startDist = 0;
+    });
+
+    // iOS Safari gesture events
+    ['gesturestart', 'gesturechange', 'gestureend'].forEach(evName => {
+      lab.addEventListener(evName, e => {
+        if (typeof e.preventDefault === 'function') e.preventDefault();
+      }, { passive: false });
+    });
+
+    // Mouse wheel zoom
+    lab.addEventListener('wheel', e => {
+      if (typeof e.preventDefault === 'function') e.preventDefault();
+      const delta = (e.deltaY || 0) < 0 ? 0.35 : -0.35;
+      zoomAt(zoomScale + delta, e.clientX || 0, e.clientY || 0, true);
+    }, { passive: false });
+
+    // Mouse drag to pan when zoomed in
+    let isMouseDown = false;
+    let mouseStartX = 0;
+    let mouseStartY = 0;
+    let mousePanStartX = 0;
+    let mousePanStartY = 0;
+
+    lab.addEventListener('mousedown', e => {
+      if (zoomScale > 1.05 && e.button === 0) {
+        isMouseDown = true;
+        mouseStartX = e.clientX;
+        mouseStartY = e.clientY;
+        mousePanStartX = panX;
+        mousePanStartY = panY;
+      }
+    });
+
+    window.addEventListener('mousemove', e => {
+      if (isMouseDown) {
+        const dx = e.clientX - mouseStartX;
+        const dy = e.clientY - mouseStartY;
+        if (Math.hypot(dx, dy) > 5) {
+          markGesturing();
+          panX = mousePanStartX + dx;
+          panY = mousePanStartY + dy;
+          applyZoom(false);
+        }
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isMouseDown) {
+        isMouseDown = false;
+        applyZoom(true);
+        endGesturing();
+      }
+    });
+
+    // Floating UI Buttons (+, -, Reset)
+    $('zoom-in')?.addEventListener('click', e => {
+      e?.stopPropagation?.();
+      const rect = typeof lab.getBoundingClientRect === 'function' ? lab.getBoundingClientRect() : { left: 0, top: 0, width: 1000, height: 500 };
+      zoomAt(zoomScale + 0.6, rect.left + rect.width / 2, rect.top + rect.height / 2, true);
+    });
+
+    $('zoom-out')?.addEventListener('click', e => {
+      e?.stopPropagation?.();
+      const rect = typeof lab.getBoundingClientRect === 'function' ? lab.getBoundingClientRect() : { left: 0, top: 0, width: 1000, height: 500 };
+      zoomAt(zoomScale - 0.6, rect.left + rect.width / 2, rect.top + rect.height / 2, true);
+    });
+
+    $('zoom-reset')?.addEventListener('click', e => {
+      e?.stopPropagation?.();
+      resetZoom(true);
+    });
+
+    window.addEventListener('resize', () => {
+      applyZoom(false);
+    });
+
+    applyZoom(false);
+  }
+
+  setupZoom();
   syncPause(); setInterval(tick, 100);
   loadAssets().catch(() => {});
   if ('serviceWorker' in navigator && window.isSecureContext) navigator.serviceWorker.register('./sw.js').catch(() => {});
