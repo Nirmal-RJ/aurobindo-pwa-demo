@@ -74,6 +74,9 @@ function gameUI(language = 'en', { motion = false } = {}) {
         toggle: (name, on) => { if (on ?? !this.classList.contains(name)) this.classList.add(name); else this.classList.remove(name); }
       };
     }
+    play() { this.paused = false; this.emit('play'); return Promise.resolve(); }
+    pause() { this.paused = true; this.emit('pause'); }
+    load() { this.error = null; }
     set innerHTML(value) {
       this._html = value; this.children = []; this._text = '';
       const stack = [this];
@@ -156,8 +159,9 @@ function gameUI(language = 'en', { motion = false } = {}) {
   const action = name => click(`[data-action="${name}"]`);
   const half = id => click(`[data-half="${id}"]`);
   const join = i => { half(i * 2); half(i * 2 + 1); };
-  function training() { action('demo'); action('continue'); advance(7500); action('practice'); for (let i = 0; i < 5; i++) { join(i); advance(3300); action('next'); } }
-  return { get, app, document, window, click, advance, action, half, join, training, storage, animations,
+  function finishVideo() { const video = get('practice-video'); assert.ok(video); video.ended = true; video.emit('ended'); }
+  function training() { action('demo'); action('continue'); advance(7500); action('practice'); for (let i = 0; i < 5; i++) { finishVideo(); join(i); advance(3300); action('next'); } }
+  return { get, app, document, window, click, advance, action, half, join, training, finishVideo, storage, animations,
     drag(a, b, cancel = false, edgeGap = null) {
       const node = app.querySelector(`[data-half="${a}"]`), target = app.querySelector(`[data-half="${b}"]`);
       const from = node.getBoundingClientRect(), to = target.getBoundingClientRect();
@@ -181,8 +185,9 @@ test('mandatory demo and all five practice pills precede the timed challenge; re
   assert.equal(ui.app.querySelector('[data-action="practice"]').disabled, true);
   ui.advance(7500);
   assert.match(ui.get('equation').textContent, /%RSD = Precision/);
-  ui.action('practice');
+  ui.action('practice'); ui.finishVideo();
   for (let i = 0; i < 5; i++) {
+    if (i) ui.finishVideo();
     assert.equal(ui.app.querySelector('[data-action="next"]'), null);
     ui.join(i); ui.advance(3300);
     assert.match(ui.get('lesson-feedback').textContent, /Matched!/);
@@ -218,7 +223,7 @@ test('pointer drag joins pills in either direction; cancellation does not score 
 test('magnet highlights and joins at capsule edges in either direction while the pointer stays outside', () => {
   for (const [a, b] of [[0, 1], [1, 0]]) {
     for (const gap of [0, 18]) {
-      const ui = gameUI(); ui.action('demo'); ui.action('continue'); ui.advance(7500); ui.action('practice');
+      const ui = gameUI(); ui.action('demo'); ui.action('continue'); ui.advance(7500); ui.action('practice'); ui.finishVideo();
       assert.equal(ui.drag(a, b, false, gap), true); ui.advance(3300);
       assert.ok(ui.app.querySelector('[data-action="next"]'));
     }
@@ -226,7 +231,7 @@ test('magnet highlights and joins at capsule edges in either direction while the
 });
 
 test('magnet does not join distant or cancelled drops and still rejects an incorrect edge match', () => {
-  const ui = gameUI(); ui.action('demo'); ui.action('continue'); ui.advance(7500); ui.action('practice');
+  const ui = gameUI(); ui.action('demo'); ui.action('continue'); ui.advance(7500); ui.action('practice'); ui.finishVideo();
   assert.equal(ui.drag(0, 1, false, 30), false);
   assert.equal(ui.app.querySelector('[data-action="next"]'), null);
   ui.drag(0, 1, true, 0);
@@ -297,8 +302,9 @@ test('primary actions remain outside scrolling content; Next Pill stays in the d
       assert.equal(panel.querySelector('.screen-content').querySelector('.actions'), null);
       assert.equal(panel.querySelector('.actions').parent, panel);
     }
-    checkDock(); ui.action('demo'); checkDock(); ui.action('continue'); ui.advance(7500); ui.action('practice');
+    checkDock(); ui.action('demo'); checkDock(); ui.action('continue'); ui.advance(7500); ui.action('practice'); ui.finishVideo();
     for (let i = 0; i < 5; i++) {
+      if (i) ui.finishVideo();
       checkDock();
       assert.equal(ui.app.querySelector('[data-action="next"]'), null);
       assert.equal(ui.app.querySelector('[data-action="next"]'), null);
@@ -346,7 +352,7 @@ test('one demo pass precedes practice, then the equation, explanation and button
   ui.advance(5000);
   assert.equal(ui.app.querySelector('.demo-hand'), null);
   assert.equal(ui.app.querySelector('[data-action="practice"]').disabled, false);
-  ui.action('practice'); ui.join(0);
+  ui.action('practice'); ui.finishVideo(); ui.join(0);
   assert.equal(ui.get('equation').textContent, '');
   assert.equal(ui.get('lesson-feedback').textContent, '');
   assert.equal(ui.app.querySelector('[data-action="next"]'), null);
@@ -395,3 +401,36 @@ test('three mistakes end the game immediately and final report displays user con
   assert.equal(ui.app.querySelectorAll('.answer').length, 5);
 });
 
+
+
+test('each practice pill requires its corresponding audible video and advances only on completion', () => {
+  const ui = gameUI();
+  ui.action('demo'); ui.action('continue'); ui.advance(7500); ui.action('practice');
+  const files = ['1-rsd.mp4', '2-resolution.mp4', '3-trailing-factor-sample.mp4', '4-plate-count.mp4', '5-retention-time-sample.mp4'];
+  for (let i = 0; i < 5; i++) {
+    const video = ui.get('practice-video');
+    assert.equal(video.attrs.src, `assets/pill-game-video-assets/${files[i]}`);
+    assert.equal(video.muted, false);
+    assert.equal(video.volume, 1);
+    assert.equal(video.attrs.controls, undefined);
+    assert.equal(ui.app.querySelector('[data-half]'), null);
+    assert.equal(ui.app.querySelector('[data-action="next"]'), null);
+    ui.advance(60000);
+    assert.equal(ui.get('practice-video'), video);
+    video.emit('ended');
+    assert.equal(ui.get('practice-video'), video);
+    ui.action('video-toggle'); assert.equal(video.paused, true);
+    ui.action('video-toggle'); assert.equal(video.paused, false);
+    ui.get('language').value = 'hi'; ui.get('language').emit('change');
+    assert.equal(ui.get('practice-video'), video);
+    video.error = { code: 2 }; video.emit('error');
+    assert.equal(ui.app.querySelector('[data-half]'), null);
+    ui.action('video-toggle'); assert.equal(video.error, null);
+    ui.finishVideo();
+    assert.equal(video.paused, true);
+    assert.ok(ui.app.querySelector(`[data-half="${i * 2}"]`));
+    ui.join(i); ui.advance(3300); ui.action('next');
+    video.emit('ended'); // A detached video's event must not unlock the next pill.
+  }
+  assert.ok(ui.app.querySelector('[data-action="start"]'));
+});

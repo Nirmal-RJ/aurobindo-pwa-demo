@@ -582,3 +582,14 @@ body[data-phase=demo] .capsule-stage .half {
 }
 
 
+.practice-video {
+  display: block;
+  width: 100%;
+  max-height: 55dvh;
+  object-fit: contain;
+  background: #000;
+  border-radius: 16px;
+}
+
+.video-lesson h1 { font-size: clamp(24px, 5vw, 40px); }
+.video-lesson #video-status { font-size: 16px; }

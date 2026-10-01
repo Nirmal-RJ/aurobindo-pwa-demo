@@ -122,6 +122,12 @@ if (typeof document !== 'undefined') (() => {
   if (!copy[language]) language = 'en';
   let phase = 'intro', practiceIndex = 0, practiceJoined = false, demoJoined = false, demoWatching = false;
   let lessonReady = false;
+  const practiceVideos = ['1-rsd.mp4', '2-resolution.mp4', '3-trailing-factor-sample.mp4', '4-plate-count.mp4', '5-retention-time-sample.mp4'];
+  const videoCopy = {
+    en: { hint: 'Watch the full video. Your pill will appear when it finishes.', play: 'Play video', pause: 'Pause video', retry: 'Retry video', error: 'The video could not load. Check your connection and retry.' },
+    hi: { hint: 'पूरा वीडियो देखें। समाप्त होने पर आपका कैप्सूल दिखाई देगा।', play: 'वीडियो चलाएँ', pause: 'वीडियो रोकें', retry: 'फिर से चलाएँ', error: 'वीडियो लोड नहीं हुआ। कनेक्शन जाँचें और फिर कोशिश करें।' },
+    te: { hint: 'పూర్తి వీడియో చూడండి. అది ముగిశాక మీ మాత్ర కనిపిస్తుంది.', play: 'వీడియో చూడండి', pause: 'వీడియో ఆపండి', retry: 'మళ్లీ ప్రయత్నించండి', error: 'వీడియో లోడ్ కాలేదు. కనెక్షన్ తనిఖీ చేసి మళ్లీ ప్రయత్నించండి.' }
+  };
   let round = null, order = [], selected = null, drag = null, clock = null, demoTimer = null, endTimer = null;
   let sound = true, audio = null, suppressClickUntil = 0, streak = 0;
   const effectTimers = new Set(), motions = new Set();
@@ -171,6 +177,7 @@ if (typeof document !== 'undefined') (() => {
     cancelDrag(); clearEffects(); selected = null; updateHeader();
     document.body.dataset.phase = phase;
     let html = '';
+    if (phase === 'practice-video') html = `<section class="panel center video-lesson"><span class="eyebrow">${t().watchTag}</span><h1 tabindex="-1">${t().names[practiceIndex]}</h1><p id="video-count">${t().pair.replace('{n}', practiceIndex + 1)}</p><video id="practice-video" class="practice-video" playsinline preload="auto" src="assets/pill-game-video-assets/${practiceVideos[practiceIndex]}" aria-label="${t().names[practiceIndex]}"></video><p id="video-status" role="status">${videoCopy[language].hint}</p><div class="actions"><button type="button" class="primary" data-action="video-toggle" id="video-toggle">${videoCopy[language].play}</button></div></section>`;
     if (phase === 'intro') html = `<section class="panel center intro"><span class="eyebrow">${t().introTag}</span><div class="hero-orbit"><div class="hero-pill" aria-hidden="true"><span>%RSD</span><span>${t().meanings[0]}</span></div></div><h1 tabindex="-1">${t().title}</h1><p>${t().intro}</p><div class="steps"><span><b>1</b>${t().watch}</span><span><b>2</b>${t().practice}</span><span><b>3</b>${t().play}</span></div><div class="actions">${button('demo', t().begin)}</div></section>`;
     if (phase === 'demo' || phase === 'practice') {
       const demo = phase === 'demo', index = demo ? 0 : practiceIndex, joined = demo ? demoJoined : practiceJoined;
@@ -242,6 +249,7 @@ if (typeof document !== 'undefined') (() => {
     [...panel.children].forEach(node => { node.remove(); if (node !== actions) content.append(node); });
     panel.append(content);
     if (actions) panel.append(actions);
+    if (phase === 'practice-video') setupPracticeVideo();
     if (((phase === 'practice' && practiceJoined) || (phase === 'demo' && demoJoined)) && !lessonReady) {
       revealConnection(phase === 'demo' ? 0 : practiceIndex);
     }
@@ -259,6 +267,7 @@ if (typeof document !== 'undefined') (() => {
     return `<span class="tray-label">${t().tray}</span>${[...round.matched].map(mini).join('')}${Array.from({ length: 5 - round.matched.size }, (_, i) => `<span class="empty-slot" aria-hidden="true">${round.matched.size + i + 1}</span>`).join('')}`;
   }
   function transition(next) {
+    $('practice-video')?.pause();
     clearTimeout(demoTimer); clearTimeout(endTimer); clearInterval(clock);
     clearEffects(); phase = next; render();
     if (next === 'results' && round.matched.size === 5) later(() => {
@@ -267,6 +276,33 @@ if (typeof document !== 'undefined') (() => {
   }
   function startDemo() {
     demoWatching = true; demoJoined = false; lessonReady = false; transition('demo');
+  }
+  function updateVideoLabels() {
+    const video = $('practice-video');
+    if (!video) return;
+    $('app').querySelector('.eyebrow').textContent = t().watchTag;
+    $('app').querySelector('h1').textContent = t().names[practiceIndex];
+    video.setAttribute('aria-label', t().names[practiceIndex]);
+    $('video-count').textContent = t().pair.replace('{n}', practiceIndex + 1);
+    $('video-status').textContent = video.error ? videoCopy[language].error : videoCopy[language].hint;
+    $('video-toggle').textContent = video.error ? videoCopy[language].retry : video.paused ? videoCopy[language].play : videoCopy[language].pause;
+  }
+  function playPracticeVideo(video) {
+    video.play().catch(() => {
+      if ($('practice-video') === video) updateVideoLabels();
+    });
+  }
+  function setupPracticeVideo() {
+    const video = $('practice-video');
+    video.muted = false;
+    video.volume = 1;
+    for (const event of ['play', 'pause', 'error']) video.addEventListener(event, () => {
+      if ($('practice-video') === video) updateVideoLabels();
+    });
+    video.addEventListener('ended', () => {
+      if (phase === 'practice-video' && $('practice-video') === video && video.ended) transition('practice');
+    });
+    playPracticeVideo(video);
   }
   function runDemoAnimation() {
     clearTimeout(demoTimer);
@@ -715,6 +751,12 @@ if (typeof document !== 'undefined') (() => {
     const halfNode = event.target.closest('[data-half]');
     if (halfNode) { if (performance.now() >= suppressClickUntil || event.detail === 0) choose(halfNode); return; }
     const action = event.target.closest('[data-action]')?.dataset.action;
+    if (action === 'video-toggle' && phase === 'practice-video') {
+      const video = $('practice-video');
+      if (video.error) { video.load(); playPracticeVideo(video); }
+      else if (video.paused) playPracticeVideo(video);
+      else video.pause();
+    }
     if (action === 'demo' && phase === 'intro') startDemo();
     if (action === 'continue' && phase === 'demo' && demoWatching) {
       demoWatching = false;
@@ -730,10 +772,10 @@ if (typeof document !== 'undefined') (() => {
       transition('demo');
       runDemoAnimation();
     }
-    if (action === 'practice' && phase === 'demo' && demoJoined && lessonReady) { practiceIndex = 0; practiceJoined = false; lessonReady = false; transition('practice'); }
+    if (action === 'practice' && phase === 'demo' && demoJoined && lessonReady) { practiceIndex = 0; practiceJoined = false; lessonReady = false; transition('practice-video'); }
     if (action === 'next' && phase === 'practice' && practiceJoined && lessonReady) {
       if (practiceIndex === 4) transition('ready');
-      else { practiceIndex++; practiceJoined = false; lessonReady = false; transition('practice'); }
+      else { practiceIndex++; practiceJoined = false; lessonReady = false; transition('practice-video'); }
     }
     if (action === 'start' && phase === 'ready') startRound();
     if (action === 'again' && phase === 'results') { round = null; transition('intro'); }
@@ -742,14 +784,16 @@ if (typeof document !== 'undefined') (() => {
   $('language').addEventListener('change', event => {
     language = copy[event.target.value] ? event.target.value : 'en';
     try { localStorage.setItem('aurobindo-language', language); } catch (_) { /* Optional. */ }
+    if (phase === 'practice-video') { updateHeader(); updateVideoLabels(); return; }
     if (phase === 'demo' && !demoJoined) {
       if (demoWatching) startDemo(); else { transition('demo'); runDemoAnimation(); }
     } else render(false);
   });
   $('sound').addEventListener('click', () => { sound = !sound; updateHeader(); if (sound) chime(); });
-  window.addEventListener('pagehide', () => { cancelDrag(); clearEffects(); clearInterval(clock); clearTimeout(demoTimer); clearTimeout(endTimer); audio?.suspend(); });
+  window.addEventListener('pagehide', () => { $('practice-video')?.pause(); cancelDrag(); clearEffects(); clearInterval(clock); clearTimeout(demoTimer); clearTimeout(endTimer); audio?.suspend(); });
   window.addEventListener('pageshow', event => {
     if (!event.persisted) return;
+    if (phase === 'practice-video') { updateVideoLabels(); return; }
     if (phase === 'playing') { endTimer = null; render(false); if (!round.ended) clock = setInterval(updateClock, 100); }
     else if (phase === 'demo' && !demoJoined) startDemo();
     else render(false);
