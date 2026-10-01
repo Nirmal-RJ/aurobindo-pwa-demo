@@ -8,8 +8,8 @@
   <title>Liquid Sort · Aurobindo Pharma</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="liquid-sort.css?v=4">
-  <script src="liquid-sort.js?v=4" defer></script>
+  <link rel="stylesheet" href="liquid-sort.css?v=13">
+  <script src="liquid-sort.js?v=15" defer></script>
 </head>
 
 <body>
@@ -18,7 +18,6 @@
         Games</span></a></header>
   <main>
     <section id="intro" class="panel intro" aria-labelledby="title" tabindex="-1">
-      <span class="eyebrow">A LITTLE POUR. THE RIGHT MIX.</span>
       <div class="intro-tubes" aria-hidden="true">
         <span class="tube" style="--chemical:var(--water)"><img src="assets/test-tube.png" alt=""><span
             class="tube-liquid" style="height:80%"></span></span>
@@ -28,26 +27,29 @@
             class="tube-liquid" style="height:50%"></span></span>
       </div>
       <h1 id="title">A drop of focus.<br><em>The perfect solution.</em></h1>
-      <p>Prepare each cleaning solution with the right solvent percentages. Pour sizes change with each question. Tap a
+      <p>Prepare each cleaning solution with the right solvent percentages. Tap a
         chemical tube to add the <strong>percentage shown on it</strong>.</p>
       <div class="facts"><span><strong>4</strong> rounds</span><span><strong>30 sec</strong> each
           round</span><span><strong>Quick</strong> pours</span></div>
-      <p class="intro-note">Your mixture is checked at 100%. The last pour is capped at the space remaining. Pours
-        cannot be undone. The correct recipe is revealed after each round.</p>
-      <button id="play" class="primary" type="button">Let’s mix <span aria-hidden="true">→</span></button>
+      <button id="play" class="primary" type="button">Show me how <span aria-hidden="true">→</span></button>
     </section>
 
     <section id="game" class="panel game" hidden aria-labelledby="game-title" tabindex="-1">
       <div class="game-meta"><span id="progress" class="eyebrow">ROUND 1 OF 4</span><span id="running-score">Score 0 /
           4</span></div>
       <div class="game-heading">
-        <h1 id="game-title">Prepare the solution</h1><strong id="seconds" role="timer">30 sec</strong>
+        <h1 id="game-title">Column Cleaning</h1><strong id="seconds" role="timer">30 sec</strong>
       </div>
       <div id="timer" class="timer" role="progressbar" aria-label="Time remaining" aria-valuemin="0" aria-valuemax="30"
         aria-valuenow="30">
         <div id="timer-fill"></div>
       </div>
-      <div class="tray-heading"><span class="eyebrow">CHOOSE A CHEMICAL</span><span>Pour % shown on each tube</span>
+      <div id="lesson-target" class="lesson-target" hidden>
+        <div class="recipe-heading"><strong>Target recipe</strong><span>100% total</span></div>
+        <div id="target-recipe" class="recipe-ingredients" aria-label="Target solvent percentages"></div>
+        <p id="lesson-hint" role="status" aria-live="polite"></p>
+      </div>
+      <div class="tray-heading"><span id="tray-label" class="eyebrow">CHOOSE A CHEMICAL</span><span id="tray-note">Pour % shown on each tube</span>
       </div>
       <div id="chemicals" class="chemicals" aria-label="Chemical tubes">
         <button type="button" class="chemical" data-chemical="Water" style="--chemical:var(--water)"
@@ -74,8 +76,28 @@
         <div role="status" aria-live="polite"><strong id="outcome"></strong>
           <p id="correct-recipe"></p>
         </div>
-        <button id="next" class="primary" type="button">Next round →</button>
+        <div class="review-actions">
+          <button id="view-result" class="button" type="button" hidden>View comparison</button>
+          <button id="next" class="primary" type="button">Next round →</button>
+          <button id="replay-demo" class="button" type="button" hidden>Replay demo ↻</button>
+        </div>
       </div>
+    </section>
+
+    <section id="lesson-video" class="panel video-lesson" hidden aria-labelledby="video-title" tabindex="-1">
+      <span id="video-progress" class="eyebrow">WATCH &amp; LEARN</span>
+      <h1 id="video-title">Column Cleaning</h1>
+      <video id="recipe-video" playsinline preload="auto" aria-label="Column Cleaning video"></video>
+      <p id="video-status" role="status">Watch the full video. Guided practice starts when it finishes.</p>
+      <div class="actions"><button id="video-toggle" class="primary" type="button">Play video</button></div>
+    </section>
+
+    <section id="ready" class="panel intro" hidden aria-labelledby="ready-title" tabindex="-1">
+      <span class="eyebrow">PRACTICE COMPLETE</span>
+      <h1 id="ready-title">Four recipes.<br><em>Ready to beat the clock?</em></h1>
+      <p>You’ve prepared all four solutions. Now mix them from memory, with 30 seconds per round.</p>
+      <p class="intro-note">Check the pour amount on each tube. Your mixture is checked at 100%, and pours cannot be undone.</p>
+      <button id="start-game" class="primary" type="button">Start Game →</button>
     </section>
 
     <section id="report" class="panel report" hidden aria-labelledby="report-title" tabindex="-1">
@@ -88,6 +110,17 @@
           href="index.html#/games">Back to Games</a></div>
     </section>
   </main>
+  <dialog id="mix-result" class="mix-result" aria-labelledby="mix-result-title" aria-describedby="mix-result-summary">
+    <div class="mix-result-heading">
+      <span id="mix-result-recipe" class="eyebrow"></span>
+      <button id="close-result" class="result-close" type="button" aria-label="Close comparison">×</button>
+    </div>
+    <h2 id="mix-result-title"></h2>
+    <p id="mix-result-summary"></p>
+    <div id="mix-result-tubes" class="comparison-tubes"></div>
+    <div id="mix-result-values"></div>
+    <div class="result-actions"><button id="result-next" class="primary" type="button">Next round →</button></div>
+  </dialog>
 </body>
 
 </html>
