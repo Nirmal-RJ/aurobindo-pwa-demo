@@ -5,26 +5,25 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#100d25">
-  <meta name="description" content="The Aurobindo Pharmacy community hub. Celebrate, play and shine together.">
+  <meta name="description" content="The Aurobindo Pharma community hub. Celebrate, play and shine together.">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <title>Aurobindo Pharmacy · The Celebration Hub</title>
+  <title>Aurobindo Pharma · The Celebration Hub</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./icons/icon-192.png">
   <link rel="manifest" href="./manifest.webmanifest">
   <script>
-
     try {
       const l = localStorage.getItem('aurobindo-language') || (document.cookie.match(/(?:^|;\s*)aurobindo-language=([^;]*)/) || [])[1];
       if (l === 'te' || l === 'hi' || l === 'en') document.documentElement.lang = l;
     } catch (_) { }
   </script>
-  <link rel="stylesheet" href="./styles.css?v=29">
-  <script src="./tile-match.js?v=18" defer></script>
-  <link rel="stylesheet" href="./account.css?v=5">
-  <script src="./account.js?v=6" defer></script>
-  <script src="./app.js?v=22" defer></script>
+  <link rel="stylesheet" href="./styles.css?v=43">
+  <script src="./tile-match.js?v=23" defer></script>
+  <link rel="stylesheet" href="./account.css?v=6">
+  <script src="./account.js?v=11" defer></script>
+  <script src="./app.js?v=25" defer></script>
   <link rel="stylesheet" href="./leaderboard.css?v=5">
   <script src="./hero-carousel.js?v=2" defer></script>
 </head>
@@ -35,7 +34,8 @@
     <p class="account-intro">Register or log in to continue.</p>
     <div class="account-mode" role="group" aria-label="Account mode">
       <button id="login-mode" type="button" aria-pressed="true" aria-controls="login-panel">Log in</button>
-      <button id="registration-mode" type="button" aria-pressed="false" aria-controls="registration-panel">Register</button>
+      <button id="registration-mode" type="button" aria-pressed="false"
+        aria-controls="registration-panel">Register</button>
     </div>
     <div class="welcome-layout">
       <section id="registration-panel" class="account-copy" aria-labelledby="registration-title" hidden>
@@ -122,14 +122,17 @@
   </svg>
   <header class="site-header">
     <div class="header-inner">
-      <div class="brand" aria-label="Aurobindo Pharmacy">
-        <div class="brand-demo"><div class="brand-logo"><img src="./logo.png" alt="Aurobindo — Committed to healthier life!" width="618"
-            height="350"></div><span class="demo-label">DEMO APP</span></div>
-        <div class="brand-copy"><strong data-i18n="pharmacy">PHARMACY</strong><span data-i18n="community">Our people.
+      <div class="brand" aria-label="Aurobindo Pharma">
+        <div class="brand-demo">
+          <div class="brand-logo"><img src="./logo.png" alt="Aurobindo — Committed to healthier life!" width="618"
+              height="350"></div><span class="demo-label">DEMO APP</span>
+        </div>
+        <div class="brand-copy"><strong data-i18n="pharmacy">PHARMA</strong><span data-i18n="community">Our people.
             Our stage.</span></div>
       </div>
       <div class="header-controls">
-        <a class="profile-link" href="#/profile" aria-label="My profile"><span id="header-avatar" aria-hidden="true">U</span><span>Profile</span></a>
+        <a class="profile-link" href="#/profile" aria-label="My profile"><span id="header-avatar"
+            aria-hidden="true">U</span><span>Profile</span></a>
         <div class="language-control">
           <button class="language-trigger" id="language" type="button" aria-haspopup="menu" aria-expanded="false"
             aria-controls="language-menu" aria-labelledby="language-label language-current">
@@ -164,33 +167,221 @@
       <a class="back-link" href="#/">← Back to Home</a>
       <div class="profile-card">
         <div class="profile-cover"><span>ONE AUROBINDO FAMILY</span><span aria-hidden="true">✦</span></div>
-        <div class="profile-content"><div id="profile-avatar" class="profile-avatar" aria-hidden="true"></div>
-          <p class="account-eyebrow">YOUR LITTLE CORNER</p><h1 id="profile-title" tabindex="-1">My profile</h1>
+        <div class="profile-content">
+          <div id="profile-avatar" class="profile-avatar" aria-hidden="true"></div>
+          <p class="account-eyebrow">YOUR LITTLE CORNER</p>
+          <h1 id="profile-title" tabindex="-1">My profile</h1>
           <p class="profile-welcome">Great to have you in the celebration.</p>
-          <dl class="profile-details"><div><dt>Name</dt><dd id="profile-username"></dd></div><div><dt>Mobile number</dt><dd id="profile-mobile"></dd></div><div><dt>Department</dt><dd id="profile-department"></dd></div><div><dt>Plant</dt><dd id="profile-plant"></dd></div><div><dt>City</dt><dd id="profile-city"></dd></div></dl>
+          <dl class="profile-details">
+            <div>
+              <dt>Name</dt>
+              <dd id="profile-username"></dd>
+            </div>
+            <div>
+              <dt>Mobile number</dt>
+              <dd id="profile-mobile"></dd>
+            </div>
+            <div>
+              <dt>Department</dt>
+              <dd id="profile-department"></dd>
+            </div>
+            <div>
+              <dt>Plant</dt>
+              <dd id="profile-plant"></dd>
+            </div>
+            <div>
+              <dt>City</dt>
+              <dd id="profile-city"></dd>
+            </div>
+          </dl>
           <p id="logout-error" class="account-error" role="alert" hidden></p>
-          <button id="account-logout" class="logout-button" type="button">Log out <span aria-hidden="true">↗</span></button>
+          <button id="account-logout" class="logout-button" type="button">Log out <span
+              aria-hidden="true">↗</span></button>
         </div>
       </div>
     </section>
     <section id="leaderboard-view" class="leaderboard-view" aria-labelledby="leaderboard-title" hidden lang="en">
       <a class="back-link" href="#/">&larr; Back to Home</a>
       <h1 id="leaderboard-title" class="sr-only" tabindex="-1">Leaderboard</h1>
-      <div class="podium-stage"><div class="podium-confetti" aria-hidden="true"><i style="--x:3%;--delay:0s;--duration:4.8s;--drift:-14px;--color:#f6c54e;--rest:8%"></i><i style="--x:20%;--delay:-0.47s;--duration:5.3999999999999995s;--drift:14px;--color:#ab7df1;--rest:21%"></i><i style="--x:37%;--delay:-0.94s;--duration:6s;--drift:-14px;--color:#48cfbd;--rest:34%"></i><i style="--x:54%;--delay:-1.41s;--duration:6.6s;--drift:14px;--color:#ef87b1;--rest:47%"></i><i style="--x:71%;--delay:-1.88s;--duration:7.199999999999999s;--drift:-14px;--color:#78b9f4;--rest:60%"></i><i style="--x:88%;--delay:-2.35s;--duration:4.8s;--drift:14px;--color:#f6c54e;--rest:73%"></i><i style="--x:11%;--delay:-2.82s;--duration:5.3999999999999995s;--drift:-14px;--color:#ab7df1;--rest:86%"></i><i style="--x:28%;--delay:-3.29s;--duration:6s;--drift:14px;--color:#48cfbd;--rest:17%"></i><i style="--x:45%;--delay:-3.76s;--duration:6.6s;--drift:-14px;--color:#ef87b1;--rest:30%"></i><i style="--x:62%;--delay:-4.23s;--duration:7.199999999999999s;--drift:14px;--color:#78b9f4;--rest:43%"></i><i style="--x:79%;--delay:-4.7s;--duration:4.8s;--drift:-14px;--color:#f6c54e;--rest:56%"></i><i style="--x:96%;--delay:-5.17s;--duration:5.3999999999999995s;--drift:14px;--color:#ab7df1;--rest:69%"></i><i style="--x:19%;--delay:-5.64s;--duration:6s;--drift:-14px;--color:#48cfbd;--rest:82%"></i><i style="--x:36%;--delay:-6.11s;--duration:6.6s;--drift:14px;--color:#ef87b1;--rest:13%"></i><i style="--x:53%;--delay:-6.58s;--duration:7.199999999999999s;--drift:-14px;--color:#78b9f4;--rest:26%"></i><i style="--x:70%;--delay:-7.05s;--duration:4.8s;--drift:14px;--color:#f6c54e;--rest:39%"></i><i style="--x:87%;--delay:-7.52s;--duration:5.3999999999999995s;--drift:-14px;--color:#ab7df1;--rest:52%"></i><i style="--x:10%;--delay:-7.99s;--duration:6s;--drift:14px;--color:#48cfbd;--rest:65%"></i><i style="--x:27%;--delay:-8.46s;--duration:6.6s;--drift:-14px;--color:#ef87b1;--rest:78%"></i><i style="--x:44%;--delay:-8.93s;--duration:7.199999999999999s;--drift:14px;--color:#78b9f4;--rest:9%"></i><i style="--x:61%;--delay:-9.4s;--duration:4.8s;--drift:-14px;--color:#f6c54e;--rest:22%"></i><i style="--x:78%;--delay:-9.87s;--duration:5.3999999999999995s;--drift:14px;--color:#ab7df1;--rest:35%"></i><i style="--x:95%;--delay:-10.34s;--duration:6s;--drift:-14px;--color:#48cfbd;--rest:48%"></i><i style="--x:18%;--delay:-10.81s;--duration:6.6s;--drift:14px;--color:#ef87b1;--rest:61%"></i></div><div class="podium" aria-label="Top three players"><article class="podium-place podium-1" aria-label="Rank 1: Ananya Rao, 2,850 points"><div class="podium-medal" aria-hidden="true"><svg class="rank-medal medal-1" viewBox="0 0 48 60" aria-hidden="true" focusable="false"><path d="M10 3h11l9 21-10 6L10 3Z" fill="#8254db"/><path d="M27 3h11L28 30l-10-6L27 3Z" fill="#b598f1"/><circle cx="24" cy="36" r="20" fill="#bc821a"/><circle cx="24" cy="35" r="17" fill="#ffd76a" stroke="#ffffff99" stroke-width="1.5"/><circle cx="24" cy="35" r="13.5" fill="none" stroke="#bc821a" stroke-width="1"/><text x="24" y="41" text-anchor="middle" fill="#77500c" font-family="Arial,sans-serif" font-size="18" font-weight="700">1</text></svg></div><div class="podium-avatar" aria-hidden="true">AR</div><h2>Ananya Rao</h2><strong>2,850<small>points</small></strong><div class="podium-step"><span>#1</span><span>CHAMPION</span></div></article>
-<article class="podium-place podium-2" aria-label="Rank 2: Rohit Kumar, 2,720 points"><div class="podium-medal" aria-hidden="true"><svg class="rank-medal medal-2" viewBox="0 0 48 60" aria-hidden="true" focusable="false"><path d="M10 3h11l9 21-10 6L10 3Z" fill="#8254db"/><path d="M27 3h11L28 30l-10-6L27 3Z" fill="#b598f1"/><circle cx="24" cy="36" r="20" fill="#879bb8"/><circle cx="24" cy="35" r="17" fill="#dce7f6" stroke="#ffffff99" stroke-width="1.5"/><circle cx="24" cy="35" r="13.5" fill="none" stroke="#879bb8" stroke-width="1"/><text x="24" y="41" text-anchor="middle" fill="#3f5572" font-family="Arial,sans-serif" font-size="18" font-weight="700">2</text></svg></div><div class="podium-avatar" aria-hidden="true">RK</div><h2>Rohit Kumar</h2><strong>2,720<small>points</small></strong><div class="podium-step"><span>#2</span><span>RUNNER-UP</span></div></article>
-<article class="podium-place podium-3" aria-label="Rank 3: Priya Sharma, 2,640 points"><div class="podium-medal" aria-hidden="true"><svg class="rank-medal medal-3" viewBox="0 0 48 60" aria-hidden="true" focusable="false"><path d="M10 3h11l9 21-10 6L10 3Z" fill="#8254db"/><path d="M27 3h11L28 30l-10-6L27 3Z" fill="#b598f1"/><circle cx="24" cy="36" r="20" fill="#ad734e"/><circle cx="24" cy="35" r="17" fill="#edbc98" stroke="#ffffff99" stroke-width="1.5"/><circle cx="24" cy="35" r="13.5" fill="none" stroke="#ad734e" stroke-width="1"/><text x="24" y="41" text-anchor="middle" fill="#724327" font-family="Arial,sans-serif" font-size="18" font-weight="700">3</text></svg></div><div class="podium-avatar" aria-hidden="true">PS</div><h2>Priya Sharma</h2><strong>2,640<small>points</small></strong><div class="podium-step"><span>#3</span><span>THIRD PLACE</span></div></article></div></div>
-      <div class="rankings-card"><div class="rankings-heading"><h2>All rankings</h2><span>10 players &middot; Overall points</span></div>
-        <table class="rankings-table"><caption class="sr-only">Sample player rankings, ordered by total points</caption><thead><tr><th scope="col">Rank</th><th scope="col">Player</th><th scope="col" class="ranking-points">Points</th></tr></thead><tbody><tr class="ranking-winner"><td><span class="rank-number"><svg class="rank-medal medal-1" viewBox="0 0 48 60" aria-hidden="true" focusable="false"><path d="M10 3h11l9 21-10 6L10 3Z" fill="#8254db"/><path d="M27 3h11L28 30l-10-6L27 3Z" fill="#b598f1"/><circle cx="24" cy="36" r="20" fill="#bc821a"/><circle cx="24" cy="35" r="17" fill="#ffd76a" stroke="#ffffff99" stroke-width="1.5"/><circle cx="24" cy="35" r="13.5" fill="none" stroke="#bc821a" stroke-width="1"/><text x="24" y="41" text-anchor="middle" fill="#77500c" font-family="Arial,sans-serif" font-size="18" font-weight="700">1</text></svg><span class="sr-only">1</span></span></td><th scope="row"><span class="ranking-person"><span class="ranking-avatar" aria-hidden="true">AR</span><span>Ananya Rao</span></span></th><td class="ranking-points">2,850</td></tr>
-<tr class="ranking-winner"><td><span class="rank-number"><svg class="rank-medal medal-2" viewBox="0 0 48 60" aria-hidden="true" focusable="false"><path d="M10 3h11l9 21-10 6L10 3Z" fill="#8254db"/><path d="M27 3h11L28 30l-10-6L27 3Z" fill="#b598f1"/><circle cx="24" cy="36" r="20" fill="#879bb8"/><circle cx="24" cy="35" r="17" fill="#dce7f6" stroke="#ffffff99" stroke-width="1.5"/><circle cx="24" cy="35" r="13.5" fill="none" stroke="#879bb8" stroke-width="1"/><text x="24" y="41" text-anchor="middle" fill="#3f5572" font-family="Arial,sans-serif" font-size="18" font-weight="700">2</text></svg><span class="sr-only">2</span></span></td><th scope="row"><span class="ranking-person"><span class="ranking-avatar" aria-hidden="true">RK</span><span>Rohit Kumar</span></span></th><td class="ranking-points">2,720</td></tr>
-<tr class="ranking-winner"><td><span class="rank-number"><svg class="rank-medal medal-3" viewBox="0 0 48 60" aria-hidden="true" focusable="false"><path d="M10 3h11l9 21-10 6L10 3Z" fill="#8254db"/><path d="M27 3h11L28 30l-10-6L27 3Z" fill="#b598f1"/><circle cx="24" cy="36" r="20" fill="#ad734e"/><circle cx="24" cy="35" r="17" fill="#edbc98" stroke="#ffffff99" stroke-width="1.5"/><circle cx="24" cy="35" r="13.5" fill="none" stroke="#ad734e" stroke-width="1"/><text x="24" y="41" text-anchor="middle" fill="#724327" font-family="Arial,sans-serif" font-size="18" font-weight="700">3</text></svg><span class="sr-only">3</span></span></td><th scope="row"><span class="ranking-person"><span class="ranking-avatar" aria-hidden="true">PS</span><span>Priya Sharma</span></span></th><td class="ranking-points">2,640</td></tr>
-<tr><td><span class="rank-number">04</span></td><th scope="row"><span class="ranking-person"><span class="ranking-avatar" aria-hidden="true">AR</span><span>Arjun Reddy</span></span></th><td class="ranking-points">2,510</td></tr>
-<tr><td><span class="rank-number">05</span></td><th scope="row"><span class="ranking-person"><span class="ranking-avatar" aria-hidden="true">SP</span><span>Sneha Patel</span></span></th><td class="ranking-points">2,460</td></tr>
-<tr><td><span class="rank-number">06</span></td><th scope="row"><span class="ranking-person"><span class="ranking-avatar" aria-hidden="true">VS</span><span>Vikram Singh</span></span></th><td class="ranking-points">2,380</td></tr>
-<tr><td><span class="rank-number">07</span></td><th scope="row"><span class="ranking-person"><span class="ranking-avatar" aria-hidden="true">MN</span><span>Meera Nair</span></span></th><td class="ranking-points">2,250</td></tr>
-<tr><td><span class="rank-number">08</span></td><th scope="row"><span class="ranking-person"><span class="ranking-avatar" aria-hidden="true">KD</span><span>Kiran Das</span></span></th><td class="ranking-points">2,140</td></tr>
-<tr><td><span class="rank-number">09</span></td><th scope="row"><span class="ranking-person"><span class="ranking-avatar" aria-hidden="true">DS</span><span>Divya Shah</span></span></th><td class="ranking-points">2,060</td></tr>
-<tr><td><span class="rank-number">10</span></td><th scope="row"><span class="ranking-person"><span class="ranking-avatar" aria-hidden="true">RV</span><span>Rahul Verma</span></span></th><td class="ranking-points">1,980</td></tr></tbody></table>
-      </div><p class="leaderboard-note">Sample names and scores for demonstration only.</p>
+      <div class="podium-stage">
+        <div class="podium-confetti" aria-hidden="true"><i
+            style="--x:3%;--delay:0s;--duration:4.8s;--drift:-14px;--color:#f6c54e;--rest:8%"></i><i
+            style="--x:20%;--delay:-0.47s;--duration:5.3999999999999995s;--drift:14px;--color:#ab7df1;--rest:21%"></i><i
+            style="--x:37%;--delay:-0.94s;--duration:6s;--drift:-14px;--color:#48cfbd;--rest:34%"></i><i
+            style="--x:54%;--delay:-1.41s;--duration:6.6s;--drift:14px;--color:#ef87b1;--rest:47%"></i><i
+            style="--x:71%;--delay:-1.88s;--duration:7.199999999999999s;--drift:-14px;--color:#78b9f4;--rest:60%"></i><i
+            style="--x:88%;--delay:-2.35s;--duration:4.8s;--drift:14px;--color:#f6c54e;--rest:73%"></i><i
+            style="--x:11%;--delay:-2.82s;--duration:5.3999999999999995s;--drift:-14px;--color:#ab7df1;--rest:86%"></i><i
+            style="--x:28%;--delay:-3.29s;--duration:6s;--drift:14px;--color:#48cfbd;--rest:17%"></i><i
+            style="--x:45%;--delay:-3.76s;--duration:6.6s;--drift:-14px;--color:#ef87b1;--rest:30%"></i><i
+            style="--x:62%;--delay:-4.23s;--duration:7.199999999999999s;--drift:14px;--color:#78b9f4;--rest:43%"></i><i
+            style="--x:79%;--delay:-4.7s;--duration:4.8s;--drift:-14px;--color:#f6c54e;--rest:56%"></i><i
+            style="--x:96%;--delay:-5.17s;--duration:5.3999999999999995s;--drift:14px;--color:#ab7df1;--rest:69%"></i><i
+            style="--x:19%;--delay:-5.64s;--duration:6s;--drift:-14px;--color:#48cfbd;--rest:82%"></i><i
+            style="--x:36%;--delay:-6.11s;--duration:6.6s;--drift:14px;--color:#ef87b1;--rest:13%"></i><i
+            style="--x:53%;--delay:-6.58s;--duration:7.199999999999999s;--drift:-14px;--color:#78b9f4;--rest:26%"></i><i
+            style="--x:70%;--delay:-7.05s;--duration:4.8s;--drift:14px;--color:#f6c54e;--rest:39%"></i><i
+            style="--x:87%;--delay:-7.52s;--duration:5.3999999999999995s;--drift:-14px;--color:#ab7df1;--rest:52%"></i><i
+            style="--x:10%;--delay:-7.99s;--duration:6s;--drift:14px;--color:#48cfbd;--rest:65%"></i><i
+            style="--x:27%;--delay:-8.46s;--duration:6.6s;--drift:-14px;--color:#ef87b1;--rest:78%"></i><i
+            style="--x:44%;--delay:-8.93s;--duration:7.199999999999999s;--drift:14px;--color:#78b9f4;--rest:9%"></i><i
+            style="--x:61%;--delay:-9.4s;--duration:4.8s;--drift:-14px;--color:#f6c54e;--rest:22%"></i><i
+            style="--x:78%;--delay:-9.87s;--duration:5.3999999999999995s;--drift:14px;--color:#ab7df1;--rest:35%"></i><i
+            style="--x:95%;--delay:-10.34s;--duration:6s;--drift:-14px;--color:#48cfbd;--rest:48%"></i><i
+            style="--x:18%;--delay:-10.81s;--duration:6.6s;--drift:14px;--color:#ef87b1;--rest:61%"></i></div>
+        <div class="podium" aria-label="Top three players">
+          <article class="podium-place podium-1" aria-label="Rank 1: Ananya Rao, 2,850 points">
+            <div class="podium-medal" aria-hidden="true"><svg class="rank-medal medal-1" viewBox="0 0 48 60"
+                aria-hidden="true" focusable="false">
+                <path d="M10 3h11l9 21-10 6L10 3Z" fill="#8254db" />
+                <path d="M27 3h11L28 30l-10-6L27 3Z" fill="#b598f1" />
+                <circle cx="24" cy="36" r="20" fill="#bc821a" />
+                <circle cx="24" cy="35" r="17" fill="#ffd76a" stroke="#ffffff99" stroke-width="1.5" />
+                <circle cx="24" cy="35" r="13.5" fill="none" stroke="#bc821a" stroke-width="1" /><text x="24" y="41"
+                  text-anchor="middle" fill="#77500c" font-family="Arial,sans-serif" font-size="18"
+                  font-weight="700">1</text>
+              </svg></div>
+            <div class="podium-avatar" aria-hidden="true">AR</div>
+            <h2>Ananya Rao</h2><strong>2,850<small>points</small></strong>
+            <div class="podium-step"><span>#1</span><span>CHAMPION</span></div>
+          </article>
+          <article class="podium-place podium-2" aria-label="Rank 2: Rohit Kumar, 2,720 points">
+            <div class="podium-medal" aria-hidden="true"><svg class="rank-medal medal-2" viewBox="0 0 48 60"
+                aria-hidden="true" focusable="false">
+                <path d="M10 3h11l9 21-10 6L10 3Z" fill="#8254db" />
+                <path d="M27 3h11L28 30l-10-6L27 3Z" fill="#b598f1" />
+                <circle cx="24" cy="36" r="20" fill="#879bb8" />
+                <circle cx="24" cy="35" r="17" fill="#dce7f6" stroke="#ffffff99" stroke-width="1.5" />
+                <circle cx="24" cy="35" r="13.5" fill="none" stroke="#879bb8" stroke-width="1" /><text x="24" y="41"
+                  text-anchor="middle" fill="#3f5572" font-family="Arial,sans-serif" font-size="18"
+                  font-weight="700">2</text>
+              </svg></div>
+            <div class="podium-avatar" aria-hidden="true">RK</div>
+            <h2>Rohit Kumar</h2><strong>2,720<small>points</small></strong>
+            <div class="podium-step"><span>#2</span><span>RUNNER-UP</span></div>
+          </article>
+          <article class="podium-place podium-3" aria-label="Rank 3: Priya Sharma, 2,640 points">
+            <div class="podium-medal" aria-hidden="true"><svg class="rank-medal medal-3" viewBox="0 0 48 60"
+                aria-hidden="true" focusable="false">
+                <path d="M10 3h11l9 21-10 6L10 3Z" fill="#8254db" />
+                <path d="M27 3h11L28 30l-10-6L27 3Z" fill="#b598f1" />
+                <circle cx="24" cy="36" r="20" fill="#ad734e" />
+                <circle cx="24" cy="35" r="17" fill="#edbc98" stroke="#ffffff99" stroke-width="1.5" />
+                <circle cx="24" cy="35" r="13.5" fill="none" stroke="#ad734e" stroke-width="1" /><text x="24" y="41"
+                  text-anchor="middle" fill="#724327" font-family="Arial,sans-serif" font-size="18"
+                  font-weight="700">3</text>
+              </svg></div>
+            <div class="podium-avatar" aria-hidden="true">PS</div>
+            <h2>Priya Sharma</h2><strong>2,640<small>points</small></strong>
+            <div class="podium-step"><span>#3</span><span>THIRD PLACE</span></div>
+          </article>
+        </div>
+      </div>
+      <div class="rankings-card">
+        <div class="rankings-heading">
+          <h2>All rankings</h2><span>10 players &middot; Overall points</span>
+        </div>
+        <table class="rankings-table">
+          <caption class="sr-only">Sample player rankings, ordered by total points</caption>
+          <thead>
+            <tr>
+              <th scope="col">Rank</th>
+              <th scope="col">Player</th>
+              <th scope="col" class="ranking-points">Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="ranking-winner">
+              <td><span class="rank-number"><svg class="rank-medal medal-1" viewBox="0 0 48 60" aria-hidden="true"
+                    focusable="false">
+                    <path d="M10 3h11l9 21-10 6L10 3Z" fill="#8254db" />
+                    <path d="M27 3h11L28 30l-10-6L27 3Z" fill="#b598f1" />
+                    <circle cx="24" cy="36" r="20" fill="#bc821a" />
+                    <circle cx="24" cy="35" r="17" fill="#ffd76a" stroke="#ffffff99" stroke-width="1.5" />
+                    <circle cx="24" cy="35" r="13.5" fill="none" stroke="#bc821a" stroke-width="1" /><text x="24" y="41"
+                      text-anchor="middle" fill="#77500c" font-family="Arial,sans-serif" font-size="18"
+                      font-weight="700">1</text>
+                  </svg><span class="sr-only">1</span></span></td>
+              <th scope="row"><span class="ranking-person"><span class="ranking-avatar"
+                    aria-hidden="true">AR</span><span>Ananya Rao</span></span></th>
+              <td class="ranking-points">2,850</td>
+            </tr>
+            <tr class="ranking-winner">
+              <td><span class="rank-number"><svg class="rank-medal medal-2" viewBox="0 0 48 60" aria-hidden="true"
+                    focusable="false">
+                    <path d="M10 3h11l9 21-10 6L10 3Z" fill="#8254db" />
+                    <path d="M27 3h11L28 30l-10-6L27 3Z" fill="#b598f1" />
+                    <circle cx="24" cy="36" r="20" fill="#879bb8" />
+                    <circle cx="24" cy="35" r="17" fill="#dce7f6" stroke="#ffffff99" stroke-width="1.5" />
+                    <circle cx="24" cy="35" r="13.5" fill="none" stroke="#879bb8" stroke-width="1" /><text x="24" y="41"
+                      text-anchor="middle" fill="#3f5572" font-family="Arial,sans-serif" font-size="18"
+                      font-weight="700">2</text>
+                  </svg><span class="sr-only">2</span></span></td>
+              <th scope="row"><span class="ranking-person"><span class="ranking-avatar"
+                    aria-hidden="true">RK</span><span>Rohit Kumar</span></span></th>
+              <td class="ranking-points">2,720</td>
+            </tr>
+            <tr class="ranking-winner">
+              <td><span class="rank-number"><svg class="rank-medal medal-3" viewBox="0 0 48 60" aria-hidden="true"
+                    focusable="false">
+                    <path d="M10 3h11l9 21-10 6L10 3Z" fill="#8254db" />
+                    <path d="M27 3h11L28 30l-10-6L27 3Z" fill="#b598f1" />
+                    <circle cx="24" cy="36" r="20" fill="#ad734e" />
+                    <circle cx="24" cy="35" r="17" fill="#edbc98" stroke="#ffffff99" stroke-width="1.5" />
+                    <circle cx="24" cy="35" r="13.5" fill="none" stroke="#ad734e" stroke-width="1" /><text x="24" y="41"
+                      text-anchor="middle" fill="#724327" font-family="Arial,sans-serif" font-size="18"
+                      font-weight="700">3</text>
+                  </svg><span class="sr-only">3</span></span></td>
+              <th scope="row"><span class="ranking-person"><span class="ranking-avatar"
+                    aria-hidden="true">PS</span><span>Priya Sharma</span></span></th>
+              <td class="ranking-points">2,640</td>
+            </tr>
+            <tr>
+              <td><span class="rank-number">04</span></td>
+              <th scope="row"><span class="ranking-person"><span class="ranking-avatar"
+                    aria-hidden="true">AR</span><span>Arjun Reddy</span></span></th>
+              <td class="ranking-points">2,510</td>
+            </tr>
+            <tr>
+              <td><span class="rank-number">05</span></td>
+              <th scope="row"><span class="ranking-person"><span class="ranking-avatar"
+                    aria-hidden="true">SP</span><span>Sneha Patel</span></span></th>
+              <td class="ranking-points">2,460</td>
+            </tr>
+            <tr>
+              <td><span class="rank-number">06</span></td>
+              <th scope="row"><span class="ranking-person"><span class="ranking-avatar"
+                    aria-hidden="true">VS</span><span>Vikram Singh</span></span></th>
+              <td class="ranking-points">2,380</td>
+            </tr>
+            <tr>
+              <td><span class="rank-number">07</span></td>
+              <th scope="row"><span class="ranking-person"><span class="ranking-avatar"
+                    aria-hidden="true">MN</span><span>Meera Nair</span></span></th>
+              <td class="ranking-points">2,250</td>
+            </tr>
+            <tr>
+              <td><span class="rank-number">08</span></td>
+              <th scope="row"><span class="ranking-person"><span class="ranking-avatar"
+                    aria-hidden="true">KD</span><span>Kiran Das</span></span></th>
+              <td class="ranking-points">2,140</td>
+            </tr>
+            <tr>
+              <td><span class="rank-number">09</span></td>
+              <th scope="row"><span class="ranking-person"><span class="ranking-avatar"
+                    aria-hidden="true">DS</span><span>Divya Shah</span></span></th>
+              <td class="ranking-points">2,060</td>
+            </tr>
+            <tr>
+              <td><span class="rank-number">10</span></td>
+              <th scope="row"><span class="ranking-person"><span class="ranking-avatar"
+                    aria-hidden="true">RV</span><span>Rahul Verma</span></span></th>
+              <td class="ranking-points">1,980</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="leaderboard-note">Sample names and scores for demonstration only.</p>
     </section>
     <div id="home-view">
       <section class="hero" aria-labelledby="hero-title" data-carousel-seconds="5">
@@ -201,10 +392,10 @@
           <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
         </div>
         <div class="hero-copy" id="hero-copy-slide">
-          <span class="hero-demo-label">DEMO APP</span>          
+          <span class="hero-demo-label">DEMO APP</span>
           <h1 id="hero-title" class="sr-only">HPLC Celebrity League</h1>
           <div class="hero-logo-wrap">
-            <img src="./assets/hpcl-logo.png" alt="HPLC Celebrity League" class="hero-hpcl-logo" width="500"
+            <img src="./assets/hpcl-logo-new.png" alt="HPLC Celebrity League" class="hero-hpcl-logo" width="500"
               height="500">
           </div>
           <div class="hero-bottom"><span class="hero-rule"></span><span data-i18n="heroBottom">Play together. Shine
@@ -319,16 +510,25 @@
               STARS</span><span></span></div>
         </div>
         <div class="hero-scores" id="hero-scores-slide" aria-hidden="true">
-          <svg class="hero-scores-icon" viewBox="0 0 32 32" aria-hidden="true"><use href="#i-trophy" /></svg>
+          <svg class="hero-scores-icon" viewBox="0 0 32 32" aria-hidden="true">
+            <use href="#i-trophy" />
+          </svg>
           <strong data-i18n="scoresTitle">Score Board</strong>
           <span data-i18n="scoresDescription">Big efforts. Proud moments. Every point counts.</span>
           <a href="#/score-board" class="hero-scores-link">View leaderboard <span aria-hidden="true">&rarr;</span></a>
         </div>
         <div class="hero-carousel-controls" role="group" aria-label="Featured slides" hidden>
-          <button type="button" class="hero-dot" aria-label="Show league slide" aria-controls="hero-copy-slide" aria-pressed="true" data-hero-slide="0"><span></span></button>
-          <button type="button" class="hero-dot" aria-label="Show trophy slide" aria-controls="hero-art-slide" aria-pressed="false" data-hero-slide="1"><span></span></button>
-          <button type="button" class="hero-dot" aria-label="Show leaderboard slide" aria-controls="hero-scores-slide" aria-pressed="false" data-hero-slide="2"><span></span></button>
-          <button type="button" class="hero-carousel-pause" aria-label="Pause slideshow" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true"><path class="carousel-pause-icon" d="M5 3v10M11 3v10"/><path class="carousel-play-icon" d="m5 3 7 5-7 5Z"/></svg></button>
+          <button type="button" class="hero-dot" aria-label="Show league slide" aria-controls="hero-copy-slide"
+            aria-pressed="true" data-hero-slide="0"><span></span></button>
+          <button type="button" class="hero-dot" aria-label="Show trophy slide" aria-controls="hero-art-slide"
+            aria-pressed="false" data-hero-slide="1"><span></span></button>
+          <button type="button" class="hero-dot" aria-label="Show leaderboard slide" aria-controls="hero-scores-slide"
+            aria-pressed="false" data-hero-slide="2"><span></span></button>
+          <button type="button" class="hero-carousel-pause" aria-label="Pause slideshow" aria-pressed="false"><svg
+              viewBox="0 0 16 16" aria-hidden="true">
+              <path class="carousel-pause-icon" d="M5 3v10M11 3v10" />
+              <path class="carousel-play-icon" d="m5 3 7 5-7 5Z" />
+            </svg></button>
         </div>
         <svg class="hero-edge" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
           <path class="led-track" fill="none" />
@@ -402,7 +602,7 @@
       <aside class="together-banner">
         <div class="banner-mark" aria-hidden="true">a<span>✦</span></div>
         <div><strong data-i18n="bannerTitle">Different talents. One blockbuster team.</strong>
-          <p data-i18n="bannerDescription">Celebrating the people who make Aurobindo Pharmacy extraordinary.</p>
+          <p data-i18n="bannerDescription">Celebrating the people who make Aurobindo Pharma extraordinary.</p>
         </div><span class="banner-stars" aria-hidden="true">✧ ✦ ✧</span>
       </aside>
     </div>
@@ -436,10 +636,32 @@
             aria-hidden="true">✦ ✦ ✦</span></div>
       </div>
       <section class="game-gallery" aria-label="Game posters" data-i18n-aria="gamePosters" hidden>
-        <a class="game-poster poster-one playable-poster" href="cleaning-solution.html" aria-labelledby="game-one-title">
+        <a class="home-lab-feature" href="#/games/sample-preparation" lang="en">
+          <span class="home-lab-image" aria-hidden="true"></span>
+          <span class="home-lab-copy">
+            <span class="home-lab-kicker">STEP INTO THE LAB</span>
+            <strong>Sample Preparation</strong>
+          </span>
+          <span class="home-lab-action">Explore games <span aria-hidden="true">→</span></span>
+        </a>
+        <a class="game-poster poster-one playable-poster" href="cleaning-solution.html"
+          aria-labelledby="game-one-title">
           <div class="poster-card-wrap">
-            <img src="assets/game-1-card.png" alt="Game 1: Cleaning Solution Pairing" class="poster-card-image" loading="lazy">
+            <img src="assets/game-1-card.png" alt="Game 1: Cleaning Solution Pairing" class="poster-card-image"
+              loading="lazy">
             <h2 id="game-one-title" class="sr-only">Cleaning Solution Pairing</h2>
+            <div class="poster-footer-bar playable">
+              <span class="poster-status-dot"></span>
+              <span data-i18n="playGame">PLAY GAME</span>
+              <span class="poster-play-arrow" aria-hidden="true">↗</span>
+            </div>
+          </div>
+        </a>
+
+        <a class="game-poster poster-one poster-liquid playable-poster" href="liquid-sort.html"
+          aria-labelledby="game-liquid-title">
+          <div class="poster-card-wrap">
+            <img src="assets/game-1-card-liquid-sort.png" alt="" class="poster-card-image" loading="lazy">
             <div class="poster-footer-bar playable">
               <span class="poster-status-dot"></span>
               <span data-i18n="playGame">PLAY GAME</span>
@@ -474,6 +696,18 @@
           </div>
         </a>
 
+        <a class="game-poster poster-three poster-pill playable-poster" href="pill-perfect.html"
+          aria-labelledby="game-pill-title">
+          <div class="poster-card-wrap">
+            <img src="assets/game-3-card-pill-perfect.png" alt="" class="poster-card-image" loading="lazy">
+            <div class="poster-footer-bar playable">
+              <span class="poster-status-dot"></span>
+              <span data-i18n="playGame">PLAY GAME</span>
+              <span class="poster-play-arrow" aria-hidden="true">↗</span>
+            </div>
+          </div>
+        </a>
+
         <a class="game-poster poster-four playable-poster" href="chromatogram.html" aria-labelledby="game-four-title">
           <div class="poster-card-wrap">
             <img src="assets/game-4-card.png" alt="Game 4: Swipe the Right Action" class="poster-card-image"
@@ -482,6 +716,35 @@
             <div class="poster-footer-bar playable">
               <span class="poster-status-dot"></span>
               <span data-i18n="playGame">PLAY GAME</span>
+              <span class="poster-play-arrow" aria-hidden="true">↗</span>
+            </div>
+          </div>
+        </a>
+      </section>
+      <section id="sample-preparation-gallery" class="sample-preparation-gallery" aria-label="Sample Preparation games"
+        lang="en" hidden>
+        <a class="game-poster poster-prep-one playable-poster" href="wrong-sample.html"
+          aria-labelledby="sample-prep-one-title">
+          <div class="poster-card-wrap">
+            <img src="assets/sample-prep-game-1.png" alt="Game 1: Wrong Sample Selected" class="poster-card-image"
+              loading="lazy">
+            <h2 id="sample-prep-one-title" class="sr-only">Wrong Sample Selected</h2>
+            <div class="poster-footer-bar playable">
+              <span class="poster-status-dot"></span>
+              <span data-i18n="playGame">PLAY GAME</span>
+              <span class="poster-play-arrow" aria-hidden="true">↗</span>
+            </div>
+          </div>
+        </a>
+        <a class="game-poster poster-prep-two playable-poster" href="#/games/sample-preparation/wrong-sample-weight"
+          aria-labelledby="sample-prep-two-title">
+          <div class="poster-card-wrap">
+            <img src="assets/sample-prep-game-2.png" alt="Game 2: Wrong Sample Weight" class="poster-card-image"
+              loading="lazy">
+            <h2 id="sample-prep-two-title" class="sr-only">Wrong Sample Weight</h2>
+            <div class="poster-footer-bar playable">
+              <span class="poster-status-dot"></span>
+              <span data-i18n="comingSoon">COMING SOON</span>
               <span class="poster-play-arrow" aria-hidden="true">↗</span>
             </div>
           </div>
@@ -499,63 +762,188 @@
       </nav>
       <div class="tm-shell">
         <header class="header tm-header">
-          <div>
-            <span class="tm-kicker" data-tm="eyebrow">FIND THE CONNECTION</span>
+          <div class="tm-title-group">
+            <span class="tm-kicker" data-tm="eyebrow"><span class="kicker-spark">✨</span>FIND THE CONNECTION</span>
             <h1 id="tm-title" tabindex="-1" data-tm="title">Tile Match</h1>
           </div>
-          <svg class="tm-header-icon" aria-hidden="true">
-            <use href="#i-spark" />
-          </svg>
+          <div class="tm-header-badge" aria-hidden="true">
+            <svg class="tm-header-icon" aria-hidden="true">
+              <use href="#i-spark" />
+            </svg>
+          </div>
         </header>
 
         <div id="tm-intro" class="tm-intro">
           <div class="tm-intro-art" aria-hidden="true">
-            <div class="match-tiles">
-              <span>✦</span><span>●</span><span>◆</span><span>◆</span><span>✦</span><span>●</span><span>●</span><span>◆</span><span>✦</span>
+            <div class="tm-showcase">
+              <!-- Left Mini Card: SST Parameter -->
+              <div class="tm-showcase-card tm-card-param">
+                <div class="tm-card-glow"></div>
+                <div class="tm-card-inner">
+                  <span class="tm-card-badge">PARAMETER</span>
+                  <div class="tm-card-symbol">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+                      stroke-linejoin="round">
+                      <polygon
+                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                      </polygon>
+                    </svg>
+                  </div>
+                  <strong class="tm-card-title">%RSD</strong>
+                  <span class="tm-card-sub">Peak Variation</span>
+                </div>
+              </div>
+
+              <!-- Central Energy Link Connector -->
+              <div class="tm-showcase-link">
+                <div class="tm-link-beam">
+                  <div class="tm-link-pulse"></div>
+                </div>
+                <div class="tm-link-core">
+                  <span class="tm-link-ring"></span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                  </svg>
+                  <span class="tm-link-tag">MATCH</span>
+                </div>
+              </div>
+
+              <!-- Right Mini Card: Meaning -->
+              <div class="tm-showcase-card tm-card-meaning">
+                <div class="tm-card-glow"></div>
+                <div class="tm-card-inner">
+                  <span class="tm-card-badge">DEFINITION</span>
+                  <div class="tm-card-symbol">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                      stroke-linejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+                  <strong class="tm-card-title">Precision</strong>
+                  <span class="tm-card-sub">Measurement</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Floating Ambient Sparks -->
+            <div class="tm-showcase-sparkles">
+              <span class="sparkle sp-1">✦</span>
+              <span class="sparkle sp-2">◆</span>
+              <span class="sparkle sp-3">★</span>
+              <span class="sparkle sp-4">✦</span>
             </div>
           </div>
-          <h2 data-tm="introTitle">Make every match count.</h2>
-          <p class="tm-instruction" data-tm="instruction">Match the SST parameter with its meaning.</p>
-          <div class="tm-rules">
-            <span><strong>10</strong><span data-tm="tiles">tiles</span></span>
-            <span><strong>5</strong><span data-tm="pairs">pairs</span></span>
-            <span><strong>45</strong><span data-tm="seconds">seconds</span></span>
+
+          <div class="tm-intro-copy">
+            <h2 data-tm="introTitle">Make every match count.</h2>
+            <p class="tm-instruction" data-tm="instruction">Match the SST parameter with its meaning.</p>
           </div>
-          <button id="tm-play" class="game-start-btn tm-primary" type="button">
-            <span data-tm="play">Start Game</span> <span aria-hidden="true">▶</span>
-          </button>
+
+          <div class="tm-rules">
+            <div class="tm-rule-card tm-rule-tiles">
+              <div class="tm-rule-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <rect x="3" y="3" width="7" height="9" rx="1.5"></rect>
+                  <rect x="14" y="3" width="7" height="9" rx="1.5"></rect>
+                  <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
+                  <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+                </svg>
+              </div>
+              <div class="tm-rule-content">
+                <strong>10</strong>
+                <span data-tm="tiles">tiles</span>
+              </div>
+            </div>
+
+            <div class="tm-rule-card tm-rule-pairs">
+              <div class="tm-rule-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path
+                    d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3">
+                  </path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </div>
+              <div class="tm-rule-content">
+                <strong>5</strong>
+                <span data-tm="pairs">pairs</span>
+              </div>
+            </div>
+
+            <div class="tm-rule-card tm-rule-time">
+              <div class="tm-rule-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+              </div>
+              <div class="tm-rule-content">
+                <strong>45</strong>
+                <span data-tm="seconds">seconds</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="tm-intro-action">
+            <button id="tm-play" class="game-start-btn tm-primary" type="button">
+              <span class="btn-shine" aria-hidden="true"></span>
+              <span class="btn-content"><span data-tm="play">Start Game</span></span>
+              <span class="btn-arrow" aria-hidden="true">▶</span>
+            </button>
+            <div class="tm-hint-pill" aria-hidden="true">
+              <span class="tm-hint-icon">⚡</span>
+              <span>Memorize tile positions in 3s, then match pairs!</span>
+            </div>
+          </div>
         </div>
 
         <div id="tm-round" hidden>
           <div class="controls tm-controls">
-            <div class="star-list" aria-label="Rating">
-              <span class="star-item stars star-1">★</span>
-              <span class="star-item stars star-2">★</span>
-              <span class="star-item stars star-3">★</span>
-              <span class="moves-container">
-                <span class="moves-selector" id="tm-moves">0</span>
-                <span data-tm="moves">Moves</span>
-              </span>
+            <div class="tm-hud-bar">
+              <div class="star-list" aria-label="Rating">
+                <span class="star-item stars star-1">★</span>
+                <span class="star-item stars star-2">★</span>
+                <span class="star-item stars star-3">★</span>
+                <span class="moves-container"><span id="tm-moves">0</span><span class="moves-label"> <span
+                      data-tm="moves">Moves</span></span></span>
+              </div>
+              <div class="tm-score-pill">
+                <svg class="tm-hud-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    clip-rule="evenodd" />
+                </svg>
+                <span class="hud-label" data-tm="matched">Matched:</span>
+                <strong id="tm-score">0 / 5</strong>
+              </div>
+              <div class="tm-clock">
+                <svg class="tm-hud-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fill-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                    clip-rule="evenodd" />
+                </svg>
+                <span class="hud-label" data-tm="timeLeft">Time:</span>
+                <strong id="tm-time" role="timer" aria-live="off">45s</strong>
+              </div>
+              <button class="refresh" id="tm-refresh" type="button" aria-label="Restart round"
+                title="Restart">↻</button>
             </div>
-            <div class="time-container">
-              <span class="tm-score-pill"><span data-tm="matched">Matched</span>: <strong id="tm-score">0 /
-                  5</strong></span>
-              <span class="tm-clock"><span data-tm="timeLeft">Time</span>: <strong id="tm-time" role="timer"
-                  aria-live="off">45s</strong></span>
+            <div id="tm-timer" class="tm-timer" role="progressbar" aria-label="Time remaining" aria-valuemin="0"
+              aria-valuemax="45" aria-valuenow="45">
+              <div id="tm-timer-fill"></div>
             </div>
-            <button class="refresh" id="tm-refresh" type="button" aria-label="Restart round" title="Restart">↻</button>
           </div>
 
-          <p class="tm-instruction" data-tm="instruction">Match the SST parameter with its meaning.</p>
-
-          <div id="tm-timer" class="tm-timer" role="progressbar" aria-label="Time remaining" aria-valuemin="0"
-            aria-valuemax="45" aria-valuenow="45">
-            <div id="tm-timer-fill"></div>
-          </div>
-
-          <ul id="tm-grid" class="deck" aria-label="Matching cards deck"></ul>
+          <p class="tm-instruction" data-tm="instruction" hidden>Match the SST parameter with its meaning.</p>
 
           <p id="tm-feedback" class="tm-feedback" role="status" aria-live="polite" aria-atomic="true"></p>
+
+          <ul id="tm-grid" class="deck" aria-label="Matching cards deck"></ul>
         </div>
 
         <div id="tm-results" class="win tm-results" hidden>
@@ -589,10 +977,9 @@
         </div>
       </div>
     </section>
-    <footer><span class="footer-brand" data-i18n="footerBrand">Aurobindo Pharmacy</span><span
-        class="footer-message"><span data-i18n="footerMessage">Made for our people. Made for good times.</span><span
-          class="footer-star" aria-hidden="true">✦</span></span><button class="install-button" id="install" hidden><svg
-          class="icon">
+    <footer><span class="footer-brand" data-i18n="footerBrand">Aurobindo Pharma</span><span class="footer-message"><span
+          data-i18n="footerMessage">Made for our people. Made for good times.</span><span class="footer-star"
+          aria-hidden="true">✦</span></span><button class="install-button" id="install" hidden><svg class="icon">
           <use href="#i-download" />
         </svg><span data-i18n="install">Install app</span></button></footer>
   </main>

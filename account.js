@@ -10,12 +10,13 @@
     } catch (_) { return null; }
   }
   function returningFromGame() {
-    if (location.hash !== '#/games') return false;
+    if (location.hash !== '#/games' && location.hash !== '#/games/sample-preparation') return false;
     try {
       // A refresh is a new demo opening, even if its referrer is still a game.
       if (window.performance?.getEntriesByType('navigation')[0]?.type === 'reload') return false;
       const previous = new URL(document.referrer);
-      return ['cleaning-solution.html', 'symptom-match.html', 'chromatogram.html'].some(file => {
+      const games = location.hash === '#/games/sample-preparation' ? ['wrong-sample.html'] : ['cleaning-solution.html', 'liquid-sort.html', 'symptom-match.html', 'chromatogram.html', 'pill-perfect.html'];
+      return games.some(file => {
         const game = new URL(file, location.href);
         return previous.origin === game.origin && previous.pathname === game.pathname;
       });
@@ -46,7 +47,7 @@
         $('registration-mode').setAttribute('aria-pressed', String(isRegistration));
         $('login-mode').setAttribute('aria-pressed', String(!isRegistration));
       }
-      document.title = `${isProfile ? 'My profile' : isRegistration ? 'Register' : 'Log in'} · Aurobindo Pharmacy`;
+      document.title = `${isProfile ? 'My profile' : isRegistration ? 'Register' : 'Log in'} · Aurobindo Pharma`;
       if (focus) {
         window.scrollTo(0, 0);
         $(isProfile ? 'profile-title' : isRegistration ? 'registration-mode' : 'login-mode').focus({ preventScroll: true });
@@ -85,6 +86,9 @@
       return;
     }
     profile = next;
+    if (document.activeElement && typeof document.activeElement.blur === 'function') {
+      document.activeElement.blur();
+    }
     $('account-error').hidden = true;
     $('registration-error').hidden = true;
     $('login-form').reset();

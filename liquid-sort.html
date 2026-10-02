@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ecf4f6">
+  <title>Liquid Sort · Aurobindo Pharma</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="liquid-sort.css?v=13">
+  <script src="liquid-sort.js?v=15" defer></script>
+</head>
+
+<body>
+  <header><a class="brand" href="index.html#/games"><img src="logo.png" alt="Aurobindo Pharma"><span>Aurobindo
+        Pharma<small>GAME 01 · LIQUID SORT</small></span></a><a class="back" href="index.html#/games">← <span>Back to
+        Games</span></a></header>
+  <main>
+    <section id="intro" class="panel intro" aria-labelledby="title" tabindex="-1">
+      <div class="intro-tubes" aria-hidden="true">
+        <span class="tube" style="--chemical:var(--water)"><img src="assets/test-tube.png" alt=""><span
+            class="tube-liquid" style="height:80%"></span></span>
+        <span class="tube" style="--chemical:var(--acn)"><img src="assets/test-tube.png" alt=""><span
+            class="tube-liquid" style="height:65%"></span></span>
+        <span class="tube" style="--chemical:var(--meoh)"><img src="assets/test-tube.png" alt=""><span
+            class="tube-liquid" style="height:50%"></span></span>
+      </div>
+      <h1 id="title">A drop of focus.<br><em>The perfect solution.</em></h1>
+      <p>Prepare each cleaning solution with the right solvent percentages. Tap a
+        chemical tube to add the <strong>percentage shown on it</strong>.</p>
+      <div class="facts"><span><strong>4</strong> rounds</span><span><strong>30 sec</strong> each
+          round</span><span><strong>Quick</strong> pours</span></div>
+      <button id="play" class="primary" type="button">Show me how <span aria-hidden="true">→</span></button>
+    </section>
+
+    <section id="game" class="panel game" hidden aria-labelledby="game-title" tabindex="-1">
+      <div class="game-meta"><span id="progress" class="eyebrow">ROUND 1 OF 4</span><span id="running-score">Score 0 /
+          4</span></div>
+      <div class="game-heading">
+        <h1 id="game-title">Column Cleaning</h1><strong id="seconds" role="timer">30 sec</strong>
+      </div>
+      <div id="timer" class="timer" role="progressbar" aria-label="Time remaining" aria-valuemin="0" aria-valuemax="30"
+        aria-valuenow="30">
+        <div id="timer-fill"></div>
+      </div>
+      <div id="lesson-target" class="lesson-target" hidden>
+        <div class="recipe-heading"><strong>Target recipe</strong><span>100% total</span></div>
+        <div id="target-recipe" class="recipe-ingredients" aria-label="Target solvent percentages"></div>
+        <p id="lesson-hint" role="status" aria-live="polite"></p>
+      </div>
+      <div class="tray-heading"><span id="tray-label" class="eyebrow">CHOOSE A CHEMICAL</span><span id="tray-note">Pour % shown on each tube</span>
+      </div>
+      <div id="chemicals" class="chemicals" aria-label="Chemical tubes">
+        <button type="button" class="chemical" data-chemical="Water" style="--chemical:var(--water)"
+          aria-label="Pour Water"><span class="tube" aria-hidden="true"><img src="assets/test-tube.png" alt=""><span
+              class="tube-liquid"></span></span><span class="chemical-name"><i></i>Water</span><small></small></button>
+        <button type="button" class="chemical" data-chemical="ACN" style="--chemical:var(--acn)"
+          aria-label="Pour ACN"><span class="tube" aria-hidden="true"><img src="assets/test-tube.png" alt=""><span
+              class="tube-liquid"></span></span><span class="chemical-name"><i></i>ACN</span><small></small></button>
+        <button type="button" class="chemical" data-chemical="MeOH" style="--chemical:var(--meoh)"
+          aria-label="Pour MeOH"><span class="tube" aria-hidden="true"><img src="assets/test-tube.png" alt=""><span
+              class="tube-liquid"></span></span><span class="chemical-name"><i></i>MeOH</span><small></small></button>
+      </div>
+      <div class="mixing-area">
+        <div class="receiver-wrap">
+          <span class="tube receiver" id="receiver" role="img" aria-label="Empty solution tube"><img
+              src="assets/test-tube.png" alt=""><span id="mixture" class="mixture"></span></span>
+          <span class="fill-mark" id="fill-total">0<span>% filled</span></span>
+        </div>
+        <h2 id="solution-name">Column Cleaning</h2>
+        <div id="composition" class="composition" aria-label="Your mixture"></div>
+      </div>
+      <p id="feedback" class="feedback" role="status" aria-live="polite">Tap a chemical above to start pouring.</p>
+      <div id="review" class="review" hidden>
+        <div role="status" aria-live="polite"><strong id="outcome"></strong>
+          <p id="correct-recipe"></p>
+        </div>
+        <div class="review-actions">
+          <button id="view-result" class="button" type="button" hidden>View comparison</button>
+          <button id="next" class="primary" type="button">Next round →</button>
+          <button id="replay-demo" class="button" type="button" hidden>Replay demo ↻</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="lesson-video" class="panel video-lesson" hidden aria-labelledby="video-title" tabindex="-1">
+      <span id="video-progress" class="eyebrow">WATCH &amp; LEARN</span>
+      <h1 id="video-title">Column Cleaning</h1>
+      <video id="recipe-video" playsinline preload="auto" aria-label="Column Cleaning video"></video>
+      <p id="video-status" role="status">Watch the full video. Guided practice starts when it finishes.</p>
+      <div class="actions"><button id="video-toggle" class="primary" type="button">Play video</button></div>
+    </section>
+
+    <section id="ready" class="panel intro" hidden aria-labelledby="ready-title" tabindex="-1">
+      <span class="eyebrow">PRACTICE COMPLETE</span>
+      <h1 id="ready-title">Four recipes.<br><em>Ready to beat the clock?</em></h1>
+      <p>You’ve prepared all four solutions. Now mix them from memory, with 30 seconds per round.</p>
+      <p class="intro-note">Check the pour amount on each tube. Your mixture is checked at 100%, and pours cannot be undone.</p>
+      <button id="start-game" class="primary" type="button">Start Game →</button>
+    </section>
+
+    <section id="report" class="panel report" hidden aria-labelledby="report-title" tabindex="-1">
+      <span class="eyebrow">CHALLENGE COMPLETE</span>
+      <h1 id="report-title">Your results</h1>
+      <div class="score-circle"><strong id="final-score">0</strong><span>OUT OF 4</span></div>
+      <p id="report-message"></p>
+      <div id="results" class="results"></div>
+      <div class="actions"><button id="retry" class="primary" type="button">Play again ↻</button><a class="button"
+          href="index.html#/games">Back to Games</a></div>
+    </section>
+  </main>
+  <dialog id="mix-result" class="mix-result" aria-labelledby="mix-result-title" aria-describedby="mix-result-summary">
+    <div class="mix-result-heading">
+      <span id="mix-result-recipe" class="eyebrow"></span>
+      <button id="close-result" class="result-close" type="button" aria-label="Close comparison">×</button>
+    </div>
+    <h2 id="mix-result-title"></h2>
+    <p id="mix-result-summary"></p>
+    <div id="mix-result-tubes" class="comparison-tubes"></div>
+    <div id="mix-result-values"></div>
+    <div class="result-actions"><button id="result-next" class="primary" type="button">Next round →</button></div>
+  </dialog>
+</body>
+
+</html>

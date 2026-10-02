@@ -13,7 +13,7 @@ window.TileMatch = (() => {
       introTitle: 'Make every match count.', instruction: 'Match the SST parameter with its meaning.',
       tiles: 'tiles', pairs: 'pairs', seconds: 'seconds', play: 'Start Game', moves: 'Moves', matched: 'Matched',
       timeLeft: 'Time', timerLabel: 'Time remaining', gridLabel: 'Matching cards deck',
-      pick: 'Pick any card to flip it over.', next: 'Now choose its matching partner.',
+      pick: 'Pick any card to flip it over.', next: 'Now choose its matching partner.', preview: 'Memorize the cards!',
       wrong: 'Not a match. Try another pair!', correct: 'That’s a match! Keep going.',
       yourScore: 'YOUR SCORE', correctMatches: 'correct matches', retry: 'Play again!', exit: 'Exit',
       answerReview: 'The matching pairs', complete: 'Congratulations!', expired: 'Time’s up!',
@@ -27,7 +27,7 @@ window.TileMatch = (() => {
       introTitle: 'ప్రతి జతతో మీ సత్తా చూపండి.', instruction: 'SST పరామితిని దాని అర్థంతో జత చేయండి.',
       tiles: 'టైల్స్', pairs: 'జతలు', seconds: 'సెకన్లు', play: 'ఆట మొదలుపెట్టండి', moves: 'కదలికలు', matched: 'జత చేసినవి',
       timeLeft: 'సమయం', timerLabel: 'మిగిలిన సమయం', gridLabel: 'కార్డుల డెక్',
-      pick: 'కార్డును తెరవడానికి ఎంచుకోండి.', next: 'ఇప్పుడు దానికి సరిపోయే కార్డును ఎంచుకోండి.',
+      pick: 'కార్డును తెరవడానికి ఎంచుకోండి.', next: 'ఇప్పుడు దానికి సరిపోయే కార్డును ఎంచుకోండి.', preview: 'కార్డులను గుర్తుంచుకోండి!',
       wrong: 'ఇది సరైన జత కాదు. మళ్లీ ప్రయత్నించండి!', correct: 'సరైన జత! ఇలాగే కొనసాగించండి.',
       yourScore: 'మీ స్కోరు', correctMatches: 'సరైన జతలు', retry: 'మళ్లీ ఆడండి!', exit: 'నిష్క్రమించండి',
       answerReview: 'సరైన జతలు', complete: 'అభినందనలు!', expired: 'సమయం ముగిసింది!',
@@ -41,7 +41,7 @@ window.TileMatch = (() => {
       introTitle: 'हर जोड़ी से अपना हुनर दिखाएँ.', instruction: 'SST पैरामीटर को उसके अर्थ से मिलाएँ.',
       tiles: 'टाइलें', pairs: 'जोड़ियाँ', seconds: 'सेकंड', play: 'खेल शुरू करें', moves: 'चालें', matched: 'सही जोड़ियाँ',
       timeLeft: 'समय', timerLabel: 'बचा हुआ समय', gridLabel: 'कार्ड डेक',
-      pick: 'कार्ड पलटने के लिए कोई कार्ड चुनें.', next: 'अब उससे मेल खाने वाला कार्ड चुनें.',
+      pick: 'कार्ड पलटने के लिए कोई कार्ड चुनें.', next: 'अब उससे मेल खाने वाला कार्ड चुनें.', preview: 'कार्डों को याद रखें!',
       wrong: 'यह सही जोड़ी नहीं है. फिर कोशिश करें!', correct: 'सही जोड़ी! ऐसे ही आगे बढ़ें.',
       yourScore: 'आपका स्कोर', correctMatches: 'सही जोड़ियाँ', retry: 'फिर खेलें!', exit: 'बाहर जाएँ',
       answerReview: 'सही जोड़ियाँ', complete: 'बधाई हो!', expired: 'समय समाप्त!',
@@ -54,15 +54,22 @@ window.TileMatch = (() => {
 
   const $ = selector => document.querySelector(selector);
   let language = 'en', phase = 'intro', deadline = 0, startTime = 0, interval = null;
+  let previewTimeout = null, flipBackTimeout = null;
   let cardOneElement = null, cardTwoElement = null, matched = new Set(), moves = 0, stars = 3;
   let feedback = 'pick', previousOrder = '';
 
   function stopTimers() {
     clearInterval(interval);
     interval = null;
+    clearTimeout(previewTimeout);
+    previewTimeout = null;
+    clearTimeout(flipBackTimeout);
+    flipBackTimeout = null;
   }
 
   function showScreen(screen) {
+    const header = $('.tm-header');
+    if (header) header.hidden = screen === 'round';
     ['intro', 'round', 'results'].forEach(name => {
       const el = $(`#tm-${name}`);
       if (el) el.hidden = name !== screen;
@@ -85,7 +92,7 @@ window.TileMatch = (() => {
     if (phase === 'results') renderResults();
     if (!$('#tile-match-view').hidden) {
       const footerBrand = document.querySelector('.footer-brand');
-      document.title = `${text.title} · ${footerBrand ? footerBrand.textContent : 'Aurobindo Pharmacy'}`;
+      document.title = `${text.title} · ${footerBrand ? footerBrand.textContent : 'Aurobindo Pharma'}`;
     }
   }
 
@@ -141,16 +148,14 @@ window.TileMatch = (() => {
     cardTwoElement = null;
     moves = 0;
     stars = 3;
-    feedback = 'pick';
-    startTime = Date.now();
-    deadline = Date.now() + 45000;
+    feedback = 'preview';
 
     const tiles = shuffle(pairs.flatMap((pair, pairIndex) => pair.map((text, side) => ({
       text, pairIndex, id: `${pairIndex}-${side}`
     }))));
 
     const deck = $('#tm-grid');
-    deck.classList.remove('cant-click-this');
+    deck.classList.add('cant-click-this');
     deck.replaceChildren(...tiles.map(tile => {
       const li = document.createElement('li');
       li.className = 'card';
@@ -162,7 +167,6 @@ window.TileMatch = (() => {
 
       const front = document.createElement('div');
       front.className = 'card-face front';
-      front.innerHTML = '<span class="card-brand-icon">✦</span><span class="card-badge">SST</span>';
 
       const back = document.createElement('div');
       back.className = 'card-face back';
@@ -177,13 +181,54 @@ window.TileMatch = (() => {
 
     $('#tm-score').textContent = '0 / 5';
     updateMovesAndStars();
-    say('pick');
+    say('preview');
 
     showScreen('round');
-    updateTimer();
-    interval = setInterval(updateTimer, 100);
+    $('#tm-time').textContent = `45${copy[language].secondUnit}`;
+    $('#tm-timer').setAttribute('aria-valuenow', '45');
+    $('#tm-timer-fill').style.transform = 'scaleX(1)';
+    $('#tm-round').classList.remove('time-low');
+
     $('#tm-title').focus({ preventScroll: true });
     window.scrollTo(0, 0);
+
+    // Initial smooth dealer wave opening
+    requestAnimationFrame(() => {
+      const cards = deck.querySelectorAll('.card');
+      cards.forEach((card, index) => {
+        const container = card.querySelector('.card-container');
+        if (container) {
+          container.style.transitionDelay = `${index * 35}ms`;
+          container.classList.add('flipped');
+        }
+      });
+    });
+
+    previewTimeout = setTimeout(() => {
+      if (phase !== 'playing') return;
+      const cards = deck.querySelectorAll('.card');
+      cards.forEach((card, index) => {
+        const container = card.querySelector('.card-container');
+        if (container) {
+          container.style.transitionDelay = `${index * 35}ms`;
+          container.classList.remove('flipped');
+        }
+      });
+
+      flipBackTimeout = setTimeout(() => {
+        if (phase !== 'playing') return;
+        cards.forEach(card => {
+          const container = card.querySelector('.card-container');
+          if (container) container.style.transitionDelay = '0s';
+        });
+        deck.classList.remove('cant-click-this');
+        startTime = Date.now();
+        deadline = Date.now() + 45000;
+        updateTimer();
+        interval = setInterval(updateTimer, 100);
+        say('pick');
+      }, 35 * 10 + 650);
+    }, 3500);
   }
 
   function updateTimer() {
@@ -213,6 +258,7 @@ window.TileMatch = (() => {
     if (card === cardOneElement) return;
 
     const container = card.querySelector('.card-container');
+    container.style.transitionDelay = '0s';
     container.classList.add('flipped');
 
     if (!cardOneElement) {
@@ -260,13 +306,15 @@ window.TileMatch = (() => {
         if (phase !== 'playing') return;
         first.classList.remove('wrong');
         second.classList.remove('wrong');
-        first.querySelector('.card-container').classList.remove('flipped');
-        second.querySelector('.card-container').classList.remove('flipped');
+        const c1 = first.querySelector('.card-container');
+        const c2 = second.querySelector('.card-container');
+        if (c1) { c1.style.transitionDelay = '0s'; c1.classList.remove('flipped'); }
+        if (c2) { c2.style.transitionDelay = '0s'; c2.classList.remove('flipped'); }
         cardOneElement = null;
         cardTwoElement = null;
         deck.classList.remove('cant-click-this');
         say('pick');
-      }, 600);
+      }, 650);
     }
   }
 

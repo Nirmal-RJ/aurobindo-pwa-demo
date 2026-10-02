@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101e28">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>Wrong sample selected · Aurobindo Pharma</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="wrong-sample.css?v=16">
+  <script src="wrong-sample.js?v=15" defer></script>
+</head>
+
+<body>
+  <div id="app">
+    <header class="topbar">
+      <a href="index.html#/games/sample-preparation" class="back">← <span>Sample Preparation</span></a>
+      <span class="edition">LAB MEMORY CHALLENGE</span>
+      <button id="fullscreen" class="quiet" type="button">Full screen</button>
+    </header>
+    <main>
+      <section id="intro" class="intro screen" aria-labelledby="title">
+        <div class="intro-copy">
+          <span class="eyebrow">SAMPLE PREPARATION · MEMORY CHALLENGE</span>
+          <h1 id="title">Wrong sample<br><em>selected.</em></h1>
+          <div class="facts"><span><b>3 sec</b> to memorise</span><span><b>60 sec</b> to find them</span><span><b>1</b>
+              extra look</span></div>
+          <div class="how-to">
+            <h2>How to Play</h2>
+            <ol>
+              <li><strong>Memorise the list:</strong> Review the 3 requested chemical formulas in 3 seconds before notes
+                hide.</li>
+              <li><strong>Pick matching bottles:</strong> Find and place the 3 correct bottles on your bench within 60
+                seconds.</li>
+              <li><strong>Use your extra look:</strong> Tap the <em>Lab Notes</em> dossier if you need a reminder before
+                checking samples.</li>
+            </ol>
+          </div>
+          <button id="start" class="primary" type="button"><span aria-hidden="true">▶</span> Enter the lab</button>
+        </div>
+        <div class="intro-art" aria-hidden="true"><span class="lab-preview-badge">MISSION 01 · SAMPLE HUNT</span>
+          <div class="hero-specimens"><img src="assets/sample-preparation-game-assets/bottle%201.png" alt=""><img
+              src="assets/sample-preparation-game-assets/bottle%202.png" alt=""><img
+              src="assets/sample-preparation-game-assets/bottle%203.png" alt=""></div>
+          <div class="intro-art-label">OBSERVE. REMEMBER. SELECT.<small>One focused minute. Three correct
+              samples.</small></div>
+        </div>
+      </section>
+
+      <section id="walkthrough" class="screen walkthrough" aria-label="Laboratory walkthrough" hidden>
+        <video id="video" muted playsinline preload="metadata" disablepictureinpicture
+          aria-label="Silent laboratory walkthrough">
+          <source src="assets/sample-preparation-game-assets/walkthrough-video-with-logo.mp4" type="video/mp4">
+        </video>
+        <button id="skip-video" class="skip-video-btn" type="button" hidden>Skip intro <span
+            aria-hidden="true">⏭</span></button>
+        <div id="video-recovery" class="video-recovery" hidden>
+          <p id="video-message">Tap to play the walkthrough.</p>
+          <button id="resume-video" class="primary" type="button">Play walkthrough</button>
+          <button id="continue-video" class="primary" type="button" hidden>Continue to game</button>
+        </div>
+      </section>
+
+      <section id="game" class="screen game" aria-labelledby="game-title" hidden>
+        <div class="game-heading">
+          <div><span class="eyebrow">SELECT THE RIGHT SAMPLES</span>
+            <h1 id="game-title" tabindex="-1">Wrong sample selected</h1>
+          </div>
+          <div class="hud"><span>ON BENCH <b id="found">0 / 3</b></span><span class="clock">TIME <b id="time"
+                role="timer">60s</b></span></div>
+        </div>
+        <p id="shelf-help" class="shelf-help">Find 3 formulas among 25 bottles. Select 3 to place on your bench.</p>
+        <div class="workspace">
+          <div id="lab" class="lab" role="region" tabindex="0" aria-label="Laboratory shelves"
+            aria-describedby="shelf-help">
+            <div class="shelf-scene">
+              <div id="bottles" class="bottles" aria-label="Choose chemical bottles"></div>
+              <span class="shelf-rail rail-one" aria-hidden="true"></span><span class="shelf-rail rail-two"
+                aria-hidden="true"></span><span class="shelf-rail rail-three" aria-hidden="true"></span>
+              <div id="table-tray" class="table-tray" role="group" aria-label="Selected samples on the table"></div>
+            </div>
+            <div id="zoom-controls" class="zoom-controls" aria-label="Zoom shelves">
+              <button id="zoom-in" class="zoom-btn" type="button" aria-label="Zoom in">+</button>
+              <button id="zoom-out" class="zoom-btn" type="button" aria-label="Zoom out" disabled>−</button>
+              <button id="zoom-reset" class="zoom-btn zoom-reset" type="button" aria-label="Reset zoom" hidden>1.0x
+                ↺</button>
+            </div>
+            <div id="zoom-hint" class="zoom-hint" aria-hidden="true">🔍 Pinch to zoom</div>
+          </div>
+          <aside id="mission" class="mission" aria-label="Handwritten sample request" aria-hidden="true"
+            data-open="false" inert>
+            <div class="mission-heading"><span class="eyebrow">Lab notes</span><span id="list-countdown">3s</span></div>
+            <div id="request-list">
+              <p class="list-instruction">Need these 3 formulas…</p>
+              <ol id="targets"></ol><span class="note-signature">Check the formulas! &nbsp; — Lab supervisor</span>
+            </div>
+            <div id="list-hidden" class="list-hidden" hidden>
+              <p>Find the three requested formulas on the shelves.</p>
+            </div>
+          </aside>
+          <button id="recall" class="recall dossier" type="button" aria-disabled="true" aria-controls="mission"
+            aria-label="Open lab notes. One extra look available.">
+            <span class="dossier-paper" aria-hidden="true"><i></i><i></i><i></i></span><span class="dossier-cover"
+              aria-hidden="true">LAB<br>NOTES</span><span id="recall-count" class="dossier-count"
+              aria-hidden="true">1</span><span id="recall-label" class="dossier-caption">Open notes</span>
+          </button>
+        </div>
+        <div id="game-briefing" class="game-briefing" role="dialog" aria-modal="true" aria-labelledby="briefing-title"
+          hidden>
+          <div class="briefing-card">
+            <span class="eyebrow">LABORATORY READY</span>
+            <h2 id="briefing-title">Game start!</h2>
+            <p>Your <strong>Lab Notes list</strong> will pop up for <strong>3 seconds</strong> showing the 3 required
+              chemical formulas. Memorise them before the notes hide!</p>
+            <p class="briefing-tip">💡 Need a reminder later? Tap the <em>Lab Notes</em> dossier on the right for 1
+              extra look.</p>
+            <button id="ready-start" class="primary" type="button">
+              <span aria-hidden="true">▶</span> Show notes list &amp; start
+            </button>
+          </div>
+        </div>
+        <nav class="game-toolbar" aria-label="Game controls">
+          <a class="game-exit" href="index.html#/games/sample-preparation">← Exit</a>
+          <p id="feedback" class="feedback" role="status" aria-live="polite">Study your list. The timer starts next.</p>
+          <button id="check-samples" class="primary" type="button" hidden>Check samples →</button>
+          <button id="game-fullscreen" class="quiet" type="button">Full screen</button>
+        </nav>
+      </section>
+
+      <section id="results" class="screen results" aria-labelledby="result-title" hidden>
+        <div class="result-particles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div id="result-icon" class="result-icon" aria-hidden="true">✓</div>
+        <span id="result-badge" class="eyebrow">ROUND COMPLETE</span>
+        <h1 id="result-title" tabindex="-1">Samples selected.</h1>
+        <p id="result-message"></p>
+        <div class="result-stats"><span><b id="final-score">0</b> / 300 points</span><span><b id="final-found">0 / 3</b>
+            formula matches</span><span><b id="final-misses">0</b> mismatches / missing</span></div>
+        <div id="review" class="review" aria-label="Requested chemicals and results"></div>
+        <div class="result-actions"><button id="replay" class="primary" type="button">↻ Play another round</button><a
+            class="secondary" href="index.html#/games/sample-preparation">Back to Sample Preparation</a></div>
+      </section>
+    </main>
+  </div>
+  <div id="scene-fade" class="scene-fade" data-dark="false" aria-hidden="true"></div>
+  <aside id="fullscreen-help" class="fullscreen-help" role="dialog" aria-modal="true"
+    aria-labelledby="fullscreen-help-title" hidden>
+    <h2 id="fullscreen-help-title">Play without browser bars</h2>
+    <p id="fullscreen-help-message"></p><button id="close-fullscreen-help" class="primary" type="button">Continue
+      playing</button>
+  </aside>
+  <div id="rotate" class="rotate" role="dialog" aria-modal="true" aria-labelledby="rotate-title" hidden><span
+      class="rotate-icon" aria-hidden="true">↻</span>
+    <h2 id="rotate-title">Rotate your phone</h2>
+    <p>This lab works in landscape.<br>Your game and video are paused until you turn your phone.</p><a
+      href="index.html#/games/sample-preparation">← Back to Sample Preparation</a>
+  </div>
+  <noscript>
+    <p class="noscript">Enable JavaScript to play this game.</p>
+  </noscript>
+</body>
+
+</html>
