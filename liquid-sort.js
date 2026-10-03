@@ -109,6 +109,7 @@
   }
 
   function clearEffects() {
+    hideDemoPointer();
     effects.forEach(dispose => dispose());
     effects.clear();
   }
@@ -156,9 +157,30 @@
     { chemical: 'MeOH', amount: 5, text: 'Pouring 5% MeOH (100% full — Recipe Complete!)' }
   ];
 
+  function showDemoPointer(button) {
+    const pointer = $('demo-touch-pointer');
+    const stage = $('demo-screen');
+    if (!pointer || !stage || !button) return;
+    const stageRect = stage.getBoundingClientRect();
+    const btnRect = button.getBoundingClientRect();
+    const x = btnRect.left + btnRect.width / 2 - stageRect.left;
+    const y = btnRect.top + btnRect.height * 0.45 - stageRect.top;
+    pointer.style.left = `${x}px`;
+    pointer.style.top = `${y}px`;
+    pointer.classList.remove('is-active');
+    void pointer.offsetWidth;
+    pointer.classList.add('is-active');
+  }
+
+  function hideDemoPointer() {
+    const pointer = $('demo-touch-pointer');
+    if (pointer) pointer.classList.remove('is-active');
+  }
+
   function runDemoStep(stepIndex) {
     if (mode !== 'demo') return;
     if (stepIndex >= demoSteps.length) {
+      hideDemoPointer();
       demoComplete = true;
       $('demo-next')?.focus({ preventScroll: true });
       return;
@@ -173,11 +195,13 @@
       return;
     }
 
+    showDemoPointer(button);
     button.classList.add('demo-tap');
 
     demoTimer = setTimeout(() => {
       if (mode !== 'demo') return;
       button.classList.remove('demo-tap');
+      hideDemoPointer();
       animatePour(button, step.chemical, step.amount, {
         land() {
           demoMixture[step.chemical] += step.amount;
@@ -198,6 +222,7 @@
   function startAutomatedDemo() {
     clearEffects();
     clearTimeout(demoTimer);
+    hideDemoPointer();
     preparePourAudio();
     mode = 'demo';
     demoMixture = { Water: 0, ACN: 0, MeOH: 0 };
@@ -684,15 +709,26 @@
     }
   }
 
-  function renderReportChips(mix, targetMix = null) {
-    const active = chemicals.filter(name => (mix && mix[name]) || (targetMix && targetMix[name]));
-    if (!active.length) return '<span class="res-chip is-empty">None</span>';
-    return active.map(name => {
-      const val = mix ? (mix[name] || 0) : 0;
-      const targetVal = targetMix ? (targetMix[name] || 0) : null;
-      const isMismatch = targetVal !== null && val !== targetVal;
-      return `<span class="res-chip${isMismatch ? ' is-mismatch' : ''}" style="--c:${colors[name]}"><i class="chip-dot" aria-hidden="true"></i>${name} <strong>${val}%</strong>${isMismatch ? ` <small class="target-diff">(${targetVal}% req)</small>` : ''}</span>`;
-    }).join('');
+  function renderReportTube(mix, label, isTarget = false, isMatched = true) {
+    const filled = chemicals.reduce((sum, name) => sum + (mix[name] || 0), 0);
+    const chips = chemicals
+      .filter(name => mix[name])
+      .map(name => `<span class="mini-chip" style="--c:${colors[name]}"><i aria-hidden="true"></i>${name} <strong>${mix[name]}%</strong></span>`)
+      .join('');
+
+    return `<div class="report-tube-item ${isTarget ? 'is-target-tube' : isMatched ? 'is-matched' : 'is-mismatched'}">
+      <span class="report-tube-badge">${label}</span>
+      <div class="report-tube-visual">
+        <span class="tube report-tube-glass" role="img" aria-label="${label}: ${recipeText(mix)}. ${filled}% filled">
+          <img src="assets/test-tube.png" alt="">
+          <span class="mixture">
+            ${chemicals.map(name => `<span class="liquid-layer" style="height:${mix[name] || 0}%;--chemical:${colors[name]}"></span>`).join('')}
+          </span>
+        </span>
+        <span class="report-tube-fill-num">${filled}%</span>
+      </div>
+      <div class="report-tube-recipe-chips">${chips || '<span class="mini-chip empty">Empty (0%)</span>'}</div>
+    </div>`;
   }
 
   /* Screen 7: Report */
@@ -723,7 +759,7 @@
 
     $('results').innerHTML = recipes.map((recipe, i) => {
       const res = results[i] || { correct: false, mix: { Water: 0, ACN: 0, MeOH: 0 } };
-      return `<div class="result-row${res.correct ? ' is-correct' : ' incorrect is-incorrect'}">
+      return `<div class="result-row report-card ${res.correct ? 'is-correct' : 'incorrect is-incorrect'}">
         <div class="result-row-head">
           <div class="result-row-title">
             <span class="result-row-icon" aria-hidden="true">${res.correct ? '✓' : '✕'}</span>
@@ -731,22 +767,10 @@
           </div>
           <span class="result-status-pill ${res.correct ? 'pill-correct' : 'pill-incorrect'}">${res.correct ? 'Correct · 1/1' : 'Incorrect · 0/1'}</span>
         </div>
-        <div class="result-row-body">
-          ${res.correct ? `
-            <div class="result-spec-row">
-              <span class="spec-label">Recipe:</span>
-              <div class="spec-chips">${renderReportChips(recipe.mix)}</div>
-            </div>
-          ` : `
-            <div class="result-spec-row">
-              <span class="spec-label">Your mix:</span>
-              <div class="spec-chips">${renderReportChips(res.mix, recipe.mix)}</div>
-            </div>
-            <div class="result-spec-row is-target">
-              <span class="spec-label">Target:</span>
-              <div class="spec-chips">${renderReportChips(recipe.mix)}</div>
-            </div>
-          `}
+        <div class="report-tubes-grid">
+          ${renderReportTube(res.mix, 'Your mix', false, res.correct)}
+          <div class="report-tube-separator" aria-hidden="true">vs</div>
+          ${renderReportTube(recipe.mix, 'Target recipe', true, true)}
         </div>
       </div>`;
     }).join('');
