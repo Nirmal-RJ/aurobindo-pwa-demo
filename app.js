@@ -261,9 +261,9 @@ function renderRoute(focus = true) {
   }
   try {
     if (screen.orientation && typeof screen.orientation.lock === 'function') {
-      screen.orientation.lock('portrait').catch(() => {});
+      screen.orientation.lock('portrait').catch(() => { });
     }
-  } catch (_) {}
+  } catch (_) { }
   const isTileMatch = route === 'games/tile-match';
   const next = isTileMatch ? null : (Object.keys(pages).find(key => pages[key].route === route) || null);
   setScoreboardTheme(next === 'scores');
