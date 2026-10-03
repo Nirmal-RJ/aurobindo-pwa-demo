@@ -748,42 +748,45 @@ a:focus-visible {
 }
 
 .fill-sublabel {
-  font-size: 11px;
-  font-weight: 600;
-  color: #6a8591;
-  background: #ffffff99;
-  padding: 1px 6px;
-  border-radius: 6px;
-  border: 1px solid #d7e8e3;
+  display: none !important;
 }
 
 /* Composition Breakdown */
 .composition {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  margin-top: 3px;
+  gap: 3.5px;
+  margin-top: 3.5px;
 }
 
 .composition span {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  font-size: 13px;
-  font-weight: 700;
-  color: #315560;
-  background: #ffffff80;
-  padding: 2px 7px;
-  border-radius: 6px;
-  border: 1px solid #daeae6;
+  gap: 6px;
+  font-size: 14.5px;
+  font-weight: 750;
+  color: #244652;
+  background: #ffffff99;
+  padding: 3px 8px;
+  border-radius: 7px;
+  border: 1px solid #d4e7e2;
   white-space: nowrap;
 }
 
 .composition strong {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 850;
   font-variant-numeric: tabular-nums;
-  color: #153443;
+  color: #0f2c38;
+}
+
+.composition i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--chemical);
+  display: inline-block;
+  flex-shrink: 0;
 }
 
 /* Status & Feedback */
@@ -1516,22 +1519,21 @@ a:focus-visible {
   }
 
   .fill-sublabel {
-    font-size: 10.5px;
-    padding: 1px 4px
+    display: none !important;
   }
 
   .composition {
-    gap: 2.5px;
-    margin-top: 2px;
+    gap: 3px;
+    margin-top: 3px;
   }
 
   .composition span {
-    font-size: 12px;
-    padding: 2px 6px
+    font-size: 13.5px;
+    padding: 2.5px 7px
   }
 
   .composition strong {
-    font-size: 12px
+    font-size: 14px
   }
 
   .feedback {
