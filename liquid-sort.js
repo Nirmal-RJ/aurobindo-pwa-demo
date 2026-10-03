@@ -282,7 +282,7 @@
     playing = false;
     show('lesson-video');
     $('video-progress').textContent = `SOLUTION ${index + 1} OF ${recipes.length} · VIDEO`;
-    $('video-title').textContent = `Video of ${recipes[index].name}`;
+    $('video-title').textContent = `${recipes[index].name}`;
     const video = $('recipe-video');
     video.pause();
     video.src = `assets/test-tube-game-video-assets/${recipeVideos[index]}`;

@@ -8,8 +8,8 @@
   <title>Liquid Sort · Aurobindo Pharma</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="liquid-sort.css?v=29">
-  <script src="liquid-sort.js?v=31" defer></script>
+  <link rel="stylesheet" href="liquid-sort.css?v=31">
+  <script src="liquid-sort.js?v=33" defer></script>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(regs => {
@@ -140,15 +140,19 @@
 
     <!-- Screen 5: Video of Solution -->
     <section id="lesson-video" class="panel video-lesson" hidden aria-labelledby="video-title" tabindex="-1">
-      <span id="video-progress" class="eyebrow">SOLUTION VIDEO</span>
-      <h1 id="video-title">Column Cleaning</h1>
+      <div class="video-header">
+        <span id="video-progress" class="eyebrow">SOLUTION VIDEO</span>
+        <h1 id="video-title">Column Cleaning</h1>
+      </div>
       <div class="video-container">
         <video id="recipe-video" playsinline preload="auto" aria-label="Solution Video"></video>
       </div>
-      <p id="video-status" role="status">Watch the full video to see how this solution is prepared.</p>
-      <div class="actions">
-        <button id="video-toggle" class="button" type="button">Play video</button>
-        <button id="video-next" class="primary" type="button">Start Mixing <span aria-hidden="true">→</span></button>
+      <div class="video-footer">
+        <p id="video-status" role="status">Watch the full video to see how this solution is prepared.</p>
+        <div class="actions">
+          <button id="video-toggle" class="button" type="button">Play video</button>
+          <button id="video-next" class="primary" type="button">Start Mixing <span aria-hidden="true">→</span></button>
+        </div>
       </div>
     </section>
 
