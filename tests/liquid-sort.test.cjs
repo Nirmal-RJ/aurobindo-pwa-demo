@@ -182,7 +182,7 @@ test('Screen 4 to Screen 5 (Solution Video) to Screen 6 (Mixing without Timer)',
   assert.equal(g.get('lesson-video').hidden, false);
   assert.match(g.get('video-title').textContent, /Column Cleaning/);
   const video = g.get('recipe-video');
-  assert.equal(video.src, 'assets/test-tube-game-video-assets/column-cleaning.mp4');
+  assert.equal(video.src, 'assets/test-tube-game-video-assets/column-cleaning.mp4?v=portrait-2');
 
   // Video toggle controls
   g.click('video-toggle'); // Pause

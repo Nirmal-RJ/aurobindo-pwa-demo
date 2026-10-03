@@ -285,7 +285,7 @@
     $('video-title').textContent = `${recipes[index].name}`;
     const video = $('recipe-video');
     video.pause();
-    video.src = `assets/test-tube-game-video-assets/${recipeVideos[index]}`;
+    video.src = `assets/test-tube-game-video-assets/${recipeVideos[index]}?v=portrait-2`;
     video.playbackRate = 1.0;
     video.muted = false;
     video.volume = 1;
