@@ -6,7 +6,7 @@ const path = require('node:path');
 
 const htmlContent = fs.readFileSync(path.join(__dirname, '../liquid-sort.html'), 'utf8');
 
-function createGame({ animated = false, reducedMotion = false } = {}) {
+function createGame({ animated = false, reducedMotion = false, random = Math.random, AudioContext, fetchAudio } = {}) {
   const animations = [];
   let serial = 0;
   let now = 0;
@@ -53,7 +53,7 @@ function createGame({ animated = false, reducedMotion = false } = {}) {
     querySelector(selector) { return (this.selectors ||= {})[selector] ||= new Element(); }
     cloneNode() { return new Element(); }
     getBoundingClientRect() { return { left: 80, top: 100, width: 42, height: 180 }; }
-    append(child) { this.children.push(child); }
+    append(child) { this.children = this.children.filter(item => item !== child); this.children.push(child); }
     focus() { }
     remove() { this.removed = true; }
   }
@@ -68,6 +68,7 @@ function createGame({ animated = false, reducedMotion = false } = {}) {
   };
 
   const document = new Element(), window = new Element();
+  window.AudioContext = AudioContext;
   window.innerWidth = 390;
   window.innerHeight = 750;
   document.getElementById = get;
@@ -75,7 +76,7 @@ function createGame({ animated = false, reducedMotion = false } = {}) {
   window.matchMedia = () => ({ matches: reducedMotion });
 
   vm.runInNewContext('Array.prototype.at = undefined;\n' + fs.readFileSync(path.join(__dirname, '../liquid-sort.js'), 'utf8'), {
-    document, window, Date: { now: () => now },
+    document, window, fetch: fetchAudio, Math: Object.assign(Object.create(Math), { random }), Date: { now: () => now },
     setInterval: fn => { intervals.set(++serial, fn); return serial; },
     clearInterval: id => intervals.delete(id),
     setTimeout: (fn, ms) => { timeouts.set(++serial, { fn, at: now + ms }); return serial; },
@@ -86,7 +87,7 @@ function createGame({ animated = false, reducedMotion = false } = {}) {
     get, window, document, sources, demoSources, animations,
     click(id) { get(id).emit('click'); },
     demo() { get('play').emit('click'); },
-    skip() { get('skip').emit('click'); },
+    start() { get('play').emit('click'); },
     tryBtn() { get('try-btn').emit('click'); },
     watchSolution() { get('solution-intro-btn').emit('click'); },
     startMixing() { get('video-next').emit('click'); },
@@ -94,9 +95,14 @@ function createGame({ animated = false, reducedMotion = false } = {}) {
     pour(name, count = 1) {
       for (let i = 0; i < count; i++) {
         sources.find(el => el.dataset.chemical === name).emit('click');
+        if (get('game').dataset.pouring === 'true') {
+          const duration = animations.at(-1)?.options.duration || 820;
+          this.advance(duration);
+        }
       }
+      if (get('game').dataset.state === 'settling') this.advance(1400);
     },
-    next() { get('next').emit('click'); },
+    next() { get(get('practice-result').open ? 'practice-result-action' : 'next').emit('click'); },
     advance(ms, runTimers = true) {
       const end = now + ms;
       if (runTimers) {
@@ -113,82 +119,54 @@ function createGame({ animated = false, reducedMotion = false } = {}) {
   };
 }
 
-test('Opening Screen has correct Title "The Perfect Cleaning Solution" and Demo / Skip buttons in HTML', () => {
-  assert.match(htmlContent, /<h1 id="title">The Perfect Cleaning Solution<\/h1>/);
-  assert.match(htmlContent, /<button id="play" class="primary" type="button">Demo <span/);
-  assert.match(htmlContent, /<button id="skip" class="button" type="button">Skip <span/);
+test('Opening Screen shows only background artwork and Start button', () => {
+  const intro = htmlContent.match(/<section id="intro"[\s\S]*?<\/section>/)[0];
+  assert.match(intro, /1-title-page\/bg\.webp/);
+  assert.match(intro, /1-title-page\/start-button\.webp/);
+  assert.match(intro, /id="play"[^>]*aria-label="Start"/);
+  assert.doesNotMatch(intro, /<h1|id="skip"|intro-tubes/);
 });
 
-test('Screen 2 Tutorial Demo runs automated pouring demo with Replay and Next controls', () => {
-  assert.match(htmlContent, /<h1 id="demo-title">Demo Video<\/h1>/);
-  assert.match(htmlContent, /<button id="demo-replay" class="button" type="button">Replay ↻<\/button>/);
-  assert.match(htmlContent, /<button id="demo-next" class="primary" type="button">Next <span/);
-
+test('Start opens the first solution artwork without running an automatic demo', () => {
   const g = createGame({ animated: true });
-  g.demo(); // Click Demo button on Opening Screen
-  assert.equal(g.get('demo-screen').hidden, false);
+  g.click('play');
   assert.equal(g.get('intro').hidden, true);
-  assert.match(g.get('demo-fill-total').innerHTML, /^0</);
-
-  // Advance automated demo
-  g.advance(550 + 450 + 700); // 1st pour lands
-  assert.match(g.get('demo-fill-total').innerHTML, /^30</);
-
-  // Complete all 5 demo pours
+  assert.equal(g.get('demo-screen').hidden, true);
+  assert.equal(g.get('solution-intro').hidden, false);
+  assert.match(g.get('solution-intro-art').src, /column-cleaning-intro-page\.webp$/);
   g.advance(15000);
-  assert.match(g.get('demo-fill-total').innerHTML, /^100</);
-
-  // Test Replay button restarts demo
-  g.click('demo-replay');
-  assert.match(g.get('demo-fill-total').innerHTML, /^0</);
-
-  // Test Next button advances to Screen 3 (Let's Try)
-  g.click('demo-next');
-  assert.equal(g.get('demo-screen').hidden, true);
-  assert.equal(g.get('try-screen').hidden, false);
-});
-
-test('Screen 3 Let’s Try button advances to Screen 4 Solution Title', () => {
-  assert.match(htmlContent, /<button id="try-btn" class="primary" type="button">Let’s Try <span/);
-
-  const g = createGame();
-  g.demo();
-  g.click('demo-next'); // Now on Screen 3
-  assert.equal(g.get('try-screen').hidden, false);
-
-  g.tryBtn(); // Click Let's Try button
-  assert.equal(g.get('try-screen').hidden, true);
+  assert.equal(g.animations.length, 0);
   assert.equal(g.get('solution-intro').hidden, false);
-  assert.equal(g.get('solution-intro-title').textContent, 'Column Cleaning');
-  assert.match(g.get('solution-intro-eyebrow').textContent, /SOLUTION 1 OF 4/);
-});
-
-test('Skip button on Opening Screen bypasses demo and jumps to Screen 4 Solution 1', () => {
-  const g = createGame();
-  g.skip(); // Click Skip button on Screen 1
-  assert.equal(g.get('intro').hidden, true);
-  assert.equal(g.get('demo-screen').hidden, true);
-  assert.equal(g.get('try-screen').hidden, true);
-  assert.equal(g.get('solution-intro').hidden, false);
-  assert.equal(g.get('solution-intro-title').textContent, 'Column Cleaning');
+  const intro = htmlContent.match(/<section id="solution-intro"[\s\S]*?<\/section>/)[0];
+  assert.match(intro, /watch-video-button\.webp/);
+  assert.match(intro, /exit-button\.webp/);
+  assert.match(intro, /href="index\.html#\/games"/);
 });
 
 test('Screen 4 to Screen 5 (Solution Video) to Screen 6 (Mixing without Timer)', () => {
   const g = createGame();
-  g.skip(); // On Screen 4
+  g.start(); // On Screen 4
   g.watchSolution(); // Click "Watch Video"
 
   // Screen 5: Video Screen
   assert.equal(g.get('lesson-video').hidden, false);
   assert.match(g.get('video-title').textContent, /Column Cleaning/);
   const video = g.get('recipe-video');
-  assert.equal(video.src, 'assets/test-tube-game-video-assets/column-cleaning.mp4?v=portrait-2');
+  assert.equal(video.src, 'assets/test-tube-game-assets/column-cleaning.mp4?v=portrait-2');
 
-  // Video toggle controls
-  g.click('video-toggle'); // Pause
-  assert.equal(video.paused, true);
-  g.click('video-toggle'); // Play
+  // Replay restarts the same solution and preserves the image button.
+  video.currentTime = 12;
+  video.pause();
+  g.click('video-toggle');
+  assert.equal(video.currentTime, 0);
   assert.equal(video.paused, false);
+  assert.equal(g.get('video-toggle').attributes['aria-label'], 'Replay Video');
+  g.finishVideo();
+  assert.equal(g.get('lesson-video').hidden, false);
+  const page = htmlContent.match(/<section id="lesson-video"[\s\S]*?<\/section>/)[0];
+  assert.match(page, /<video[^>]*controls/);
+  assert.match(page, /replay-video-button\.webp/);
+  assert.match(page, /start-mixing-button\.webp/);
 
   // Advance to Screen 6 via Start Mixing button
   g.startMixing();
@@ -201,59 +179,60 @@ test('Screen 4 to Screen 5 (Solution Video) to Screen 6 (Mixing without Timer)',
   assert.equal(g.get('game-title').textContent, 'Column Cleaning');
 });
 
-test('Screen 6 Interactive Guided Practice without timer: guides each pour and completes with Perfect recipe', () => {
+test('Manual practice accepts any solvent order without a timer and shows correct result', () => {
   const g = createGame();
-  g.skip();
-  g.watchSolution();
-  g.startMixing();
-
-  // Column Cleaning: Water 90%, ACN 5%, MeOH 5%
-  // In guided practice, timer and score are hidden, and active solvent is guided
-  assert.equal(g.get('seconds').hidden, true);
+  g.start(); g.watchSolution(); g.startMixing();
   assert.equal(g.get('timer').hidden, true);
-  assert.equal(g.get('running-score').hidden, true);
-  assert.match(g.get('fill-total').innerHTML, /^0</);
-
-  // Water is the first guided solvent
-  const waterBtn = g.sources.find(s => s.dataset.chemical === 'Water');
-  assert.equal(waterBtn.classList.contains('is-guided'), true);
-
-  g.pour('Water', 3); // 90%
-  assert.match(g.get('fill-total').innerHTML, /^90</);
-
-  // Next guided is ACN
-  const acnBtn = g.sources.find(s => s.dataset.chemical === 'ACN');
-  assert.equal(acnBtn.classList.contains('is-guided'), true);
-  g.pour('ACN', 1); // 5%
-
-  // Next guided is MeOH
-  const meohBtn = g.sources.find(s => s.dataset.chemical === 'MeOH');
-  assert.equal(meohBtn.classList.contains('is-guided'), true);
-  g.pour('MeOH', 1); // 5% -> 100%
-
-  assert.match(g.get('fill-total').innerHTML, /^100</);
+  assert.equal(g.get('seconds').hidden, true);
+  assert.equal(g.get('lesson-target').hidden, true);
+  g.sources.forEach(button => {
+    assert.equal(button.disabled, false);
+    assert.equal(button.classList.contains('is-guided'), false);
+  });
+  g.advance(60000);
+  assert.equal(g.get('practice-result').open, undefined);
+  g.pour('MeOH'); g.pour('ACN'); g.pour('Water', 3);
   assert.equal(g.get('game').dataset.outcome, 'correct');
-  assert.match(g.get('outcome').textContent, /perfect recipe/i);
-  assert.equal(g.get('correct-recipe').textContent, '');
-  assert.equal(g.get('correct-recipe').hidden, true);
-  assert.equal(g.get('review').hidden, false);
+  assert.equal(g.get('practice-result').open, true);
+  assert.match(g.get('practice-result-button').src, /next-solution%20button/);
+  g.next();
+  assert.equal(g.get('practice-result').open, false);
+  assert.equal(g.get('solution-intro').hidden, false);
+  assert.match(g.get('solution-intro-art').src, /strong-wash-intro/);
 });
 
-test('Full workflow: Interactive Guided Practice for all 4 solutions leads to Screen ready, which starts the Test Challenge', () => {
+test('Wrong practice mixture offers the same video and resets on retry', () => {
   const g = createGame();
-  g.skip(); // Starts at Screen 4 for Solution 1
+  g.start(); g.watchSolution(); g.startMixing();
+  g.pour('Water', 4);
+  assert.equal(g.get('game').dataset.outcome, 'incorrect');
+  assert.equal(g.get('practice-result').open, true);
+  assert.match(g.get('practice-result-button').src, /6-wrong-answer-pop-up\/watch-video-button/);
+  g.click('practice-result-action');
+  assert.equal(g.get('practice-result').open, false);
+  assert.equal(g.get('lesson-video').hidden, false);
+  assert.match(g.get('recipe-video').src, /column-cleaning/);
+  g.startMixing();
+  assert.match(g.get('fill-total').innerHTML, /^0</);
+  g.sources.forEach(button => assert.equal(button.disabled, false));
+});
+
+test('Full workflow: Manual practice for all 4 solutions leads to Screen ready, which starts the Test Challenge', () => {
+  const g = createGame();
+  g.start(); // Starts at Screen 4 for Solution 1
 
   const solutions = [
     { name: 'Column Cleaning', pours: [['Water', 3], ['ACN', 1], ['MeOH', 1]] },
     { name: 'Strong Wash Solvent', pours: [['Water', 2], ['ACN', 4]] },
     { name: 'Needle Wash Solvent', pours: [['Water', 2], ['MeOH', 2]] },
-    { name: 'Column Storage (C18)', pours: [['Water', 2], ['ACN', 7]] }
+    { name: 'Column Storage (C18)', pours: [['Water', 2], ['ACN', 2]] }
   ];
 
   solutions.forEach((sol, i) => {
     // Screen 4: Title
     assert.equal(g.get('solution-intro').hidden, false);
-    assert.equal(g.get('solution-intro-title').textContent, sol.name);
+    assert.equal(g.get('solution-intro').attributes['aria-label'], sol.name);
+    assert.match(g.get('solution-intro-art').src, new RegExp(['column-cleaning', 'strong-wash', 'needle-wash', 'column-storage'][i] + '-intro-page\\.webp$'));
 
     // Screen 4 -> Screen 5: Video
     g.watchSolution();
@@ -261,10 +240,15 @@ test('Full workflow: Interactive Guided Practice for all 4 solutions leads to Sc
 
     // Screen 5 -> Screen 6: Guided Practice
     g.finishVideo();
+    g.startMixing();
     assert.equal(g.get('game').hidden, false);
     assert.equal(g.get('game-title').textContent, sol.name);
 
-    // Perform guided pours
+    if (i === 3) {
+      const acn = g.sources.find(button => button.dataset.chemical === 'ACN');
+      assert.equal(acn.querySelector('small').textContent, '+35% / tap');
+    }
+    // Perform manual pours
     sol.pours.forEach(([chem, count]) => g.pour(chem, count));
     assert.equal(g.get('game').dataset.outcome, 'correct');
     assert.match(g.get('fill-total').innerHTML, /^100</);
@@ -282,7 +266,7 @@ test('Full workflow: Interactive Guided Practice for all 4 solutions leads to Sc
   assert.equal(g.get('game').hidden, false);
   assert.equal(g.get('seconds').hidden, false);
   assert.equal(g.get('timer').hidden, false);
-  assert.equal(g.get('running-score').hidden, false);
+  assert.equal(g.get('running-score').hidden, true);
   assert.equal(g.get('lesson-target').hidden, true); // Hidden target recipe tests memory!
 
   // Play through the 4 rounds of the test
@@ -301,11 +285,11 @@ test('Full workflow: Interactive Guided Practice for all 4 solutions leads to Sc
 
 test('Animated pours with reduced motion keep tube movement visible and clean up', () => {
   const g = createGame({ animated: true, reducedMotion: true });
-  g.skip();
+  g.start();
   g.watchSolution();
   g.startMixing();
 
-  g.pour('Water');
+  g.sources.find(button => button.dataset.chemical === 'Water').emit('click');
   assert.ok(g.animations.length > 0);
   assert.ok(g.animations.some(anim => anim.frames.some(f => /rotate\(-?108deg\)/.test(f.transform))));
   assert.match(g.get('fill-total').innerHTML, /^30</);
@@ -314,4 +298,222 @@ test('Animated pours with reduced motion keep tube movement visible and clean up
   g.window.innerWidth = 768;
   g.window.emit('resize');
   assert.ok(g.animations.every(anim => anim.cancelled));
+});
+
+test('Challenge shares 45 seconds of playing time and pauses during result review', () => {
+  const g = createGame();
+  g.click('start-game');
+  assert.equal(g.get('seconds').textContent, '00:45');
+  assert.equal(g.get('timer').attributes['aria-valuenow'], 45);
+  g.advance(10000);
+  g.pour('Water', 3); g.pour('ACN'); g.pour('MeOH');
+  assert.equal(g.get('mix-result').open, true);
+  g.advance(60000);
+  assert.equal(g.get('seconds').textContent, '00:35');
+  g.click('close-result');
+  g.advance(60000);
+  assert.equal(g.get('seconds').textContent, '00:35');
+  g.next();
+  assert.equal(g.get('seconds').textContent, '00:35');
+  assert.equal(g.get('game-title').textContent, 'Strong Wash Solvent');
+  g.advance(35000);
+  assert.equal(g.get('report').hidden, false);
+  assert.equal(g.get('final-score').textContent, 1);
+  assert.equal(g.get('mix-result').open, false);
+});
+
+test('Wrong-result review pauses the timer and restarting gives a fresh 45 seconds', () => {
+  const g = createGame();
+  g.click('start-game');
+  g.advance(12345);
+  g.pour('Water', 4);
+  assert.equal(g.get('mix-result').open, true);
+  g.advance(60000);
+  assert.equal(g.get('mix-result').open, true);
+  g.next();
+  assert.equal(g.get('seconds').textContent, '00:33');
+  g.advance(32654);
+  assert.equal(g.get('report').hidden, true);
+  g.advance(1);
+  assert.equal(g.get('report').hidden, false);
+  g.click('start-game');
+  assert.equal(g.get('seconds').textContent, '00:45');
+  assert.match(g.get('fill-total').innerHTML, /^0</);
+});
+
+test('Practice orders solvents by descending target percentage for every recipe', () => {
+  const g = createGame();
+  g.start();
+  const orders = [['Water', 'ACN', 'MeOH'], ['ACN', 'Water', 'MeOH'], ['Water', 'MeOH', 'ACN'], ['ACN', 'Water', 'MeOH']];
+  const pours = [[['Water', 3], ['ACN', 1], ['MeOH', 1]], [['Water', 2], ['ACN', 4]], [['Water', 2], ['MeOH', 2]], [['Water', 2], ['ACN', 2]]];
+  orders.forEach((expected, i) => {
+    g.watchSolution(); g.startMixing();
+    assert.deepEqual(g.get('chemicals').children.map(button => button.dataset.chemical), expected);
+    pours[i].forEach(([name, count]) => g.pour(name, count));
+    g.next();
+  });
+});
+
+test('Challenge shuffles on each solution and preserves solvent click behavior', () => {
+  const values = [0, 0, .99, .99];
+  const g = createGame({ random: () => values.shift() ?? .5 });
+  g.click('start-game');
+  assert.deepEqual(g.get('chemicals').children.map(button => button.dataset.chemical), ['ACN', 'MeOH', 'Water']);
+  g.pour('Water', 3); g.pour('ACN'); g.pour('MeOH');
+  assert.equal(g.get('game').dataset.outcome, 'correct');
+  g.next();
+  assert.deepEqual(g.get('chemicals').children.map(button => button.dataset.chemical), ['Water', 'ACN', 'MeOH']);
+  g.pour('Water', 2); g.pour('ACN', 4);
+  assert.equal(g.get('game').dataset.outcome, 'correct');
+});
+
+test('Final challenge pour finishes animating before showing the result and does not consume review time', () => {
+  const g = createGame({ animated: true });
+  g.click('start-game');
+  g.pour('Water', 3); g.pour('ACN');
+  g.sources.find(button => button.dataset.chemical === 'MeOH').emit('click');
+  assert.equal(g.get('game').dataset.state, 'settling');
+  assert.notEqual(g.get('mix-result').open, true);
+  g.advance(819);
+  assert.notEqual(g.get('mix-result').open, true);
+  g.advance(450);
+  assert.notEqual(g.get('mix-result').open, true);
+  g.advance(1);
+  assert.equal(g.get('mix-result').open, true);
+  assert.equal(g.get('game').dataset.state, 'review');
+  g.advance(10000);
+  g.next();
+  assert.equal(g.get('seconds').textContent, '00:42');
+});
+
+test('Timer urgency starts at ten seconds and clears on a new challenge', () => {
+  const g = createGame();
+  g.click('start-game');
+  g.advance(34999);
+  assert.equal(g.get('timer').classList.contains('urgent'), false);
+  g.advance(1);
+  assert.equal(g.get('timer').classList.contains('urgent'), true);
+  assert.equal(g.get('seconds').textContent, '00:10');
+  g.pour('Water', 4);
+  assert.equal(g.get('game').dataset.state, 'review');
+  g.advance(20000);
+  assert.equal(g.get('seconds').textContent, '00:10');
+  g.next();
+  assert.equal(g.get('game').dataset.state, 'playing');
+  assert.equal(g.get('timer').classList.contains('urgent'), true);
+  g.click('start-game');
+  assert.equal(g.get('timer').classList.contains('urgent'), false);
+});
+
+test('Report shows all four statuses and opens the selected solution video', () => {
+  const g = createGame();
+  g.click('start-game'); g.advance(45000);
+  assert.equal(g.get('report').hidden, false);
+  const markup = g.get('results').innerHTML;
+  assert.equal((markup.match(/data-report-video=/g) || []).length, 4);
+  assert.equal((markup.match(/aria-label="Incorrect"/g) || []).length, 4);
+  assert.match(markup, /9-report-page\/watch-video-button\.webp/);
+  g.get('results').emit('click', { target: { closest: () => ({ dataset: { reportVideo: '2' } }) } });
+  assert.equal(g.get('lesson-video').hidden, false);
+  assert.match(g.get('recipe-video').src, /needle-cleaning\.mp4/);
+  g.click('retry');
+  assert.equal(g.get('intro').hidden, false);
+});
+
+test('Every game screen and result dialog provides an exit to the menu', () => {
+  const screens = htmlContent.match(/<(?:section|dialog)\b[\s\S]*?<\/(?:section|dialog)>/g);
+  assert.ok(screens.length >= 10);
+  screens.forEach(screen => {
+    assert.match(screen, /class="game-exit" href="index\.html#\/games"/);
+    assert.match(screen, /images\/exit-button\.webp/);
+  });
+});
+
+test('Pour audio is prepared on Start and synchronized with practice and challenge pours', async () => {
+  const requested = [], played = [];
+  class AudioContext {
+    constructor() { this.state = 'running'; this.currentTime = 0; this.destination = {}; }
+    resume() { return Promise.resolve(); }
+    decodeAudioData() { return Promise.resolve({ duration: 2 }); }
+    createBufferSource() {
+      return { connect() {}, disconnect() {}, stop() {}, start: (...args) => played.push(args) };
+    }
+    createGain() {
+      return { connect() {}, disconnect() {}, gain: { setValueAtTime() {}, linearRampToValueAtTime() {} } };
+    }
+  }
+  const g = createGame({ animated: true, AudioContext, fetchAudio: async url => {
+    requested.push(url);
+    return { ok: true, arrayBuffer: async () => new ArrayBuffer(1) };
+  } });
+  g.start();
+  await new Promise(resolve => setImmediate(resolve));
+  assert.deepEqual(requested, ['audio/pour-audio.mp3']);
+  g.watchSolution(); g.startMixing();
+  g.pour('Water');
+  assert.equal(played.length, 1);
+  assert.ok(played[0][0] > 0);
+  assert.equal(played[0][2], 2);
+  assert.equal(played[0][0], .27);
+  assert.equal(g.animations[0].options.duration, 2550);
+  g.advance(2550);
+  g.click('start-game');
+  g.pour('Water');
+  assert.equal(played.length, 2);
+  assert.equal(requested.filter(url => url === 'audio/pour-audio.mp3').length, 1);
+});
+
+test('Both modes disable all solvent cards while pouring and recover after rotation', () => {
+  for (const mode of ['practice', 'game']) {
+    const g = createGame({ animated: true });
+    if (mode === 'practice') { g.start(); g.watchSolution(); g.startMixing(); }
+    else g.click('start-game');
+    const water = g.sources.find(button => button.dataset.chemical === 'Water');
+    water.emit('click');
+    assert.equal(g.get('game').dataset.pouring, 'true');
+    assert.equal(g.get('chemicals').attributes['aria-busy'], 'true');
+    assert.match(g.get('feedback').textContent, /Pouring/);
+    g.sources.forEach(button => assert.equal(button.disabled, true));
+    g.sources.find(button => button.dataset.chemical === 'ACN').emit('click');
+    assert.match(g.get('fill-total').innerHTML, /^30</);
+    g.window.innerWidth = 750;
+    g.window.emit('resize');
+    assert.equal(g.get('game').dataset.pouring, 'false');
+    g.sources.forEach(button => assert.equal(button.disabled, false));
+    water.emit('click');
+    g.advance(820);
+    assert.equal(g.get('game').dataset.pouring, 'false');
+    g.sources.forEach(button => assert.equal(button.disabled, false));
+  }
+});
+
+test('Last ten seconds audio pauses on results and resumes at the saved countdown position', async () => {
+  const sources = [], urls = [];
+  class AudioContext {
+    constructor() { this.state = 'running'; this.currentTime = 0; this.destination = {}; }
+    resume() { return Promise.resolve(); }
+    decodeAudioData() { return Promise.resolve({ duration: 10 }); }
+    createBufferSource() {
+      const source = { stopped: false, connect() {}, disconnect() {}, stop() { this.stopped = true; }, start(...args) { this.args = args; } };
+      sources.push(source); return source;
+    }
+  }
+  const g = createGame({ AudioContext, fetchAudio: async url => {
+    urls.push(url); return { ok: true, arrayBuffer: async () => new ArrayBuffer(1) };
+  } });
+  g.click('start-game');
+  await new Promise(resolve => setImmediate(resolve));
+  assert.ok(urls.includes('audio/10s-timer-audio.wav'));
+  g.advance(35000);
+  assert.deepEqual(sources[0].args, [0, 0, 10]);
+  g.advance(2000);
+  g.pour('Water', 4);
+  assert.equal(sources[0].stopped, true);
+  g.advance(20000);
+  assert.equal(sources.length, 1);
+  g.next();
+  assert.deepEqual(sources[1].args, [0, 2, 8]);
+  g.advance(8000);
+  assert.equal(sources[1].stopped, true);
+  assert.equal(g.get('report').hidden, false);
 });

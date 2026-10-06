@@ -8,8 +8,8 @@
   <title>Liquid Sort · Aurobindo Pharma</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="liquid-sort.css?v=33">
-  <script src="liquid-sort.js?v=35" defer></script>
+  <link rel="stylesheet" href="liquid-sort.css?v=53">
+  <script src="liquid-sort.js?v=54" defer></script>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(regs => {
@@ -31,24 +31,21 @@
         Pharma</span></a><a class="back" href="index.html#/games">← <span>Back</span></a></header>
   <main>
     <!-- Screen 1: Opening Screen -->
-    <section id="intro" class="panel intro" aria-labelledby="title" tabindex="-1">
-      <h1 id="title">The Perfect Cleaning Solution</h1>
-      <div class="intro-tubes" aria-hidden="true">
-        <span class="tube" style="--chemical:var(--water)"><img src="assets/test-tube.png" alt=""><span
-            class="tube-liquid" style="height:80%"></span></span>
-        <span class="tube" style="--chemical:var(--acn)"><img src="assets/test-tube.png" alt=""><span
-            class="tube-liquid" style="height:65%"></span></span>
-        <span class="tube" style="--chemical:var(--meoh)"><img src="assets/test-tube.png" alt=""><span
-            class="tube-liquid" style="height:50%"></span></span>
-      </div>
-      <div class="actions hero-actions">
-        <button id="play" class="primary" type="button">Demo <span aria-hidden="true">→</span></button>
-        <button id="skip" class="button" type="button">Skip <span aria-hidden="true">→</span></button>
-      </div>
+    <section id="intro" class="panel intro" aria-label="The Perfect Solvent" tabindex="-1">
+      <a class="game-exit" href="index.html#/games" aria-label="Exit game and return to menu">
+        <img src="assets/test-tube-game-assets/images/exit-button.webp" alt="" draggable="false">
+      </a>
+      <img class="title-background" src="assets/test-tube-game-assets/images/1-title-page/bg.webp" alt="" fetchpriority="high">
+      <button id="play" class="title-start" type="button" aria-label="Start">
+        <img src="assets/test-tube-game-assets/images/1-title-page/start-button.webp" alt="" draggable="false">
+      </button>
     </section>
 
     <!-- Screen 2: Tutorial Demo (Automated Pouring) -->
     <section id="demo-screen" class="panel game demo-panel" hidden aria-labelledby="demo-title" tabindex="-1">
+      <a class="game-exit" href="index.html#/games" aria-label="Exit game and return to menu">
+        <img src="assets/test-tube-game-assets/images/exit-button.webp" alt="" draggable="false">
+      </a>
       <h1 id="demo-title">Demo Video</h1>
 
       <!-- Target Recipe -->
@@ -116,6 +113,9 @@
 
     <!-- Screen 3: Let's Try Screen -->
     <section id="try-screen" class="panel intro" hidden aria-labelledby="try-title" tabindex="-1">
+      <a class="game-exit" href="index.html#/games" aria-label="Exit game and return to menu">
+        <img src="assets/test-tube-game-assets/images/exit-button.webp" alt="" draggable="false">
+      </a>
       <span class="eyebrow">READY TO PRACTICE</span>
       <div class="intro-tubes mini-preview" aria-hidden="true">
         <span class="tube" style="--chemical:var(--water)"><img src="assets/test-tube.png" alt=""><span
@@ -134,37 +134,44 @@
     </section>
 
     <!-- Screen 4: Solution Title Screen -->
-    <section id="solution-intro" class="panel intro" hidden aria-labelledby="solution-intro-title" tabindex="-1">
-      <span id="solution-intro-eyebrow" class="eyebrow">SOLUTION 1 OF 4</span>
-      <h1 id="solution-intro-title">Column Cleaning</h1>
-      <p id="solution-intro-desc">Watch the preparation video to learn the exact recipe.</p>
-      <div id="solution-intro-recipe" class="recipe-ingredients preview-target"></div>
-      <div class="actions">
-        <button id="solution-intro-btn" class="primary" type="button">Watch Video <span
-            aria-hidden="true">→</span></button>
-      </div>
+    <section id="solution-intro" class="panel intro" hidden aria-label="Column Cleaning" tabindex="-1">
+      <a class="game-exit" href="index.html#/games" aria-label="Exit game and return to menu">
+        <img src="assets/test-tube-game-assets/images/exit-button.webp" alt="" draggable="false">
+      </a>
+      <img id="solution-intro-art" class="title-background" src="assets/test-tube-game-assets/images/2-solution-name-page/column-cleaning-intro-page.webp" alt="Column Cleaning. Before you make the mix, let's see the process for column cleaning.">
+      <button id="solution-intro-btn" class="image-control solution-watch" type="button" aria-label="Watch Video">
+        <img src="assets/test-tube-game-assets/images/2-solution-name-page/watch-video-button.webp" alt="" draggable="false">
+      </button>
     </section>
 
     <!-- Screen 5: Video of Solution -->
     <section id="lesson-video" class="panel video-lesson" hidden aria-labelledby="video-title" tabindex="-1">
-      <div class="video-header">
-        <span id="video-progress" class="eyebrow">SOLUTION VIDEO</span>
+      <a class="game-exit" href="index.html#/games" aria-label="Exit game and return to menu">
+        <img src="assets/test-tube-game-assets/images/exit-button.webp" alt="" draggable="false">
+      </a>
+      <div class="video-header sr-only">
+        <span id="video-progress">SOLUTION VIDEO</span>
         <h1 id="video-title">Column Cleaning</h1>
       </div>
       <div class="video-container">
-        <video id="recipe-video" playsinline preload="auto" aria-label="Solution Video"></video>
+        <video id="recipe-video" controls playsinline preload="auto" aria-label="Solution Video"></video>
       </div>
+      <p id="video-status" class="sr-only" role="status">Watch the preparation video.</p>
       <div class="video-footer">
-        <p id="video-status" role="status">Watch the full video to see how this solution is prepared.</p>
-        <div class="actions">
-          <button id="video-toggle" class="button" type="button">Play video</button>
-          <button id="video-next" class="primary" type="button">Start Mixing <span aria-hidden="true">→</span></button>
-        </div>
+        <button id="video-toggle" class="image-control" type="button" aria-label="Replay Video">
+          <img src="assets/test-tube-game-assets/images/3-video-page/replay-video-button.webp" alt="" draggable="false">
+        </button>
+        <button id="video-next" class="image-control" type="button" aria-label="Start Mixing">
+          <img src="assets/test-tube-game-assets/images/3-video-page/start-mixing-button.webp" alt="" draggable="false">
+        </button>
       </div>
     </section>
 
     <!-- Screen 6: Game without Timer -->
     <section id="game" class="panel game" hidden aria-labelledby="game-title" tabindex="-1">
+      <a class="game-exit" href="index.html#/games" aria-label="Exit game and return to menu">
+        <img src="assets/test-tube-game-assets/images/exit-button.webp" alt="" draggable="false">
+      </a>
       <div class="game-meta">
         <span id="progress" class="eyebrow">SOLUTION 1 OF 4</span>
         <span id="running-score" class="score-pill">Score 0 / 4</span>
@@ -174,8 +181,8 @@
         <h1 id="game-title">Column Cleaning</h1>
         <strong id="seconds" role="timer" hidden></strong>
       </div>
-      <div id="timer" class="timer" role="progressbar" aria-label="Time remaining" aria-valuemin="0" aria-valuemax="30"
-        aria-valuenow="30" hidden>
+      <div id="timer" class="timer" role="progressbar" aria-label="Time remaining" aria-valuemin="0" aria-valuemax="45"
+        aria-valuenow="45" hidden>
         <div id="timer-fill"></div>
       </div>
 
@@ -203,7 +210,7 @@
         <div class="receiver-stage">
           <div class="receiver-wrap">
             <span class="tube receiver" id="receiver" role="img" aria-label="Empty solution tube"><img
-                src="assets/test-tube.png" alt=""><span id="mixture" class="mixture"></span></span>
+                class="receiver-tube-art" src="assets/test-tube.png" alt=""><img class="practice-beaker-art" src="assets/test-tube-game-assets/images/4-slow-game-page/beaker.webp" alt=""><span id="mixture" class="mixture"></span></span>
           </div>
           <div class="fill-indicator">
             <span class="fill-mark" id="fill-total">0<span>% filled</span></span>
@@ -231,47 +238,60 @@
     </section>
 
     <!-- Practice Complete Transition Screen -->
-    <section id="ready" class="panel intro" hidden aria-labelledby="ready-title" tabindex="-1">
-      <span class="eyebrow">PRACTICE COMPLETE</span>
-      <h1 id="ready-title">Four recipes.<br><em>Ready to beat the clock?</em></h1>
-      <p>You’ve prepared all four solutions. Now mix them from memory, with 30 seconds per round.</p>
-      <div class="actions">
-        <button id="start-game" class="primary" type="button">Start Game →</button>
-      </div>
+    <section id="ready" class="panel intro" hidden aria-label="Final Challenge instructions" tabindex="-1">
+      <a class="game-exit" href="index.html#/games" aria-label="Exit game and return to menu">
+        <img src="assets/test-tube-game-assets/images/exit-button.webp" alt="" draggable="false">
+      </a>
+      <img class="title-background" src="assets/test-tube-game-assets/images/7-final-challenge-instruction/final-challenge-bg.webp" alt="Final Challenge. You have prepared all four solutions. Now mix them from memory, within 45 seconds!">
+      <button id="start-game" class="image-control challenge-start" type="button" aria-label="Start Game">
+        <img src="assets/test-tube-game-assets/images/7-final-challenge-instruction/start-game-button.webp" alt="" draggable="false">
+      </button>
     </section>
 
     <!-- Challenge Complete Report -->
-    <section id="report" class="panel report" hidden aria-labelledby="report-title" tabindex="-1">
-      <div class="report-header">
-        <span class="eyebrow">CHALLENGE COMPLETE</span>
-        <h1 id="report-title">Your Results</h1>
+    <section id="report" class="panel report" hidden aria-label="Final Challenge results" tabindex="-1">
+      <a class="game-exit" href="index.html#/games" aria-label="Exit game and return to menu">
+        <img src="assets/test-tube-game-assets/images/exit-button.webp" alt="" draggable="false">
+      </a>
+      <div class="report-score" aria-label="Your score">
+        <div><strong id="final-score">0</strong><span>/4</span></div>
+        <h1>PERFECT SOLUTIONS</h1>
       </div>
-      <div class="score-hero">
-        <div class="score-circle">
-          <strong id="final-score">0</strong>
-          <span>OUT OF 4</span>
-        </div>
-        <div class="score-hero-details">
-          <span id="report-badge-chip" class="report-badge-chip"></span>
-          <p id="report-message"></p>
-        </div>
-      </div>
+      <p id="report-message" class="sr-only"></p>
       <div id="results" class="results" role="region" aria-label="Solution results breakdown"></div>
-      <div class="actions report-actions">
-        <button id="retry" class="primary" type="button">Play Again ↻</button>
-        <a class="button" href="index.html#/games">Back</a>
+      <div class="report-actions">
+        <button id="retry" class="image-control" type="button" aria-label="Play Again">
+          <img src="assets/test-tube-game-assets/images/9-report-page/play-again-button.webp" alt="" draggable="false">
+        </button>
+        <a class="image-control" href="index.html#/games" aria-label="Back to Menu">
+          <img src="assets/test-tube-game-assets/images/9-report-page/back-to-menu-button.webp" alt="" draggable="false">
+        </a>
       </div>
     </section>
   </main>
+  <dialog id="practice-result" aria-label="Practice result">
+      <a class="game-exit" href="index.html#/games" aria-label="Exit game and return to menu">
+        <img src="assets/test-tube-game-assets/images/exit-button.webp" alt="" draggable="false">
+      </a>
+    <img id="practice-result-panel" alt="">
+    <button id="practice-result-action" class="image-control" type="button" aria-label="Next Solution">
+      <img id="practice-result-button" alt="" draggable="false">
+    </button>
+  </dialog>
   <dialog id="mix-result" class="mix-result" aria-labelledby="mix-result-title" aria-describedby="mix-result-summary">
+      <a class="game-exit" href="index.html#/games" aria-label="Exit game and return to menu">
+        <img src="assets/test-tube-game-assets/images/exit-button.webp" alt="" draggable="false">
+      </a>
     <div class="mix-result-heading">
       <span id="mix-result-recipe" class="eyebrow"></span>
       <button id="close-result" class="result-close" type="button" aria-label="Close comparison">×</button>
     </div>
     <h2 id="mix-result-title"></h2>
-    <p id="mix-result-summary"></p>
-    <div id="mix-result-tubes" class="comparison-tubes"></div>
-    <div id="mix-result-values"></div>
+    <p id="mix-result-summary" class="sr-only"></p>
+    <div class="mix-result-body">
+      <div id="mix-result-tubes" class="comparison-tubes"></div>
+      <div id="mix-result-values"></div>
+    </div>
     <div class="result-actions">
       <button id="result-next" class="primary" type="button">Next Solution →</button>
     </div>

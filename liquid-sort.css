@@ -1897,3 +1897,582 @@ a:focus-visible {
     font-size: 12.5px;
   }
 }
+/* Asset-only opening screen. Keep the complete portrait artwork visible. */
+body:has(#intro:not([hidden]), #solution-intro:not([hidden]), #lesson-video:not([hidden]), #ready:not([hidden])) {
+  background: #03161e;
+}
+
+body:has(#intro:not([hidden]), #solution-intro:not([hidden]), #lesson-video:not([hidden]), #ready:not([hidden])) > header {
+  display: none;
+}
+
+body:has(#intro:not([hidden]), #solution-intro:not([hidden]), #lesson-video:not([hidden]), #ready:not([hidden])) > main {
+  max-width: none;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+#intro,
+#solution-intro,
+#ready {
+  position: relative;
+  flex: none !important;
+  width: min(100vw, 56.25vh);
+  width: min(100vw, 56.25dvh);
+  height: auto !important;
+  aspect-ratio: 9 / 16;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+.title-background {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+#intro .title-start {
+  position: absolute;
+  left: 23%;
+  top: 80.4%;
+  width: 54%;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.title-start img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+#intro .title-start:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+
+#solution-intro .image-control {
+  position: absolute;
+  display: block;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.image-control img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+#solution-intro .solution-watch {
+  left: 23%;
+  top: 60.4%;
+  width: 54%;
+}
+
+#solution-intro .solution-exit {
+  right: 4.2%;
+  top: 2.55%;
+  width: 7.4%;
+}
+
+#solution-intro .image-control:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+
+/* Portrait video page follows the supplied reference proportions. */
+#lesson-video.panel.video-lesson {
+  position: relative;
+  flex: none;
+  width: min(100vw, 56.25vh);
+  width: min(100vw, 56.25dvh);
+  height: auto;
+  aspect-ratio: 9 / 16;
+  max-height: none;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: url('assets/test-tube-game-assets/images/3-4-video-screen-and-game-screen-bg.webp') center / 100% 100% no-repeat;
+}
+
+#lesson-video .video-container {
+  position: absolute;
+  top: 7.6%;
+  left: 4.5%;
+  width: 91%;
+  height: 74.4%;
+  max-width: none;
+  margin: 0;
+  padding: 2%;
+  border: 1px solid #1c91ac;
+  border-radius: 4% / 3%;
+  background: #0005;
+  box-shadow: inset 0 0 0 1px #0b4758;
+}
+
+#lesson-video #recipe-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 1px solid #245a65;
+  border-radius: 3% / 2%;
+  background: #000;
+  box-shadow: none;
+  accent-color: #00e3e9;
+}
+
+#lesson-video .video-footer {
+  position: absolute;
+  top: 86.4%;
+  left: 6.3%;
+  width: 87.4%;
+  display: flex;
+  align-items: center;
+  gap: 3%;
+}
+
+#lesson-video .image-control {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+#lesson-video .image-control:focus-visible {
+  outline: 3px solid white;
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+
+#lesson-video #video-status:not(.sr-only) {
+  position: absolute;
+  top: 82.2%;
+  left: 5%;
+  width: 90%;
+  margin: 0;
+  color: white;
+  font-size: clamp(9px, 1.8vh, 14px);
+}
+
+/* Guided practice: solvent cards above a beaker and live composition. */
+.practice-beaker-art { display: none !important; }
+body:has(#game:is([data-mode="practice"], [data-mode="game"]):not([hidden])) {
+  background: #03161e;
+}
+body:has(#game:is([data-mode="practice"], [data-mode="game"]):not([hidden])) > header { display: none; }
+body:has(#game:is([data-mode="practice"], [data-mode="game"]):not([hidden])) > main {
+  max-width: none;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+}
+#game:is([data-mode="practice"], [data-mode="game"]) {
+  position: relative;
+  container-type: inline-size;
+  flex: none;
+  width: min(100vw, 56.25vh);
+  width: min(100vw, 56.25dvh);
+  height: auto;
+  aspect-ratio: 9 / 16;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  color: #fff;
+  --water: #00cfff;
+  --acn: #b627ed;
+  --meoh: #ffbf25;
+  background: url('assets/test-tube-game-assets/images/3-4-video-screen-and-game-screen-bg.webp') center / 100% 100%;
+}
+#game:is([data-mode="practice"], [data-mode="game"]) .game-meta {
+  position: absolute; top: 7.8%; width: 100%; justify-content: center;
+}
+#game:is([data-mode="practice"], [data-mode="game"]) #progress {
+  color: #00eeed; font-size: 3.5cqw; letter-spacing: .06em;
+}
+#game:is([data-mode="practice"], [data-mode="game"]) .game-heading {
+  position: absolute; top: 11.5%; width: 100%; text-align: center;
+}
+#game:is([data-mode="practice"], [data-mode="game"]) #game-title {
+  margin: 0; color: white; font-size: 5.5cqw; line-height: 1.15;
+}
+#game:is([data-mode="practice"], [data-mode="game"]) .game-heading::after {
+  content: 'Select a solvent to add to the container';
+  display: block; margin-top: 2cqw; color: #bfcbd0; font-size: 3.9cqw;
+}
+#game:is([data-mode="practice"], [data-mode="game"]) #lesson-target,
+#game:is([data-mode="practice"], [data-mode="game"]) #feedback,
+#game:is([data-mode="practice"], [data-mode="game"]) #fill-total { display: none; }
+#game:is([data-mode="practice"], [data-mode="game"]) #chemicals {
+  position: absolute; top: 23.3%; left: 6.8%; width: 88.4%; height: 29%;
+  margin: 0; padding: 0; gap: 4%; border: 0; background: transparent; box-shadow: none;
+}
+#game:is([data-mode="practice"], [data-mode="game"]) .chemical {
+  position: relative; padding: 2cqw 1cqw; gap: 1cqw;
+  border: 1px solid var(--chemical); border-radius: 3cqw;
+  background: #020b1199; color: white; box-shadow: none; opacity: 1;
+}
+#game:is([data-mode="practice"], [data-mode="game"]) .chemical-name {
+  order: -1; height: 18%; justify-content: center; white-space: normal;
+  color: white; font-size: 3.8cqw; line-height: 1.1; text-align: center;
+}
+#game:is([data-mode="practice"], [data-mode="game"]) .chemical .tube {
+  height: 51%; width: auto; max-height: none; margin: 1cqw 0;
+}
+#game:is([data-mode="practice"], [data-mode="game"]) .chemical small {
+  width: 90%; padding: 0; background: none; border: 0; color: white;
+  white-space: normal; font-size: 3.6cqw; line-height: 1.3;
+}
+#game:is([data-mode="practice"], [data-mode="game"]) #mixing-area {
+  position: absolute; left: 5.2%; top: 59.2%; width: 90%; height: 31.8%;
+  margin: 0; padding: 2%; background: #001c2580;
+  border: 1px solid #23869a; border-radius: 3cqw;
+}
+#game:is([data-mode="practice"], [data-mode="game"]) .receiver-stage {
+  width: 100%; height: 100%; gap: 4%; justify-content: space-between;
+}
+#game:is([data-mode="practice"], [data-mode="game"]) .receiver-wrap {
+  width: 48%; height: 90%; align-self: flex-end;
+}
+#game:is([data-mode="practice"], [data-mode="game"]) #receiver {
+  width: auto; height: 100%; aspect-ratio: 814 / 1018; max-height: 100%; filter: none;
+}
+#game:is([data-mode="practice"], [data-mode="game"]) .receiver-tube-art { display: none; }
+#game:is([data-mode="practice"], [data-mode="game"]) .practice-beaker-art { display: block !important; }
+#game:is([data-mode="practice"], [data-mode="game"]) #mixture {
+  left: 18%; right: 13%; bottom: 12%; height: 64%;
+  border-radius: 0 0 18% 18%; mix-blend-mode: normal; opacity: .72;
+}
+#game:is([data-mode="practice"], [data-mode="game"]) .fill-indicator { width: 48%; align-self: center; margin-bottom: 0; }
+#game:is([data-mode="practice"], [data-mode="game"]) #composition { width: 100%; gap: 1.5cqw; margin: 0; }
+#game:is([data-mode="practice"], [data-mode="game"]) #composition > span {
+  display: grid; grid-template-columns: 3.5cqw 1fr auto; gap: 1.5cqw; align-items: center;
+  min-height: 12.5cqw; padding: 2cqw; border-radius: 2cqw;
+  border: 1px solid #426575; background: #082833;
+  white-space: nowrap; color: white; font-size: clamp(14px, 4cqw, 20px); font-weight: 650; line-height: 1.3;
+}
+#game:is([data-mode="practice"], [data-mode="game"]) #composition i { width: 3.5cqw; height: 3.5cqw; }
+#game:is([data-mode="practice"], [data-mode="game"]) #composition strong { color: white; font-size: clamp(15px, 4.5cqw, 22px); font-weight: 800; font-variant-numeric: tabular-nums; }
+#game:is([data-mode="practice"], [data-mode="game"]) #review {
+  position: absolute; top: 92%; left: 5%; width: 90%; margin: 0; padding: 1cqw;
+  color: white; background: #062d36; border-color: #00b6c6;
+}
+#game:is([data-mode="practice"], [data-mode="game"]) #review p { margin: 0; }
+#game:is([data-mode="practice"], [data-mode="game"]) #review .review-actions { margin: 1cqw 0 0; }
+#game:is([data-mode="practice"], [data-mode="game"]) #next { min-height: 0; padding: 1cqw 3cqw; font-size: 3cqw; }
+
+/* Native modal centers the result independently of the game layout. */
+#practice-result {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: min(82vw, 46.125vh);
+  width: min(82vw, 46.125dvh);
+  height: fit-content;
+  max-width: none;
+  max-height: 90dvh;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: visible;
+}
+#practice-result::backdrop {
+  background: #00151c80;
+  backdrop-filter: blur(3px);
+}
+#practice-result-panel { display: block; width: 100%; height: auto; }
+#practice-result-action {
+  position: absolute;
+  left: 7%; top: 67%; width: 86%;
+  min-height: 0; padding: 0; border: 0;
+  background: transparent; box-shadow: none; cursor: pointer;
+}
+#practice-result-action:focus-visible {
+  outline: 2px solid white; outline-offset: 3px; border-radius: 8px;
+}
+
+#ready .challenge-start {
+  position: absolute;
+  left: 23%;
+  top: 74.6%;
+  width: 54%;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+}
+#ready .challenge-start:focus-visible {
+  outline: 3px solid white;
+  outline-offset: 4px;
+  border-radius: 12px;
+}
+
+/* Challenge uses the same responsive board with one shared countdown. */
+#game[data-mode="game"] .game-meta { top: 4.7%; }
+#game[data-mode="game"] .game-heading { top: 8.4%; }
+#game[data-mode="game"] .game-heading::after { content: 'Prepare the perfect solution'; }
+#game[data-mode="game"] #seconds {
+  position: absolute;
+  top: 9cqw;
+  left: 32%;
+  width: 36%;
+  margin-top: 7cqw;
+  padding: 1.5cqw 1cqw;
+  border: 2px solid #fff;
+  border-radius: 3cqw;
+  box-shadow: 0 0 2cqw #dffaff80, inset 0 0 1cqw #dffaff50;
+  color: white;
+  background: #10303c80;
+  font-size: 6cqw;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+#game[data-mode="game"] #seconds::before {
+  content: '';
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: .25em;
+  vertical-align: -.12em;
+  background: currentColor;
+  mask: url('assets/stopwatch.svg') center / contain no-repeat;
+  -webkit-mask: url('assets/stopwatch.svg') center / contain no-repeat;
+}
+#game[data-mode="game"] #timer { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+#game[data-mode="game"]:has(#timer.urgent) #seconds { color: #ff8888; border-color: #ff8888; }
+#game[data-mode="game"] #chemicals { top: 28%; height: 28.6%; }
+#game[data-mode="game"] #mixing-area { top: 61.5%; height: 31.8%; }
+#game[data-mode="game"] #review { top: 94%; }
+#game[data-mode="game"] #review > div:first-child { display: none; }
+#game[data-mode="game"] #view-result { min-height: 0; padding: 1cqw 2cqw; font-size: 3cqw; }
+
+/* Comparison keeps its navigation visible, even on short mobile screens. */
+#mix-result {
+  height: min(640px, calc(100dvh - 24px));
+  max-height: calc(100dvh - 24px);
+  padding: 16px;
+  overflow: hidden;
+}
+#mix-result[open] { display: flex; flex-direction: column; }
+#mix-result .mix-result-heading,
+#mix-result h2,
+#mix-result > p,
+#mix-result .result-actions { flex-shrink: 0; }
+#mix-result h2 { font-size: clamp(20px, 5vw, 26px); margin: 6px 0; }
+#mix-result > p { font-size: 14px; line-height: 1.35; margin: 0 0 10px; }
+#mix-result .mix-result-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+#mix-result .comparison-tubes { gap: 10px; }
+#mix-result .comparison-card { padding: 8px; gap: 5px; }
+#mix-result .comparison-card h3 { font-size: 14px; text-align: center; }
+#mix-result .comparison-beaker {
+  height: clamp(80px, 19dvh, 130px);
+  width: auto;
+  aspect-ratio: 814 / 1018;
+}
+#mix-result .comparison-beaker .mixture {
+  left: 18%; right: 13%; bottom: 12%; height: 64%;
+  border-radius: 0 0 18% 18%; mix-blend-mode: normal; opacity: .72;
+}
+#mix-result .comparison-card > strong { font-size: 16px; }
+#mix-result .comparison-table { margin-top: 10px; font-size: 14px; }
+#mix-result .comparison-table thead th { font-size: 11px; padding: 5px; }
+#mix-result .comparison-table tbody th,
+#mix-result .comparison-table td { padding: 6px 5px; }
+#mix-result .result-actions { margin-top: 10px; padding-top: 8px; border-top: 1px solid #dbeae6; }
+#mix-result #result-next { min-height: 44px; }
+
+#mix-result {
+  --water: #00cfff;
+  --acn: #b627ed;
+  --meoh: #ffbf25;
+}
+#mix-result .comparison-beaker .mixture { opacity: 1; }
+
+/* A double pulse emphasizes the final ten seconds of active play. */
+#game[data-mode="game"]:has(#timer.urgent) #seconds {
+  color: #ff4747;
+  border-color: #ff4747;
+  background: #3a1019;
+  box-shadow: 0 0 3cqw #ff303080, inset 0 0 1.5cqw #ff303040;
+}
+#game[data-mode="game"][data-state="playing"]:has(#timer.urgent) #seconds {
+  animation: timer-heartbeat .9s ease-in-out infinite;
+  transform-origin: center;
+}
+@keyframes timer-heartbeat {
+  0%, 40%, 100% { transform: scale(1); }
+  12% { transform: scale(1.08); }
+  25% { transform: scale(1.02); }
+  32% { transform: scale(1.06); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #game[data-mode="game"][data-state="playing"]:has(#timer.urgent) #seconds {
+    animation: none;
+  }
+}
+
+/* Final report mirrors the portrait artwork, with all four results visible. */
+body:has(#report:not([hidden])) { background: #03161e; }
+body:has(#report:not([hidden])) > header { display: none; }
+body:has(#report:not([hidden])) > main {
+  max-width: none; padding: 0; align-items: center; justify-content: center;
+}
+#report.panel.report {
+  position: relative;
+  container-type: inline-size;
+  flex: none;
+  width: min(100vw, 56.25vh);
+  width: min(100vw, 56.25dvh);
+  height: auto;
+  aspect-ratio: 9 / 16;
+  max-height: none;
+  padding: 0; margin: 0; border: 0; border-radius: 0; box-shadow: none;
+  color: white;
+  background: url('assets/test-tube-game-assets/images/9-report-page/report-page-bg.webp') center / 100% 100% no-repeat;
+}
+#report .report-score { position: absolute; top: 25.5%; left: 5%; width: 90%; text-align: center; }
+#report .report-score > div { color: #00e9ef; font-size: 5.8cqw; line-height: 1.2; font-weight: 850; }
+#report .report-score h1 { color: white; font-size: 4cqw; margin: 1.3cqw 0 0; letter-spacing: .02em; }
+#report #results {
+  position: absolute; top: 33.6%; left: 5.4%; width: 89.4%; height: 40.3%;
+  margin: 0; padding: 4.2%; border: 1px solid #26b5bd; border-radius: 5cqw;
+  display: grid; grid-template-rows: repeat(4, minmax(0, 1fr)); gap: 1.4cqw;
+  overflow: hidden; background: #02141b99;
+}
+#report .report-solution {
+  display: grid; grid-template-columns: 10cqw minmax(0, 1fr) 5.5cqw 24cqw;
+  align-items: center; gap: 2cqw; padding: 1.5cqw 2cqw;
+  border: 1px solid #244651; border-radius: 4cqw;
+  background: linear-gradient(#0b232c, #03161d);
+  box-shadow: 0 1cqw 2cqw #0006;
+}
+#report .report-solution > strong { font-size: 3cqw; font-weight: 650; text-align: left; line-height: 1.2; }
+#report .report-solution-icon {
+  display: grid; place-items: center; width: 10cqw; height: 10cqw;
+  color: var(--badge-color); border: 1px solid currentColor; border-radius: 50%; background: #05242d;
+}
+#report .report-solution-icon svg { width: 60%; height: 60%; }
+#report .report-solution-status svg { display: block; width: 100%; height: auto; }
+#report .report-solution-status.is-correct { color: #00dce5; }
+#report .report-solution-status.is-incorrect { color: #ff503c; }
+#report .image-control {
+  display: block; padding: 0; border: 0; border-radius: 0; min-height: 0;
+  background: transparent; box-shadow: none; cursor: pointer;
+}
+#report .image-control:focus-visible { outline: 2px solid white; outline-offset: 3px; border-radius: 8px; }
+#report .report-actions {
+  position: absolute; top: 81%; left: 10%; width: 80%;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 2cqw; margin: 0;
+}
+
+/* Explicit outcome colors complement the labels and per-solvent feedback. */
+#mix-result[data-outcome="correct"] {
+  border: 2px solid #168447;
+  background: #f1fbf4;
+}
+#mix-result[data-outcome="incorrect"] {
+  border: 2px solid #cb3038;
+  background: #fff4f4;
+}
+#mix-result #mix-result-title {
+  padding: 9px 10px;
+  border-radius: 10px;
+  letter-spacing: -.3px;
+}
+#mix-result[data-outcome="correct"] #mix-result-title {
+  color: #116232; background: #d5f3de; border: 1px solid #94d6aa;
+}
+#mix-result[data-outcome="incorrect"] #mix-result-title {
+  color: #a51925; background: #ffe0e2; border: 1px solid #ee9ba2;
+}
+#mix-result .comparison-card:last-child {
+  border: 2px solid #71ba8b; background: #edfaf1;
+}
+#mix-result .comparison-card:last-child h3 { color: #116232; }
+#mix-result[data-outcome="correct"] .comparison-card:first-child {
+  border: 2px solid #71ba8b; background: #edfaf1;
+}
+#mix-result[data-outcome="correct"] .comparison-card:first-child h3 { color: #116232; }
+#mix-result[data-outcome="incorrect"] .comparison-card:first-child {
+  border: 2px solid #e78c94; background: #fff0f1;
+}
+#mix-result[data-outcome="incorrect"] .comparison-card:first-child h3,
+#mix-result[data-outcome="incorrect"] .comparison-card:first-child > strong { color: #a51925; }
+#mix-result .comparison-table .matches { background: #e7f6ec; }
+#mix-result .comparison-table .matches small { color: #116232; }
+#mix-result .comparison-table .needs-change { background: #ffe4e6; }
+#mix-result .comparison-table .needs-change small,
+#mix-result .comparison-table .needs-change td:first-of-type { color: #a51925; }
+#mix-result[data-outcome="correct"] #result-next { background: #167c40; }
+#mix-result[data-outcome="incorrect"] #result-next { background: #b42330; }
+
+/* Shared viewport position keeps Exit reachable on every screen and modal. */
+.game-exit {
+  position: fixed;
+  top: max(10px, env(safe-area-inset-top));
+  right: max(10px, calc((100vw - min(100vw, 56.25dvh)) / 2 + 10px));
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 4px;
+  border: 0;
+  background: transparent;
+  text-decoration: none;
+}
+.game-exit img { display: block; width: 100%; height: auto; }
+.game-exit:focus-visible { outline: 2px solid white; outline-offset: 2px; border-radius: 8px; }
+
+#game:is([data-mode="practice"], [data-mode="game"]) .chemical:disabled {
+  filter: grayscale(1);
+  opacity: .45;
+  cursor: wait;
+  transform: none;
+  box-shadow: none;
+}
+#game[data-pouring="true"] #feedback {
+  display: block;
+  position: absolute;
+  top: 54%; left: 5%; width: 90%;
+  margin: 0; padding: .8cqw;
+  color: #e2e8ec; background: #16333d;
+  border: 1px solid #526c76; border-radius: 2cqw;
+  font-size: clamp(12px, 3.3cqw, 16px); text-align: center;
+}
+#game[data-mode="game"][data-pouring="true"] #feedback { top: 57%; }
