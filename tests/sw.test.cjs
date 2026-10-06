@@ -18,7 +18,7 @@ test('Optional audio failure does not prevent service worker installation', asyn
   handlers.install({ waitUntil(promise) { installing = promise; } });
   await installing;
   assert.equal(activated, true);
-  assert.ok(required.includes('./liquid-sort.css?v=59'));
+  assert.ok(required.includes('./liquid-sort.css?v=60'));
   assert.equal(required.some(asset => asset.endsWith('.wav')), false);
   assert.ok(optional.includes('./audio/10s-timer-audio.wav'));
 });

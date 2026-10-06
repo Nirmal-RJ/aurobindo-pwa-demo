@@ -2479,10 +2479,10 @@ body:has(#report:not([hidden])) > main {
 
 .practice-result-sticker {
   position: absolute;
-  left: 22%;
+  left: 16.4%;
   bottom: calc(100% + 12px);
-  width: 56%;
-  height: min(22dvh, 160px);
+  width: 67.2%;
+  height: min(26.4dvh, 192px);
   object-fit: contain;
   pointer-events: none;
   opacity: 0;
