@@ -52,7 +52,7 @@
     } catch (_) { /* Pouring remains playable without audio. */ }
   }
 
-  function schedulePourSound(duration, audioDelay = duration * .33) {
+  function schedulePourSound(duration, audioDelay = duration * .33, soundLength = duration * .39) {
     if (!pourAudioBuffer || pourAudioContext?.state !== 'running' || document.hidden) return () => { };
     const source = pourAudioContext.createBufferSource(), gain = pourAudioContext.createGain();
     source.buffer = pourAudioBuffer;
@@ -60,8 +60,8 @@
     gain.connect(pourAudioContext.destination);
 
     const start = pourAudioContext.currentTime + audioDelay / 1000;
-    const length = pourAudioBuffer.duration;
-    const fade = Math.min(.025, length / 3);
+    const length = Math.min(pourAudioBuffer.duration, soundLength / 1000);
+    const fade = Math.min(.12, length / 3);
     gain.gain.setValueAtTime(0, start);
     gain.gain.linearRampToValueAtTime(.65, start + fade);
     gain.gain.setValueAtTime(.65, start + length - fade);
@@ -403,6 +403,25 @@
     show('game');
   }
 
+  const practiceStickers = {
+    positive: ['Anna Nuvvu King Telugu.webp', 'Box Office Badhalu Kottav Telugu.webp', 'Kya Baat Hai Hindi.webp', 'Nailed It! English.webp', 'Shabaash Hindi.webp'],
+    negative: ['1.png', '2.png', '3.png', '4.png', '5.png']
+  };
+
+  function showPracticeSticker(correct) {
+    const kind = correct ? 'positive' : 'negative';
+    const choices = practiceStickers[kind];
+    const sticker = $('practice-result-sticker');
+    sticker.classList.remove('is-visible');
+    sticker.style.setProperty('--sticker-angle', `${Math.random() * 12 - 6}deg`);
+    sticker.onload = () => {
+      sticker.classList.remove('is-visible');
+      void sticker.offsetWidth;
+      sticker.classList.add('is-visible');
+    };
+    sticker.src = `assets/${kind}-stickers/${encodeURIComponent(choices[Math.floor(Math.random() * choices.length)])}`;
+  }
+
   function finishPractice() {
     const correct = chemicals.every(name => mixture[name] === recipes[index].mix[name]);
     buttons.forEach(button => { button.disabled = true; });
@@ -416,6 +435,7 @@
     $('practice-result-action').setAttribute('aria-label', correct ? (last ? 'Proceed to Challenge' : 'Next Solution') : 'Watch Video');
     $('practice-result-button').src = `assets/test-tube-game-assets/images/${folder}/${correct ? (last ? 'proceed-to-challenge-button-for-last-answer.webp' : 'next-solution%20button.webp') : 'watch-video-button.webp'}`;
     $('feedback').textContent = correct ? 'Perfect blend!' : 'Incorrect mix. Watch the video and try again.';
+    showPracticeSticker(correct);
     $('practice-result').showModal();
     $('practice-result-action').focus({ preventScroll: true });
   }
@@ -505,42 +525,17 @@
     interval = setInterval(tick, 100);
   }
 
-  function finishTestRound(timedOut = false, deferResult = false) {
-    stopTimerAudio();
-    if (!playing) return;
-    challengeRemaining = Math.max(0, deadline - Date.now());
-    clearInterval(interval);
-    playing = false;
-
-    const correct = !timedOut && chemicals.every(name => mixture[name] === recipes[index].mix[name]);
-    results.push({ correct, timedOut, mix: { ...mixture } });
-
+  function finishTestRound() {
+    const correct = chemicals.every(name => mixture[name] === recipes[index].mix[name]);
+    results.push({ correct, timedOut: false, mix: { ...mixture } });
     buttons.forEach(button => { button.disabled = true; });
-    $('game').dataset.state = deferResult ? 'settling' : 'review';
+    $('game').dataset.state = 'settling';
     $('game').dataset.outcome = correct ? 'correct' : 'incorrect';
-    $('running-score').textContent = `Score ${results.filter(r => r.correct).length} / ${recipes.length}`;
-
-    $('outcome').textContent = correct ? 'The perfect mix! +1 point' : timedOut ? 'Time’s up!' : 'Not quite the right mix';
-    $('correct-recipe').textContent = `Correct recipe: ${recipeText(recipes[index].mix)}`;
-    $('correct-recipe').hidden = false;
-    $('feedback').textContent = `${$('outcome').textContent}. ${$('correct-recipe').textContent}`;
-
-    $('retry-round').hidden = true;
-    $('view-result').hidden = deferResult;
-    $('next').textContent = index === recipes.length - 1 ? 'See Results →' : 'Next Round →';
-    $('review').hidden = deferResult;
-
-    renderMixResult(correct, timedOut);
-    if (!deferResult) revealTestResult();
-  }
-
-  function revealTestResult() {
-    if (mode !== 'game') return;
-    $('game').dataset.state = 'review';
-    $('review').hidden = false;
-    $('view-result').hidden = false;
-    $('mix-result').showModal();
-    $('result-next').focus({ preventScroll: true });
+    if (results.length === recipes.length) {
+      playing = false;
+      clearInterval(interval);
+      stopTimerAudio();
+    }
   }
 
   function delayTestResult() {
@@ -548,7 +543,14 @@
     const dispose = () => { clearTimeout(timer); effects.delete(dispose); };
     const timer = setTimeout(() => {
       dispose();
-      if (mode === 'game' && index === round && $('game').dataset.state === 'settling') revealTestResult();
+      if (mode !== 'game' || index !== round || $('game').dataset.state !== 'settling') return;
+      if (results.length === recipes.length) showReport();
+      else {
+        challengeRemaining = Math.max(0, deadline - Date.now());
+        if (!challengeRemaining) { expireChallenge(); return; }
+        index++;
+        startTestRound();
+      }
     }, 450);
     effects.add(dispose);
   }
@@ -611,11 +613,11 @@
     const mouthY = to.top - top + (isBeaker ? to.height * .15 : 0) - 32;
     const currentTotal = isDemo ? demoTotal() : total();
     const surfaceY = to.top - top + to.height * (isBeaker ? .88 - .64 * currentTotal / 100 : .96 - .84 * currentTotal / 100);
-    const audioLength = pourAudioBuffer?.duration * 1000 || 0;
+    const audioLength = pourAudioBuffer ? Math.min(pourAudioBuffer.duration * 1000, 450) : 0;
     const approach = 270, returnTime = 280;
     const duration = audioLength ? approach + audioLength + returnTime : isDemo ? 680 : 820;
-    const stopSound = schedulePourSound(duration, audioLength ? approach : duration * .33);
-    // Keep approach/return snappy while stretching the liquid stream to the full clip.
+    const stopSound = schedulePourSound(duration, audioLength ? approach : duration * .33, audioLength || duration * .39);
+    // Keep approach/return snappy while keeping the stream and faded audio brief.
     const timedOffset = offset => {
       if (!audioLength) return offset;
       const time = offset <= .33 ? approach * offset / .33
@@ -773,7 +775,7 @@
       setPourBusy(true);
       commitPour(name, amount);
       const complete = total() === 100;
-      if (complete) finishTestRound(false, true);
+      if (complete) finishTestRound();
       activePourFinish = () => {
         activePourFinish = null;
         if (mode !== 'game') return;

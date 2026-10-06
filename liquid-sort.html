@@ -8,19 +8,12 @@
   <title>Liquid Sort · Aurobindo Pharma</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="liquid-sort.css?v=53">
-  <script src="liquid-sort.js?v=54" defer></script>
+  <link rel="stylesheet" href="liquid-sort.css?v=59">
+  <script src="liquid-sort.js?v=58" defer></script>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then(regs => {
         for (const reg of regs) reg.update();
-      });
-    }
-    if ('caches' in window) {
-      caches.keys().then(keys => {
-        for (const key of keys) {
-          if (!key.includes('v136')) caches.delete(key);
-        }
       });
     }
   </script>
@@ -273,6 +266,7 @@
       <a class="game-exit" href="index.html#/games" aria-label="Exit game and return to menu">
         <img src="assets/test-tube-game-assets/images/exit-button.webp" alt="" draggable="false">
       </a>
+    <img id="practice-result-sticker" class="practice-result-sticker" alt="" draggable="false">
     <img id="practice-result-panel" alt="">
     <button id="practice-result-action" class="image-control" type="button" aria-label="Next Solution">
       <img id="practice-result-button" alt="" draggable="false">

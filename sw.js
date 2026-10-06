@@ -1,9 +1,10 @@
 const CACHE_PREFIX = 'aurobindo-shell-';
-const CACHE = `${CACHE_PREFIX}v136`;
+const CACHE = `${CACHE_PREFIX}v137`;
 const ASSETS = ['./', './index.html', './styles.css?v=30', './app.js?v=18', './tile-match.js?v=23', './symptom-match.html', './symptom-match.css?v=18', './symptom-match.js?v=20', './chromatogram.html', './chromatogram.css?v=23', './chromatogram.js?v=22', './assets/toggle%20button.png', './assets/4%20arrow%20toggle%20outline.png', './assets/hpcl-logo-new.png', './assets/game-1-card.png', './assets/game-2-card.png', './assets/game-3-card.png', './assets/game-4-card.png', './logo.png', './icon.svg', './icons/icon-192.png', './icons/icon-512.png', './manifest.webmanifest'];
 ASSETS.push('./cleaning-solution.html', './cleaning-solution.css?v=7', './cleaning-solution.js?v=6');
 ASSETS.splice(ASSETS.indexOf('./styles.css?v=30'), 1, './styles.css?v=43');
-ASSETS.push('./audio/10s-timer-audio.wav', './assets/stopwatch.svg', './liquid-sort.html', './liquid-sort.css?v=53', './liquid-sort.js?v=54', './assets/test-tube.png', './audio/pour-audio.mp3', './assets/test-tube-game-assets/images/1-title-page/bg.webp', './assets/test-tube-game-assets/images/1-title-page/start-button.webp');
+ASSETS.push('./audio/10s-timer-audio.wav', './assets/stopwatch.svg', './liquid-sort.html', './liquid-sort.css?v=59', './liquid-sort.js?v=58', './assets/test-tube.png', './audio/pour-audio.mp3', './assets/test-tube-game-assets/images/1-title-page/bg.webp', './assets/test-tube-game-assets/images/1-title-page/start-button.webp');
+ASSETS.push('./assets/positive-stickers/Anna%20Nuvvu%20King%20Telugu.webp', './assets/positive-stickers/Box%20Office%20Badhalu%20Kottav%20Telugu.webp', './assets/positive-stickers/Kya%20Baat%20Hai%20Hindi.webp', './assets/positive-stickers/Nailed%20It%21%20English.webp', './assets/positive-stickers/Shabaash%20Hindi.webp', './assets/negative-stickers/1.png', './assets/negative-stickers/2.png', './assets/negative-stickers/3.png', './assets/negative-stickers/4.png', './assets/negative-stickers/5.png');
 ASSETS.push(...['report-page-bg', 'watch-video-button', 'play-again-button', 'back-to-menu-button'].map(name => `./assets/test-tube-game-assets/images/9-report-page/${name}.webp`));
 ASSETS.push('./assets/test-tube-game-assets/images/7-final-challenge-instruction/final-challenge-bg.webp', './assets/test-tube-game-assets/images/7-final-challenge-instruction/start-game-button.webp');
 ASSETS.push('./assets/test-tube-game-assets/images/5-correct-answer-pop-up/popup-base-panel.webp', './assets/test-tube-game-assets/images/5-correct-answer-pop-up/next-solution%20button.webp', './assets/test-tube-game-assets/images/5-correct-answer-pop-up/proceed-to-challenge-button-for-last-answer.webp', './assets/test-tube-game-assets/images/6-wrong-answer-pop-up/wrong-answer-base-panel.webp', './assets/test-tube-game-assets/images/6-wrong-answer-pop-up/watch-video-button.webp');
@@ -18,7 +19,16 @@ ASSETS.push('./assets/tile-match-game-assets/card-front.png', './assets/tile-mat
 ASSETS.push('./assets/sample-prep-game-1.png', './assets/sample-prep-game-2.png');
 ASSETS.push(...['bg-img.png', 'bottle%201.png', 'bottle%202.png', 'bottle%203.png'].map(file => `./assets/sample-preparation-game-assets/${file}`));
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE);
+    const optional = ASSETS.filter(asset => /\.(?:mp3|wav)$/.test(asset));
+    await cache.addAll(ASSETS.filter(asset => !optional.includes(asset)));
+    await Promise.all(optional.map(async asset => {
+      try { await cache.add(asset); }
+      catch (error) { console.warn('Optional audio could not be cached:', asset, error); }
+    }));
+    await self.skipWaiting();
+  })());
 });
 self.addEventListener('activate', event => {
   event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim()));

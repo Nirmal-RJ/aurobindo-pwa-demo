@@ -2476,3 +2476,30 @@ body:has(#report:not([hidden])) > main {
   font-size: clamp(12px, 3.3cqw, 16px); text-align: center;
 }
 #game[data-mode="game"][data-pouring="true"] #feedback { top: 57%; }
+
+.practice-result-sticker {
+  position: absolute;
+  left: 22%;
+  bottom: calc(100% + 12px);
+  width: 56%;
+  height: min(22dvh, 160px);
+  object-fit: contain;
+  pointer-events: none;
+  opacity: 0;
+  filter: drop-shadow(0 5px 8px #0005);
+  transform: rotate(var(--sticker-angle, -4deg));
+}
+#practice-result[open] .practice-result-sticker.is-visible {
+  opacity: 1;
+  animation: practice-sticker-pop 2.5s ease-in-out both;
+  will-change: transform;
+}
+@keyframes practice-sticker-pop {
+  0% { opacity: 0; transform: translateY(18px) rotate(-10deg) scale(.65); }
+  16% { opacity: 1; transform: translateY(-8px) rotate(calc(var(--sticker-angle, -4deg) + 4deg)) scale(1.12); }
+  28% { opacity: 1; transform: translateY(2px) rotate(var(--sticker-angle, -4deg)) scale(.98); }
+  44% { opacity: 1; transform: translateY(-6px) rotate(calc(var(--sticker-angle, -4deg) - 3deg)) scale(1.06); }
+  60% { opacity: 1; transform: translateY(0) rotate(calc(var(--sticker-angle, -4deg) + 2deg)) scale(1); }
+  76% { opacity: 1; transform: translateY(-3px) rotate(calc(var(--sticker-angle, -4deg) - 1deg)) scale(1.025); }
+  100% { opacity: 1; transform: translateY(0) rotate(var(--sticker-angle, -4deg)) scale(1); }
+}

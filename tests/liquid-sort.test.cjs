@@ -273,8 +273,7 @@ test('Full workflow: Manual practice for all 4 solutions leads to Screen ready, 
   solutions.forEach((sol, i) => {
     assert.equal(g.get('game-title').textContent, sol.name);
     sol.pours.forEach(([chem, count]) => g.pour(chem, count));
-    assert.equal(g.get('mix-result').open, true);
-    g.next(); // Closes modal and advances to next test round
+    assert.notEqual(g.get('mix-result').open, true);
   });
 
   // Screen 7: Challenge Complete Report
@@ -300,45 +299,28 @@ test('Animated pours with reduced motion keep tube movement visible and clean up
   assert.ok(g.animations.every(anim => anim.cancelled));
 });
 
-test('Challenge shares 45 seconds of playing time and pauses during result review', () => {
+test('Challenge automatically advances without popups and keeps one continuous deadline', () => {
   const g = createGame();
   g.click('start-game');
-  assert.equal(g.get('seconds').textContent, '00:45');
-  assert.equal(g.get('timer').attributes['aria-valuenow'], 45);
   g.advance(10000);
   g.pour('Water', 3); g.pour('ACN'); g.pour('MeOH');
-  assert.equal(g.get('mix-result').open, true);
-  g.advance(60000);
-  assert.equal(g.get('seconds').textContent, '00:35');
-  g.click('close-result');
-  g.advance(60000);
-  assert.equal(g.get('seconds').textContent, '00:35');
-  g.next();
-  assert.equal(g.get('seconds').textContent, '00:35');
+  assert.notEqual(g.get('mix-result').open, true);
   assert.equal(g.get('game-title').textContent, 'Strong Wash Solvent');
-  g.advance(35000);
+  assert.equal(g.get('seconds').textContent, '00:34');
+  g.advance(33600);
   assert.equal(g.get('report').hidden, false);
   assert.equal(g.get('final-score').textContent, 1);
-  assert.equal(g.get('mix-result').open, false);
 });
 
-test('Wrong-result review pauses the timer and restarting gives a fresh 45 seconds', () => {
+test('Incorrect challenge mixes also advance automatically', () => {
   const g = createGame();
   g.click('start-game');
-  g.advance(12345);
   g.pour('Water', 4);
-  assert.equal(g.get('mix-result').open, true);
-  g.advance(60000);
-  assert.equal(g.get('mix-result').open, true);
-  g.next();
-  assert.equal(g.get('seconds').textContent, '00:33');
-  g.advance(32654);
-  assert.equal(g.get('report').hidden, true);
-  g.advance(1);
+  assert.equal(g.get('game-title').textContent, 'Strong Wash Solvent');
+  assert.notEqual(g.get('mix-result').open, true);
+  g.advance(45000);
   assert.equal(g.get('report').hidden, false);
-  g.click('start-game');
-  assert.equal(g.get('seconds').textContent, '00:45');
-  assert.match(g.get('fill-total').innerHTML, /^0</);
+  assert.equal(g.get('final-score').textContent, 0);
 });
 
 test('Practice orders solvents by descending target percentage for every recipe', () => {
@@ -360,14 +342,13 @@ test('Challenge shuffles on each solution and preserves solvent click behavior',
   g.click('start-game');
   assert.deepEqual(g.get('chemicals').children.map(button => button.dataset.chemical), ['ACN', 'MeOH', 'Water']);
   g.pour('Water', 3); g.pour('ACN'); g.pour('MeOH');
-  assert.equal(g.get('game').dataset.outcome, 'correct');
-  g.next();
+  assert.notEqual(g.get('mix-result').open, true);
   assert.deepEqual(g.get('chemicals').children.map(button => button.dataset.chemical), ['Water', 'ACN', 'MeOH']);
   g.pour('Water', 2); g.pour('ACN', 4);
-  assert.equal(g.get('game').dataset.outcome, 'correct');
+  assert.equal(g.get('game-title').textContent, 'Needle Wash Solvent');
 });
 
-test('Final challenge pour finishes animating before showing the result and does not consume review time', () => {
+test('Challenge finishes the pour animation before automatically starting the next solution', () => {
   const g = createGame({ animated: true });
   g.click('start-game');
   g.pour('Water', 3); g.pour('ACN');
@@ -379,11 +360,10 @@ test('Final challenge pour finishes animating before showing the result and does
   g.advance(450);
   assert.notEqual(g.get('mix-result').open, true);
   g.advance(1);
-  assert.equal(g.get('mix-result').open, true);
-  assert.equal(g.get('game').dataset.state, 'review');
-  g.advance(10000);
-  g.next();
-  assert.equal(g.get('seconds').textContent, '00:42');
+  assert.notEqual(g.get('mix-result').open, true);
+  assert.equal(g.get('game').dataset.state, 'playing');
+  assert.equal(g.get('game-title').textContent, 'Strong Wash Solvent');
+  assert.equal(g.get('seconds').textContent, '00:41');
 });
 
 test('Timer urgency starts at ten seconds and clears on a new challenge', () => {
@@ -395,10 +375,6 @@ test('Timer urgency starts at ten seconds and clears on a new challenge', () => 
   assert.equal(g.get('timer').classList.contains('urgent'), true);
   assert.equal(g.get('seconds').textContent, '00:10');
   g.pour('Water', 4);
-  assert.equal(g.get('game').dataset.state, 'review');
-  g.advance(20000);
-  assert.equal(g.get('seconds').textContent, '00:10');
-  g.next();
   assert.equal(g.get('game').dataset.state, 'playing');
   assert.equal(g.get('timer').classList.contains('urgent'), true);
   g.click('start-game');
@@ -453,10 +429,10 @@ test('Pour audio is prepared on Start and synchronized with practice and challen
   g.pour('Water');
   assert.equal(played.length, 1);
   assert.ok(played[0][0] > 0);
-  assert.equal(played[0][2], 2);
+  assert.equal(played[0][2], .45);
   assert.equal(played[0][0], .27);
-  assert.equal(g.animations[0].options.duration, 2550);
-  g.advance(2550);
+  assert.equal(g.animations[0].options.duration, 1000);
+  g.advance(1000);
   g.click('start-game');
   g.pour('Water');
   assert.equal(played.length, 2);
@@ -487,7 +463,7 @@ test('Both modes disable all solvent cards while pouring and recover after rotat
   }
 });
 
-test('Last ten seconds audio pauses on results and resumes at the saved countdown position', async () => {
+test('Last ten seconds audio follows the continuous countdown across solutions', async () => {
   const sources = [], urls = [];
   class AudioContext {
     constructor() { this.state = 'running'; this.currentTime = 0; this.destination = {}; }
@@ -509,11 +485,21 @@ test('Last ten seconds audio pauses on results and resumes at the saved countdow
   g.advance(2000);
   g.pour('Water', 4);
   assert.equal(sources[0].stopped, true);
-  g.advance(20000);
-  assert.equal(sources.length, 1);
-  g.next();
-  assert.deepEqual(sources[1].args, [0, 2, 8]);
-  g.advance(8000);
+  assert.deepEqual(sources[1].args, [0, 2.45, 7.55]);
+  g.advance(6600);
   assert.equal(sources[1].stopped, true);
   assert.equal(g.get('report').hidden, false);
+});
+
+test('Practice chooses a sticker from the matching result collection', () => {
+  for (const correct of [true, false]) {
+    const g = createGame({ random: () => .5 });
+    g.start(); g.watchSolution(); g.startMixing();
+    if (correct) { g.pour('Water', 3); g.pour('ACN'); g.pour('MeOH'); }
+    else g.pour('Water', 4);
+    const sticker = g.get('practice-result-sticker');
+    assert.equal(sticker.src, correct ? 'assets/positive-stickers/Kya%20Baat%20Hai%20Hindi.webp' : 'assets/negative-stickers/3.png');
+    sticker.onload();
+    assert.equal(sticker.classList.contains('is-visible'), true);
+  }
 });
