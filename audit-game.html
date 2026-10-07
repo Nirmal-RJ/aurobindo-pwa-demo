@@ -6,8 +6,8 @@
   <meta name="theme-color" content="#102a40">
   <title>Audit game · Aurobindo Pharma</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="audit-game.css?v=19">
-  <script src="audit-game.js?v=27" defer></script>
+  <link rel="stylesheet" href="audit-game.css?v=24">
+  <script src="audit-game.js?v=30" defer></script>
 </head>
 <body>
   <main id="game">
@@ -18,10 +18,9 @@
       <div id="clock" role="timer" aria-label="Time remaining"><img class="clock-icon" src="assets/stopwatch.svg" alt=""><span id="seconds">90</span><small>s</small><div class="time-track"><div id="time-bar"></div></div></div>
     </header>
     <footer class="toolbar">
+      <span class="zoom-hint"><svg class="zoom-gesture" viewBox="0 0 32 32" aria-hidden="true"><path d="M12 12 5 5m0 7V5h7m8 15 7 7m0-7v7h-7" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16" cy="16" r="3" fill="currentColor"/></svg><span><strong>Pinch to zoom</strong><small>Use two fingers &middot; Drag to explore</small></span></span>
       <div class="zoom-controls" aria-label="Scene zoom">
-        <button id="zoom-out" class="icon-button" aria-label="Zoom out">−</button>
-        <button id="zoom-reset" aria-label="Reset zoom">1×</button>
-        <button id="zoom-in" class="icon-button" aria-label="Zoom in">+</button>
+        <button id="zoom-reset" aria-label="Reset zoom to 1 times" title="Tap to reset zoom">1×</button>
       </div>
       <span id="selected-count" aria-live="polite">0 selected</span>
       <button id="submit" class="primary" disabled>Submit →</button>

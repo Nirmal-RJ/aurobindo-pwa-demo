@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>F1 Grand Prix • Sign Scroller Championship</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@600;700&family=Titillium+Web:ital,wght@0,400;0,700;0,900;1,700;1,900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --f1-red: #e10600;
+            --f1-red-dark: #a80000;
+            --f1-black: #0f1015;
+            --f1-carbon: #181920;
+            --f1-gray: #2d2f3b;
+            --f1-gold: #ffb800;
+            --f1-blue: #0090ff;
+            --f1-purple: #b026ff;
+            --f1-white: #ffffff;
+            --f1-border: rgba(255, 255, 255, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body,
+        html {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            font-family: 'Titillium Web', sans-serif;
+            background: #090a0d;
+            color: var(--f1-white);
+        }
+
+        #gameCanvas {
+            width: 100dvw;
+            height: 100dvh;
+            display: block;
+            background: #14151a;
+        }
+
+        /* ==================== F1 TOP HUD BAR ==================== */
+        #f1Header {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0 16px;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        .hud-panel {
+            background: linear-gradient(135deg, rgba(24, 25, 32, 0.92), rgba(15, 16, 21, 0.96));
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--f1-border);
+            border-top: 3px solid var(--f1-red);
+            border-radius: 6px;
+            padding: 6px 14px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            pointer-events: auto;
+        }
+
+        /* SCORE / TELEMETRY */
+        #scoreContainer {
+            min-width: 130px;
+        }
+
+        .hud-sub-label {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: #8e90a0;
+            text-transform: uppercase;
+        }
+
+        #score {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(16px, 3.2vw, 22px);
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+            margin: 1px 0;
+        }
+
+        .telemetry-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Orbitron', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            color: #00f0ff;
+            letter-spacing: 0.5px;
+        }
+
+        .drs-badge {
+            background: rgba(0, 240, 255, 0.15);
+            border: 1px solid #00f0ff;
+            border-radius: 3px;
+            padding: 1px 4px;
+            font-size: 9px;
+            color: #00f0ff;
+            font-weight: 900;
+        }
+
+        /* RACE DIRECTIVE (CENTER HUD) */
+        #directiveContainer {
+            text-align: center;
+            padding: 8px 20px;
+            transform-origin: top center;
+            border-top: 3px solid var(--f1-red);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .race-control-tag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #fff;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .radio-pulse {
+            width: 7px;
+            height: 7px;
+            background: var(--f1-red);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px var(--f1-red);
+            animation: radioBlink 1.2s infinite;
+        }
+
+        @keyframes radioBlink {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.8); }
+        }
+
+        /* Keeping the original #hud element and its logic */
+        #hud {
+            font-family: 'Titillium Web', sans-serif;
+            font-style: italic;
+            font-size: clamp(16px, 3.8vw, 24px);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 4px 18px;
+            border-radius: 4px;
+            margin: 2px auto;
+            display: inline-block;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            transition: all 0.25s ease;
+        }
+
+        .directive-instruction {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #a0a2b2;
+            text-transform: uppercase;
+        }
+
+        /* LIVES / TYRE LIFE */
+        #livesContainer {
+            min-width: 130px;
+            text-align: right;
+        }
+
+        #lives {
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(16px, 3.2vw, 22px);
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 1px;
+            margin: 1px 0;
+        }
+
+        .tyre-rack {
+            display: flex;
+            justify-content: flex-end;
+            gap: 6px;
+            margin-top: 3px;
+        }
+
+        .tyre-icon {
+            width: 14px;
+            height: 22px;
+            background: #2a2b33;
+            border: 2px solid #555;
+            border-radius: 3px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tyre-icon.active {
+            border-color: var(--f1-red);
+            background: #181920;
+            box-shadow: 0 0 8px rgba(225, 6, 0, 0.7);
+        }
+
+        .tyre-icon.active::after {
+            content: '';
+            position: absolute;
+            left: 2px;
+            right: 2px;
+            top: 50%;
+            height: 2px;
+            background: var(--f1-red);
+            transform: translateY(-50%);
+        }
+
+        .tyre-icon.lost {
+            opacity: 0.25;
+            filter: grayscale(1);
+            border-color: #444;
+        }
+
+        /* ==================== F1 STREAK / PURPLE SECTOR ==================== */
+        #combo {
+            position: absolute;
+            top: 42%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, rgba(176, 38, 255, 0.95), rgba(110, 15, 180, 0.95));
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            font-style: italic;
+            font-weight: 900;
+            font-size: clamp(18px, 4.5vw, 30px);
+            letter-spacing: 2px;
+            padding: 12px 28px;
+            border-radius: 8px;
+            border: 2px solid #df80ff;
+            box-shadow: 0 0 35px rgba(176, 38, 255, 0.8), inset 0 0 15px rgba(255, 255, 255, 0.4);
+            opacity: 0;
+            z-index: 100;
+            pointer-events: none;
+            text-transform: uppercase;
+            text-align: center;
+            transition: opacity 0.3s ease, transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #combo::before {
+            content: "⚡ PURPLE SECTOR • ";
+            font-size: 0.7em;
+            letter-spacing: 1px;
+            display: block;
+            color: #f3d4ff;
+        }
+
+        /* STREAK BROKEN / YELLOW FLAG */
+        #comboBroken {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, rgba(225, 6, 0, 0.92), rgba(140, 0, 0, 0.95));
+            color: #fff;
+            font-family: 'Titillium Web', sans-serif;
+            font-style: italic;
+            font-weight: 900;
+            font-size: clamp(18px, 4.2vw, 30px);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+            padding: 12px 32px;
+            border-radius: 8px;
+            border: 2px solid #ff5555;
+            box-shadow: 0 0 30px rgba(225, 6, 0, 0.8);
+            display: none;
+            z-index: 100;
+            pointer-events: none;
+            animation: warningPulse 0.4s ease-out;
+        }
+
+        #comboBroken::before {
+            content: "⚠️ TRACK LIMITS EXCEEDED • ";
+            display: block;
+            font-size: 0.65em;
+            letter-spacing: 1.5px;
+            color: #ffd2d2;
+        }
+
+        @keyframes warningPulse {
+            0% { transform: translate(-50%, -50%) scale(0.7); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        /* FLOATING SCORE POPUP */
+        .plus10 {
+            position: absolute;
+            font-family: 'Orbitron', monospace;
+            font-size: clamp(20px, 4.5vw, 32px);
+            font-weight: 900;
+            color: #00ff88;
+            text-shadow: 0 0 15px rgba(0, 255, 136, 0.8), 2px 2px 4px #000;
+            animation: rise 1s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+            pointer-events: none;
+            z-index: 90;
+        }
+
+        /* ==================== F1 STARTING LIGHTS & GANTRY ==================== */
+        #gantryOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(15, 16, 21, 0.85) 0%, rgba(9, 10, 13, 0.96) 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 900;
+            transition: opacity 0.5s ease;
+        }
+
+        .f1-logo-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .f1-badge-red {
+            background: var(--f1-red);
+            color: #fff;
+            font-family: 'Titillium Web', sans-serif;
+            font-style: italic;
+            font-weight: 900;
+            font-size: 28px;
+            letter-spacing: 3px;
+            padding: 4px 14px;
+            border-radius: 4px;
+            box-shadow: 0 0 20px rgba(225, 6, 0, 0.6);
+        }
+
+        .f1-badge-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 4px;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        /* 5 Starting Lights Pods */
+        .lights-gantry {
+            display: flex;
+            gap: 12px;
+            background: #111217;
+            border: 2px solid #282a36;
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 0, 0, 0.9);
+            margin-bottom: 28px;
+        }
+
+        .light-pod {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #090a0d;
+            padding: 10px 8px;
+            border-radius: 8px;
+            border: 1px solid #20222b;
+        }
+
+        .f1-lamp {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #1a1a20;
+            border: 2px solid #2c2d38;
+            transition: all 0.15s ease;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .f1-lamp.lit {
+            background: #ff1e00;
+            border-color: #ff7766;
+            box-shadow: 0 0 20px #ff1e00, 0 0 35px #ff1e00, inset 0 0 10px #ffffff;
+        }
+
+        #lightsOutMessage {
+            font-family: 'Titillium Web', sans-serif;
+            font-style: italic;
+            font-weight: 900;
+            font-size: clamp(24px, 5vw, 42px);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #00ff88;
+            text-shadow: 0 0 25px rgba(0, 255, 136, 0.8);
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #lightsOutMessage.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* START BUTTON (Retaining original #startBtn) */
+        #startBtn {
+            font-family: 'Titillium Web', sans-serif;
+            font-style: italic;
+            font-weight: 900;
+            font-size: clamp(18px, 4vw, 24px);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 16px 42px;
+            border: none;
+            background: linear-gradient(135deg, var(--f1-red) 0%, var(--f1-red-dark) 100%);
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(225, 6, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            position: relative;
+        }
+
+        #startBtn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(225, 6, 0, 0.7);
+        }
+
+        #startBtn:active {
+            transform: translateY(1px) scale(0.98);
+        }
+
+        .control-hints {
+            margin-top: 24px;
+            font-size: 13px;
+            letter-spacing: 1px;
+            color: #7b7e90;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 600;
+        }
+
+        .key-badge {
+            background: #252733;
+            border: 1px solid #44475a;
+            border-radius: 4px;
+            padding: 2px 8px;
+            color: #fff;
+            font-weight: 700;
+            font-family: 'Orbitron', monospace;
+            font-size: 11px;
+        }
+
+        /* COUNTDOWN OVERLAY (Preserving ID) */
+        #countdownOverlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 80px;
+            font-weight: 900;
+            color: var(--f1-white);
+            text-shadow: 0 0 25px var(--f1-red);
+            z-index: 999;
+            display: none;
+            pointer-events: none;
+        }
+
+        /* ==================== F1 GAME OVER MODAL ==================== */
+        #gameOverModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(9, 10, 13, 0.85);
+            backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        #gameOverBox {
+            background: linear-gradient(145deg, #181922, #101117);
+            border: 1px solid var(--f1-border);
+            border-top: 4px solid var(--f1-red);
+            padding: 36px 48px;
+            border-radius: 12px;
+            text-align: center;
+            color: #fff;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(225, 6, 0, 0.3);
+            max-width: 440px;
+            width: 90%;
+        }
+
+        .chequered-bar {
+            height: 10px;
+            background: repeating-linear-gradient(45deg, #fff, #fff 10px, #000 10px, #000 20px);
+            border-radius: 3px;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        #gameOverBox h2 {
+            font-family: 'Titillium Web', sans-serif;
+            font-style: italic;
+            font-weight: 900;
+            font-size: 34px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--f1-red);
+            text-shadow: 0 0 15px rgba(225, 6, 0, 0.5);
+            margin-bottom: 8px;
+        }
+
+        .dnf-tag {
+            display: inline-block;
+            font-family: 'Orbitron', monospace;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: rgba(225, 6, 0, 0.2);
+            color: #ff4d4d;
+            border: 1px solid #ff4d4d;
+            padding: 2px 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        #finalScore {
+            font-family: 'Orbitron', monospace;
+            font-size: 26px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 24px;
+            letter-spacing: 1px;
+        }
+
+        #gameOverBox button {
+            font-family: 'Titillium Web', sans-serif;
+            font-style: italic;
+            font-weight: 900;
+            font-size: 18px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, var(--f1-red) 0%, var(--f1-red-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(225, 6, 0, 0.5);
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        #gameOverBox button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(225, 6, 0, 0.7);
+        }
+
+        /* MOBILE TOUCH STEER BUTTONS (Optional quick tap) */
+        #mobileControls {
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 24px;
+            pointer-events: none;
+            z-index: 60;
+        }
+
+        .steer-btn {
+            pointer-events: auto;
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: rgba(24, 25, 34, 0.65);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(6px);
+            cursor: pointer;
+            transition: transform 0.1s ease, background 0.1s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .steer-btn:active {
+            transform: scale(0.92);
+            background: rgba(225, 6, 0, 0.8);
+            border-color: #fff;
+        }
+
+        @media (min-width: 900px) {
+            #mobileControls {
+                display: none;
+            }
+        }
+
+        /* TRAIL & SCREEN SHAKE */
+        .trail {
+            position: absolute;
+            width: 40px;
+            height: 70px;
+            background: radial-gradient(circle, rgba(225, 6, 0, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0.4;
+            pointer-events: none;
+            animation: fadeTrail 0.4s ease-out forwards;
+        }
+
+        @keyframes fadeTrail {
+            0% { opacity: 0.5; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.5); }
+        }
+
+        .shake {
+            animation: screenShake 0.3s;
+        }
+
+        @keyframes screenShake {
+            0% { transform: translate(4px, 0); }
+            25% { transform: translate(-4px, 4px); }
+            50% { transform: translate(4px, -4px); }
+            75% { transform: translate(-4px, 4px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        @keyframes rise {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            50% { opacity: 1; transform: translateY(-25px) scale(1.2); }
+            100% { opacity: 0; transform: translateY(-60px) scale(1); }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- F1 BROADCAST HEADER -->
+    <header id="f1Header">
+        <!-- SCORE & TELEMETRY -->
+        <div class="hud-panel" id="scoreContainer">
+            <span class="hud-sub-label">POINTS</span>
+            <div id="score">Score: 0</div>
+            <div class="telemetry-row">
+                <span id="telemetrySpeed">280 KM/H</span>
+                <span class="drs-badge" id="drsBadge">DRS</span>
+            </div>
+        </div>
+
+        <!-- RACE CONTROL DIRECTIVE -->
+        <div class="hud-panel" id="directiveContainer">
+            <div class="race-control-tag">
+                <span class="radio-pulse"></span> FIA RACE CONTROL
+            </div>
+            <!-- Preserving the original #hud element for game logic -->
+            <div id="hud">Mandatory</div>
+            <div class="directive-instruction" id="directiveInstruction">Collect matching road signs</div>
+        </div>
+
+        <!-- TYRE LIFE / LIVES -->
+        <div class="hud-panel" id="livesContainer">
+            <span class="hud-sub-label">TYRE COMPOUND</span>
+            <div id="lives">Lives: 3</div>
+            <div class="tyre-rack" id="tyreRack">
+                <div class="tyre-icon active" id="tyre1" title="Soft Slick Tyre"></div>
+                <div class="tyre-icon active" id="tyre2" title="Soft Slick Tyre"></div>
+                <div class="tyre-icon active" id="tyre3" title="Soft Slick Tyre"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- FLOATING STREAKS -->
+    <div id="combo">Streak: 0</div>
+    <div id="comboBroken">Streak Broken!</div>
+    <div id="countdownOverlay"></div>
+
+    <!-- MOBILE STEER BUTTONS -->
+    <div id="mobileControls">
+        <button class="steer-btn" id="steerLeft" aria-label="Steer Left">◀</button>
+        <button class="steer-btn" id="steerRight" aria-label="Steer Right">▶</button>
+    </div>
+
+    <!-- F1 STARTING LIGHTS GANTRY & OVERLAY -->
+    <div id="gantryOverlay">
+        <div class="f1-logo-badge">
+            <span class="f1-badge-red">F1</span>
+            <span class="f1-badge-text">GRAND PRIX</span>
+        </div>
+
+        <!-- 5 Red Start Lights Pods -->
+        <div class="lights-gantry" id="lightsGantry">
+            <div class="light-pod">
+                <div class="f1-lamp" id="l1_top"></div>
+                <div class="f1-lamp" id="l1_bot"></div>
+            </div>
+            <div class="light-pod">
+                <div class="f1-lamp" id="l2_top"></div>
+                <div class="f1-lamp" id="l2_bot"></div>
+            </div>
+            <div class="light-pod">
+                <div class="f1-lamp" id="l3_top"></div>
+                <div class="f1-lamp" id="l3_bot"></div>
+            </div>
+            <div class="light-pod">
+                <div class="f1-lamp" id="l4_top"></div>
+                <div class="f1-lamp" id="l4_bot"></div>
+            </div>
+            <div class="light-pod">
+                <div class="f1-lamp" id="l5_top"></div>
+                <div class="f1-lamp" id="l5_bot"></div>
+            </div>
+        </div>
+
+        <div id="lightsOutMessage">LIGHTS OUT AND AWAY WE GO!</div>
+
+        <!-- Preserving original #startBtn -->
+        <button id="startBtn">START GRAND PRIX</button>
+
+        <div class="control-hints">
+            <span>STEER: <span class="key-badge">←</span> <span class="key-badge">→</span> or <span class="key-badge">A</span> <span class="key-badge">D</span></span>
+            <span>MOBILE: <span class="key-badge">SWIPE</span> or <span class="key-badge">TAP</span></span>
+        </div>
+    </div>
+
+    <!-- F1 CAR SPRITE -->
+    <img id="carImg" src="./f1-car.png" alt="F1 Car" style="display:none;" />
+
+    <!-- GAME OVER MODAL -->
+    <div id="gameOverModal">
+        <div id="gameOverBox">
+            <div class="chequered-bar"></div>
+            <h2>RETIRED</h2>
+            <div class="dnf-tag">SESSION CLASSIFIED (DNF)</div>
+            <p id="finalScore">Your Score: 0</p>
+            <button onclick="restartGame()">BOX, BOX 🔁 RESTART RACE</button>
+        </div>
+    </div>
+
+    <!-- AUDIO ELEMENTS -->
+    <audio id="bgMusic" src="./bg.mp3" loop></audio>
+    <audio id="correctSound" src="./correct.mp3"></audio>
+    <audio id="wrongSound" src="./wrong-old.mp3"></audio>
+    <audio id="gameOverSound" src="./wrong.mp3"></audio>
+
+    <script>
+        // ==================== ORIGINAL ASSETS & DATA STRUCTURE ====================
+        const signImageURLs = {
+            mandatory: [
+                "./signs/02 Give way.png",
+                "./signs/03 Cycles prohibited.png",
+                "./signs/05 Compulsory ahead.png",
+                "./signs/08 Compulsory turn right.png",
+                "./signs/11 Pedestrian prohibited.png",
+                "./signs/13 Compulsory ahead or left.png",
+                "./signs/14 Prohibited both ways.png",
+                "./signs/15 Compulsory keep left.png",
+                "./signs/16 No Entry.png",
+                "./signs/20 Compulsory sound horn.png",
+                "./signs/21 Right turn prohibited.png",
+                "./signs/23 Compulsory bus stop.png",
+                "./signs/29 U turn prohibited.png",
+                "./signs/31 Overtaking prohibited.png",
+                "./signs/34 Horn prohibited.png",
+                "./signs/35 Truck prohibited.png",
+                "./signs/37 No parking.png",
+                "./signs/39 No stopping or standing.png",
+                "./signs/40 One way.png",
+                "./signs/43 Speed limit.png",
+                "./signs/47 Length limit.png",
+                "./signs/49 Load limit.png",
+            ],
+
+            cautionary: [
+                "./signs/04 Staggered intersection.png",
+                "./signs/06 Left reverse bend.png",
+                "./signs/07 T intersection.png",
+                "./signs/09 Loose gravel.png",
+                "./signs/10 Major road.png",
+                "./signs/12 Roundabout.png",
+                "./signs/17 Speedbreaker.png",
+                "./signs/18 Barrier.png",
+                "./signs/19 Pedestrian crossing.png",
+                "./signs/22 Unguarded railway.png",
+                "./signs/24 School zone.png",
+                "./signs/25 Guarded railway.png",
+                "./signs/26 Steep ascent.png",
+                "./signs/27 Men at work.png",
+                "./signs/30 Cattle.png",
+                "./signs/32 Right hairpin bend.png",
+                "./signs/33 Falling rocks.png",
+                "./signs/36 Narrow road.png",
+                "./signs/38 Cross road.png",
+                "./signs/41 Gap in median.png",
+                "./signs/44 Road widens.png",
+                "./signs/45 Side road right.png",
+                "./signs/48 Narrow bridge.png",
+                "./signs/51 Left curve.png",
+                "./signs/52 Y intersection.png",
+                "./signs/53 Slippery road.png",
+                "./signs/54 Signal ahead.png"
+            ],
+            informatory: [
+                "./signs/28 No through road.png",
+                "./signs/42 Petrol bunk.png",
+                "./signs/46 Hospital.png",
+                "./signs/50 Parking both sides.png"
+            ]
+        };
+
+        const signImages = {
+            mandatory: [],
+            cautionary: [],
+            informatory: []
+        };
+
+        for (let type in signImageURLs) {
+            signImageURLs[type].forEach(url => {
+                const img = new Image();
+                img.src = url;
+                signImages[type].push(img);
+            });
+        }
+
+        // ==================== CANVAS & GAME STATE ====================
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const laneCount = 3;
+        let currentLane = 1;
+        // Tuned for high-res F1 car proportions (408 x 927 ~ 1:2.27)
+        const carWidth = 68;
+        const carHeight = 150;
+        const laneWidth = canvas.width / laneCount;
+        let lives = 3;
+        let score = 0;
+        let speed = 5;
+        let spawnRate = 2000;
+        let scoreType = "mandatory";
+        let comboCount = 0;
+        let roadOffset = 0;
+        let isGameOver = false;
+
+        let carX = currentLane * laneWidth + laneWidth / 2;
+        let carRotation = 0;          // Current rotation angle
+        let targetRotation = 0;       // Desired angle
+        let rotationResetTimer = 0;   // Countdown to reset rotation
+
+        // F1 visual particles: titanium sparks and tyre heat smoke
+        const sparks = [];
+        const tyreSmoke = [];
+
+        const types = ["mandatory", "cautionary", "informatory"];
+        const roadSigns = [];
+
+        const correctSound = document.getElementById("correctSound");
+        const wrongSound = document.getElementById("wrongSound");
+        const gameOverSound = document.getElementById("gameOverSound");
+        const comboDiv = document.getElementById("combo");
+        const comboBreak = document.getElementById("comboBroken");
+        const telemetrySpeedEl = document.getElementById("telemetrySpeed");
+
+        function randomType() {
+            return types[Math.floor(Math.random() * types.length)];
+        }
+
+        // Function to update Directive Banner styling and instruction
+        function applyHudTheme(typeText) {
+            const hudEl = document.getElementById("hud");
+            const dirContainer = document.getElementById("directiveContainer");
+            const dirInst = document.getElementById("directiveInstruction");
+
+            switch (typeText) {
+                case "Mandatory":
+                    hudEl.style.backgroundColor = "#e10600";
+                    hudEl.style.color = "#ffffff";
+                    if (dirContainer) dirContainer.style.borderTopColor = "#e10600";
+                    if (dirInst) dirInst.textContent = "Collect Mandatory (Red) Signs";
+                    break;
+                case "Cautionary":
+                    hudEl.style.backgroundColor = "#ffb800";
+                    hudEl.style.color = "#000000";
+                    if (dirContainer) dirContainer.style.borderTopColor = "#ffb800";
+                    if (dirInst) dirInst.textContent = "Collect Cautionary (Yellow) Signs";
+                    break;
+                case "Informatory":
+                    hudEl.style.backgroundColor = "#0070f3";
+                    hudEl.style.color = "#ffffff";
+                    if (dirContainer) dirContainer.style.borderTopColor = "#0070f3";
+                    if (dirInst) dirInst.textContent = "Collect Informatory (Blue) Signs";
+                    break;
+            }
+        }
+
+        function updateTyreDisplay() {
+            for (let i = 1; i <= 3; i++) {
+                const tyreEl = document.getElementById("tyre" + i);
+                if (tyreEl) {
+                    if (i <= lives) {
+                        tyreEl.className = "tyre-icon active";
+                    } else {
+                        tyreEl.className = "tyre-icon lost";
+                    }
+                }
+            }
+        }
+
+        applyHudTheme(document.getElementById("hud").textContent);
+        updateTyreDisplay();
+
+        // Target Directive rotation logic (Preserved 100%)
+        setInterval(() => {
+            const signNearCar = roadSigns.some(sign => sign.y > canvas.height / 2);
+            if (!signNearCar) {
+                let newType;
+                do {
+                    newType = randomType();
+                } while (newType === scoreType); // ensure it's different
+                scoreType = newType;
+
+                document.getElementById("hud").textContent = scoreType.charAt(0).toUpperCase() + scoreType.slice(1);
+                applyHudTheme(document.getElementById("hud").textContent);
+            }
+        }, 3000);
+
+        // Web Audio Synthesizer for F1 engine rev on lane switch
+        let audioCtx;
+        function playEngineRev() {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = "sawtooth";
+                osc.frequency.setValueAtTime(140, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(280, audioCtx.currentTime + 0.12);
+                osc.frequency.exponentialRampToValueAtTime(120, audioCtx.currentTime + 0.25);
+
+                gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.25);
+            } catch (e) {
+                // AudioContext not available or allowed yet
+            }
+        }
+
+        // ==================== RENDERING METHODS ====================
+
+        // F1 Racetrack with asphalt grain, red/white curbs, white dashed lane lines, grid boxes
+        function drawRoad() {
+            // Dark Racing Tarmac
+            ctx.fillStyle = "#16171d";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Outer Grass / Run-off borders
+            const curbWidth = Math.max(18, Math.min(32, canvas.width * 0.035));
+            ctx.fillStyle = "#0d2b1a"; // Astroturf green
+            ctx.fillRect(0, 0, curbWidth + 8, canvas.height);
+            ctx.fillRect(canvas.width - curbWidth - 8, 0, curbWidth + 8, canvas.height);
+
+            // F1 Red and White Alternating Kerbs
+            const kerbSegHeight = 45;
+            const kerbOffset = roadOffset % (kerbSegHeight * 2);
+            for (let y = kerbOffset - kerbSegHeight * 2; y < canvas.height; y += kerbSegHeight) {
+                const isRed = Math.floor((y - kerbOffset) / kerbSegHeight) % 2 === 0;
+                ctx.fillStyle = isRed ? "#e10600" : "#ffffff";
+                // Left kerb
+                ctx.fillRect(8, y, curbWidth, kerbSegHeight);
+                // Right kerb
+                ctx.fillRect(canvas.width - curbWidth - 8, y, curbWidth, kerbSegHeight);
+            }
+
+            // Kerb edge lines (track limits)
+            ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+            ctx.fillRect(curbWidth + 8, 0, 3, canvas.height);
+            ctx.fillRect(canvas.width - curbWidth - 11, 0, 3, canvas.height);
+
+            // Rubberized racing groove down the center of each lane
+            ctx.fillStyle = "rgba(10, 11, 14, 0.4)";
+            for (let i = 0; i < laneCount; i++) {
+                const lx = i * laneWidth + laneWidth / 2;
+                ctx.fillRect(lx - 25, 0, 50, canvas.height);
+            }
+
+            // Periodic DRS Zone Detection Lines & Grid Boxes
+            const gridOffset = (roadOffset * 0.8) % 900;
+            if (gridOffset < canvas.height) {
+                // DRS line
+                ctx.fillStyle = "rgba(0, 240, 255, 0.25)";
+                ctx.fillRect(curbWidth + 12, gridOffset, canvas.width - (curbWidth + 12) * 2, 4);
+                ctx.font = "900 11px Orbitron";
+                ctx.fillStyle = "#00f0ff";
+                ctx.fillText("DRS ZONE", curbWidth + 24, gridOffset - 4);
+            }
+
+            // Dashed white lane dividers
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+            ctx.setLineDash([40, 30]);
+            ctx.lineWidth = 3;
+
+            for (let y = roadOffset % 70 - 70; y < canvas.height; y += 70) {
+                for (let i = 1; i < laneCount; i++) {
+                    let x = i * laneWidth;
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(x, y + 40);
+                    ctx.stroke();
+                }
+            }
+            ctx.setLineDash([]); // Reset line dash
+
+            roadOffset += speed;
+        }
+
+        // F1 Car Sprite & Effects
+        function drawCar() {
+            const carImg = document.getElementById("carImg");
+            const x = carX;
+            const y = canvas.height - carHeight / 2 - 20;
+
+            // Spawn tyre heat smoke particles
+            if (Math.random() < 0.3) {
+                tyreSmoke.push({
+                    x: x + (Math.random() < 0.5 ? -24 : 24),
+                    y: y + carHeight / 2 - 10,
+                    size: 6,
+                    opacity: 0.35
+                });
+            }
+
+            // Draw & update tyre smoke
+            for (let i = tyreSmoke.length - 1; i >= 0; i--) {
+                const s = tyreSmoke[i];
+                ctx.fillStyle = `rgba(180, 185, 200, ${s.opacity})`;
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+                ctx.fill();
+                s.y += speed * 0.6;
+                s.size += 0.8;
+                s.opacity -= 0.03;
+                if (s.opacity <= 0) tyreSmoke.splice(i, 1);
+            }
+
+            // Titanium sparks when streak is active or at high speed
+            if (comboCount >= 3 || Math.random() < 0.15) {
+                sparks.push({
+                    x: x + (Math.random() * 20 - 10),
+                    y: y + carHeight / 2 - 4,
+                    vx: (Math.random() - 0.5) * 4,
+                    vy: speed * 1.2 + Math.random() * 3,
+                    life: 1
+                });
+            }
+
+            // Draw & update sparks
+            for (let i = sparks.length - 1; i >= 0; i--) {
+                const sp = sparks[i];
+                ctx.fillStyle = `rgba(255, ${Math.floor(160 + sp.life * 95)}, 40, ${sp.life})`;
+                ctx.fillRect(sp.x, sp.y, 3, 3);
+                sp.x += sp.vx;
+                sp.y += sp.vy;
+                sp.life -= 0.05;
+                if (sp.life <= 0) sparks.splice(i, 1);
+            }
+
+            // Draw F1 Car Sprite with rotation
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.rotate((carRotation * Math.PI) / 180);
+
+            // Car drop shadow on asphalt
+            ctx.fillStyle = "rgba(0, 0, 0, 0.55)";
+            ctx.beginPath();
+            ctx.ellipse(0, 8, carWidth / 2 + 6, carHeight / 2 + 4, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Draw F1 single-seater image
+            if (carImg && carImg.complete) {
+                ctx.drawImage(carImg, -carWidth / 2, -carHeight / 2, carWidth, carHeight);
+            }
+
+            // F1 Rear Rain / ERS Blinking Red Safety LED light
+            const pulse = (Math.sin(Date.now() / 120) + 1) / 2;
+            ctx.fillStyle = `rgba(255, 10, 0, ${0.4 + pulse * 0.6})`;
+            ctx.beginPath();
+            ctx.arc(0, carHeight / 2 - 6, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowColor = "#ff0000";
+            ctx.shadowBlur = 8;
+            ctx.fill();
+            ctx.shadowBlur = 0; // reset
+
+            ctx.restore();
+        }
+
+        // Road Signs with high-tech Electronic Marshal backing
+        function drawSigns() {
+            for (let i = 0; i < roadSigns.length; i++) {
+                const sign = roadSigns[i];
+                if (sign.img && sign.img.complete) {
+                    // Electronic telemetry halo pod backing
+                    ctx.save();
+                    const signX = sign.x;
+                    const signY = sign.y;
+
+                    // Marshal panel background
+                    ctx.fillStyle = "rgba(16, 17, 24, 0.85)";
+                    ctx.beginPath();
+                    ctx.roundRect(signX - 32, signY - 32, 64, 64, 12);
+                    ctx.fill();
+
+                    // Colored border reflecting sign type
+                    let borderColor = "rgba(255, 255, 255, 0.3)";
+                    if (sign.type === "mandatory") borderColor = "rgba(225, 6, 0, 0.8)";
+                    else if (sign.type === "cautionary") borderColor = "rgba(255, 184, 0, 0.8)";
+                    else if (sign.type === "informatory") borderColor = "rgba(0, 144, 255, 0.8)";
+
+                    ctx.strokeStyle = borderColor;
+                    ctx.lineWidth = 2.5;
+                    ctx.stroke();
+
+                    // Render actual sign image (75x75 as original)
+                    ctx.drawImage(sign.img, signX - 28, signY - 28, 56, 56);
+                    ctx.restore();
+                }
+            }
+        }
+
+        // ==================== GAMEPLAY & SCORING ====================
+
+        function showPlus10(x, y, multiplier = 1) {
+            const plus = document.createElement("div");
+            plus.className = "plus10";
+            plus.textContent = `+${10 * multiplier}`;
+            if (multiplier > 1) {
+                plus.style.color = "#df80ff";
+                plus.style.textShadow = "0 0 15px rgba(223, 128, 255, 0.9), 2px 2px 4px #000";
+            }
+            plus.style.left = `${x - 20}px`;
+            plus.style.top = `${y}px`;
+            document.body.appendChild(plus);
+            setTimeout(() => plus.remove(), 1000);
+        }
+
+        function showComboBroken() {
+            comboBreak.style.display = 'block';
+            setTimeout(() => comboBreak.style.display = 'none', 1000);
+        }
+
+        function updateTelemetry() {
+            const calculatedSpeed = Math.floor(260 + speed * 12);
+            if (telemetrySpeedEl) {
+                telemetrySpeedEl.textContent = `${calculatedSpeed} KM/H`;
+            }
+        }
+
+        function updateSigns() {
+            for (let i = roadSigns.length - 1; i >= 0; i--) {
+                const sign = roadSigns[i];
+                sign.y += speed;
+
+                if (sign.y > canvas.height - carHeight - 30 && sign.y < canvas.height - 30) {
+                    const checkCarX = currentLane * laneWidth + laneWidth / 2;
+                    if (Math.abs(sign.x - checkCarX) < laneWidth / 2) {
+                        if (sign.type === scoreType) {
+                            comboCount++;
+                            const multiplier = 1 + Math.floor(comboCount / 5);
+                            score += 10 * multiplier;
+                            correctSound.currentTime = 0;
+                            correctSound.play();
+                            document.getElementById("score").textContent = `Score: ${score}`;
+                            showPlus10(checkCarX, sign.y, multiplier);
+                            createSparkles(checkCarX, sign.y);
+
+                            if (comboCount > 1) {
+                                comboDiv.style.opacity = 1;
+                            }
+                            comboDiv.textContent = `Streak: ${comboCount}`;
+                            window.setTimeout(() => {
+                                comboDiv.style.opacity = 0;
+                            }, 1000);
+
+                            if (score % 50 === 0) {
+                                speed += 0.5;
+                                spawnRate = Math.max(600, spawnRate - 100);
+                                resetSpawnInterval();
+                                updateTelemetry();
+                            }
+                        } else {
+                            if (comboCount > 1) showComboBroken();
+                            comboCount = 0;
+                            comboDiv.textContent = `Combo: 0`;
+                            lives--;
+                            document.getElementById("lives").textContent = `Lives: ${lives}`;
+                            updateTyreDisplay();
+
+                            if (lives <= 0) {
+                                gameOverSound.play();
+                                clearInterval(spawnInterval);
+                                document.getElementById("finalScore").textContent = `Championship Points: ${score}`;
+                                isGameOver = true;
+                                document.getElementById("gameOverModal").style.display = "flex";
+                                roadSigns.length = 0;
+                                lives = 3;
+                                score = 0;
+                                speed = 5;
+                                spawnRate = 2000;
+                                comboCount = 0;
+                                comboDiv.textContent = `Combo: 0`;
+                                document.getElementById("lives").textContent = `Lives: ${lives}`;
+                                document.getElementById("score").textContent = `Score: ${score}`;
+                                updateTyreDisplay();
+                                updateTelemetry();
+                                resetSpawnInterval();
+                            } else {
+                                wrongSound.currentTime = 0;
+                                wrongSound.play();
+                                triggerScreenShake();
+                            }
+                        }
+                        roadSigns.splice(i, 1);
+                    }
+                } else if (sign.y > canvas.height + 30) {
+                    roadSigns.splice(i, 1);
+                }
+            }
+        }
+
+        function spawnSign() {
+            const availableLanes = [0, 1, 2];
+            for (let sign of roadSigns) {
+                let signLane = Math.floor(sign.x / laneWidth);
+                if (sign.y < 200) {
+                    const index = availableLanes.indexOf(signLane);
+                    if (index !== -1) availableLanes.splice(index, 1);
+                }
+            }
+            if (availableLanes.length === 0) return;
+
+            const lane = availableLanes[Math.floor(Math.random() * availableLanes.length)];
+            const x = lane * laneWidth + laneWidth / 2;
+            const type = randomType();
+            const imageList = signImages[type];
+            const img = imageList[Math.floor(Math.random() * imageList.length)];
+
+            roadSigns.push({ x, y: -20, type, img });
+        }
+
+        function resetSpawnInterval() {
+            clearInterval(spawnInterval);
+            spawnInterval = setInterval(spawnSign, spawnRate);
+        }
+
+        // ==================== CONTROLS (TOUCH + KEYBOARD) ====================
+        function steerLeft() {
+            if (currentLane > 0) {
+                currentLane--;
+                targetRotation = -7;
+                rotationResetTimer = 10;
+                playEngineRev();
+            }
+        }
+
+        function steerRight() {
+            if (currentLane < 2) {
+                currentLane++;
+                targetRotation = 7;
+                rotationResetTimer = 10;
+                playEngineRev();
+            }
+        }
+
+        // Touch swipe gesture (Preserved 100%)
+        let touchStartX = 0;
+        canvas.addEventListener("touchstart", e => touchStartX = e.touches[0].clientX);
+        canvas.addEventListener("touchend", e => {
+            const dx = e.changedTouches[0].clientX - touchStartX;
+            if (dx > 50) {
+                steerRight();
+            } else if (dx < -50) {
+                steerLeft();
+            }
+        });
+
+        // Keyboard controls (Arrow keys and A / D)
+        window.addEventListener("keydown", e => {
+            if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
+                steerLeft();
+            } else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
+                steerRight();
+            }
+        });
+
+        // Mobile on-screen steer buttons
+        document.getElementById("steerLeft").addEventListener("click", steerLeft);
+        document.getElementById("steerRight").addEventListener("click", steerRight);
+
+        function createSparkles(x, y) {
+            for (let i = 0; i < 8; i++) {
+                sparks.push({
+                    x: x + (Math.random() * 30 - 15),
+                    y: y + (Math.random() * 30 - 15),
+                    vx: (Math.random() - 0.5) * 8,
+                    vy: (Math.random() - 0.5) * 8,
+                    life: 1
+                });
+            }
+        }
+
+        function restartGame() {
+            isGameOver = false;
+            gameStarted = false;
+            document.getElementById("gameOverModal").style.display = "none";
+            lives = 3;
+            score = 0;
+            speed = 5;
+            spawnRate = 2000;
+            comboCount = 0;
+            roadSigns.length = 0;
+            document.getElementById("lives").textContent = `Lives: ${lives}`;
+            document.getElementById("score").textContent = `Score: ${score}`;
+            comboDiv.textContent = `Combo: 0`;
+            updateTyreDisplay();
+            updateTelemetry();
+
+            resetSpawnInterval();
+            if (!gameStarted) {
+                gameStarted = true;
+                gameLoop();
+            }
+        }
+
+        function showTrailEffect() {
+            const trail = document.createElement("div");
+            const x = currentLane * laneWidth + laneWidth / 2 - carWidth / 2;
+            const y = canvas.height - carHeight - 20;
+
+            trail.className = "trail";
+            trail.style.left = `${x}px`;
+            trail.style.top = `${y}px`;
+            document.body.appendChild(trail);
+            setTimeout(() => trail.remove(), 400);
+        }
+
+        function triggerScreenShake() {
+            document.body.classList.add("shake");
+            setTimeout(() => {
+                document.body.classList.remove("shake");
+            }, 300);
+        }
+
+        // ==================== MAIN GAME LOOP ====================
+        function gameLoop() {
+            if (isGameOver) return;
+
+            drawRoad();
+            drawCar();
+            drawSigns();
+            updateSigns();
+
+            if (rotationResetTimer > 0) {
+                rotationResetTimer--;
+            } else {
+                targetRotation = 0;
+            }
+
+            carRotation += (targetRotation - carRotation) * 0.15;
+
+            if (Math.abs(carRotation) < 0.5) {
+                carRotation = 0;
+                targetRotation = 0;
+            }
+
+            const targetX = currentLane * laneWidth + laneWidth / 2;
+            carX += (targetX - carX) * 0.2;
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        // ==================== F1 STARTING LIGHTS SEQUENCE ====================
+        let gameStarted = false;
+        let spawnInterval;
+
+        function triggerF1StartSequence() {
+            const startBtn = document.getElementById("startBtn");
+            startBtn.style.display = "none";
+            playEngineRev();
+
+            const lampPairs = [
+                ["l1_top", "l1_bot"],
+                ["l2_top", "l2_bot"],
+                ["l3_top", "l3_bot"],
+                ["l4_top", "l4_bot"],
+                ["l5_top", "l5_bot"]
+            ];
+
+            let step = 0;
+            const lightInterval = setInterval(() => {
+                if (step < 5) {
+                    const [topId, botId] = lampPairs[step];
+                    document.getElementById(topId).classList.add("lit");
+                    document.getElementById(botId).classList.add("lit");
+                    step++;
+                } else {
+                    clearInterval(lightInterval);
+                    // Random pause between 400ms and 900ms just like real F1 start!
+                    const pauseTime = 400 + Math.random() * 500;
+                    setTimeout(() => {
+                        // Extinguish all lights!
+                        lampPairs.forEach(([t, b]) => {
+                            document.getElementById(t).classList.remove("lit");
+                            document.getElementById(b).classList.remove("lit");
+                        });
+
+                        const msg = document.getElementById("lightsOutMessage");
+                        msg.classList.add("show");
+
+                        // START RACE!
+                        gameStarted = true;
+                        document.getElementById("bgMusic").play().catch(() => {});
+                        gameLoop();
+                        spawnInterval = setInterval(spawnSign, spawnRate);
+
+                        // Fade out overlay
+                        setTimeout(() => {
+                            const overlay = document.getElementById("gantryOverlay");
+                            overlay.style.opacity = "0";
+                            setTimeout(() => overlay.style.display = "none", 500);
+                        }, 700);
+                    }, pauseTime);
+                }
+            }, 320);
+        }
+
+        document.getElementById("startBtn").addEventListener("click", triggerF1StartSequence);
+
+        window.addEventListener('resize', () => location.reload());
+    </script>
+</body>
+
+</html>

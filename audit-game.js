@@ -14,25 +14,25 @@
     tubes: [500, 613, 723, 835, 949, 1059, 1175].map((x, i) => ({ id: i + 1, x: x - 40, y: 389, width: 80, height: 290, contaminated: false }))
   }, {
     background: `${root}page-3/3-bg.webp`, overlay: `${root}page-3/3-bg-overlay.webp`,
-    overlayClip: 'path("M 684 284 H 946 V 294 H 684 Z M 683 514 H 973 V 528 H 683 Z")',
+    overlayClip: 'path("M 637 413 H 1015 V 429 H 637 Z M 634 751 H 1053 V 770 H 634 Z")',
     tubes: [
-      ...[725, 769, 814, 859, 903].map((x, i) => ({ id: i + 1, x: x - 16, y: 213, width: 32, height: 108, contaminated: false })),
-      ...[721, 774, 827, 880, 932].map((x, i) => ({ id: i + 6, x: x - 19, y: 435, width: 38, height: 127, contaminated: false, variant: 2 }))
+      ...[677, 752, 827, 902, 977].map((x, i) => ({ id: i + 1, x: x - 24, y: 310, width: 48, height: 166, contaminated: false })),
+      ...[680, 760, 840, 920, 1000].map((x, i) => ({ id: i + 6, x: x - 34, y: 596, width: 68, height: 238, contaminated: false }))
     ]
   }, {
     background: `${root}page-4/4-bg.webp`, overlay: `${root}page-4/4-overlay.webp`,
-    overlayClip: 'path("M 690 100 H 968 V 111 H 690 Z M 684 284 H 946 V 294 H 684 Z M 683 514 H 973 V 528 H 683 Z")',
+    overlayClip: 'path("M 612 148 H 1020 V 163 H 612 Z M 605 416 H 986 V 433 H 605 Z M 600 757 H 1025 V 777 H 600 Z")',
     tubes: [
-      ...[725, 775, 829, 878, 928].map((x, i) => ({ id: i + 1, x: x - 16, y: 25, width: 32, height: 108, contaminated: false })),
-      ...[725, 769, 814, 859, 903].map((x, i) => ({ id: i + 6, x: x - 16, y: 213, width: 32, height: 108, contaminated: false, variant: 2 })),
-      ...[721, 774, 827, 880, 932].map((x, i) => ({ id: i + 11, x: x - 19, y: 435, width: 38, height: 127, contaminated: false, variant: 2 }))
+      ...[655, 732, 809, 886, 963].map((x, i) => ({ id: i + 1, x: x - 19, y: 74, width: 38, height: 130, contaminated: false })),
+      ...[645, 720, 795, 870, 945].map((x, i) => ({ id: i + 6, x: x - 24, y: 313, width: 48, height: 166, contaminated: false })),
+      ...[643, 723, 803, 883, 963].map((x, i) => ({ id: i + 11, x: x - 34, y: 606, width: 68, height: 238, contaminated: false }))
     ]
   }];
   // Later levels alternate the two- and three-rack scenes, each with independent answers.
   for (const layoutIndex of [2, 3, 2, 3, 2, 3]) {
     scenarios.push({ ...scenarios[layoutIndex], tubes: scenarios[layoutIndex].tubes.map(tube => ({ ...tube })) });
   }
-  const tubeImage = tube => `${root}${tube.contaminated ? (tube.variant === 2 ? 'contaminated-test-tube-2' : 'contaminated-test-tube') : 'empty-test-tube'}.webp`;
+  const tubeImage = tube => `${root}${tube.contaminated ? 'contaminated-test-tube-with-water' : 'empty-test-tube-with-water'}.webp`;
   function randomizeScenarios() {
     scenarios.forEach((scenario, scenarioIndex) => {
       const tubes = [...scenario.tubes];
@@ -44,10 +44,9 @@
         const j = Math.floor(Math.random() * (i + 1));
         [tubes[i], tubes[j]] = [tubes[j], tubes[i]];
       }
-      const firstVariant = Math.random() < .5 ? 1 : 2;
       tubes.slice(0, count).forEach((tube, index) => {
         tube.contaminated = true;
-        tube.variant = scenarioIndex < 2 ? scenarioIndex + 1 : (index % 2 ? 3 - firstVariant : firstVariant);
+        tube.variant = 1;
       });
     });
   }
@@ -120,7 +119,7 @@
     offsetX = (w - sw) / 2 + panX; offsetY = (h - sh) / 2 + panY;
     scene.style.transform = `translate(${offsetX}px,${offsetY}px) scale(${base * zoom})`;
     $('zoom-reset').textContent = `${Number(zoom.toFixed(1))}×`;
-    $('zoom-out').disabled = zoom <= 1; $('zoom-in').disabled = zoom >= 5;
+
   }
   function setZoom(value) { zoom = Math.max(1, Math.min(5, value)); transform(); }
   function render() {
@@ -295,8 +294,6 @@
     prepareWarning(); render(); advanceClock(); $('submit').focus();
   });
   $('start').addEventListener('click', start); $('replay').addEventListener('click', start);
-  $('zoom-in').addEventListener('click', () => setZoom(zoom + .5));
-  $('zoom-out').addEventListener('click', () => setZoom(zoom - .5));
   $('zoom-reset').addEventListener('click', () => { panX = panY = 0; setZoom(1); });
   viewport.addEventListener('wheel', e => { if (!running) return; e.preventDefault(); setZoom(zoom + (e.deltaY < 0 ? .2 : -.2)); }, { passive: false });
   viewport.addEventListener('pointerdown', e => {
@@ -331,7 +328,7 @@
   window.addEventListener('resize', visibilityChanged); document.addEventListener('visibilitychange', visibilityChanged);
   setInterval(advanceClock, 100);
   render(); visibilityChanged();
-  const assets = [...new Set(scenarios.flatMap(s => [s.background,s.overlay]).concat([`${root}empty-test-tube.webp`,`${root}contaminated-test-tube.webp`, `${root}contaminated-test-tube-2.webp`, `${root}home-page-assets/bg.webp`, `${root}home-page-assets/play-button.webp`]))];
+  const assets = [...new Set(scenarios.flatMap(s => [s.background,s.overlay]).concat([`${root}empty-test-tube-with-water.webp`,`${root}contaminated-test-tube-with-water.webp`, `${root}home-page-assets/bg.webp`, `${root}home-page-assets/play-button.webp`]))];
   Promise.all(assets.map(src => new Promise((resolve,reject) => { const image = new Image(); image.onload = resolve; image.onerror = reject; image.src = src; })))
     .then(() => { $('start').disabled = false; })
     .catch(() => {

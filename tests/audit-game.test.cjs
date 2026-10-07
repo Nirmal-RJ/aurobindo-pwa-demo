@@ -53,16 +53,12 @@ test('clean scenarios reject false selections; unsubmitted clean scenarios remai
   assert.match(g.get('report-results').innerHTML, /Unanswered/);
 });
 
-test('random answers are used consistently in gameplay and both reports, including mixed variants', () => {
+test('random answers are used consistently in gameplay and both reports, using the water-filled tube assets', () => {
   const g = game(() => .99); g.start();
   const counts = [];
   for (let i = 0; i < 10; i++) {
     const tubes = dirty(g); counts.push(tubes.length);
-    if (i < 2) assert.ok(tubes[0].children[0].url.endsWith(i === 0 ? 'contaminated-test-tube.webp' : 'contaminated-test-tube-2.webp'));
-    if (i >= 2) {
-      assert.ok(tubes.some(t => t.children[0].url.endsWith('contaminated-test-tube-2.webp')));
-      assert.ok(tubes.some(t => t.children[0].url.endsWith('contaminated-test-tube.webp')));
-    }
+    assert.ok(tubes.every(t => t.children[0].url.endsWith('contaminated-test-tube-with-water.webp')));
     for (const tube of tubes) tube.click();
     g.get('submit').click();
     const overlays = g.get('scene').children.filter(n => n.className === 'scene-feedback');
