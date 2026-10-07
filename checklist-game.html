@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#163f41">
+  <title>Checklist game · Aurobindo Pharma</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="checklist-game.css?v=9">
+  <script src="checklist-game.js?v=7" defer></script>
+</head>
+<body>
+  <main class="game-shell">
+    <header><a href="index.html#/games" aria-label="Back to games" class="exit">×</a><span class="brand">LAB CHALLENGE</span><div id="clock" role="timer"><span id="seconds">20</span><small>s</small></div></header>
+    <section class="game-heading"><span id="mode-label" class="eyebrow">CHECKLIST GAME</span><h1 id="game-title">Order the<br><em>operation.</em></h1><p id="game-hint">Drag the steps into the right sequence.</p></section>
+    <div id="go-cue" aria-hidden="true" hidden>GO!</div>
+    <div class="time-track" aria-hidden="true"><div id="time-fill"></div></div>
+    <section class="clipboard" aria-label="Reorder the laboratory workflow"><div class="clip" aria-hidden="true"></div><div class="sheet-heading"><span>THE WORKFLOW</span><span>5 STEPS</span></div><ol id="steps"></ol></section>
+    <div id="feedback" role="status" aria-live="polite">Build your perfect workflow.</div>
+    <button id="submit" class="primary" disabled>Submit <span aria-hidden="true">→</span></button>
+    <section id="intro" class="overlay" aria-labelledby="intro-title"><div class="modal"><div class="medallion" aria-hidden="true">&#9776;</div><span class="eyebrow">LAB CHALLENGE</span><h2 id="intro-title">Checklist game</h2><p>Every step counts.</p><button id="start" class="primary">Play &#8594;</button></div></section>
+    <section id="instructions" class="overlay" hidden aria-labelledby="instruction-title"><div class="modal"><span class="eyebrow">HOW TO PLAY</span><h2 id="instruction-title">Watch. Remember. Reorder.</h2><p>Study the correct sequence for <strong>5 seconds</strong>.<br>Watch the steps shuffle.<br>Drag them back into order within <strong>20 seconds</strong>, then Submit.</p><button id="memorize" class="primary">Show me the order &#8594;</button></div></section>
+    <section id="result" class="overlay" hidden aria-labelledby="result-title"><div class="modal result-modal"><div id="result-icon" class="medallion" aria-hidden="true"></div><span id="result-tag" class="eyebrow"></span><h2 id="result-title"></h2><p id="result-summary"></p><div class="order-comparison"><section><h3>Your order</h3><ol id="your-order"></ol></section><section><h3>Correct order</h3><ol id="correct-order" class="correct-order"></ol></section></div><div class="result-actions"><a href="index.html#/games">Back to games</a><button id="replay" class="primary">Play again ↻</button></div></div></section>
+  </main>
+</body>
+</html>
