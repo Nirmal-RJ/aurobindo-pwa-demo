@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content" />
+  <meta name="theme-color" content="#0a0d14" />
+  <meta name="description" content="Hazard Spotter - Interactive 16:9 Landscape Video Hazard Spotter Game" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Hazard Spotter" />
+  <meta name="application-name" content="Hazard Spotter" />
+
+  <title>Hazard Spotter | Aurobindo Pharma</title>
+
+  <!-- Prevent browser & proxy stale caching -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="hazard-spotter.css?v=2" />
+</head>
+
+<body>
+  <!-- Ambient background glow effect -->
+  <div class="ambient-glow"></div>
+
+  <!-- Portrait Orientation Warning Overlay -->
+  <aside class="portrait-warning-overlay" id="portraitOverlay" aria-live="polite">
+    <div class="portrait-warning-card">
+      <div class="rotate-icon-wrapper">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M16.48 2.52c3.27 1.55 5.61 4.72 5.97 8.48h1.5C23.44 4.84 18.29 0 12 0l-.66.03 3.81 3.81 1.33-1.32zm-12.96 0L2.19 3.84 6 7.65V18c0 1.1.9 2 2 2h10.35l2.06 2.06 1.41-1.41L4.93 2.11 3.52.7 2.11 2.11 3.52 3.52zM8 9.65l8.35 8.35H8V9.65zM4 6.27L1.93 4.2C1.35 5.51 1 6.96 1 8.5c0 5.48 4.07 9.99 9.35 10.45l-1.32-1.32L9 17.63c-3.87-.49-6.89-3.79-7-7.63.11-1.35.53-2.61 1.2-3.73H4z" />
+        </svg>
+      </div>
+      <h2>Please Rotate Your Device</h2>
+      <p>This interactive video game is optimized for <strong>Landscape Mode</strong>. Turn your screen sideways to
+        begin!</p>
+    </div>
+  </aside>
+
+  <!-- =========================================================================
+       SCREEN 1: LANDING PAGE & DASHBOARD
+       ========================================================================= -->
+  <section class="landing-view" id="landingView">
+    <div class="hazard-home"><img class="hazard-home-bg" src="assets/hazard-spotter-game-assets/home-bg.webp" alt="Hazard Spotter. Observe the video, spot the mistakes, learn the right practice."><button id="startPlayBtn" aria-label="Start Hazard Spotter" disabled><img src="assets/hazard-spotter-game-assets/start-button.webp" alt="Start"></button><a class="hazard-exit" href="index.html#/games" aria-label="Back to games">&#215;</a></div>
+    <div class="landing-card-container">
+
+      <!-- Top Brand & Actions Header -->
+      <div class="landing-header-row">
+        <div class="brand-section">
+          <div class="brand-logo-icon">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+            </svg>
+          </div>
+          <div class="brand-title-text">
+            <h1>Hazard Spotter</h1>
+            <span>Interactive Video Challenge</span>
+          </div>
+        </div>
+
+        <div class="landing-top-actions">
+          <button class="icon-toggle-btn highlight-fullscreen-prompt" id="fullscreenToggleBtn"
+            title="Go Fullscreen (Recommended)">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
+            </svg>
+            <span class="btn-text">Fullscreen</span>
+          </button>
+          <span class="scenario-badge" id="currentScenarioBadge">Scenario 01</span>
+        </div>
+      </div>
+
+      <!-- Main Content: Optimized 2-Column Grid on Landscape Screens -->
+      <div class="landing-body-grid">
+        <!-- Rules / How it works Column -->
+        <div class="rules-summary">
+          <h3><span>⚡</span> How It Works</h3>
+          <ul class="rules-list">
+            <li>A real-time hazard scenario video plays.</li>
+            <li>The video freezes at a critical checkpoint.</li>
+            <li>Tap the exact grid cell where the hazard is.</li>
+            <li>The video completes to reveal what happens!</li>
+          </ul>
+        </div>
+
+        <!-- Controls, Play & Install Column -->
+        <div class="landing-action-column">
+          <!-- Audio & Dev Settings -->
+          <div class="audio-controls-panel">
+            <div class="quick-toggles-row">
+              <div class="toggle-item">
+                <span>🎓 Demo Scene</span>
+                <label class="switch">
+                  <input type="checkbox" id="demoModeToggle" checked>
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="toggle-item">
+                <span>🎵 Music</span>
+                <label class="switch">
+                  <input type="checkbox" id="bgmToggle" checked>
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="toggle-item">
+                <span>🔔 Sound FX</span>
+                <label class="switch">
+                  <input type="checkbox" id="soundToggle" checked>
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="toggle-item">
+                <span>🛠️ Dev Grid</span>
+                <label class="switch">
+                  <input type="checkbox" id="devModeToggle" checked>
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+
+            <!-- BGM Volume Slider -->
+            <div class="bgm-volume-row" id="bgmVolumeRow">
+              <span class="vol-label">Volume: <strong id="bgmVolumeVal">25%</strong></span>
+              <input type="range" id="bgmVolumeSlider" class="vol-slider" min="0" max="100" value="25">
+            </div>
+          </div>
+
+          <!-- Big Play Button -->
+          <button class="play-action-btn" id="legacyStartPlayBtn">
+            <svg viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+            <span>Start Challenge</span>
+          </button>
+
+          <!-- Footer Links: Install PWA & Fullscreen -->
+          <div class="landing-footer-row">
+            <button class="link-btn install-btn-active" id="installPwaBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z" />
+              </svg>
+              <span>Install App / Add to Screen</span>
+            </button>
+            <span class="standalone-badge" id="standaloneBadge" style="display: none;">⚡ Standalone App Mode</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SCREEN 2: PURE DISTRACTION-FREE 16:9 GAME STAGE
+       ========================================================================= -->
+  <main class="game-viewport" id="gameViewport">
+    <div class="stage-wrapper" id="stageWrapper">
+      <div class="video-canvas-container">
+
+        <!-- Stage In-Game Fullscreen Toggle Button -->
+        <button class="stage-fullscreen-btn" id="stageFullscreenBtn" title="Toggle Fullscreen">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
+          </svg>
+        </button>
+
+        <!-- Tutorial Mode: Skip Demo Button -->
+        <button class="skip-tutorial-btn" id="skipTutorialBtn" title="Skip Demo">
+          <span>Skip Demo</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-8.29-1.42 1.42L16.86 11H5v2z" />
+          </svg>
+        </button>
+
+        <!-- Tutorial Mode: Floating Guide Banner -->
+        <div class="tutorial-guide-banner" id="tutorialGuideBanner">
+          <span class="guide-badge">DEMO</span>
+          <span class="guide-msg" id="tutorialGuideMsg">Step 1: Tap the potential hazard area</span>
+        </div>
+
+        <!-- Video element (pointer events disabled to avoid any browser extension toolbars capturing clicks) -->
+        <video id="gameVideo" class="game-video" playsinline webkit-playsinline disablePictureInPicture
+          controlsList="nodownload nofullscreen noremoteplayback" preload="auto">
+        </video>
+
+        <!-- Dynamic Action Prompt Banner (Visible only on pause checkpoint) -->
+        <div class="action-prompt-banner" id="actionPromptBanner">
+          <span class="prompt-icon"></span>
+          <span class="prompt-text"></span>
+          <div class="prompt-timer-pill" id="promptTimerPill">
+            <svg class="timer-ring-svg" width="22" height="22" viewBox="0 0 24 24">
+              <circle class="timer-ring-bg" cx="12" cy="12" r="9" />
+              <circle class="timer-ring-progress" id="timerRingProgress" cx="12" cy="12" r="9" />
+            </svg>
+            <span class="timer-countdown-val" id="timerCountdownVal">7s</span>
+          </div>
+        </div>
+
+        <!-- Overlaid Interactive Target Grid (Visible only on pause checkpoint) -->
+        <div class="grid-overlay" id="gridOverlay"></div>
+
+        <!-- Tutorial Mode: Animated Guidance Hand / Spotlight Pointer -->
+        <div class="tutorial-pointer" id="tutorialPointer">
+          <div class="pointer-hand">👆</div>
+          <div class="pointer-ping"></div>
+          <div class="pointer-label" id="tutorialPointerLabel">Tap Here</div>
+        </div>
+
+        <!-- Answer Confirmation Prompt (Visible when an area is tapped) -->
+        <div class="selection-confirm-banner" id="selectionConfirmBanner">
+          <div class="confirm-content">
+            <span class="confirm-text">Lock in this area as your answer?</span>
+            <div class="confirm-btns">
+              <button class="confirm-btn retap-btn" id="retouchBtn" title="Retap another area">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
+                </svg>
+                <span>Change</span>
+              </button>
+              <button class="confirm-btn lock-btn" id="confirmLockBtn">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                </svg>
+                <span>Confirm & Lock</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Hint Banner (Plays during post-pause video replay) -->
+        <div class="bottom-explanation-banner" id="bottomExplanationBanner">
+          <span class="explanation-icon">💡</span>
+          <span class="explanation-text" id="bottomExplanationText">Hint: Stay focused and watch the road.</span>
+        </div>
+
+        <!-- Tutorial Graduation Modal (Shown upon completing tutorial) -->
+        <div class="tutorial-graduation-modal" id="tutorialGraduationModal">
+          <div class="graduation-card">
+            <div class="graduation-badge">🎉 DEMO COMPLETED</div>
+            <h2 class="graduation-title">You're Ready to Play!</h2>
+            <p class="graduation-desc">You've mastered spotting hazards. Let's start the real challenge now!</p>
+            <div class="graduation-actions">
+              <button class="graduation-retry-btn" id="tutorialRetryDemoBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />
+                </svg>
+                <span>Retry Demo</span>
+              </button>
+              <button class="graduation-start-btn" id="tutorialStartRealBtn">
+                <span>Start Scenario 01</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-8.29-1.42 1.42L16.86 11H5v2z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================================================================
+             IN-VIDEO LOWER-THIRD HUD DOCK (Non-intrusive, keeps video in full view)
+             =================================================================== -->
+        <div class="invideo-hud-dock" id="resultScreen">
+          <div class="hud-dock-content" id="resultCard">
+
+            <div class="hud-dock-left">
+              <div class="hud-dock-title-row">
+                <span class="hud-status-badge" id="resultCardBadge">✅ Hazard Spotted</span>
+                <span class="hud-divider-dot"></span>
+                <h3 class="hud-scenario-title" id="hudScenarioTitle">Scenario 01: Emerging Vehicle</h3>
+              </div>
+              <p class="hud-explanation" id="resultDesc">A vehicle emerged unexpectedly from behind an opening gate.</p>
+            </div>
+
+            <div class="hud-dock-actions">
+              <button class="hud-btn hud-btn-icon" id="returnToMenuBtn" title="Main Menu">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                </svg>
+                <span>Menu</span>
+              </button>
+              <button class="hud-btn hud-btn-secondary" id="replayBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />
+                </svg>
+                <span>Replay</span>
+              </button>
+              <button class="hud-btn hud-btn-primary" id="nextLevelBtn">
+                <span>Next Scenario</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M5 13h11.86l-5.43 5.43 1.42 1.42L21.14 12l-8.29-8.29-1.42 1.42L16.86 11H5v2z" />
+                </svg>
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- =========================================================================
+       MODAL: PWA INSTALLATION GUIDE (For iOS Safari & In-App Browsers)
+       ========================================================================= -->
+  <div class="install-guide-modal" id="installGuideModal">
+    <div class="install-modal-backdrop" id="closeInstallModalBackdrop"></div>
+    <div class="install-modal-card">
+      <div class="install-modal-header">
+        <div class="install-modal-title">
+          <span class="install-modal-icon">📲</span>
+          <h3>Install Hazard Spotter</h3>
+        </div>
+        <button class="install-modal-close" id="closeInstallModalBtn" aria-label="Close modal">&times;</button>
+      </div>
+
+      <p class="install-modal-desc">
+        Install the app on your home screen for distraction-free full-screen play with zero browser address bars!
+      </p>
+
+      <div class="install-tabs">
+        <button class="install-tab-btn active" id="tabAndroidBtn">📱 Android (Chrome)</button>
+        <button class="install-tab-btn" id="tabIosBtn">🍏 iPhone / iPad</button>
+      </div>
+
+      <!-- Android Guide -->
+      <div class="install-tab-pane active" id="tabPaneAndroid">
+        <ol class="install-step-list">
+          <li>Tap the <strong>three dots menu (⋮)</strong> in the top-right of Chrome.</li>
+          <li>Select <strong>"Install app"</strong> or <strong>"Add to Home screen"</strong>.</li>
+          <li>Tap <strong>Install</strong> to launch instantly anytime!</li>
+        </ol>
+      </div>
+
+      <!-- iOS Guide -->
+      <div class="install-tab-pane" id="tabPaneIos">
+        <ol class="install-step-list">
+          <li>Tap the <strong>Share icon</strong> (
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="vertical-align:-2px">
+              <path
+                d="M16 5l-1.42 1.42-1.59-1.59V16h-1.98V4.83L9.42 6.42 8 5l4-4 4 4zm4 5v11c0 1.1-.9 2-2 2H6c-1.11 0-2-.9-2-2V10c0-1.11.89-2 2-2h3v2H6v11h12V10h-3V8h3c1.1 0 2 .89 2 2z" />
+            </svg>
+            ) in Safari.
+          </li>
+          <li>Scroll down and tap <strong>"Add to Home Screen"</strong> (➕).</li>
+          <li>Tap <strong>Add</strong> in the top right to start playing full-screen!</li>
+        </ol>
+      </div>
+
+      <div class="install-modal-actions">
+        <button class="modal-fullscreen-btn" id="modalFullscreenDirectBtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z" />
+          </svg>
+          <span>Play In Fullscreen Mode Now</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast message popups -->
+  <div class="toast-msg" id="toast">Settings saved</div>
+
+  <!-- Fullscreen Pitch-Black Intro Overlay for Demo Mode -->
+  <div class="demo-intro-overlay" id="demoIntroOverlay" aria-hidden="true">
+    <div class="demo-intro-content">
+      <div class="demo-intro-tag">INTERACTIVE TUTORIAL</div>
+      <h1 class="demo-intro-title">DEMO MODE</h1>
+      <div class="demo-intro-line"></div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>window.GAME_VERSION = 1;</script>
+  <script src="hazard-spotter-settings.js?v=1"></script>
+  <script src="hazard-spotter.js?v=1"></script>
+</body>
+
+</html>
