@@ -321,7 +321,7 @@
     $('solution-intro-art').setAttribute('alt', `${recipes[index].name}. Watch the preparation video before making the mix.`);
     $('solution-intro').setAttribute('aria-label', recipes[index].name);
   }
-
+    
   /* Screen 5: Video of Solution */
   function updateVideoControls() {
     const video = $('recipe-video');
