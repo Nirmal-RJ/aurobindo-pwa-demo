@@ -210,3 +210,48 @@
 @media(max-height:450px){#report .report-hero{padding:10px 20px;gap:6px 14px}#report-mascot .bacteria-stage{width:min(220px,calc(100dvh - 138px));height:min(220px,calc(100dvh - 138px))}#report-title{font-size:clamp(20px,3vw,28px)}#report-caption{font-size:12px}#report-stats{padding:7px 0}#report-stats b{font-size:25px}}
 @media(max-width:600px){#report .report-hero{padding:8px 14px;gap:6px 12px}#report-title{font-size:21px}#report-caption{font-size:11px}}
 @keyframes audit-sticker-pop{0%{opacity:0;transform:translateY(20px) rotate(-12deg) scale(.3)}35%{opacity:1;transform:translateY(-8px) rotate(6deg) scale(1.12)}65%{transform:translateY(2px) rotate(-5deg) scale(.97)}100%{opacity:1;transform:translateY(0) rotate(-3deg) scale(1)}}
+
+/* Landscape game console. Controls never share space with the laboratory. */
+#game{--top-rail:76px;--bottom-rail:76px;background:radial-gradient(ellipse at center,#20495d,#081e30 80%)}
+#viewport{top:calc(var(--top-rail) + env(safe-area-inset-top));bottom:calc(var(--bottom-rail) + env(safe-area-inset-bottom));left:env(safe-area-inset-left);right:env(safe-area-inset-right);border-top:1px solid #9bddf530;border-bottom:1px solid #9bddf530}
+.hud{top:env(safe-area-inset-top);left:0;right:0;height:var(--top-rail);padding:10px max(20px,env(safe-area-inset-left)) 10px max(20px,env(safe-area-inset-right));align-items:center;background:linear-gradient(#102f43,#0b2436);gap:12px}
+.heading{padding:0}.heading strong{font-size:20px;letter-spacing:-.4px}.heading span{font-size:12px;color:#9dcddf}
+.exit-button{width:44px;height:44px}
+#clock{left:50%!important;top:8px;width:160px;height:60px;font-size:40px;border-radius:17px;padding:4px 12px 12px;border-width:1px;box-shadow:0 0 16px #c0faff30,inset 0 0 12px #b5f5ff10}
+#clock small{font-size:14px;margin-top:8px}.clock-icon{width:.62em;height:.62em}.time-track{left:12px;right:12px;bottom:6px;height:3px}
+.toolbar{bottom:env(safe-area-inset-bottom);left:0;right:0;height:var(--bottom-rail);padding:10px max(20px,env(safe-area-inset-left)) 10px max(20px,env(safe-area-inset-right));gap:16px;background:linear-gradient(#0b2436,#102f43)}
+.zoom-controls{background:#183d51;border-color:#72bed34a;border-radius:14px;padding:2px}
+.zoom-controls .icon-button,.zoom-controls #zoom-reset{height:42px;width:42px;min-width:42px}
+#selected-count{font-size:14px;color:#c9e7f0;text-shadow:none}
+.toolbar .primary{border-radius:15px;min-width:146px;font-size:17px;padding:11px 20px;min-height:44px;border-width:1px;box-shadow:0 3px 0 #9c7428,0 5px 16px #0003}
+.scene-sticker{bottom:calc(var(--bottom-rail) + env(safe-area-inset-bottom) + 12px);height:clamp(86px,25vh,180px);width:clamp(150px,25vw,260px)}
+#selected-count.feedback-correct,#selected-count.feedback-wrong{border-width:1px;font-size:16px;padding:10px 14px;border-radius:12px;box-shadow:none}
+@media(max-height:500px){#game{--top-rail:54px;--bottom-rail:58px}.hud{padding-top:5px;padding-bottom:5px}.exit-button{width:36px;height:36px}.heading strong{font-size:16px}.heading span{font-size:11px;margin-top:1px}#clock{top:5px;width:132px;height:44px;font-size:30px;border-radius:13px;padding-bottom:9px;gap:4px}#clock small{font-size:12px;margin-top:5px}.time-track{bottom:4px}.toolbar{padding-top:5px;padding-bottom:8px;gap:12px}.zoom-controls .icon-button,.zoom-controls #zoom-reset{height:38px;width:38px;min-width:38px}.toolbar .primary{font-size:15px;min-width:120px;padding:10px 18px}#selected-count{font-size:12px}#selected-count.feedback-correct,#selected-count.feedback-wrong{font-size:14px;padding:9px 12px}}
+@media(max-width:600px){.hud,.toolbar{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right));gap:8px}.heading strong{display:none}.heading{padding:0}.heading span{font-size:11px}#clock{width:120px}.zoom-controls .icon-button,.zoom-controls #zoom-reset{width:34px;min-width:34px}.toolbar .primary{min-width:100px;padding:10px 14px}#selected-count.feedback-correct,#selected-count.feedback-wrong{font-size:12px;padding:9px}}
+
+/* Slim rails leave most of a landscape phone available for the lab. */
+.contamination-fumes{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:visible}
+.gas-bed{position:absolute;left:5%;right:5%;bottom:7%;height:35%;border-radius:50%;background:radial-gradient(ellipse,#a7ed4d80,#66b02c50 40%,#84cb3520 65%,transparent 75%);filter:blur(5px);animation:gas-breathe 2.4s ease-in-out infinite!important}
+.gas-puff{position:absolute;bottom:12%;left:22%;width:48%;height:45%;border-radius:48% 62% 40% 55%;background:radial-gradient(ellipse,#a3e94280,#71bb3650 35%,#91d94b20 60%,transparent 74%);filter:blur(5px);opacity:0;animation:gas-rise 3s ease-out infinite!important}
+.puff-two{left:5%;width:55%;animation-delay:1s!important}.puff-three{left:45%;width:50%;animation-delay:2s!important}
+.caught .contamination-fumes{opacity:.45}.escaped .contamination-fumes{opacity:1}
+.scene-germ .contamination-fumes{z-index:-1}.compact .gas-bed,.compact .gas-puff{filter:blur(3px)}
+@keyframes gas-rise{0%{opacity:0;transform:translate(0,10%) scale(.65)}20%{opacity:.85}65%{opacity:.5;transform:translate(-10%,-65%) scale(1.2)}100%{opacity:0;transform:translate(14%,-135%) scale(1.5)}}
+@keyframes gas-breathe{0%,100%{opacity:.6;transform:scale(.85,1)}50%{opacity:1;transform:scale(1.1,.9)}}
+.scene-germ{animation:scene-tube-emerge 1.7s cubic-bezier(.25,.65,.3,1) both!important;transform-origin:50% 50%}
+.scene-germ .contamination-fumes{animation:fume-follow 2s ease-out both!important}
+.scene-germ .prison-bars{animation:bars-drop .55s ease-out 1.65s both!important}
+.scene-germ .party-note{animation-delay:1.5s!important}
+@keyframes scene-tube-emerge{0%{opacity:0;transform:translate(-50%,var(--rise-distance)) scale(.18)}12%{opacity:.9;transform:translate(-50%,var(--rise-distance)) scale(.22)}55%{opacity:1;transform:translate(-50%,20px) scale(.65)}82%{transform:translate(-50%,-6px) scale(1.04)}100%{opacity:1;transform:translate(-50%,0) scale(1)}}
+@keyframes fume-follow{0%,15%{opacity:0;transform:translateY(25px) scale(.3)}40%{opacity:.35;transform:translateY(32px) scale(.7)}75%{opacity:.9;transform:translateY(18px) scale(.95)}100%{opacity:1;transform:translateY(0) scale(1)}}
+.scene-fume-path{position:absolute;left:0;transform:translateX(-50%);border-radius:45%;background:linear-gradient(90deg,transparent,#9ade4965 35%,#bef56a90 50%,#80c43f55 70%,transparent);filter:blur(5px);transform-origin:bottom center;animation:fume-path-fill 1.8s ease-out both!important;pointer-events:none}
+.scene-fume-path.contained{opacity:.65}
+.scene-fume-path i{position:absolute;inset:0;border-radius:45%;background:radial-gradient(ellipse at 50% 65%,#b9f26965,transparent 65%);animation:fume-path-drift 3s ease-in-out infinite!important}
+.scene-fume-path i:nth-child(2){animation-delay:-1s!important;background:radial-gradient(ellipse at 30% 35%,#83c73580,transparent 60%)}
+.scene-fume-path i:nth-child(3){animation-delay:-2s!important;background:radial-gradient(ellipse at 70% 55%,#cdf57a60,transparent 60%)}
+@keyframes fume-path-fill{0%,10%{clip-path:inset(100% 0 0);opacity:0}35%{opacity:.65}100%{clip-path:inset(0);opacity:.8}}
+@keyframes fume-path-drift{0%,100%{transform:translate(0,8%) scaleX(.8);opacity:.45}50%{transform:translate(12%,-10%) scaleX(1.25);opacity:.9}}
+#game{--top-rail:54px;--bottom-rail:58px}
+.hud{padding-top:4px;padding-bottom:4px}#clock{top:4px;height:46px;width:140px;font-size:32px;border-radius:12px;padding:3px 10px 9px}
+.toolbar{padding-top:5px;padding-bottom:7px}
+@media(max-height:500px){#game{--top-rail:38px;--bottom-rail:46px}.hud{padding-top:2px;padding-bottom:2px}.exit-button{width:30px;height:30px}.heading strong{font-size:14px}.heading span{font-size:10px}#clock{top:3px;width:114px;height:32px;font-size:24px;padding:2px 8px 7px;border-radius:10px}#clock small{font-size:10px;margin-top:3px}.time-track{bottom:3px;height:2px;left:9px;right:9px}.toolbar{padding-top:2px;padding-bottom:3px}.zoom-controls{padding:0}.zoom-controls .icon-button,.zoom-controls #zoom-reset{height:36px;width:34px;min-width:34px}.zoom-controls .icon-button{font-size:23px}.toolbar .primary{min-height:38px;padding:7px 16px;font-size:14px;border-radius:12px}#selected-count.feedback-correct,#selected-count.feedback-wrong{padding:7px 10px;font-size:13px}}

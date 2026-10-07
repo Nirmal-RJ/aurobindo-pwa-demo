@@ -60,6 +60,18 @@
   const pointers = new Map();
   let gesture = null, moved = false;
   let audioContext, audioBuffer, audioSource, audioLoading = false;
+  let laughAudio = null;
+  function stopLaugh() {
+    if (!laughAudio) return;
+    laughAudio.pause(); laughAudio.currentTime = 0; laughAudio = null;
+  }
+  function playEscapeLaugh() {
+    stopLaugh();
+    if (!window.Audio) return;
+    laughAudio = new window.Audio('audio/bacteria-laugh.mp3');
+    laughAudio.volume = .85;
+    laughAudio.play().catch(() => {});
+  }
   function stopWarning() {
     if (audioSource) { try { audioSource.stop(); } catch (_) {} audioSource.disconnect(); audioSource = null; }
   }
@@ -108,9 +120,9 @@
     offsetX = (w - sw) / 2 + panX; offsetY = (h - sh) / 2 + panY;
     scene.style.transform = `translate(${offsetX}px,${offsetY}px) scale(${base * zoom})`;
     $('zoom-reset').textContent = `${Number(zoom.toFixed(1))}×`;
-    $('zoom-out').disabled = zoom <= 1; $('zoom-in').disabled = zoom >= 3;
+    $('zoom-out').disabled = zoom <= 1; $('zoom-in').disabled = zoom >= 5;
   }
-  function setZoom(value) { zoom = Math.max(1, Math.min(3, value)); transform(); }
+  function setZoom(value) { zoom = Math.max(1, Math.min(5, value)); transform(); }
   function render() {
     $('scene-sticker').hidden = true; $('scene-sticker').replaceChildren();
     scene.replaceChildren();
@@ -142,6 +154,7 @@
   }
   function updateSelection() { $('selected-count').textContent = `${selections[current].size} selected`; }
   function start() {
+    stopLaugh();
     randomizeScenarios();
     reviewing = false; $('game').classList.toggle('scene-review', false); $('scene-next').hidden = true; $('submit').hidden = false;
     $('selected-count').classList.toggle('feedback-correct', false); $('selected-count').classList.toggle('feedback-wrong', false);
@@ -160,6 +173,7 @@
       : '<animateTransform attributeName="transform" type="rotate" values="-14 150 205;14 150 205;-14 150 205" dur="0.6s" repeatCount="indefinite"/><animateTransform attributeName="transform" type="translate" values="0 0;0 -18;0 0" dur="0.6s" additive="sum" repeatCount="indefinite"/>';
     const limbMotion = (x, y, reverse = false) => caught ? '' : `<animateTransform attributeName="transform" type="rotate" values="${reverse ? 32 : -32} ${x} ${y};${reverse ? -32 : 32} ${x} ${y};${reverse ? 32 : -32} ${x} ${y}" dur="0.45s" repeatCount="indefinite"/>`;
     return `<div class="bacteria-stage ${caught ? 'caught' : 'escaped'}${compact ? ' compact' : ''}" role="img" aria-label="${caught ? 'Arrested bacteria crying behind bars' : 'Escaped bacteria dancing with a silly smile'}">
+      <div class="contamination-fumes" aria-hidden="true"><i class="gas-bed"></i><i class="gas-puff puff-one"></i><i class="gas-puff puff-two"></i><i class="gas-puff puff-three"></i></div>
       <div class="bacteria-orbit"></div><span class="party-note note-one" aria-hidden="true">♪</span><span class="party-note note-two" aria-hidden="true">♫</span>
       <svg class="bacteria-art native-motion" viewBox="0 0 300 280" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <ellipse class="germ-shadow" cx="150" cy="252" rx="64" ry="10" fill="#071c3530"/>
@@ -199,6 +213,7 @@
     }).join('');
   }
   function finish() {
+    stopLaugh();
     reviewing = false; $('report').classList.toggle('individual-report', false);
     $('report-next').hidden = true; $('replay').hidden = false;
     $('report-label').textContent = 'AUDIT COMPLETE';
@@ -230,12 +245,14 @@
     showScenarioReport();
   });
   function showScenarioReport() {
+    zoom = 1; panX = panY = 0; transform();
     reviewing = true; wasPaused = true; lastTick = performance.now();
     stopWarning(); $('clock').classList.toggle('ticking', false); $('game').classList.toggle('time-critical', false);
     pointers.clear(); gesture = null;
     const scenario = scenarios[current], selected = selections[current];
     const correct = scenario.tubes.filter(t => t.contaminated);
     const correctAnswer = selected.size === correct.length && correct.every(t => selected.has(t.id));
+    if (correct.some(tube => !selected.has(tube.id))) playEscapeLaugh();
     const stickers = correctAnswer
       ? ['Anna Nuvvu King Telugu.webp', 'Box Office Badhalu Kottav Telugu.webp', 'Kya Baat Hai Hindi.webp', 'Nailed It! English.webp', 'Shabaash Hindi.webp']
       : ['1.png', '2.png', '3.png', '4.png', '5.png'];
@@ -257,15 +274,20 @@
       const overlay = document.createElement('div'); overlay.className = 'scene-feedback';
       const size = Math.max(64, Math.min(130, tube.width * 1.8));
       // Counter-scale markers so they remain readable even on the small distant racks.
-      const markerSize = Math.min(54, Math.max(38, viewport.clientHeight * .105));
-      overlay.style.cssText = `left:${tube.x + tube.width / 2}px;top:${tube.y}px;--germ-size:${size}px;--germ-top:${Math.max(4 - tube.y, -size + 16)}px;--badge-top:${tube.height - 12 + (tube.width * base < 30 ? (tube.id % 2) * markerSize / base : 0)}px;--marker-size:${markerSize}px;--marker-scale:${1 / base}`;
-      overlay.innerHTML = `${tube.contaminated ? `<div class="scene-germ">${bacteria(picked, true)}</div>` : ''}<span class="scene-verdict ${tube.contaminated && picked ? 'arrested' : 'escaped'}" role="img" aria-label="Tube ${tube.id}: ${tube.contaminated ? (picked ? 'caught' : 'missed') : 'incorrectly selected'}">${tube.contaminated ? (picked ? '✓' : '!') : '✕'}</span>`;
+      const markerSize = Math.min(36, Math.max(22, tube.height * base * .36));
+      const badgeTop = Math.max(4 - tube.y, tube.height - (markerSize + 8) / base);
+      const germTop = Math.max(4 - tube.y, -size + 16);
+      const riseDistance = tube.height * .65 - germTop - size / 2;
+      const trail = tube.contaminated ? `<div class="scene-fume-path ${picked ? 'contained' : 'leaking'}" style="top:${germTop + size * .55}px;height:${riseDistance + size * .3}px;width:${Math.max(35, size * .6)}px" aria-hidden="true"><i></i><i></i><i></i></div>` : '';
+      overlay.style.cssText = `left:${tube.x + tube.width / 2}px;top:${tube.y}px;--germ-size:${size}px;--germ-top:${germTop}px;--rise-distance:${riseDistance}px;--badge-top:${badgeTop}px;--marker-size:${markerSize}px;--marker-scale:${1 / base}`;
+      overlay.innerHTML = `${trail}${tube.contaminated ? `<div class="scene-germ">${bacteria(picked, true)}</div>` : ''}<span class="scene-verdict ${tube.contaminated && picked ? 'arrested' : 'escaped'}" role="img" aria-label="Tube ${tube.id}: ${tube.contaminated ? (picked ? 'caught' : 'missed') : 'incorrectly selected'}">${tube.contaminated ? (picked ? '✓' : '!') : '✕'}</span>`;
       scene.append(overlay);
     }
     $('scene-next').focus();
   }
   $('scene-next').addEventListener('click', () => {
     if (!reviewing || innerHeight > innerWidth || document.hidden) return;
+    stopLaugh();
     if (current + 1 === scenarios.length) { finish(); return; }
     reviewing = false; current++; lastTick = performance.now(); wasPaused = paused();
     $('game').classList.toggle('scene-review', false); $('scene-next').hidden = true; $('submit').hidden = false;
@@ -297,6 +319,10 @@
   window.addEventListener('pointercancel', e => { pointers.delete(e.pointerId); gesture = null; moved = true; });
   let wasPaused = paused();
   function visibilityChanged() {
+    if (laughAudio) {
+      if (innerHeight > innerWidth || document.hidden) laughAudio.pause();
+      else if (reviewing && !laughAudio.ended) laughAudio.play().catch(() => {});
+    }
     const now = performance.now();
     if (running && !wasPaused) remaining = Math.max(0, remaining - (now - lastTick));
     lastTick = now; wasPaused = paused(); $('rotate').hidden = innerWidth >= innerHeight;
