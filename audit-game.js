@@ -65,10 +65,10 @@
     if (!laughAudio) return;
     laughAudio.pause(); laughAudio.currentTime = 0; laughAudio = null;
   }
-  function playEscapeLaugh() {
+  function playBacteriaReaction(caught = false) {
     stopLaugh();
     if (!window.Audio) return;
-    laughAudio = new window.Audio('audio/bacteria-laugh.mp3');
+    laughAudio = new window.Audio(caught ? 'audio/bacteria-caught.mp3' : 'audio/bacteria-laugh.mp3');
     laughAudio.volume = .85;
     laughAudio.play().catch(() => {});
   }
@@ -252,7 +252,7 @@
     const scenario = scenarios[current], selected = selections[current];
     const correct = scenario.tubes.filter(t => t.contaminated);
     const correctAnswer = selected.size === correct.length && correct.every(t => selected.has(t.id));
-    if (correct.some(tube => !selected.has(tube.id))) playEscapeLaugh();
+    if (correct.length) playBacteriaReaction(correct.every(tube => selected.has(tube.id)));
     const stickers = correctAnswer
       ? ['Anna Nuvvu King Telugu.webp', 'Box Office Badhalu Kottav Telugu.webp', 'Kya Baat Hai Hindi.webp', 'Nailed It! English.webp', 'Shabaash Hindi.webp']
       : ['1.png', '2.png', '3.png', '4.png', '5.png'];

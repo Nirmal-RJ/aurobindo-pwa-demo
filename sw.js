@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'aurobindo-shell-';
-const CACHE = `${CACHE_PREFIX}v167`;
+const CACHE = `${CACHE_PREFIX}v168`;
 const ASSETS = ['./', './index.html', './styles.css?v=30', './app.js?v=18', './tile-match.js?v=23', './symptom-match.html', './symptom-match.css?v=18', './symptom-match.js?v=20', './chromatogram.html', './chromatogram.css?v=23', './chromatogram.js?v=22', './assets/toggle%20button.png', './assets/4%20arrow%20toggle%20outline.png', './assets/hpcl-logo-new.png', './assets/game-1-card.png', './assets/game-2-card.png', './assets/game-3-card.png', './assets/game-4-card.png', './logo.png', './icon.svg', './icons/icon-192.png', './icons/icon-512.png', './manifest.webmanifest'];
 ASSETS.push('./cleaning-solution.html', './cleaning-solution.css?v=7', './cleaning-solution.js?v=6');
 ASSETS.splice(ASSETS.indexOf('./styles.css?v=30'), 1, './styles.css?v=43');
@@ -18,12 +18,12 @@ ASSETS.push('./pill-perfect.html', './pill-perfect.css?v=25', './pill-perfect.js
 ASSETS.push('./assets/tile-match-game-assets/card-front.png', './assets/tile-match-game-assets/card-back.png');
 ASSETS.push('./assets/sample-prep-game-1.png', './assets/sample-prep-game-2.png');
 ASSETS.push(...['bg-img.png', 'bottle%201.png', 'bottle%202.png', 'bottle%203.png'].map(file => `./assets/sample-preparation-game-assets/${file}`));
-ASSETS.push('./audit-game.html', './audit-game.css?v=19', './audit-game.js?v=26', './assets/audit-game-assets/empty-test-tube.webp', './assets/audit-game-assets/contaminated-test-tube.webp', './assets/audit-game-assets/contaminated-test-tube-2.webp', ...['1-bg', '1-bg-stand-overlay', 'page-1-reference'].map(name => `./assets/audit-game-assets/page-1/${name}.webp`));
+ASSETS.push('./audit-game.html', './audit-game.css?v=19', './audit-game.js?v=27', './assets/audit-game-assets/empty-test-tube.webp', './assets/audit-game-assets/contaminated-test-tube.webp', './assets/audit-game-assets/contaminated-test-tube-2.webp', ...['1-bg', '1-bg-stand-overlay', 'page-1-reference'].map(name => `./assets/audit-game-assets/page-1/${name}.webp`));
 ASSETS.push('./assets/audit-game-assets/home-page-assets/bg.webp', './assets/audit-game-assets/home-page-assets/play-button.webp');
 ASSETS.push('./assets/audit-game-assets/page-2/2-bg.webp', './assets/audit-game-assets/page-2/2-bg-overlay.webp');
 ASSETS.push('./assets/audit-game-assets/page-3/3-bg.webp', './assets/audit-game-assets/page-3/3-bg-overlay.webp');
 ASSETS.push('./assets/audit-game-assets/page-4/4-bg.webp', './assets/audit-game-assets/page-4/4-overlay.webp');
-ASSETS.push('./audio/bacteria-laugh.mp3');
+ASSETS.push('./audio/bacteria-laugh.mp3', './audio/bacteria-caught.mp3');
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE);
