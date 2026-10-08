@@ -27,13 +27,13 @@ class FindTheMistakeGame {
     this.demoLevel = {
       id: 'demo',
       title: "Tutorial: Practice Demo",
-      videoSrc: "videos/case 01 - chlid chasing ball to road.mp4",
-      pauseSecond: 1.0,
-      rows: 4,
-      cols: 4,
-      correctGrid: 12,
-      hint: "Practice finding the hazard on the road.",
-      explanation: "Great job! A child suddenly ran into the street chasing a ball."
+      videoSrc: "videos/case-01.webm",
+      pauseSecond: 5.0,
+      rows: 3,
+      cols: 3,
+      correctGrid: 8,
+      hint: "Look closely at the test tubes for signs of contamination.",
+      explanation: "A contaminated test tube was spotted in the rack. It should be isolated and replaced with a clean tube before use."
     };
 
     // DOM Elements
@@ -91,27 +91,18 @@ class FindTheMistakeGame {
      Level Data Management
      ========================================================================== */
   async loadLevels() {
-    try {
-      const res = await fetch('assets/find-the-mistake-interactive/data/levels.json');
-      if (res.ok) {
-        this.levels = await res.json();
-      }
-    } catch (e) {
-      console.warn('Could not load data/levels.json, using fallback.', e);
-    }
-
     if (!this.levels || this.levels.length === 0) {
       this.levels = [
         {
           id: 1,
-          title: "Scenario 01",
-          videoSrc: "videos/case 01 - chlid chasing ball to road.mp4",
-          pauseSecond: 1.0,
-          rows: 4,
-          cols: 4,
-          correctGrid: 12,
-          hint: "Stay focused and watch the entire road.",
-          explanation: "A child suddenly ran into the street chasing a ball from the right side."
+          title: "Scenario 01: Contaminated Test Tube",
+          videoSrc: "videos/case-01.webm",
+          pauseSecond: 5.0,
+          rows: 3,
+          cols: 3,
+          correctGrid: 8,
+          hint: "Look closely at the test tubes for signs of contamination.",
+          explanation: "A contaminated test tube was spotted in the rack. It should be isolated and replaced with a clean tube before use."
         }
       ];
     }
@@ -151,7 +142,7 @@ class FindTheMistakeGame {
     if (!src) return '';
     const version = window.GAME_VERSION || Date.now();
     const cleanSrc = src.split('?')[0];
-    return `assets/find-the-mistake-interactive/${cleanSrc}`;
+    return `assets/hazard-spotter-game-assets/${cleanSrc}`;
   }
 
   updateScenarioBadge() {
@@ -181,6 +172,10 @@ class FindTheMistakeGame {
       const cell = document.createElement('div');
       cell.className = 'grid-cell';
       cell.dataset.gridIndex = i;
+      const numberBadge = document.createElement('span');
+      numberBadge.className = 'cell-number-badge';
+      numberBadge.textContent = String(i);
+      cell.appendChild(numberBadge);
 
       let triggered = false;
       const doSelect = (e) => {
@@ -729,7 +724,7 @@ class FindTheMistakeGame {
 
     // Show bottom explanation banner
     if (this.bottomExplanationText) {
-      this.bottomExplanationText.textContent = `Hint: ${this.currentLevel.hint || 'Watch the road closely.'}`;
+      this.bottomExplanationText.textContent = `Hint: ${this.currentLevel.hint || 'Check the test tubes carefully.'}`;
     }
     this.bottomExplanationBanner.classList.add('active');
 

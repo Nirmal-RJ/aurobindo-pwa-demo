@@ -132,16 +132,9 @@ class SettingsManager {
      Background Music (BGM) Engine with Smart Audio Ducking
      ========================================================================== */
   initBGM() {
-    try {
-      this.bgm = new Audio('assets/find-the-mistake-interactive/audios/bgm.mp3');
-      this.bgm.loop = true;
-      this.applyEffectiveBGMVolume();
-      this.bgm.preload = 'auto';
-    } catch (e) {
-      console.warn('Could not initialize BGM audio:', e);
-    }
-
-    const onFirstUserAction = () => {
+    // No background music asset is supplied for this game.
+    const onFirstUserAction = (event) => {
+      if (!event.isTrusted || navigator.userActivation?.isActive === false) return;
       this.hasUserInteracted = true;
       if (this.bgmEnabled) {
         this.playBGM();
@@ -194,7 +187,9 @@ class SettingsManager {
   initAudioContext() {
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
     if (AudioContextClass) {
-      const unlockAudio = () => {
+      const unlockAudio = (event) => {
+        if (!event.isTrusted || navigator.userActivation?.isActive === false) return;
+        this.hasUserInteracted = true;
         if (!this.audioCtx) {
           this.audioCtx = new AudioContextClass();
         }
@@ -202,15 +197,15 @@ class SettingsManager {
           this.audioCtx.resume();
         }
         window.removeEventListener('click', unlockAudio);
-        window.removeEventListener('touchstart', unlockAudio);
+        window.removeEventListener('keydown', unlockAudio);
       };
       window.addEventListener('click', unlockAudio, { once: true });
-      window.addEventListener('touchstart', unlockAudio, { once: true });
+      window.addEventListener('keydown', unlockAudio, { once: true });
     }
   }
 
   playBeep(freq = 440, duration = 0.1, type = 'sine', gainLevel = 0.35) {
-    if (!this.soundEnabled) return;
+    if (!this.soundEnabled || !this.hasUserInteracted) return;
     try {
       if (!this.audioCtx) {
         const AudioContextClass = window.AudioContext || window.webkitAudioContext;
@@ -244,13 +239,13 @@ class SettingsManager {
   }
 
   playPauseAlert() {
-    if (!this.soundEnabled) return;
+    if (!this.soundEnabled || !this.hasUserInteracted) return;
     this.playBeep(580, 0.14, 'sine', 0.40);
     setTimeout(() => this.playBeep(880, 0.20, 'sine', 0.40), 120);
   }
 
   playSuccess() {
-    if (!this.soundEnabled) return;
+    if (!this.soundEnabled || !this.hasUserInteracted) return;
     const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
     notes.forEach((freq, idx) => {
       setTimeout(() => this.playBeep(freq, 0.25, 'sine', 0.35), idx * 85);
@@ -258,7 +253,7 @@ class SettingsManager {
   }
 
   playFailure() {
-    if (!this.soundEnabled) return;
+    if (!this.soundEnabled || !this.hasUserInteracted) return;
     const notes = [440, 370, 311];
     notes.forEach((freq, idx) => {
       setTimeout(() => this.playBeep(freq, 0.25, 'sawtooth', 0.35), idx * 110);
@@ -266,7 +261,7 @@ class SettingsManager {
   }
 
   playTick(urgent = false) {
-    if (!this.soundEnabled) return;
+    if (!this.soundEnabled || !this.hasUserInteracted) return;
     try {
       if (!this.audioCtx) {
         const AudioContextClass = window.AudioContext || window.webkitAudioContext;
@@ -327,7 +322,7 @@ class SettingsManager {
   }
 
   playTimeoutAlert() {
-    if (!this.soundEnabled) return;
+    if (!this.soundEnabled || !this.hasUserInteracted) return;
     const notes = [320, 240, 180];
     notes.forEach((freq, idx) => {
       setTimeout(() => this.playBeep(freq, 0.28, 'sawtooth', 0.40), idx * 120);
