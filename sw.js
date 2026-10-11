@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'aurobindo-shell-';
-const CACHE = `${CACHE_PREFIX}v217`;
+const CACHE = `${CACHE_PREFIX}v224`;
 const ASSETS = ['./', './index.html', './styles.css?v=30', './app.js?v=18', './tile-match.js?v=23', './symptom-match.html', './symptom-match.css?v=18', './symptom-match.js?v=20', './chromatogram.html', './chromatogram.css?v=23', './chromatogram.js?v=22', './assets/toggle%20button.png', './assets/4%20arrow%20toggle%20outline.png', './assets/hpcl-logo-new.png', './assets/game-1-card.png', './assets/game-2-card.png', './assets/game-3-card.png', './assets/game-4-card.png', './logo.png', './icon.svg', './icons/icon-192.png', './icons/icon-512.png', './manifest.webmanifest'];
 ASSETS.push('./cleaning-solution.html', './cleaning-solution.css?v=7', './cleaning-solution.js?v=6');
 ASSETS.splice(ASSETS.indexOf('./styles.css?v=30'), 1, './styles.css?v=43');
@@ -12,7 +12,7 @@ ASSETS.push('./assets/test-tube-game-assets/images/4-slow-game-page/beaker.webp'
 ASSETS.push('./assets/test-tube-game-assets/images/3-4-video-screen-and-game-screen-bg.webp', './assets/test-tube-game-assets/images/3-video-page/replay-video-button.webp', './assets/test-tube-game-assets/images/3-video-page/start-mixing-button.webp');
 ASSETS.push('./assets/test-tube-game-assets/images/exit-button.webp', './assets/test-tube-game-assets/images/2-solution-name-page/watch-video-button.webp', ...['column-cleaning', 'strong-wash', 'needle-wash', 'column-storage'].map(name => `./assets/test-tube-game-assets/images/2-solution-name-page/${name}-intro-page.webp`));
 ASSETS.splice(ASSETS.indexOf('./app.js?v=18'), 1, './app.js?v=25');
-ASSETS.push('./account.js?v=15', './account.css?v=6', './hero-carousel.js?v=2', './leaderboard.css?v=5');
+ASSETS.push('./account.js?v=16', './account.css?v=6', './hero-carousel.js?v=2', './leaderboard.css?v=5');
 ASSETS.push('./wrong-sample.html', './wrong-sample.css?v=16', './wrong-sample.js?v=15');
 ASSETS.push('./pill-perfect.html', './pill-perfect.css?v=25', './pill-perfect.js?v=24');
 ASSETS.push('./assets/tile-match-game-assets/card-front.png', './assets/tile-match-game-assets/card-back.png');
@@ -28,6 +28,8 @@ ASSETS.push('./checklist-game.html', './checklist-game.css?v=9', './checklist-ga
 ASSETS.push('./assets/lane-rush-game-assets/home-lights-out.png', './lane-rush.html', './lane-rush.css?v=13', './lane-rush.js?v=16', './assets/lane-rush-game-assets/f1-car.png', './audio/lanerush-bgm.mp3', './audio/lanerush-correct.mp3', './audio/lanerush-wrong.mp3');
 ASSETS.push('./assets/game-5-card.webp', './assets/game-6-card.webp', './assets/game-7-card.webp', './assets/game-8-card.webp');
 ASSETS.push('./hazard-spotter.html', './hazard-spotter.css?v=6', './hazard-spotter.js?v=10', './hazard-spotter-settings.js?v=2', './assets/hazard-spotter-game-assets/home-bg.webp', './assets/hazard-spotter-game-assets/start-button.webp');
+ASSETS.push('./working-standard.html', './working-standard.css?v=7', './working-standard-data.js?v=1', './working-standard.js?v=7');
+ASSETS.push(...['box-a-contents-page.webp','box-b-contents-page.webp','box-c-contents-page.webp','box-d-contents-page.webp','empty-tray.webp','cabinet-last-frame.webp','top-view-bottle.webp','front-view-bottle.webp','font-for-bottle-label.ttf','ui/working-standard-game-bg.webp','ui/working-standard-game-title-pg-bg.webp','ui/play-button-working-standard-game.webp'].map(file => './assets/working-standard-game-assets/'+file));
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE);
