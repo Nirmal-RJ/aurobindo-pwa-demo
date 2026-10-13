@@ -42,7 +42,7 @@ function perfectLevel(){const run=new GoodBadUglyRun();for(let i=0;i<5;i++){cons
 test('Fiat starts unlocked; a perfect level unlocks exactly one car and preserves selection',()=>{
  const garage=new GarageProgress();assert.equal(garage.level,1);assert.equal(garage.selected,0);assert.equal(garage.select(1),false);
  assert.deepEqual(garage.complete(perfectLevel()),{passed:true,unlocked:1});assert.equal(garage.level,2);assert.equal(garage.selected,0);assert.equal(garage.select(1),true);assert.equal(garage.select(2),false);
- assert.equal(new GarageProgress(JSON.parse(JSON.stringify(garage))).selected,1);
+ assert.equal(new GarageProgress(JSON.parse(JSON.stringify(garage))).selected,0);
 });
 test('An imperfect or unfinished run cannot advance the garage',()=>{
  const garage=new GarageProgress();const run=new GoodBadUglyRun();assert.equal(garage.complete(run).passed,false);
@@ -139,4 +139,21 @@ test('Driving effects advance with road travel, freeze with feedback, and respec
  vm.runInContext('road(0);',context);assert.equal(context.drivingDistance,distance);assert.equal(context.boostRemaining,boost);
  flames=0;context.reducedMotion.matches=true;
  vm.runInContext('road(.016);',context);assert.equal(flames,0);
+});
+
+test('Colors persist per car while every fresh garage starts at level one', () => {
+ const garage = new GarageProgress();
+ assert.equal(garage.paint('blue'), true);
+ garage.complete(perfectLevel()); garage.select(1); garage.paint('gold');
+ const saved = JSON.parse(JSON.stringify(garage.preferences()));
+ assert.deepEqual(Object.keys(saved), ['colors']);
+ const fresh = new GarageProgress({...saved,level:6,selected:5,champion:true});
+ assert.equal(fresh.level,1);assert.equal(fresh.selected,0);assert.equal(fresh.champion,false);
+ assert.equal(fresh.colors[0],'blue');assert.equal(fresh.colors[1],'gold');
+ fresh.complete(perfectLevel());fresh.select(1);assert.equal(fresh.colors[1],'gold');
+ assert.equal(fresh.paint('invalid'),false);assert.equal(fresh.colors[1],'gold');
+});
+test('Invalid saved colors fall back to original paint', () => {
+ const garage=new GarageProgress({colors:['invalid',null,'red']});
+ assert.deepEqual(garage.colors,['original','original','red','original','original','original']);
 });

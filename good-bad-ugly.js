@@ -19,15 +19,37 @@ const CARS = [
   { name: 'Maruti', file: '3-maruti-white.webp', rank: 'CITY RACER' },
   { name: 'Honda', file: '4-honda-white.webp', rank: 'SPORT CLASS' },
   { name: 'Benz', file: '5-benz-white.webp', rank: 'ELITE CLASS' },
-  { name: 'Ferrari', file: '6-ferrari-red.webp', rank: 'SUPER CAR' }
+  { name: 'Ferrari', file: '6-ferrari-white.webp', rank: 'SUPER CAR' }
 ];
 const carAsset = car => `assets/good-bad-ugly-assets/${car.file}`;
+const CAR_COLORS = [
+  { id: 'original', name: 'Original', hex: '#eee9d8' },
+  { id: 'red', name: 'Ruby', hex: '#cc3045' },
+  { id: 'blue', name: 'Ocean', hex: '#287cce' },
+  { id: 'green', name: 'Emerald', hex: '#299969' },
+  { id: 'gold', name: 'Gold', hex: '#dfa62f' },
+  { id: 'purple', name: 'Purple', hex: '#854dce' },
+  { id: 'orange', name: 'Orange', hex: '#ed782c' },
+  { id: 'pink', name: 'Pink', hex: '#e85ba1' },
+  { id: 'teal', name: 'Teal', hex: '#24b7b0' },
+  { id: 'silver', name: 'Silver', hex: '#b8c3d0' },
+  { id: 'black', name: 'Black', hex: '#343b48' }
+];
 class GarageProgress {
   constructor(saved = {}) {
-    this.level = Number.isInteger(saved.level) ? Math.max(1, Math.min(CARS.length, saved.level)) : 1;
-    this.selected = Number.isInteger(saved.selected) && saved.selected >= 0 && saved.selected < this.level ? saved.selected : 0;
-    this.champion = saved.champion === true && this.level === CARS.length;
+    this.level = 1;
+    this.selected = 0;
+    this.champion = false;
+    this.colors = CARS.map((_, index) => {
+      const value = saved && Array.isArray(saved.colors) ? saved.colors[index] : null;
+      return CAR_COLORS.some(color => color.id === value) ? value : 'original';
+    });
   }
+  paint(color) {
+    if (!CAR_COLORS.some(option => option.id === color)) return false;
+    this.colors[this.selected] = color; return true;
+  }
+  preferences() { return { colors: [...this.colors] }; }
   select(index) { if (!Number.isInteger(index) || index < 0 || index >= this.level) return false; this.selected = index; return true; }
   complete(run) {
     if (!run.finished || run.count !== ROUND_COUNT || run.score !== ROUND_COUNT) return { passed: false, unlocked: null };
@@ -85,7 +107,7 @@ async function findEnvironment(level, side, load, current = null) {
 function needsPortraitPrompt(viewportWidth, viewportHeight, touchFirst) {
   return touchFirst && viewportWidth > viewportHeight;
 }
-if (typeof module !== 'undefined') module.exports = { GoodBadUglyRun, SCENARIOS, LANE_LABELS, ROUND_COUNT, CARS, GarageProgress, advanceCar, gatePosition, findEnvironment, shuffleLaneLabels, needsPortraitPrompt };
+if (typeof module !== 'undefined') module.exports = { GoodBadUglyRun, SCENARIOS, LANE_LABELS, ROUND_COUNT, CARS, CAR_COLORS, GarageProgress, advanceCar, gatePosition, findEnvironment, shuffleLaneLabels, needsPortraitPrompt };
 if (typeof document !== 'undefined') (() => {
   const $ = id => document.getElementById(id);
   const shell = document.querySelector('.shell');
@@ -96,7 +118,7 @@ if (typeof document !== 'undefined') (() => {
   const track = $('track'), canvas = $('road'), ctx = canvas.getContext('2d');
   let run, state = 'home', lane = 1, elapsed = 0, wait = 0, offset = 0, previous = 0, width = 0, height = 0, orientationPaused = false, countdown = 0;
   let audioContext, buffers = {}, gestureX, carPosition = .5, carAngle = 0;
-  const progressKey = 'good-bad-ugly-garage-v1';
+  const progressKey = 'good-bad-ugly-colors-v1';
   let saved = {}; try { saved = JSON.parse(localStorage.getItem(progressKey) || '{}') || {}; } catch (_) {}
   const progress = new GarageProgress(saved);
   const environment = { left: null, right: null };
@@ -119,8 +141,65 @@ if (typeof document !== 'undefined') (() => {
     }));
   }
   applyEnvironment();
-  function saveProgress() { try { localStorage.setItem(progressKey, JSON.stringify(progress)); } catch (_) {} }
-  function applyCar() { $('car').src = carAsset(CARS[progress.selected]); $('car').alt = `Your ${CARS[progress.selected].name}`; }
+  function saveProgress() { try { localStorage.setItem(progressKey, JSON.stringify(progress.preferences())); } catch (_) {} }
+  const paintedCars = new Map();
+  function paintedCar(index, colorId) {
+    const source = carAsset(CARS[index]);
+    if (colorId === 'original') return Promise.resolve(source);
+    const key = `${index}:${colorId}`;
+    if (!paintedCars.has(key)) paintedCars.set(key, new Promise(resolve => {
+      const image = new Image();
+      image.onerror = () => resolve(source);
+      image.onload = () => {
+        try {
+          const surface = document.createElement('canvas');
+          const scale = Math.min(1, 768 / image.naturalHeight);
+          surface.width = Math.round(image.naturalWidth * scale); surface.height = Math.round(image.naturalHeight * scale);
+          const paint = surface.getContext('2d');
+          paint.drawImage(image, 0, 0, surface.width, surface.height);
+          const pixels = paint.getImageData(0, 0, surface.width, surface.height);
+          const hex = CAR_COLORS.find(color => color.id === colorId).hex;
+          const rgb = [1, 3, 5].map(offset => parseInt(hex.slice(offset, offset + 2), 16));
+          for (let i = 0; i < pixels.data.length; i += 4) {
+            const r = pixels.data[i], g = pixels.data[i + 1], b = pixels.data[i + 2];
+            const high = Math.max(r, g, b), low = Math.min(r, g, b);
+            // Tint light body panels or the Ferrari's red paint; retain dark glass and tyres.
+            const redBody = index === 5 && r > 70 && r > g * 1.45 && r > b * 1.45;
+            const lightBody = index !== 5 && low > 105 && high - low < 65;
+            if (!pixels.data[i + 3] || (!redBody && !lightBody)) continue;
+            const shade = high / 255;
+            const highlight = Math.max(0, (low - 225) / 30) * .65;
+            for (let channel = 0; channel < 3; channel++) pixels.data[i + channel] = rgb[channel] * shade * (1 - highlight) + 255 * highlight;
+          }
+          paint.putImageData(pixels, 0, 0); resolve(surface.toDataURL('image/png'));
+        } catch (_) { resolve(source); }
+      };
+      image.src = source;
+    }));
+    return paintedCars.get(key);
+  }
+  function showPaint(image, index) {
+    const color = progress.colors[index];
+    image.src = carAsset(CARS[index]);
+    image.dataset.paint = `${index}:${color}`;
+    paintedCar(index, color).then(source => { if (image.dataset.paint === `${index}:${color}`) image.src = source; });
+  }
+  function applyCar() { showPaint($('car'), progress.selected); $('car').alt = `Your ${CARS[progress.selected].name}, ${CAR_COLORS.find(color => color.id === progress.colors[progress.selected]).name}`; }
+  function renderColors() {
+    $('paint-title').textContent = `${CARS[progress.selected].name} paint`;
+    $('car-colors').replaceChildren();
+    CAR_COLORS.forEach(color => {
+      const button = document.createElement('button'); button.type = 'button';
+      button.className = 'paint-option'; button.style.setProperty('--paint-color', color.hex);
+      button.setAttribute('aria-label', color.name); button.title = color.name; button.setAttribute('aria-pressed', String(progress.colors[progress.selected] === color.id));
+      button.addEventListener('click', () => {
+        progress.paint(color.id); saveProgress(); applyCar(); renderColors();
+        const image = $('garage-cars').children[progress.selected].querySelector('img'); showPaint(image, progress.selected);
+        $('car-colors').children[CAR_COLORS.indexOf(color)].focus();
+      });
+      $('car-colors').append(button);
+    });
+  }
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   function motionEnabled() { return true; }
   track.classList.add('car-sway-enabled');
@@ -224,9 +303,10 @@ if (typeof document !== 'undefined') (() => {
     CARS.forEach((car, index) => {
       const card = document.createElement('button'), image = document.createElement('img'), name = document.createElement('strong'), status = document.createElement('small');
       card.className = 'garage-card'; card.disabled = index >= progress.level; card.classList.toggle('selected', index === progress.selected); card.setAttribute('aria-pressed', String(index === progress.selected));
-      image.src = carAsset(car); image.alt = car.name; name.textContent = car.name; status.textContent = index >= progress.level ? `LOCKED | CLEAR LEVEL ${index}` : index === progress.selected ? 'SELECTED' : 'TAP TO SELECT';
+      showPaint(image, index); image.alt = car.name; name.textContent = car.name; status.textContent = index >= progress.level ? `LOCKED | CLEAR LEVEL ${index}` : index === progress.selected ? 'SELECTED' : 'TAP TO SELECT';
       card.append(image, name, status); card.addEventListener('click', () => { if (progress.select(index)) { saveProgress(); applyCar(); openGarage(); const cards = $('garage-cars').querySelectorAll('button'); cards[index].focus(); } }); $('garage-cars').append(card);
     });
+    renderColors();
     $('garage-race').textContent = `RACE LEVEL ${progress.level}`; $('garage-race').focus();
   }
   function celebrate(unlocked, clearedLevel) {
@@ -234,7 +314,7 @@ if (typeof document !== 'undefined') (() => {
     const car = CARS[unlocked === null ? progress.selected : unlocked];
     $('unlock-tag').textContent = unlocked === null ? 'CHAMPIONSHIP WON' : 'NEW CAR UNLOCKED';
     $('unlock-title').textContent = unlocked === null ? 'You own the track.' : car.name;
-    $('unlock-image').src = carAsset(car); $('unlock-image').alt = car.name;
+    showPaint($('unlock-image'), unlocked === null ? progress.selected : unlocked); $('unlock-image').alt = car.name;
     $('unlock-rank').textContent = unlocked === null ? 'CHAMPION' : car.rank;
     $('unlock-copy').textContent = `Level ${clearedLevel} cleared${unlocked === null ? ' ? Champion!' : ''}`;
     $('confetti').replaceChildren();
@@ -328,7 +408,7 @@ if (typeof document !== 'undefined') (() => {
     } else if (state === 'home') road(dt);
     requestAnimationFrame(frame);
   }
-  $('home-start').addEventListener('click', () => { playMusic(); unlockAudio(); $('home').hidden = true; $('instructions').hidden = false; $('level-start').focus(); }); $('level-start').addEventListener('click', openGarage); $('garage-race').addEventListener('click', start); $('unlock-garage').addEventListener('click', openGarage); $('home-garage').addEventListener('click', openGarage); $('garage-menu').addEventListener('click', () => { $('garage').hidden = true; $('home').hidden = false; state = 'home'; }); applyCar(); $('start').addEventListener('click', start); $('pause').addEventListener('click', pause); $('left').addEventListener('click', () => steer(lane - 1)); $('right').addEventListener('click', () => steer(lane + 1));
+  $('home-start').addEventListener('click', () => { playMusic(); unlockAudio(); $('home').hidden = true; $('instructions').hidden = false; $('level-start').focus(); }); $('level-start').addEventListener('click', openGarage); $('garage-race').addEventListener('click', start); $('unlock-garage').addEventListener('click', openGarage); $('home-garage').addEventListener('click', openGarage); $('garage-menu').addEventListener('click', () => { progress.level = 1; progress.selected = 0; progress.champion = false; layoutLevel = 0; applyCar(); applyEnvironment(); $('garage').hidden = true; $('home').hidden = false; state = 'home'; }); applyCar(); $('start').addEventListener('click', start); $('pause').addEventListener('click', pause); $('left').addEventListener('click', () => steer(lane - 1)); $('right').addEventListener('click', () => steer(lane + 1));
   track.addEventListener('pointerdown', e => { gestureX = e.clientX; }); track.addEventListener('pointerup', e => { if (gestureX === undefined) return; const delta = e.clientX - gestureX; if (Math.abs(delta) > 25) steer(lane + (delta > 0 ? 1 : -1)); else steer(Math.floor((e.clientX - track.getBoundingClientRect().left) / (width / 3))); gestureX = undefined; }); track.addEventListener('pointercancel', () => { gestureX = undefined; });
   window.addEventListener('keydown', e => { if (['ArrowLeft', 'ArrowRight'].includes(e.key)) { e.preventDefault(); steer(lane + (e.key === 'ArrowLeft' ? -1 : 1)); } if (['1', '2', '3'].includes(e.key)) steer(Number(e.key) - 1); if (e.key === 'Escape') pause(); });
   document.addEventListener('visibilitychange', () => { if (document.hidden) { bgMusic.pause(); pause(); } previous = 0; }); window.addEventListener('pagehide', () => bgMusic.pause()); window.addEventListener('resize', fit); if ('ResizeObserver' in window) new ResizeObserver(fit).observe(track); fit(); requestAnimationFrame(frame);
