@@ -35,13 +35,21 @@ class GarageProgress {
     this.champion = true; return { passed: true, unlocked: null };
   }
 }
+function shuffleLaneLabels(random = Math.random, previous = []) {
+  const orders = [
+    ['Good', 'Bad', 'Ugly'], ['Good', 'Ugly', 'Bad'],
+    ['Bad', 'Good', 'Ugly'], ['Bad', 'Ugly', 'Good'],
+    ['Ugly', 'Good', 'Bad'], ['Ugly', 'Bad', 'Good']
+  ].filter(order => order.some((label, index) => label !== previous[index]));
+  return [...orders[Math.floor(random() * orders.length)]];
+}
 class GoodBadUglyRun {
-  constructor(random = Math.random) { this.random = random; this.score = 0; this.streak = 0; this.best = 0; this.lives = 3; this.misses = []; this.bag = []; this.round = null; this.count = 0; this.boosts = 0;  }
+  constructor(random = Math.random, options = shuffleLaneLabels(random)) { this.options = [...options]; this.random = random; this.score = 0; this.streak = 0; this.best = 0; this.lives = 3; this.misses = []; this.bag = []; this.round = null; this.count = 0; this.boosts = 0;  }
   next() {
     if (this.finished) return null;
     if (!this.bag.length) { this.bag = SCENARIOS.map((_, i) => i); for (let i = this.bag.length - 1; i > 0; i--) { const j = Math.floor(this.random() * (i + 1)); [this.bag[i], this.bag[j]] = [this.bag[j], this.bag[i]]; } }
     const index = this.bag.pop(); const { prompt, lane } = SCENARIOS[index];
-    this.round = { index, prompt, answer: LANE_LABELS[lane], lane, options: [...LANE_LABELS], resolved: false };
+    this.round = { index, prompt, answer: LANE_LABELS[lane], lane: this.options.indexOf(LANE_LABELS[lane]), options: [...this.options], resolved: false };
     return this.round;
   }
   resolve(lane) {
@@ -64,22 +72,59 @@ function advanceCar(position, target, dt) {
   const next = position + (target - position) * (1 - Math.exp(-12 * dt));
   return Math.abs(next - target) < .0005 ? target : next;
 }
-if (typeof module !== 'undefined') module.exports = { GoodBadUglyRun, SCENARIOS, LANE_LABELS, ROUND_COUNT, CARS, GarageProgress, advanceCar, gatePosition };
+// Missing level art keeps the current side, or finds another numbered image on first load.
+async function findEnvironment(level, side, load, current = null) {
+  const levels = [level, ...[1, 2, 3, 4, 5].filter(value => value !== level)];
+  for (const candidate of levels) {
+    const path = `assets/good-bad-ugly-assets/${candidate}-bg-${side}.webp`;
+    if (await load(path)) return path;
+    if (candidate === level && current) return current;
+  }
+  return null;
+}
+function needsPortraitPrompt(viewportWidth, viewportHeight, touchFirst) {
+  return touchFirst && viewportWidth > viewportHeight;
+}
+if (typeof module !== 'undefined') module.exports = { GoodBadUglyRun, SCENARIOS, LANE_LABELS, ROUND_COUNT, CARS, GarageProgress, advanceCar, gatePosition, findEnvironment, shuffleLaneLabels, needsPortraitPrompt };
 if (typeof document !== 'undefined') (() => {
   const $ = id => document.getElementById(id);
   const shell = document.querySelector('.shell');
+  const raceScene = document.querySelector('.race-scene');
+  let sceneryOffset = 0;
+  let layoutLevel = 0, levelOptions = [];
+  const categoryIndex = label => LANE_LABELS.indexOf(label);
   const track = $('track'), canvas = $('road'), ctx = canvas.getContext('2d');
   let run, state = 'home', lane = 1, elapsed = 0, wait = 0, offset = 0, previous = 0, width = 0, height = 0, orientationPaused = false, countdown = 0;
   let audioContext, buffers = {}, gestureX, carPosition = .5, carAngle = 0;
   const progressKey = 'good-bad-ugly-garage-v1';
   let saved = {}; try { saved = JSON.parse(localStorage.getItem(progressKey) || '{}') || {}; } catch (_) {}
   const progress = new GarageProgress(saved);
+  const environment = { left: null, right: null };
+  let environmentRequest = 0;
+  function loadEnvironmentImage(path) {
+    return new Promise(resolve => {
+      const image = new Image();
+      image.onload = () => resolve(image.naturalWidth > 0);
+      image.onerror = () => resolve(false);
+      image.src = path;
+    });
+  }
+  async function applyEnvironment() {
+    const request = ++environmentRequest;
+    await Promise.all(['left', 'right'].map(async side => {
+      const path = await findEnvironment(progress.level, side, loadEnvironmentImage, environment[side]);
+      if (request !== environmentRequest || !path) return;
+      environment[side] = path;
+      raceScene.style.setProperty(`--environment-${side}`, `url("${path}")`);
+    }));
+  }
+  applyEnvironment();
   function saveProgress() { try { localStorage.setItem(progressKey, JSON.stringify(progress)); } catch (_) {} }
   function applyCar() { $('car').src = carAsset(CARS[progress.selected]); $('car').alt = `Your ${CARS[progress.selected].name}`; }
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   function wrongImpact() { shell.classList.remove('wrong-impact'); void shell.offsetWidth; shell.classList.add('wrong-impact'); }
   shell.addEventListener('animationend', event => { if (event.target === shell) shell.classList.remove('wrong-impact'); });
-  function resetEffects() { shell.classList.remove('wrong-impact'); carPosition = .5; carAngle = 0; track.querySelectorAll('.tyre-trail').forEach(el => el.remove()); $('car').style.left = '0px'; $('car').style.transform = `translateX(${width * carPosition}px) translateX(-50%)`; $('boost-cue').hidden = true; $('powerup').classList.remove('show'); }
+  function resetEffects() { shell.classList.remove('wrong-impact'); carPosition = .5; carAngle = 0; track.querySelectorAll('.tyre-trail, .answer-confetti').forEach(el => el.remove()); $('car').style.left = '0px'; $('car').style.transform = `translateX(${width * carPosition}px) translateX(-50%)`; $('boost-cue').hidden = true; $('powerup').classList.remove('show'); }
 
   const bgMusic = new Audio('audio/lanerush-bgm.mp3');
   bgMusic.loop = true; bgMusic.volume = .35; bgMusic.preload = 'auto';
@@ -90,7 +135,7 @@ if (typeof document !== 'undefined') (() => {
     } catch (_) { /* Sound is optional. */ }
   }
   function sound(name) { if (!audioContext || !buffers[name] || audioContext.state !== 'running') return; const source = audioContext.createBufferSource(); source.buffer = buffers[name]; source.connect(audioContext.destination); source.start(); }
-  function fit() { const rect = track.getBoundingClientRect(); width = rect.width; height = rect.height; const dpr = Math.min(window.devicePixelRatio || 1, 2); canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); const landscape = window.innerWidth > window.innerHeight; $('rotate').hidden = !landscape; if (landscape && state === 'playing') { orientationPaused = true; pause(); } else if (!landscape && orientationPaused) { orientationPaused = false; } }
+  function fit() { const rect = track.getBoundingClientRect(); width = rect.width; height = rect.height; const dpr = Math.min(window.devicePixelRatio || 1, 2); canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); const landscape = needsPortraitPrompt(window.innerWidth, window.innerHeight, window.matchMedia('(pointer: coarse)').matches); $('rotate').hidden = !landscape; if (landscape && state === 'playing') { orientationPaused = true; pause(); } else if (!landscape && orientationPaused) { orientationPaused = false; } }
   function steer(next) { if (state !== 'playing' || wait || countdown) return; const target = Math.max(0, Math.min(2, next)); const direction = target - lane;
     if (!direction) return;
     const car = $('car');
@@ -111,7 +156,7 @@ if (typeof document !== 'undefined') (() => {
     }
     updateLane(); }
   function updateLane() {
-    $('lane-glow').style.setProperty('--lane-color', ['#5cff7d', '#ffca39', '#ff344c'][lane]);
+    $('lane-glow').style.setProperty('--lane-color', ['#5cff7d', '#ffca39', '#ff344c'][categoryIndex(run.options[lane])]);
     $('lane-glow').style.transform = `translateX(${lane * 100}%)`;
     $('left').disabled = lane === 0; $('right').disabled = lane === 2;
     track.dataset.lane = lane;
@@ -131,10 +176,28 @@ if (typeof document !== 'undefined') (() => {
     for (const d of paths[name]) { const path = document.createElementNS(ns, 'path'); path.setAttribute('d', d); svg.append(path); }
     return svg;
   }
+  function answerCelebration() {
+    if (reducedMotion.matches) return;
+    const burst = document.createElement('div');
+    burst.className = 'answer-confetti';
+    burst.setAttribute('aria-hidden', 'true');
+    burst.style.setProperty('--celebration-color', ['#8effbc', '#ffdb7a', '#ff647e'][categoryIndex(run.round.answer)]);
+    for (let i = 0; i < 28; i++) {
+      const piece = document.createElement('i');
+      const angle = Math.PI * 2 * i / 28;
+      piece.style.setProperty('--dx', Math.cos(angle) * Math.min(width * .46, 100 + i % 4 * 18) + 'px');
+      piece.style.setProperty('--dy', Math.sin(angle) * (75 + i % 3 * 18) - 30 + 'px');
+      piece.style.setProperty('--spin', (i % 2 ? 240 : -240) + 'deg');
+      burst.append(piece);
+    }
+    track.append(burst);
+    window.setTimeout(() => burst.remove(), 1050);
+  }
   function showFeedback(correct) {
+    if (correct) answerCelebration();
     const feedback = $('feedback'); feedback.replaceChildren();
     feedback.classList.toggle('bad', !correct);
-    feedback.style.setProperty('--answer-color', ['#8effbc', '#ffdb7a', '#ff647e'][run.round.lane]);
+    feedback.style.setProperty('--answer-color', ['#8effbc', '#ffdb7a', '#ff647e'][categoryIndex(run.round.answer)]);
     const caption = document.createElement('small'), answer = document.createElement('strong'), hint = document.createElement('span');
     caption.textContent = correct ? (run.streak >= 3 ? `${run.streak} IN A ROW!` : 'NAILED IT!') : 'THE RIGHT LANE WAS';
     answer.textContent = run.round.answer.toUpperCase();
@@ -147,8 +210,8 @@ if (typeof document !== 'undefined') (() => {
     popup.classList.remove('show'); void popup.offsetWidth; popup.classList.add('show');
   }
   function hud() { $('race-level').textContent = `LEVEL ${progress.level}`; $('race-progress').textContent = `${Math.min(run.count + 1, ROUND_COUNT)} / ${ROUND_COUNT}`; }
-  function nextRound() { const round = run.next(); elapsed = 0; $('question').textContent = round.prompt; $('round-time').style.transform = 'scaleX(1)'; $('feedback').textContent = ''; $('gates').hidden = false; for (let i = 0; i < 3; i++) { $(`gate-${i}`).replaceChildren(); const icon = document.createElement('span'), label = document.createElement('strong'); icon.append(makeIcon(i === 0 ? 'check' : 'warning')); icon.setAttribute('aria-hidden', 'true'); label.textContent = round.options[i]; $(`gate-${i}`).append(icon, label); $(`gate-${i}`).className = `gate lane-${i}`; } $('gates').style.transform = 'translateY(-100px)'; }
-  function start() { if (state !== 'paused') bgMusic.currentTime = 0; playMusic(); $('instructions').hidden = true; $('home').hidden = true; unlockAudio(); if (state === 'paused') { state = 'playing'; $('overlay').classList.remove('race-report'); previous = 0; $('overlay').hidden = true; $('pause').disabled = false; return; } resetEffects(); applyCar(); $('garage').hidden = true; $('unlock').hidden = true; $('boost-cue').querySelector('span').textContent = `LEVEL ${progress.level} | FIVE QUESTIONS`; $('overlay').classList.remove('race-report'); track.classList.remove('boosted'); run = new GoodBadUglyRun(); state = 'playing'; wait = 0; countdown = 0; previous = 0; lane = 1; hud(); updateLane(); countdown = 3; $('gates').hidden = true; $('feedback').textContent = ''; $('boost-cue').hidden = false; $('boost-cue').querySelector('strong').textContent = '3'; $('boost-cue').classList.add('count-beat'); $('question').textContent = 'Get ready to race'; $('overlay').hidden = true; $('pause').disabled = false; fit(); }
+  function nextRound() { const round = run.next(); elapsed = 0; $('question').textContent = round.prompt; $('round-time').style.transform = 'scaleX(1)'; $('feedback').textContent = ''; $('gates').hidden = false; for (let i = 0; i < 3; i++) { $(`gate-${i}`).replaceChildren(); const icon = document.createElement('span'), label = document.createElement('strong'); icon.append(makeIcon(round.options[i] === 'Good' ? 'check' : 'warning')); icon.setAttribute('aria-hidden', 'true'); label.textContent = round.options[i]; $(`gate-${i}`).append(icon, label); $(`gate-${i}`).className = `gate lane-${categoryIndex(round.options[i])}`; } $('gates').style.transform = 'translateY(-100px)'; }
+  function start() { if (state !== 'paused') bgMusic.currentTime = 0; playMusic(); $('instructions').hidden = true; $('home').hidden = true; unlockAudio(); if (state === 'paused') { state = 'playing'; $('overlay').classList.remove('race-report'); previous = 0; $('overlay').hidden = true; $('pause').disabled = false; return; } resetEffects(); applyCar(); applyEnvironment(); $('garage').hidden = true; $('unlock').hidden = true; $('boost-cue').querySelector('span').textContent = `LEVEL ${progress.level} | FIVE QUESTIONS`; $('overlay').classList.remove('race-report'); track.classList.remove('boosted'); if (layoutLevel !== progress.level) { levelOptions = progress.level === 1 ? [...LANE_LABELS] : shuffleLaneLabels(Math.random, levelOptions); layoutLevel = progress.level; } run = new GoodBadUglyRun(Math.random, levelOptions); state = 'playing'; wait = 0; countdown = 0; previous = 0; lane = 1; hud(); updateLane(); countdown = 3; $('gates').hidden = true; $('feedback').textContent = ''; $('boost-cue').hidden = false; $('boost-cue').querySelector('strong').textContent = '3'; $('boost-cue').classList.add('count-beat'); $('question').textContent = 'Get ready to race'; $('overlay').hidden = true; $('pause').disabled = false; fit(); }
   function pause() { if (state !== 'playing') return; state = 'paused'; bgMusic.pause(); $('overlay').classList.remove('race-report'); $('pause').disabled = true; $('overlay').hidden = false; $('tag').textContent = 'PIT STOP'; $('title').textContent = 'Race paused'; $('description').textContent = 'Your run is waiting. Ready to get back on track?'; $('review').hidden = true; $('start').textContent = 'Resume racing'; }
   function openGarage() {
     state = 'garage'; bgMusic.pause(); $('home').hidden = true; $('instructions').hidden = true; $('overlay').hidden = true; $('unlock').hidden = true; $('garage').hidden = false; $('pause').disabled = true;
@@ -169,8 +232,8 @@ if (typeof document !== 'undefined') (() => {
     $('unlock-tag').textContent = unlocked === null ? 'CHAMPIONSHIP WON' : 'NEW CAR UNLOCKED';
     $('unlock-title').textContent = unlocked === null ? 'You own the track.' : car.name;
     $('unlock-image').src = carAsset(car); $('unlock-image').alt = car.name;
-    $('unlock-rank').textContent = unlocked === null ? 'ALL SIX CARS. ONE CHAMPION.' : car.rank;
-    $('unlock-copy').textContent = `Perfect 5/5! Level ${clearedLevel} conquered. ${unlocked === null ? 'Take any car for a victory lap.' : 'Your garage just got an upgrade. Pick your ride for the next level.'}`;
+    $('unlock-rank').textContent = unlocked === null ? 'CHAMPION' : car.rank;
+    $('unlock-copy').textContent = `Level ${clearedLevel} cleared${unlocked === null ? ' ? Champion!' : ''}`;
     $('confetti').replaceChildren();
     if (!reducedMotion.matches) for (let i = 0; i < 30; i++) { const piece = document.createElement('i'); piece.style.setProperty('--x', `${(i * 37) % 100}%`); piece.style.setProperty('--delay', `${(i % 8) * .12}s`); piece.style.setProperty('--color', ['#8effbc', '#ffdb7a', '#ff647e'][i % 3]); $('confetti').append(piece); }
     if (audioContext?.state === 'running') [523,659,784,1047].forEach((note, index) => { const tone = audioContext.createOscillator(), gain = audioContext.createGain(), at = audioContext.currentTime + index * .12; tone.frequency.value = note; gain.gain.setValueAtTime(0, at); gain.gain.linearRampToValueAtTime(.09,at+.02); gain.gain.exponentialRampToValueAtTime(.001,at+.3); tone.connect(gain); gain.connect(audioContext.destination); tone.start(at); tone.stop(at+.32); });
@@ -185,14 +248,17 @@ if (typeof document !== 'undefined') (() => {
     $('review').replaceChildren(); run.misses.forEach(miss => { const row = document.createElement('div'), title = document.createElement('strong'), answer = document.createElement('span'); title.textContent = miss.prompt; answer.textContent = miss.answer; row.append(title, answer); $('review').append(row); }); $('review').hidden = run.misses.length === 0; $('start').textContent = 'Retry level'; $('start').focus();
   }
   function road(dt) {
-    offset = (offset + dt * (300 * (run ? run.multiplier : 1))) % 100;
+    const distance = dt * 300 * (run ? run.multiplier : 1);
+    offset = (offset + distance) % 100;
+    // Use continuous travel so wrapping the road markings never snaps the scenery.
+    sceneryOffset += distance * .7;
+    raceScene.style.setProperty('--scenery-offset', sceneryOffset + 'px');
     ctx.fillStyle = '#15202b'; ctx.fillRect(0, 0, width, height);
     for (let i = 0; i < 3; i++) {
       const x = width * i / 3, laneWidth = width / 3;
       const asphalt = ctx.createLinearGradient(x, 0, x + laneWidth, 0);
       asphalt.addColorStop(0, '#19212b'); asphalt.addColorStop(.5, '#252d36'); asphalt.addColorStop(1, '#19212b');
       ctx.fillStyle = asphalt; ctx.fillRect(x, 0, laneWidth, height);
-      ctx.fillStyle = '#c3c8cd70'; for (let y = offset - 100; y < height; y += 100) ctx.fillRect(x + laneWidth / 2 - 1, y, 2, 28);
       ctx.fillStyle = '#9ba3aa55'; ctx.fillRect(x + 2, 0, 2, height);
     }
     ctx.fillStyle = '#9ba3aa55'; ctx.fillRect(width - 4, 0, 2, height);
@@ -205,13 +271,15 @@ if (typeof document !== 'undefined') (() => {
   function frame(time) {
     const dt = previous ? Math.min((time - previous) / 1000, .05) : 0; previous = time;
     if (state === 'playing' && !document.hidden) {
-      road(dt);
+      // Freeze travel while the answer feedback timer continues.
+      const motionDt = wait > 0 ? 0 : dt;
+      road(motionDt);
       const targetPosition = (lane + .5) / 3;
       const oldPosition = carPosition;
-      carPosition = advanceCar(carPosition, targetPosition, dt);
-      const velocity = dt > 0 ? (carPosition - oldPosition) / dt : 0;
+      carPosition = advanceCar(carPosition, targetPosition, motionDt);
+      const velocity = motionDt > 0 ? (carPosition - oldPosition) / motionDt : 0;
       const targetAngle = reducedMotion.matches ? 0 : Math.max(-24, Math.min(24, velocity * 12));
-      carAngle += (targetAngle - carAngle) * (1 - Math.exp(-18 * dt));
+      carAngle += (targetAngle - carAngle) * (1 - Math.exp(-18 * motionDt));
       $('car').style.left = '0px';
       $('car').style.transform = `translateX(${width * carPosition}px) translateX(-50%) rotate(${carAngle}deg)`;
 

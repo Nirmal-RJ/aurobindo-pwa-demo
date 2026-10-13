@@ -257,3 +257,63 @@ footer .exit,footer #pause{width:36px;min-height:44px;height:44px;flex:0 0 36px;
 @keyframes showroom-light{50%{opacity:.5}}
 @media(max-height:700px){.victory-stars{height:38px;gap:14px}.victory-stars span{font-size:25px}.victory-stars span:nth-child(2){font-size:34px}}
 @media(prefers-reduced-motion:reduce){.car-podium:before,.victory-stars span,.victory-stars span:after{animation:none}}
+
+/* Environment sits outside the medians. Override image variables for future levels. */
+.race-scene{--environment-left:none;--environment-right:none;display:flex;flex:1;min-height:0;margin:0 5px;overflow:hidden}
+.race-scene .track{flex:1;min-width:0;margin:0}
+.roadside{flex:0 0 12%;background-repeat:repeat-y;background-size:100% auto;pointer-events:none}
+.roadside-left{background-image:var(--environment-left);background-position:right var(--scenery-offset,0px)}
+.roadside-right{background-image:var(--environment-right);background-position:left var(--scenery-offset,0px)}
+.race-scene .gate{font-size:clamp(12px,4.5vw,22px)}
+.race-scene #car{width:min(86px,22%)}
+
+/* Small celebration during the correct-answer pause. */
+.answer-confetti{position:absolute;left:50%;top:35%;width:0;height:0;z-index:5;pointer-events:none}
+.answer-confetti i{position:absolute;width:9px;height:15px;background:var(--celebration-color);border-radius:2px;box-shadow:0 0 8px var(--celebration-color);animation:answer-confetti-burst .95s ease-out forwards}
+.answer-confetti i:nth-child(3n){background:#fff1bb;width:9px;height:9px}
+@keyframes answer-confetti-burst{0%{opacity:0;transform:translate(0,0) scale(.4)}10%,65%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--spin)) scale(.85)}}
+@media(prefers-reduced-motion:reduce){.answer-confetti{display:none}}
+
+/* Compact race instructions with the action kept inside the panel. */
+.flow-panel{padding:20px 18px;overflow-y:auto}
+.flow-panel h2{font-size:clamp(27px,7.5vw,34px);margin:12px 0;line-height:1.05}
+.flow-panel ol{margin:12px 0}
+.flow-panel li{padding:9px 0 9px 37px}
+.flow-panel li:before{top:10px;width:26px;height:26px;font-size:13px}
+.flow-panel li strong{font-size:14px}
+.flow-panel li span{font-size:13px;line-height:1.4;margin-top:3px}
+.flow-panel .lane-legend{margin:12px 0 5px;gap:8px;font-size:10px}
+.flow-panel .keyboard-hint{font-size:11px;margin:5px 0 14px}
+.flow-panel .primary{min-height:46px;font-size:16px}
+@media(max-height:640px){.flow-panel{padding:14px 16px}.flow-panel:before{margin-bottom:8px}.flow-panel h2{margin:8px 0}.flow-panel li{padding-top:7px;padding-bottom:7px}}
+
+/* Static showroom: overhead car grounded on a solid circular display plinth. */
+.unlock-panel .car-podium{position:relative;padding:16px 12px 14px;border:1px solid #d5b3ff38;border-radius:20px;background:radial-gradient(ellipse at 50% 20%,#73579955,transparent 65%),linear-gradient(160deg,#251b3b,#100d20 85%);box-shadow:inset 0 1px 0 #ffffff12,0 8px 20px #16062766}
+.unlock-panel .car-podium:before,.unlock-panel .car-podium:after{display:none}
+.showroom-stage{position:relative;width:min(100%,230px);aspect-ratio:1;margin:0 auto 12px;display:grid;place-items:center;isolation:isolate}
+.showroom-stage:before{content:"";position:absolute;inset:-20px -25px 8px;background:conic-gradient(from 155deg at 50% 0%,transparent 0deg,#fff3cc08 9deg,#fff3cc24 25deg,#fff3cc08 41deg,transparent 50deg);filter:blur(10px);z-index:0;pointer-events:none}
+.showroom-platform{position:absolute;inset:10px;border-radius:50%;background:radial-gradient(circle at 42% 28%,#77658b,#40334f 58%,#281f34 85%);border:2px solid #d7ba7e;box-shadow:0 2px 0 #ffedc688,inset 0 0 0 5px #22192e,inset 0 0 0 6px #d6b57755,inset 0 12px 24px #fff4d412,0 8px 0 #352539,0 10px 0 #987743,0 18px 22px #0009,0 0 35px #dcbaff14;z-index:1}
+.showroom-platform:after{content:"";position:absolute;inset:18%;border-radius:50%;background:radial-gradient(ellipse,#fff5d521,transparent 70%);pointer-events:none}
+.unlock-panel .car-podium img{position:relative;z-index:2;display:block;height:76%;width:auto;max-width:65%;object-fit:contain;animation:none;transform:none;filter:drop-shadow(6px 10px 5px #000b) drop-shadow(0 0 2px #fff3cc33)}
+.unlock-panel .car-podium span{animation:none;display:table;margin:0 auto;padding:5px 12px;border:1px solid #d8b57366;background:#1a1428;color:#f5dfac;font-size:9px;letter-spacing:1.6px}
+.unlock-panel #unlock-copy{margin:13px 0 15px;font-size:12px;color:#e4d6ef;line-height:1.4}
+@media(max-height:700px){.showroom-stage{width:min(100%,190px)}.unlock-panel .car-podium{padding:10px 10px 12px}}
+
+/* Polished award stars and a gold level-clear seal. */
+.unlock-panel .victory-stars{gap:13px;height:48px;margin:12px 0 4px;align-items:center}
+.unlock-panel .victory-stars span{width:29px;height:29px;font-size:0;transform:rotate(-10deg);animation:star-award .55s ease-out both;filter:drop-shadow(0 2px 0 #98601c) drop-shadow(0 0 7px #ffd66a55);text-shadow:none}
+.unlock-panel .victory-stars span:before{content:"";position:absolute;inset:0;clip-path:polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 94%,50% 72%,21% 94%,32% 57%,2% 35%,39% 35%);background:linear-gradient(145deg,#fffbe0 5%,#ffe798 38%,#edb648 65%,#c78a25);box-shadow:inset 0 1px 0 #fff}
+.unlock-panel .victory-stars span:nth-child(1){animation-delay:.1s}
+.unlock-panel .victory-stars span:nth-child(2){width:42px;height:42px;transform:none;animation-delay:.2s;filter:drop-shadow(0 3px 0 #98601c) drop-shadow(0 0 10px #ffd66a66)}
+.unlock-panel .victory-stars span:nth-child(3){transform:rotate(10deg);animation-delay:.3s}
+.unlock-panel .victory-stars span:after{top:0;right:1px;width:6px;height:6px;animation:star-glint 3.5s 1s ease-in-out infinite}
+.unlock-panel #unlock-copy{display:table;margin:16px auto 18px;padding:8px 18px;border:1px solid #e4bf6b80;border-radius:8px;background:linear-gradient(110deg,#ffdf8612,#ffdf8626,#ffdf8612);color:#ffe9ad;font-family:Race,Impact,sans-serif;font-size:19px;font-weight:400;letter-spacing:1px;line-height:1.2;text-transform:uppercase;box-shadow:inset 0 1px 0 #ffedba18,0 0 16px #ffd9710d}
+@media(max-height:700px){.unlock-panel .victory-stars{margin:8px 0 3px;height:42px}.unlock-panel #unlock-copy{font-size:17px;margin:13px auto 15px;padding:7px 16px}}
+@media(prefers-reduced-motion:reduce){.unlock-panel .victory-stars span,.unlock-panel .victory-stars span:after{animation:none}}
+
+/* Quiet display surface keeps the car as the focus. */
+.unlock-panel .car-podium{background:radial-gradient(ellipse at 50% 40%,#44305680,transparent 72%),linear-gradient(155deg,#21162f,#110d1e);border-color:#d8bdff26;box-shadow:inset 0 1px 0 #ffffff09}
+.showroom-platform{inset:13px;border:1px solid #d6bddb45;background:radial-gradient(circle at 45% 30%,#796b8270,#4b3d5866 62%,#29203280);box-shadow:inset 0 1px 2px #ffffff16,0 10px 20px #0005,0 0 25px #c5a4ff0a}
+.showroom-platform:after{inset:18%;background:radial-gradient(ellipse at 50% 65%,#0005,transparent 70%);filter:blur(7px)}
+.showroom-stage:before{background:conic-gradient(from 155deg at 50% 0%,transparent 0deg,#fff3cc04 9deg,#fff3cc18 25deg,#fff3cc04 41deg,transparent 50deg);filter:blur(14px)}
+.unlock-panel .car-podium img{filter:drop-shadow(3px 7px 4px #0009)}
