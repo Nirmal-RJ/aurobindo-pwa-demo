@@ -90,7 +90,7 @@ if (typeof document !== 'undefined') (() => {
   const $ = id => document.getElementById(id);
   const shell = document.querySelector('.shell');
   const raceScene = document.querySelector('.race-scene');
-  let sceneryOffset = 0;
+  let sceneryOffset = 0, drivingDistance = 0, boostRemaining = 0;
   let layoutLevel = 0, levelOptions = [];
   const categoryIndex = label => LANE_LABELS.indexOf(label);
   const track = $('track'), canvas = $('road'), ctx = canvas.getContext('2d');
@@ -124,7 +124,7 @@ if (typeof document !== 'undefined') (() => {
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   function wrongImpact() { shell.classList.remove('wrong-impact'); void shell.offsetWidth; shell.classList.add('wrong-impact'); }
   shell.addEventListener('animationend', event => { if (event.target === shell) shell.classList.remove('wrong-impact'); });
-  function resetEffects() { shell.classList.remove('wrong-impact'); carPosition = .5; carAngle = 0; track.querySelectorAll('.tyre-trail, .answer-confetti').forEach(el => el.remove()); $('car').style.left = '0px'; $('car').style.transform = `translateX(${width * carPosition}px) translateX(-50%)`; $('boost-cue').hidden = true; $('powerup').classList.remove('show'); }
+  function resetEffects() { boostRemaining = 0; shell.classList.remove('wrong-impact'); carPosition = .5; carAngle = 0; track.querySelectorAll('.tyre-trail, .answer-confetti').forEach(el => el.remove()); $('car').style.left = '0px'; $('car').style.transform = `translateX(${width * carPosition}px) translateX(-50%)`; $('boost-cue').hidden = true; $('powerup').classList.remove('show'); }
 
   const bgMusic = new Audio('audio/lanerush-bgm.mp3');
   bgMusic.loop = true; bgMusic.volume = .35; bgMusic.preload = 'auto';
@@ -206,6 +206,7 @@ if (typeof document !== 'undefined') (() => {
     feedback.classList.remove('feedback-pop'); void feedback.offsetWidth; feedback.classList.add('feedback-pop');
   }
   function powerup() {
+    boostRemaining = 1.1;
     const popup = $('powerup'); popup.textContent = `${run.streak} STREAK | ${run.multiplier.toFixed(2)}x BOOST`;
     popup.classList.remove('show'); void popup.offsetWidth; popup.classList.add('show');
   }
@@ -250,6 +251,8 @@ if (typeof document !== 'undefined') (() => {
   function road(dt) {
     const distance = dt * 300 * (run ? run.multiplier : 1);
     offset = (offset + distance) % 100;
+    drivingDistance += distance;
+    boostRemaining = Math.max(0, boostRemaining - dt);
     // Use continuous travel so wrapping the road markings never snaps the scenery.
     sceneryOffset += distance * .7;
     raceScene.style.setProperty('--scenery-offset', sceneryOffset + 'px');
@@ -267,6 +270,29 @@ if (typeof document !== 'undefined') (() => {
       for (let y = offset - 100; y < height; y += 32) { ctx.fillStyle = '#879096'; ctx.fillRect(edge + 1, y, 5, 26); ctx.fillStyle = '#b3bbc0'; ctx.fillRect(edge + 1, y, 2, 26); }
     }
     ctx.fillStyle = '#ffffff08'; for (let i = 0; i < 200; i++) { const x = (i * 47.3) % width, y = (i * 89.7 + offset) % height; ctx.fillRect(x, y, 1, 1); }
+    if (state === 'playing' && !reducedMotion.matches && !countdown) {
+      // Six simple canvas streaks: no extra DOM, timers, or animation loops.
+      ctx.fillStyle = boostRemaining > 0 ? '#ffe6a34d' : '#dcecff24';
+      for (let i = 0; i < 6; i++) {
+        const x = i < 3 ? 10 + i * 3 : width - 12 - (i - 3) * 3;
+        const y = ((drivingDistance * 1.5 + i * height / 3) % (height + 90)) - 90;
+        ctx.fillRect(x, y, 1.5, boostRemaining > 0 ? 80 : 45);
+      }
+      if (boostRemaining > 0) {
+        const x = width * carPosition, y = height - 13;
+        const fade = Math.min(1, boostRemaining / .3);
+        ctx.save(); ctx.globalAlpha = fade;
+        for (const side of [-1, 1]) {
+          const exhaustX = x + side * Math.min(86, width * .22) * .17;
+          const flame = ctx.createLinearGradient(0, y - 7, 0, height);
+          flame.addColorStop(0, '#fff2b8'); flame.addColorStop(1, '#ffad3200');
+          ctx.fillStyle = flame;
+          ctx.beginPath(); ctx.moveTo(exhaustX - 4, y - 7); ctx.lineTo(exhaustX + 4, y - 7); ctx.lineTo(exhaustX + 2, height); ctx.lineTo(exhaustX - 2, height); ctx.closePath(); ctx.fill();
+        }
+        ctx.restore();
+      }
+    }
+
   }
   function frame(time) {
     const dt = previous ? Math.min((time - previous) / 1000, .05) : 0; previous = time;

@@ -118,3 +118,19 @@ test('Wide PC windows remain playable; landscape touch devices request portrait'
  assert.equal(needsPortraitPrompt(390, 844, true), false);
  assert.equal(needsPortraitPrompt(1024, 768, false), false);
 });
+
+test('Driving effects advance with road travel, freeze with feedback, and respect reduced motion', () => {
+ const fs=require('node:fs'),vm=require('node:vm');
+ const source=fs.readFileSync(require.resolve('../good-bad-ugly.js'),'utf8');
+ const road=source.slice(source.indexOf('  function road(dt)'),source.indexOf('  function frame(time)'));
+ let flames=0;
+ const ctx=new Proxy({}, {get:(_,key)=>key==='createLinearGradient'?()=>({addColorStop:()=>{}}):key==='fill'?()=>flames++:()=>{},set:()=>true});
+ const context=vm.createContext({ctx,width:380,height:600,offset:0,drivingDistance:0,boostRemaining:1.1,
+  sceneryOffset:0,run:{multiplier:1.4},raceScene:{style:{setProperty:()=>{}}},state:'playing',reducedMotion:{matches:false},countdown:0,carPosition:.5});
+ vm.runInContext(road+';road(.016);',context);
+ assert.equal(flames,2);assert.ok(context.drivingDistance>0);assert.ok(context.boostRemaining<1.1);
+ const distance=context.drivingDistance,boost=context.boostRemaining;
+ vm.runInContext('road(0);',context);assert.equal(context.drivingDistance,distance);assert.equal(context.boostRemaining,boost);
+ flames=0;context.reducedMotion.matches=true;
+ vm.runInContext('road(.016);',context);assert.equal(flames,0);
+});

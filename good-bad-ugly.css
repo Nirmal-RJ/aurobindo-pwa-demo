@@ -317,3 +317,6 @@ footer .exit,footer #pause{width:36px;min-height:44px;height:44px;flex:0 0 36px;
 .showroom-platform:after{inset:18%;background:radial-gradient(ellipse at 50% 65%,#0005,transparent 70%);filter:blur(7px)}
 .showroom-stage:before{background:conic-gradient(from 155deg at 50% 0%,transparent 0deg,#fff3cc04 9deg,#fff3cc18 25deg,#fff3cc04 41deg,transparent 50deg);filter:blur(14px)}
 .unlock-panel .car-podium img{filter:drop-shadow(3px 7px 4px #0009)}
+
+/* Tight contact shadow grounds the driving car without an animated filter. */
+.race-scene #car{filter:drop-shadow(0 3px 2px #000b)}
