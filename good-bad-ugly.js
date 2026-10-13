@@ -2,15 +2,16 @@
 'use strict';
 const LANE_LABELS = ['Good', 'Bad', 'Ugly'];
 const SCENARIOS = [
-  { prompt: 'Followed the lab rules', lane: 0 },
-  { prompt: 'Broken test tube', lane: 1 },
-  { prompt: 'Contaminated sample', lane: 2 },
-  { prompt: 'Wore the required protective equipment', lane: 0 },
-  { prompt: 'Forgot to label a test tube', lane: 1 },
-  { prompt: 'Falsified test results', lane: 2 },
-  { prompt: 'Checked equipment before use', lane: 0 },
-  { prompt: 'Left the workbench untidy', lane: 1 },
-  { prompt: 'Mixed chemical waste into a clean sample', lane: 2 }
+  { prompt: 'Pre-assumption of sample reading', lane: 2 },
+  { prompt: 'Not wearing the required PPE', lane: 1 },
+  { prompt: 'Reusage of butter paper', lane: 1 },
+  { prompt: 'Usage of dried flask when adding samples', lane: 0 },
+  { prompt: 'Excess sample from gross weight can be discarded', lane: 0 },
+  { prompt: 'Vial can be filled as preferred', lane: 1 },
+  { prompt: 'Check expiry dates of the standards/solvents', lane: 0 },
+  { prompt: 'Place the vials in the tray in any order you prefer', lane: 2 },
+  { prompt: 'Usage of solvent from the same batch/lot throughout the analysis', lane: 0 },
+  { prompt: 'Ignore the flask labeling', lane: 2 }
 ];
 const ROUND_COUNT = 5;
 const CARS = [

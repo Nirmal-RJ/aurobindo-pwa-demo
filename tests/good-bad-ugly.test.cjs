@@ -21,7 +21,7 @@ test('Every scenario uses shuffled category lanes without revealing its answer',
  const run=new GoodBadUglyRun();const seen=new Set();
  for(let i=0;i<ROUND_COUNT;i++){const r=run.next();seen.add(r.lane);assert.deepEqual([...r.options].sort(),['Bad','Good','Ugly']);assert.equal(r.options[r.lane],LANE_LABELS[SCENARIOS[r.index].lane]);assert.equal(r.answer,r.options[r.lane]);assert.doesNotMatch(r.prompt,/\b(good|bad|ugly)\b/i);run.resolve(r.lane);}
  assert.ok(seen.size >= 1);
- for(const [prompt,lane] of [['Broken test tube',1],['Followed the lab rules',0],['Contaminated sample',2]]) assert.equal(SCENARIOS.find(s=>s.prompt===prompt).lane,lane);
+ for(const [prompt,lane] of [['Not wearing the required PPE',1],['Usage of dried flask when adding samples',0],['Ignore the flask labeling',2]]) assert.equal(SCENARIOS.find(s=>s.prompt===prompt).lane,lane);
 });
 
 test('Incoming gates start above track and reach the car as the round ends',()=>{
