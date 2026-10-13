@@ -73,3 +73,8 @@ footer{background:linear-gradient(#111b2b,#070d16);border-top:1px solid #677b935
 @keyframes count-pulse{from{opacity:.3;transform:scale(1.5)}to{opacity:1;transform:scale(1)}}
 @media(max-height:640px){.flow-panel{padding:16px}.flow-panel h2{margin:10px 0;font-size:32px}.flow-panel ol{margin:10px 0}.flow-panel li{padding-top:7px;padding-bottom:7px}.flow-panel li span{font-size:13px}.flow-panel:before{margin-bottom:8px}}
 @media(prefers-reduced-motion:reduce){.count-beat strong{animation:none}#powerup.show{animation:impact-flash .95s ease-out forwards}}
+
+
+
+/* The explicit car sway setting also controls trails under Reduced Motion. */
+.track.car-sway-enabled .tyre-trail{display:block}

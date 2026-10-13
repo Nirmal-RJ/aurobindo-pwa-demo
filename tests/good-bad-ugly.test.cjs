@@ -98,7 +98,7 @@ test('Animation frame freezes travel during feedback and resumes without runtime
  const frame = source.slice(source.indexOf('  function frame(time)'), source.indexOf("  $('home-start').addEventListener"));
  const travel = [], cue = { textContent: '1' }, car = { style: {} };
  const context = vm.createContext({ previous: 1000, state: 'playing', document: {hidden:false}, wait:.65,
-  lane:0, carPosition:.5, carAngle:0, reducedMotion:{matches:false}, width:300, countdown:1,
+  lane:0, carPosition:.5, carAngle:0, reducedMotion:{matches:true}, motionEnabled:() => true, width:300, countdown:1,
   road:dt => travel.push(dt), advanceCar, requestAnimationFrame:() => {},
   $:id => id === 'car' ? car : {querySelector:() => cue} });
  vm.runInContext(frame + ';frame(1016);', context);
@@ -106,9 +106,15 @@ test('Animation frame freezes travel during feedback and resumes without runtime
  context.wait=0;
  vm.runInContext('frame(1032);',context);
  assert.ok(travel[1]>0);assert.ok(context.carPosition<.5);
+ assert.ok(context.carAngle<0, "explicit sway stays enabled under reduced motion");
+ assert.match(car.style.transform, /rotate\(-/);
+ context.motionEnabled=() => false;
+ const previousAngle=context.carAngle;
+ vm.runInContext("frame(1040);",context);
+ assert.ok(Math.abs(context.carAngle)<Math.abs(previousAngle), "disabled sway settles toward straight");
  context.wait=.65;context.countdown=0;
  vm.runInContext('frame(1048);',context);
- assert.equal(travel[2],0);assert.ok(context.wait<.65);
+ assert.equal(travel[3],0);assert.ok(context.wait<.65);
 });
 
 const { needsPortraitPrompt } = require('../good-bad-ugly.js');

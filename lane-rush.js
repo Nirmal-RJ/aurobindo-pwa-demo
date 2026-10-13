@@ -40,7 +40,8 @@ if (typeof document !== 'undefined') (() => {
   const track = $('track'), canvas = $('road'), ctx = canvas.getContext('2d');
   let run, state = 'home', lane = 0, elapsed = 0, wait = 0, offset = 0, previous = 0, width = 0, height = 0, orientationPaused = false, boostShown = false, countdown = 0;
   let audioContext, buffers = {}, gestureX, carPosition = .25, carAngle = 0;
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  function motionEnabled() { return true; }
+  track.classList.add('car-sway-enabled');
   function wrongImpact() { shell.classList.remove('wrong-impact'); void shell.offsetWidth; shell.classList.add('wrong-impact'); }
   shell.addEventListener('animationend', event => { if (event.target === shell) shell.classList.remove('wrong-impact'); });
   function resetEffects() { shell.classList.remove('wrong-impact'); carPosition = .25; carAngle = 0; track.querySelectorAll('.tyre-trail').forEach(el => el.remove()); $('car').style.left = '0px'; $('car').style.transform = `translateX(${width * carPosition}px) translateX(-50%)`; $('boost-cue').hidden = true; $('powerup').classList.remove('show'); }
@@ -49,7 +50,7 @@ if (typeof document !== 'undefined') (() => {
   bgMusic.loop = true; bgMusic.volume = .35; bgMusic.preload = 'auto';
   function playMusic() { bgMusic.play().catch(() => {}); }
   async function unlockAudio() {
-    try { audioContext ||= new (window.AudioContext || window.webkitAudioContext)(); await audioContext.resume();
+    try { if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)(); await audioContext.resume();
       for (const name of ['correct', 'wrong']) { if (!buffers[name]) fetch(`audio/lanerush-${name}.mp3`).then(r => r.arrayBuffer()).then(data => audioContext.decodeAudioData(data)).then(buffer => { buffers[name] = buffer; }).catch(() => {}); }
     } catch (_) { /* Sound is optional. */ }
   }
@@ -60,7 +61,7 @@ if (typeof document !== 'undefined') (() => {
     const car = $('car');
     const currentLeft = width * carPosition;
     lane = target;
-    if (!reducedMotion.matches) {
+    if (motionEnabled()) {
       const startX = currentLeft, endX = width * (lane ? .75 : .25);
       for (const side of [-1, 1]) {
         const trail = document.createElement('div'); trail.className = 'tyre-trail';
@@ -92,7 +93,7 @@ if (typeof document !== 'undefined') (() => {
       const oldPosition = carPosition;
       carPosition = advanceCar(carPosition, targetPosition, dt);
       const velocity = dt > 0 ? (carPosition - oldPosition) / dt : 0;
-      const targetAngle = reducedMotion.matches ? 0 : Math.max(-24, Math.min(24, velocity * 12));
+      const targetAngle = !motionEnabled() ? 0 : Math.max(-24, Math.min(24, velocity * 12));
       carAngle += (targetAngle - carAngle) * (1 - Math.exp(-18 * dt));
       $('car').style.left = '0px';
       $('car').style.transform = `translateX(${width * carPosition}px) translateX(-50%) rotate(${carAngle}deg)`;

@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'aurobindo-shell-';
-const CACHE = `${CACHE_PREFIX}v262`;
+const CACHE = `${CACHE_PREFIX}v267`;
 const ASSETS = ['./', './index.html', './styles.css?v=30', './app.js?v=18', './tile-match.js?v=23', './symptom-match.html', './symptom-match.css?v=18', './symptom-match.js?v=20', './chromatogram.html', './chromatogram.css?v=23', './chromatogram.js?v=22', './assets/toggle%20button.png', './assets/4%20arrow%20toggle%20outline.png', './assets/hpcl-logo-new.png', './assets/game-1-card.png', './assets/game-2-card.png', './assets/game-3-card.png', './assets/game-4-card.png', './logo.png', './icon.svg', './icons/icon-192.png', './icons/icon-512.png', './manifest.webmanifest'];
 ASSETS.push('./cleaning-solution.html', './cleaning-solution.css?v=7', './cleaning-solution.js?v=6');
 ASSETS.splice(ASSETS.indexOf('./styles.css?v=30'), 1, './styles.css?v=43');
@@ -25,11 +25,11 @@ ASSETS.push('./assets/audit-game-assets/page-3/3-bg.webp', './assets/audit-game-
 ASSETS.push('./assets/audit-game-assets/page-4/4-bg.webp', './assets/audit-game-assets/page-4/4-overlay.webp');
 ASSETS.push('./audio/bacteria-laugh.mp3', './audio/bacteria-caught.mp3');
 ASSETS.push('./checklist-game.html', './checklist-game.css?v=9', './checklist-game.js?v=7', './assets/checklist-game-assets/blur-bg.webp');
-ASSETS.push('./assets/lane-rush-game-assets/home-lights-out.png', './lane-rush.html', './lane-rush.css?v=13', './lane-rush.js?v=16', './assets/lane-rush-game-assets/f1-car.png', './audio/lanerush-bgm.mp3', './audio/lanerush-correct.mp3', './audio/lanerush-wrong.mp3');
+ASSETS.push('./assets/lane-rush-game-assets/home-lights-out.png', './lane-rush.html', './lane-rush.css?v=16', './lane-rush.js?v=19', './assets/lane-rush-game-assets/f1-car.png', './audio/lanerush-bgm.mp3', './audio/lanerush-correct.mp3', './audio/lanerush-wrong.mp3');
 ASSETS.push('./assets/game-5-card.webp', './assets/game-6-card.webp', './assets/game-7-card.webp', './assets/game-8-card.webp');
 ASSETS.push('./assets/lane-rush-game-assets/user-car.png', './assets/test-tube-game-assets/fonts/BMW%20Helvetica%2097%20Black%20Condense%20Regular.otf');
 ASSETS.push('./assets/good-bad-ugly-assets/opening-bg.webp', ...['1-fiat-default.webp','2-ambassador-white.webp','3-maruti-white.webp','4-honda-white.webp','5-benz-white.webp','6-ferrari-red.webp'].map(file => './assets/good-bad-ugly-assets/' + file));
-ASSETS.push('./good-bad-ugly.html', './good-bad-ugly.css?v=29', './good-bad-ugly.js?v=28');
+ASSETS.push('./good-bad-ugly.html', './good-bad-ugly.css?v=31', './good-bad-ugly.js?v=30');
 ASSETS.push('./hazard-spotter.html', './hazard-spotter.css?v=6', './hazard-spotter.js?v=10', './hazard-spotter-settings.js?v=2', './assets/hazard-spotter-game-assets/home-bg.webp', './assets/hazard-spotter-game-assets/start-button.webp');
 ASSETS.push('./working-standard.html', './working-standard.css?v=7', './working-standard-data.js?v=1', './working-standard.js?v=7');
 ASSETS.push(...['box-a-contents-page.webp','box-b-contents-page.webp','box-c-contents-page.webp','box-d-contents-page.webp','empty-tray.webp','cabinet-last-frame.webp','top-view-bottle.webp','front-view-bottle.webp','font-for-bottle-label.ttf','ui/working-standard-game-bg.webp','ui/working-standard-game-title-pg-bg.webp','ui/play-button-working-standard-game.webp'].map(file => './assets/working-standard-game-assets/'+file));
