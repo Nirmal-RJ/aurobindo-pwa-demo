@@ -29,13 +29,13 @@ test('Incoming gates start above track and reach the car as the round ends',()=>
   assert.equal(gatePosition(0,height),-100);
   assert.ok(gatePosition(.5,height)>gatePosition(0,height));
   assert.ok(gatePosition(1,height)>gatePosition(.5,height));
-  assert.equal(gatePosition(1,height)+37,height-8-Math.min(height*.24,130)/2);
+  assert.equal(gatePosition(1,height)+37,height-48-Math.min(height*.24,130)/2);
  }
 });
 
-test('Questions allow 5.2 seconds initially and at least 4.2 seconds throughout a level',()=>{
- const run=new GoodBadUglyRun();assert.equal(run.duration,5.2);
- for(let i=0;i<5;i++){assert.ok(run.duration>=4.2);const r=run.next();run.resolve(r.lane);}
+test('Questions start at 3.8 seconds and accelerate to a three-second minimum',()=>{
+ const run=new GoodBadUglyRun();assert.equal(run.duration,3.8);
+ for(let i=0;i<5;i++){assert.ok(run.duration>=3);const r=run.next();run.resolve(r.lane);}
 });
 
 function perfectLevel(){const run=new GoodBadUglyRun();for(let i=0;i<5;i++){const r=run.next();run.resolve(r.lane);}return run;}
@@ -97,7 +97,7 @@ test('Animation frame freezes travel during feedback and resumes without runtime
  const source = fs.readFileSync(require.resolve('../good-bad-ugly.js'), 'utf8');
  const frame = source.slice(source.indexOf('  function frame(time)'), source.indexOf("  $('home-start').addEventListener"));
  const travel = [], cue = { textContent: '1' }, car = { style: {} };
- const context = vm.createContext({ previous: 1000, state: 'playing', document: {hidden:false}, wait:.65,
+ const context = vm.createContext({ readingRemaining:0,run:{duration:5},elapsed:0,reverse:false, previous: 1000, state: 'playing', document: {hidden:false}, wait:.65,
   lane:0, carPosition:.5, carAngle:0, reducedMotion:{matches:true}, motionEnabled:() => true, width:300, countdown:1,
   road:dt => travel.push(dt), advanceCar, requestAnimationFrame:() => {},
   $:id => id === 'car' ? car : {querySelector:() => cue} });
@@ -131,14 +131,22 @@ test('Driving effects advance with road travel, freeze with feedback, and respec
  const road=source.slice(source.indexOf('  function road(dt)'),source.indexOf('  function frame(time)'));
  let flames=0;
  const ctx=new Proxy({}, {get:(_,key)=>key==='createLinearGradient'?()=>({addColorStop:()=>{}}):key==='fill'?()=>flames++:()=>{},set:()=>true});
- const context=vm.createContext({ctx,width:380,height:600,offset:0,drivingDistance:0,boostRemaining:1.1,
-  sceneryOffset:0,run:{multiplier:1.4},raceScene:{style:{setProperty:()=>{}}},state:'playing',reducedMotion:{matches:false},countdown:0,carPosition:.5});
+ const context=vm.createContext({progress:{selected:4},$:()=>({naturalWidth:100,naturalHeight:150}),ctx,carAngle:12,width:380,height:600,offset:0,drivingDistance:0,boostRemaining:1.1,
+  gatePosition,reverse:false,sceneryOffset:0,run:{multiplier:1.4,duration:5},raceScene:{style:{setProperty:()=>{}}},state:'playing',reducedMotion:{matches:false},countdown:0,carPosition:.5});
  vm.runInContext(road+';road(.016);',context);
- assert.equal(flames,2);assert.ok(context.drivingDistance>0);assert.ok(context.boostRemaining<1.1);
+ assert.equal(flames,2);
+ assert.ok(Math.abs(context.drivingDistance-(gatePosition(.016/5,600)-gatePosition(0,600)))<1e-9);
+ assert.equal(context.sceneryOffset,context.drivingDistance);
+ assert.ok(context.drivingDistance>0);assert.ok(context.boostRemaining<1.1);
  const distance=context.drivingDistance,boost=context.boostRemaining;
  vm.runInContext('road(0);',context);assert.equal(context.drivingDistance,distance);assert.equal(context.boostRemaining,boost);
+ flames=0;context.boostRemaining=0;vm.runInContext('road(.016);',context);assert.equal(flames,2);
  flames=0;context.reducedMotion.matches=true;
- vm.runInContext('road(.016);',context);assert.equal(flames,0);
+ vm.runInContext('road(.016);',context);assert.equal(flames,2, 'steady exhaust stays visible under reduced motion');
+ for (const selected of [0,1,2,3,4,5]) {
+  flames=0;context.progress.selected=selected;vm.runInContext('road(.016);',context);
+  assert.equal(flames,selected>=4?2:0,'flames only for Benz and Ferrari');
+ }
 });
 
 test('Colors persist per car while every fresh garage starts at level one', () => {
@@ -156,4 +164,42 @@ test('Colors persist per car while every fresh garage starts at level one', () =
 test('Invalid saved colors fall back to original paint', () => {
  const garage=new GarageProgress({colors:['invalid',null,'red']});
  assert.deepEqual(garage.colors,['original','original','red','original','original','original']);
+});
+
+test('Reverse gates travel upward and meet the car at the top', () => {
+ for(const height of [300,500,800]) {
+  assert.ok(gatePosition(0,height,true)>height);
+  assert.ok(gatePosition(.5,height,true)<gatePosition(0,height,true));
+  assert.equal(gatePosition(1,height,true)+37,48+Math.min(height*.24,130)/2);
+ }
+});
+
+test('World keeps moving while gates wait two seconds for reading', () => {
+ const fs=require('node:fs'),vm=require('node:vm');
+ const source=fs.readFileSync(require.resolve('../good-bad-ugly.js'),'utf8');
+ const frame=source.slice(source.indexOf('  function frame(time)'),source.indexOf("  $('home-start').addEventListener"));
+ const travel=[], elements={};
+ const context=vm.createContext({previous:1000,state:'playing',document:{hidden:false},wait:0,countdown:0,
+  readingRemaining:2,elapsed:0,run:{duration:3.8},reverse:false,lane:0,carPosition:.5,carAngle:0,width:300,height:600,
+  motionEnabled:()=>true,advanceCar,gatePosition,road:dt=>travel.push(dt),requestAnimationFrame:()=>{},$:id=>elements[id]||(elements[id]={style:{}})});
+ vm.runInContext(frame+';frame(1050);',context);
+ assert.equal(travel[0],.05);assert.equal(elements.gates.hidden,true);assert.equal(context.elapsed,0);assert.equal(context.readingRemaining,1.95);
+ assert.ok(context.carPosition<.5);
+ context.readingRemaining=.01;
+ vm.runInContext('frame(1100);',context);
+ assert.equal(context.readingRemaining,0);assert.ok(Math.abs(context.elapsed-.04)<1e-9);
+ assert.equal(travel[1],.05);assert.equal(elements.gates.hidden,false);
+});
+
+test('Each upgraded level moves faster for the same answer count', () => {
+ let previous=Infinity;
+ for(let level=1;level<=6;level++) {
+  const run=new GoodBadUglyRun(()=>.5,LANE_LABELS,level);
+  assert.ok(run.duration<previous);previous=run.duration;
+  assert.equal(run.duration,3.8/(1+(level-1)*.06));
+  for(let i=0;i<5;i++){const round=run.next();run.resolve(round.lane);}
+  assert.ok(run.duration>=3/1.3);
+ }
+ assert.equal(new GoodBadUglyRun(()=>.5,LANE_LABELS,99).level,6);
+ assert.equal(new GoodBadUglyRun(()=>.5,LANE_LABELS,-1).level,1);
 });

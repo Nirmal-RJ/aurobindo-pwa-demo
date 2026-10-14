@@ -324,3 +324,115 @@ footer .exit,footer #pause{width:36px;min-height:44px;height:44px;flex:0 0 36px;
 .track.car-sway-enabled .tyre-trail{display:block}
 
 .car-paint{border:1px solid #455975;border-radius:10px;padding:8px 10px;margin:0 0 12px;text-align:left}.car-paint legend{padding:0 6px;font-size:11px;font-weight:800;color:#d6e8f8}.paint-options{display:flex;flex-wrap:wrap;justify-content:center;gap:4px}.paint-option{display:grid;place-items:center;width:32px;height:32px;padding:3px;border:1px solid transparent;border-radius:8px;background:#0a1423;color:#d8e6f3;flex:0 0 32px}.paint-option:before{content:"";width:22px;height:22px;border-radius:50%;background:var(--paint-color);box-shadow:inset 0 0 0 1px #ffffff55,0 2px 5px #0008}.paint-option[aria-pressed="true"]{border-color:#8effbc;background:#16382d}
+
+.prompt-meta{gap:8px}.prompt-meta .exit,.prompt-meta #pause{display:grid;place-items:center;flex:0 0 25px;width:25px;height:25px;min-height:25px;margin:0;border:1px solid #473d17;border-radius:5px;background:#25220f;color:#fff4b9;font-size:18px;text-decoration:none}.prompt-meta #pause{font-size:12px}.prompt-meta #race-progress{margin-left:auto}.prompt-meta #pause:disabled{opacity:.4}
+
+.race-scene #car{bottom:48px}
+
+.race-scene #car{transform-origin:50% 50%}
+
+/* Clean question card with quiet metadata and a slim time indicator. */
+.prompt{min-height:0;margin:6px 6px 0;padding:12px 14px 11px;border:1px solid #e5cc86;border-radius:12px;background:linear-gradient(135deg,#fff4d2,#f6e4ad);box-shadow:0 3px 12px #0003;clip-path:none}
+.prompt:before,.prompt:after{display:none}
+.prompt .scenario-copy{width:100%;padding:0;border:0;min-width:0}
+.prompt-meta{gap:8px;margin-bottom:9px}
+.prompt-meta #race-level,.prompt-meta #race-progress{background:#5947160e;color:#655424;border:0;padding:4px 7px;border-radius:6px;font-size:10px;font-weight:700;letter-spacing:.4px}
+.prompt-meta .exit,.prompt-meta #pause{width:28px;height:28px;min-height:28px;flex-basis:28px;border:1px solid #65542426;border-radius:7px;background:#fff9e780;color:#655424}
+.prompt h1{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:clamp(18px,4.8vw,23px);font-weight:650;font-style:normal;letter-spacing:0;line-height:1.4;text-align:left;color:#252a30;margin:0 0 12px;text-shadow:none;overflow-wrap:break-word}
+.prompt .round-timer{height:3px;border:0;border-radius:3px;background:#6554241c;overflow:hidden}
+.prompt .round-timer i{background:#aa8430;box-shadow:none;border-radius:3px}
+@media(max-height:640px){.prompt{padding:9px 12px}.prompt-meta{margin-bottom:6px}.prompt h1{font-size:18px;line-height:1.35;margin-bottom:9px}}
+
+/* Caution board: restrained hazard edges around a clear reading area. */
+.prompt{padding:15px 14px 14px;border:1px solid #e6b82e;border-radius:10px;background:#f5d45b;box-shadow:0 3px 10px #0004}
+.prompt:before,.prompt:after{display:block;content:"";position:absolute;left:0;right:0;width:100%;height:5px;background:repeating-linear-gradient(135deg,#272719 0 8px,#f5d45b 8px 16px);transform:none;box-shadow:none}
+.prompt:before{top:0}.prompt:after{top:auto;bottom:0}
+.prompt h1{color:#242414;font-weight:700;line-height:1.4}
+.prompt-meta #race-level,.prompt-meta #race-progress{background:#292719;color:#fff1b1;font-weight:700}
+.prompt-meta .exit,.prompt-meta #pause{background:#292719;color:#fff1b1;border-color:#292719;border-radius:6px}
+.prompt .round-timer{background:#29271920}.prompt .round-timer i{background:#39351e}
+@media(max-height:640px){.prompt{padding:12px 12px 11px}}
+
+/* Quiet lane signs: category color lives in the edge and icon, not a neon glow. */
+.race-scene .gate{border:1px solid #60717e;border-top:3px solid var(--category);border-radius:8px;background:linear-gradient(180deg,#26343e,#16212a);box-shadow:0 3px 6px #0004;gap:5px;padding:8px 3px;clip-path:none}
+.race-scene .gate:before,.race-scene .gate:after{display:none}
+.race-scene .gate span{color:var(--category);font-size:24px;line-height:1}
+.race-scene .gate strong{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:clamp(14px,4vw,19px);font-weight:750;letter-spacing:.4px;line-height:1.2;color:#f4f7f9;text-shadow:none}
+.race-scene .gate.correct{border-color:var(--category);box-shadow:0 0 0 1px var(--category);filter:none}
+.race-scene .gate.wrong{outline:1px solid #ff8791;animation:none}
+#feedback{left:12%;right:12%;padding:12px 14px;border:1px solid #60717e;border-left:3px solid var(--answer-color);border-radius:10px;background:#101c27f5;box-shadow:0 5px 14px #0004;text-align:left}
+#feedback small{font-size:10px;font-weight:600;letter-spacing:.6px;color:#b6c5d0}
+#feedback strong{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:26px;font-weight:750;letter-spacing:.3px;line-height:1.2;margin:5px 0;text-shadow:none}
+#feedback>span{font-size:11px;font-weight:500;letter-spacing:.2px;color:#c6d4de}
+#feedback.feedback-pop{animation:sleek-answer-in .18s ease-out}
+@keyframes sleek-answer-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){#feedback.feedback-pop{animation:none}}
+
+/* Balanced answer reveal: a strong category badge with restrained illumination. */
+#feedback{left:10%;right:10%;padding:16px 14px 15px;text-align:center;border:1px solid var(--answer-color);border-left-width:1px;border-radius:14px;background:linear-gradient(145deg,#1c2c38f7,#0c1722fa);box-shadow:0 8px 22px #0006,inset 0 3px 0 var(--answer-color)}
+#feedback small{font-size:10px;letter-spacing:1.1px;font-weight:700;color:#d6e1e9}
+#feedback strong{display:flex;align-items:center;justify-content:center;gap:10px;font-size:clamp(30px,8.5vw,40px);font-weight:800;letter-spacing:1px;margin:10px 0;line-height:1.1;color:var(--answer-color)}
+#feedback strong:before{content:"!";display:grid;place-items:center;width:30px;height:30px;flex:0 0 30px;border:1px solid currentColor;border-radius:50%;font-size:20px;font-weight:700;letter-spacing:0}
+#feedback:not(.bad) strong:before{content:"?"}
+#feedback>span{display:inline-block;padding:5px 10px;border-radius:6px;background:#ffffff09;color:#dce7ee;font-size:11px;font-weight:650;letter-spacing:.5px}
+
+/* Clear results hierarchy and compact, category-colored corrections. */
+.race-report{padding:16px;background:#06111bed}
+.race-report .panel{padding:24px 20px;border:1px solid #4c6275;border-radius:20px;background:linear-gradient(145deg,#172735,#0b1621);box-shadow:0 16px 40px #0005;overflow-y:auto}
+.race-report .panel:before,.race-report .panel:after{display:none}
+.race-report .tag{padding:0;border:0;border-radius:0;background:none;color:#9db3c5;font-size:10px;letter-spacing:1.3px;font-style:normal}
+.race-report #title{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:56px;font-weight:800;font-style:normal;letter-spacing:-2px;margin:14px 0 4px;color:#fff;text-shadow:none}
+.race-report #title:after{content:"CORRECT ANSWERS";display:block;font-size:10px;letter-spacing:1.2px;font-weight:600;color:#9db3c5;margin-top:6px}
+.race-report #description{display:block;border:0;background:none;padding:0;margin:14px 0 22px;font-size:13px;line-height:1.5;color:#cfdae3}
+.race-report #review{margin:0 0 20px;text-align:left}
+.race-report #review:before{content:"REVIEW THE CORRECT ANSWERS";font-size:9px;letter-spacing:1px;margin-bottom:10px;color:#9db3c5}
+.race-report #review div{display:flex;align-items:center;gap:12px;padding:12px 0;margin:0;border:0;border-bottom:1px solid #ffffff12;border-radius:0;background:none;box-shadow:none}
+.race-report #review div:before{display:none}
+.race-report #review strong{flex:1;min-width:0;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:13px;font-weight:550;line-height:1.45;color:#e7eef4}
+.race-report #review .review-category{display:inline-block;flex:0 0 auto;margin:0;padding:5px 8px;font-size:11px;font-weight:700;border-radius:6px;color:#9bf0bf;background:#83e9ac16}
+.race-report #review .review-category:before{content:none}
+.race-report #review .category-bad{color:#ffda7a;background:#ffda7a16}
+.race-report #review .category-ugly{color:#ff90a2;background:#ff718b16}
+.race-report .primary{min-height:46px;border-radius:10px;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:15px;font-style:normal;letter-spacing:.3px;text-shadow:none;box-shadow:0 3px 0 #8a1830;background:linear-gradient(135deg,#f23958,#d51d40)}
+.race-report .panel>a{font-size:12px;margin-top:16px;color:#a9bfce}
+@media(max-height:640px){.race-report .panel{padding:18px 16px}.race-report #title{font-size:44px;margin-top:10px}.race-report #description{margin:12px 0 16px}.race-report #review div{padding:9px 0}}
+
+/* On a missed answer, leave only the correct category visible until the next round. */
+.race-scene .gate{transition:opacity .25s ease}
+.race-scene .gate.answer-dimmed{opacity:0;pointer-events:none}
+@media(prefers-reduced-motion:reduce){.race-scene .gate{transition:none}}
+
+/* Correct matches get one quiet confirmation instead of a streak banner. */
+#feedback.feedback-success{left:50%;right:auto;top:34%;transform:translateX(-50%);width:max-content;max-width:80%;padding:8px 16px;border:1px solid #8effbc55;border-radius:24px;background:#102a23ec;color:#a4f3c5;font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:15px;font-weight:650;letter-spacing:.2px;box-shadow:0 3px 9px #0003;animation:none}
+.race-scene .gate.match-pulse{animation:match-confirm .45s ease-out}
+@keyframes match-confirm{0%,100%{box-shadow:0 0 0 1px var(--category)}45%{box-shadow:0 0 0 3px var(--category),0 0 14px #ffffff18}}
+@media(prefers-reduced-motion:reduce){.race-scene .gate.match-pulse{animation:none}}
+
+/* Results arrive in a short sequence so the score leads the review. */
+.race-report.report-enter .panel{animation:report-panel-in .4s cubic-bezier(.2,.75,.3,1) both}
+.race-report.report-enter .tag{animation:report-text-in .35s .08s ease-out both}
+.race-report.report-enter #title{animation:report-score-in .55s .12s cubic-bezier(.2,.8,.3,1.15) both}
+.race-report.report-enter #description{animation:report-text-in .4s .25s ease-out both}
+.race-report.report-enter #review:before{animation:report-text-in .35s .32s ease-out both}
+.race-report.report-enter #review div{animation:report-text-in .4s ease-out both;animation-delay:.38s}
+.race-report.report-enter #review div:nth-child(2){animation-delay:.46s}
+.race-report.report-enter #review div:nth-child(3){animation-delay:.54s}
+.race-report.report-enter .primary{animation:report-text-in .4s .62s ease-out both}
+.race-report.report-enter .panel>a{animation:report-text-in .35s .7s ease-out both}
+@keyframes report-panel-in{from{opacity:0;transform:translateY(18px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes report-text-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes report-score-in{0%{opacity:0;transform:translateY(8px) scale(.85)}70%{opacity:1;transform:translateY(0) scale(1.05)}100%{opacity:1;transform:translateY(0) scale(1)}}
+@media(prefers-reduced-motion:reduce){.race-report.report-enter .panel,.race-report.report-enter .tag,.race-report.report-enter #title,.race-report.report-enter #description,.race-report.report-enter #review:before,.race-report.report-enter #review div,.race-report.report-enter .primary,.race-report.report-enter .panel>a{animation-name:report-fade-in;animation-duration:.4s;animation-timing-function:ease-out}}
+
+@keyframes report-fade-in{from{opacity:0}to{opacity:1}}
+
+#feedback.feedback-success{display:flex;align-items:center;justify-content:center;gap:7px}
+#feedback.feedback-success svg{width:18px;height:18px;flex:0 0 18px}
+#feedback.feedback-success>span{display:inline;padding:0;background:none;border:0;font-size:14px;font-weight:650;color:inherit;letter-spacing:0}
+
+/* Empty feedback must stay hidden even when a previous result class remains. */
+#feedback.feedback-success:empty,#feedback:empty{display:none}
+
+/* Question sits behind the car: below upward driving, above downward driving. */
+body:not([data-direction="reverse"]) .prompt{margin:0 6px 6px}
+body[data-direction="reverse"] .prompt{margin:6px 6px 0}

@@ -1,0 +1,8 @@
+/* Reverse driving: car faces down; the road and scenery travel up. */
+[data-direction="reverse"] #car{top:48px;bottom:auto}
+[data-direction="reverse"] #road{transform:scaleY(-1)}
+[data-direction="reverse"] .catch-line{top:calc(48px + min(24%,130px) / 2);bottom:auto}
+[data-direction="reverse"] .prompt{margin-top:0;margin-bottom:0}
+[data-direction="reverse"] .gate{height:74px;min-height:74px}
+[data-direction="reverse"] .tyre-trail{bottom:auto;transform-origin:50% 100%;animation:reverse-tyre-fade .6s ease-out forwards}
+@keyframes reverse-tyre-fade{0%{opacity:0;transform:translate3d(0,0,0) scaleY(.1)}25%{opacity:.65;transform:translate3d(calc(var(--trail-distance) * .35),-15px,0) rotate(var(--trail-angle)) scaleY(1)}60%{opacity:.35;transform:translate3d(calc(var(--trail-distance) * .75),-55px,0) rotate(var(--trail-angle)) scaleY(1.4)}100%{opacity:0;transform:translate3d(var(--trail-distance),-100px,0) scaleY(1.8)}}
