@@ -120,3 +120,18 @@ test('game starts, renders, resizes and pauses on phone, tablet and PC layouts',
   windowEvents.blur();types.children[0].events.click();elements.get('start').events.click();callback(3040);
  }
 });
+
+test('straight body visibly slithers over time even with reduced motion enabled',()=>{
+ const fs=require('node:fs'),vm=require('node:vm');
+ const source=fs.readFileSync(require.resolve('../snake.js'),'utf8');
+ const helper=source.slice(source.indexOf('  function slitheringBody('),source.indexOf('  function draw()'));
+ const body=Array.from({length:18},(_,i)=>({x:200-i*10,y:100}));
+ const original=JSON.stringify(body);
+ const context={SnakePhysics:{body:()=>body},reducedMotion:{matches:true},runTime:0};
+ vm.createContext(context);vm.runInContext(helper+';this.sample=slitheringBody;',context);
+ const first=context.sample({});context.runTime=.2;const second=context.sample({});
+ assert.equal(first[0],body[0]);
+ assert.ok(first.some((p,i)=>Math.abs(p.y-body[i].y)>10));
+ assert.ok(second.some((p,i)=>Math.abs(p.y-first[i].y)>5));
+ assert.equal(JSON.stringify(body),original);
+});

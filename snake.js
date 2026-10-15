@@ -485,8 +485,21 @@ if (typeof document !== 'undefined') (() => {
       paint.drawImage(image, p.x - size / 2, p.y - size / 2, size, size);
     }
   }
+  function slitheringBody(snake) {
+    const body = SnakePhysics.body(snake);
+    // A visible travelling S-wave moves down the body without changing its physics path.
+    return body.map((point, index) => {
+      if (index === 0) return point;
+      const front = body[index - 1], back = body[Math.min(index + 1, body.length - 1)];
+      const dx = front.x - back.x, dy = front.y - back.y;
+      const length = Math.hypot(dx, dy) || 1;
+      const envelope = Math.min(1, index / 4);
+      const offset = Math.sin(index * .48 - runTime * 7) * 14 * envelope;
+      return { x: point.x - dy / length * offset, y: point.y + dx / length * offset };
+    });
+  }
   function draw() {
-    ctx.fillStyle = ['#16414b', '#253957', '#3d3154', '#214a40'][Math.min(3, Math.floor(score / 10))]; ctx.fillRect(0, 0, width, height);
+    ctx.fillStyle = '#fbfcfd'; ctx.fillRect(0, 0, width, height);
     const impact = screenImpact ? Math.max(0, 1 - screenImpact.age / .5) : 0;
     const amplitude = screenImpact && screenImpact.kind === 'wrong' ? 13 : 7;
     const shakeX = !reducedMotion.matches && screenImpact ? Math.sin(screenImpact.age * 65) * amplitude * impact : 0;
@@ -495,27 +508,35 @@ if (typeof document !== 'undefined') (() => {
     ctx.save(); ctx.translate(width / 2 + shakeX, height / 2 + shakeY); ctx.scale(zoom * punch, zoom * punch); ctx.translate(-camera.x, -camera.y);
     const left = camera.x - width / zoom / 2, top = camera.y - height / zoom / 2;
     const visible = (x, y, margin = 40) => x > left - margin && x < left + width / zoom + margin && y > top - margin && y < top + height / zoom + margin;
-    ctx.strokeStyle = '#b9eadd09'; ctx.lineWidth = 1;
+    ctx.strokeStyle = '#dfe6eb'; ctx.lineWidth = 1;
     ctx.beginPath();
-    for (let x = Math.floor(left / 64) * 64; x < left + width / zoom; x += 64) { ctx.moveTo(x, top); ctx.lineTo(x, top + height / zoom); }
-    for (let y = Math.floor(top / 64) * 64; y < top + height / zoom; y += 64) { ctx.moveTo(left, y); ctx.lineTo(left + width / zoom, y); } ctx.stroke();
-    ctx.fillStyle = '#030d2244'; ctx.fillRect(-WORLD, -WORLD, WORLD * 3, WORLD); ctx.fillRect(-WORLD, WORLD, WORLD * 3, WORLD); ctx.fillRect(-WORLD, 0, WORLD, WORLD); ctx.fillRect(WORLD, 0, WORLD, WORLD);
-    ctx.strokeStyle = '#ff8c9d'; ctx.lineWidth = 6; ctx.strokeRect(0, 0, WORLD, WORLD);
+    for (let x = Math.floor(left / 128) * 128; x < left + width / zoom; x += 128) { ctx.moveTo(x, top); ctx.lineTo(x, top + height / zoom); }
+    for (let y = Math.floor(top / 128) * 128; y < top + height / zoom; y += 128) { ctx.moveTo(left, y); ctx.lineTo(left + width / zoom, y); } ctx.stroke();
+    ctx.fillStyle = '#cbd5df'; ctx.fillRect(-WORLD, -WORLD, WORLD * 3, WORLD); ctx.fillRect(-WORLD, WORLD, WORLD * 3, WORLD); ctx.fillRect(-WORLD, 0, WORLD, WORLD); ctx.fillRect(WORLD, 0, WORLD, WORLD);
+    // Layer a soft warning halo behind the red neon collision boundary.
+    ctx.save();
+    ctx.strokeStyle = '#ff26261a'; ctx.lineWidth = 32; ctx.strokeRect(0, 0, WORLD, WORLD);
+    ctx.strokeStyle = '#ff262638'; ctx.lineWidth = 18; ctx.strokeRect(0, 0, WORLD, WORLD);
+    ctx.shadowColor = '#ff2020'; ctx.shadowBlur = 18;
+    ctx.strokeStyle = '#ff2929'; ctx.lineWidth = 6; ctx.strokeRect(0, 0, WORLD, WORLD);
+    ctx.shadowBlur = 0;
+    ctx.strokeStyle = '#ffe0d8'; ctx.lineWidth = 2; ctx.strokeRect(0, 0, WORLD, WORLD);
+    ctx.restore();
     for (const p of food) {
       if (!visible(p.x, p.y)) continue;
-      ctx.fillStyle = '#08212a88'; ctx.beginPath(); ctx.arc(p.x + 3, p.y + 5, 23, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#52677d25'; ctx.beginPath(); ctx.arc(p.x + 3, p.y + 5, 23, 0, Math.PI * 2); ctx.fill();
       ctx.fillStyle = '#e5edff'; ctx.beginPath(); ctx.arc(p.x, p.y, 21, 0, Math.PI * 2); ctx.fill();
       ctx.strokeStyle = '#8da8ce'; ctx.lineWidth = 3; ctx.stroke();
       ctx.fillStyle = '#193247'; ctx.font = 'bold 20px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(p.number, p.x, p.y); ctx.textBaseline = 'alphabetic';
     }
     for (const pickup of pickups) {
       if (!visible(pickup.x, pickup.y)) continue;
-      ctx.fillStyle = '#09212d88'; ctx.beginPath(); ctx.ellipse(pickup.x + 2, pickup.y + 14, 19, 8, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#52677d25'; ctx.beginPath(); ctx.ellipse(pickup.x + 2, pickup.y + 14, 19, 8, 0, 0, Math.PI * 2); ctx.fill();
       ctx.drawImage(pickup.image, pickup.x - 25, pickup.y - 25, 50, 50);
       ctx.fillStyle = '#fff1a9'; ctx.font = 'bold 12px system-ui'; ctx.textAlign = 'center'; ctx.fillText('⚡', pickup.x, pickup.y - 27);
     }
     for (const snake of snakes) {
-      const body = SnakePhysics.body(snake);
+      const body = slitheringBody(snake);
       // Render shadows as one layer beneath the entire body, so joints stay clean.
       ctx.strokeStyle = '#00192355'; ctx.lineWidth = 28; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.beginPath();
       if (snake === player && snake.bodyType === 'textured') {
@@ -539,12 +560,12 @@ if (typeof document !== 'undefined') (() => {
         ctx.fillStyle = '#251a2d'; ctx.beginPath(); ctx.ellipse(22, 0, 4 + chew * 3, 1 + chew * 5, 0, 0, Math.PI * 2); ctx.fill();
         ctx.fillStyle = biteCorrect ? '#ffe6a4' : '#ff9ba8'; ctx.beginPath(); ctx.ellipse(23, 2, 3, chew * 2, 0, 0, Math.PI * 2); ctx.fill();
       }
-      ctx.restore(); ctx.fillStyle = snake === player ? '#ffdc90' : '#daf0ee'; ctx.font = 'bold 12px system-ui'; ctx.textAlign = 'center'; ctx.fillText(snake.name, snake.x, snake.y - 34);
+      ctx.restore(); ctx.fillStyle = snake === player ? '#72501b' : '#354b60'; ctx.font = 'bold 12px system-ui'; ctx.textAlign = 'center'; ctx.fillText(snake.name, snake.x, snake.y - 34);
     }
     if (biteFeedback) {
       const event = biteFeedback, progress = Math.min(1, event.age / .75);
       ctx.globalAlpha = 1 - progress;
-      ctx.strokeStyle = event.kind === 'wrong' ? '#ff36bd' : event.kind === 'speed' ? '#00f0ff' : '#a8ff00';
+      ctx.strokeStyle = event.kind === 'wrong' ? '#ff3333' : event.kind === 'speed' ? '#00f0ff' : '#a8ff00';
       ctx.lineWidth = 5 * (1 - progress) + 1; ctx.beginPath(); ctx.arc(player.x, player.y, 22 + progress * 65, 0, Math.PI * 2); ctx.stroke();
       ctx.globalAlpha = 1;
       if (event.image && event.age < .4) {
@@ -553,7 +574,7 @@ if (typeof document !== 'undefined') (() => {
         ctx.drawImage(event.image, x - size / 2, y - size / 2, size, size);
       }
     }
-    const playerBody = SnakePhysics.body(player);
+    const playerBody = slitheringBody(player);
     for (const item of digestion) {
       const index = Math.min(playerBody.length - 1, Math.floor(item.distance / 10));
       const a = playerBody[index], b = playerBody[Math.min(index + 1, playerBody.length - 1)];
@@ -590,7 +611,7 @@ if (typeof document !== 'undefined') (() => {
     for (const item of expelled) drawSlime(item);
     ctx.globalAlpha = 1;
     for (const p of effects) {
-      ctx.globalAlpha = Math.max(0, 1 - p.age / .65); ctx.fillStyle = p.correct ? '#baff25' : '#ff39bd';
+      ctx.globalAlpha = Math.max(0, 1 - p.age / .65); ctx.fillStyle = p.correct ? '#baff25' : '#ff3333';
       ctx.beginPath(); ctx.arc(p.x, p.y, 2.5 * (1 - p.age / .65), 0, Math.PI * 2); ctx.fill();
     }
     ctx.globalAlpha = 1;
@@ -603,7 +624,7 @@ if (typeof document !== 'undefined') (() => {
     ctx.restore();
     if (screenImpact) {
       const fade = Math.max(0, 1 - screenImpact.age / .8);
-      const color = screenImpact.kind === 'wrong' ? '#ff36bd' : screenImpact.kind === 'speed' ? '#00f0ff' : '#a8ff00';
+      const color = screenImpact.kind === 'wrong' ? '#ff3333' : screenImpact.kind === 'speed' ? '#00f0ff' : '#a8ff00';
       ctx.globalAlpha = fade * .15; ctx.strokeStyle = color; ctx.lineWidth = 26; ctx.strokeRect(13, 13, width - 26, height - 26);
       ctx.globalAlpha = fade * .9; ctx.strokeStyle = color; ctx.lineWidth = 12; ctx.strokeRect(6, 6, width - 12, height - 12);
       ctx.globalAlpha = 1;
