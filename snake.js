@@ -34,13 +34,13 @@ const SnakePhysics = {
     if (grow) snake.length = Math.min(950, snake.length + 7);
   },
   number(run, value) {
-    if (run.next > 40 || value !== run.next) return false;
+    if (run.next > (run.total || 40) || value !== run.next) return false;
     run.next++; run.correct++; return true;
   },
   unlocked(correct, count = 6) { return Math.min(count, 1 + Math.floor(Math.max(0, correct) / 4)); },
   speed(boosted, manual) { return manual ? 230 : boosted ? 190 : 125; },
-  medal(correct, mistakes) {
-    if (correct < 40) return 'Keep going';
+  medal(correct, mistakes, total = 40) {
+    if (correct < total) return 'Keep going';
     return mistakes === 0 ? 'Gold' : mistakes <= 3 ? 'Silver' : 'Bronze';
   },
   trail(kind, x, y, angle, count = 7) {
@@ -55,6 +55,34 @@ if (typeof module !== 'undefined') module.exports = SnakePhysics;
 if (typeof document !== 'undefined') (() => {
   const $ = id => document.getElementById(id), canvas = $('arena'), ctx = canvas.getContext('2d');
   const WORLD = 2600, STEP = 1 / 60;
+  const processLabels = ['1-a','1-b','1-c','1-d','1-e','2-a','2-b','2-c','2-d','2-e','2-f','2-g','3-a','3-b','3-c','3-d'];
+  const processImages = processLabels.map(label => {
+    const image = document.createElement('img');
+    image.src = `assets/snake-game-assets/lab-process-assets/${label}.webp`;
+    return image;
+  });
+  const processLabel = number => processLabels[number - 1] || 'Done';
+  const levels = [{ start: 1, end: 5 }, { start: 6, end: 12 }, { start: 13, end: 16 }];
+  let level = 0, completedLevels = 0;
+  try { completedLevels = Math.min(3, Math.max(0, Math.floor(Number(localStorage.getItem('snake-lab-levels')) || 0))); } catch (_) {}
+  const unlockedSkins = () => 1 + completedLevels;
+  const processSize = () => 76 / zoom;
+  function drawProcess(number, x, y, size, label = false) {
+    const image = processImages[number - 1];
+    if (image && image.complete && image.naturalWidth) {
+      const scale = Math.min(size / image.naturalWidth, size / image.naturalHeight);
+      const w = image.naturalWidth * scale, h = image.naturalHeight * scale;
+      ctx.drawImage(image, x - w / 2, y - h / 2, w, h);
+    } else {
+      ctx.fillStyle = '#e5edf4'; ctx.fillRect(x - size / 2, y - size / 2, size, size);
+    }
+    if (label || !image || !image.complete) {
+      ctx.fillStyle = '#243b50'; ctx.font = `bold ${14 / zoom}px system-ui`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(processLabel(number), x, y + (label ? size / 2 + 12 / zoom : 0));
+      ctx.textBaseline = 'alphabetic';
+    }
+  }
   const skins = [
     { id: 'ruby', name: 'Ruby', color: '#c72e3f', light: '#ee5360', dark: '#591725', band: true },
     { id: 'ocean', name: 'Ocean', color: '#287fca', light: '#78d4ff', dark: '#123653', band: true },
@@ -69,8 +97,8 @@ if (typeof document !== 'undefined') (() => {
   let selectedType = 'textured';
   try { if (localStorage.getItem('snake-arena-type') === 'classic') selectedType = 'classic'; } catch (_) {}
   try { selectedSkin = skins.find(s => s.id === localStorage.getItem('snake-arena-skin')) || skins[0]; } catch (_) {}
-  if (skins.indexOf(selectedSkin) >= SnakePhysics.unlocked(totalCorrect)) selectedSkin = skins[0];
-  let sequence = { next: 1, correct: 0 }, digestion = [], expelled = [];
+  if (skins.indexOf(selectedSkin) >= unlockedSkins()) selectedSkin = skins[0];
+  let sequence = { next: 1, correct: 0, total: processLabels.length }, digestion = [], expelled = [];
   let biteTime = 0, biteCorrect = true, effects = [], feedbackTime = 0;
   let biteFeedback = null;
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -117,7 +145,7 @@ if (typeof document !== 'undefined') (() => {
   }
   let width = 0, height = 0, zoom = 1, state = 'home', player, snakes = [], food = [], score = 0, best = 0;
   let camera = { x: WORLD / 2, y: WORLD / 2 }, last = 0, accumulator = 0, hudTime = 0, boost = false;
-  let pointer = null, joystickPointer = null, joystickVector = null, quality = 1, slowFrames = 0;
+  let pointer = null, joystickPointer = null, joystickVector = null, touchSteering = null, quality = 1, slowFrames = 0;
   let lastDraw = 0, renderInterval = 0, hudSignature = '';
   const keys = new Set(), sprites = new Map();
   let pickups = [], pickupTimer = 0, speedRemaining = 0;
@@ -163,12 +191,14 @@ if (typeof document !== 'undefined') (() => {
   function numberedFood(number) {
     let x, y;
     do { x = 200 + Math.random() * (WORLD - 400); y = 200 + Math.random() * (WORLD - 400); }
-    while (food.some(p => Math.hypot(p.x - x, p.y - y) < 75) || Math.hypot(player.x - x, player.y - y) < 80);
-    return { x, y, number, radius: 21 };
+    while (food.some(p => Math.hypot(p.x - x, p.y - y) < 170) || Math.hypot(player.x - x, player.y - y) < 150);
+    return { x, y, number, radius: 38 };
   }
-  function reset() {
+  function reset(nextLevel = 0, continueRun = false) {
+    const saved = continueRun ? { score, sequence, runTime, mistakes, streak, longestStreak, length: player.length } : null;
+    level = nextLevel;
     score = 0; boost = false; keys.clear(); pointer = null; releaseJoystick();
-    sequence = { next: 1, correct: 0 }; digestion = []; expelled = [];
+    sequence = { next: 1, correct: 0, total: processLabels.length }; digestion = []; expelled = [];
     biteTime = 0; effects = []; feedbackTime = 0;
     runTime = 0; mistakes = 0; streak = 0; longestStreak = 0; toastTime = 0; $('celebration').hidden = true; $('results').hidden = true;
     pickups = []; pickupTimer = 1; speedRemaining = 0;
@@ -181,20 +211,25 @@ if (typeof document !== 'undefined') (() => {
       const bot = makeSnake(name, ['#63e1c6', '#9f9aff', '#ff89b1', '#70cbff'][index], x, y, angle + Math.PI / 2);
       bot.patrol = { x: x - Math.cos(angle) * 180, y: y - Math.sin(angle) * 180 }; return bot;
     })];
+    if (saved) {
+      score = saved.score; sequence = saved.sequence; runTime = saved.runTime; mistakes = saved.mistakes;
+      streak = saved.streak; longestStreak = saved.longestStreak; player.length = saved.length; player.score = score;
+      player.path = Array.from({length: Math.ceil(player.length / 2) + 8}, (_, i) => ({x: player.x - Math.cos(player.angle) * i * 2, y: player.y - Math.sin(player.angle) * i * 2}));
+    }
     food = [];
-    for (let number = 1; number <= 40; number++) food.push(numberedFood(number));
+    for (let number = levels[level].start; number <= levels[level].end; number++) food.push(numberedFood(number));
     for (let i = 0; i < 3; i++) spawnPickup();
     camera = { x: player.x, y: player.y }; updateHud();
   }
   function updateHud() {
-    const signature = `${score}:${best}:${sequence.next}:${totalCorrect}:${streak}:${feedbackTime > 0}:${Math.ceil(speedRemaining)}`;
+    const signature = `${level}:${score}:${best}:${sequence.next}:${totalCorrect}:${streak}:${feedbackTime > 0}:${Math.ceil(speedRemaining)}`;
     if (signature === hudSignature) return;
     hudSignature = signature;
     $('score').textContent = score; $('best').textContent = Math.max(best, score);
-    const unlocked = SnakePhysics.unlocked(totalCorrect), nextSkin = skins[unlocked];
-    $('unlock-progress').textContent = nextSkin ? `${4 - totalCorrect % 4} more correct → ${nextSkin.name} · Streak ${streak}` : `All skins unlocked · Streak ${streak}`;
-    if (feedbackTime <= 0) $('hint').textContent = sequence.next <= 40 ? `Eat ${sequence.next} next · ${score} / 40 correct${speedRemaining > 0 ? ` · SPEED ${Math.ceil(speedRemaining)}s` : ''}` : 'Finishing digestion…';
-    $('leaders').replaceChildren(...[{ name: 'Next number', score: sequence.next <= 40 ? sequence.next : 'Done' }, { name: 'Skins unlocked', score: `${SnakePhysics.unlocked(totalCorrect)} / ${skins.length}` }].map(s => {
+
+    $('unlock-progress').textContent = `Level ${level + 1} / 3 · Complete this series to unlock a snake`;
+    if (feedbackTime <= 0) $('hint').textContent = sequence.next <= processLabels.length ? `Eat ${processLabel(sequence.next)} next · ${score} / ${processLabels.length} correct${speedRemaining > 0 ? ` · SPEED ${Math.ceil(speedRemaining)}s` : ''}` : 'Finishing digestion…';
+    $('leaders').replaceChildren(...[{ name: 'Next step', score: sequence.next <= processLabels.length ? processLabel(sequence.next) : 'Done' }, { name: 'Skins unlocked', score: `${unlockedSkins()} / ${skins.length}` }].map(s => {
       const li = document.createElement('li'); li.className = s === player ? 'you' : '';
       li.append(document.createTextNode(s.name)); const value = document.createElement('b'); value.textContent = s.score; li.append(value); return li;
     }));
@@ -210,7 +245,7 @@ if (typeof document !== 'undefined') (() => {
     updateHud(); $('announcement').textContent = `Run finished. Score ${score}.`;
     showOverlay('Nice run!', `You collected ${score} points. Best: ${best}. Avoid the glowing arena boundary.`, 'Play again →');
     $('results').hidden = false;
-    $('results').textContent = `${SnakePhysics.medal(score, mistakes)} · ${Math.floor(runTime / 60)}:${String(Math.floor(runTime % 60)).padStart(2, '0')} · ${mistakes} mistakes · Best streak ${longestStreak}`;
+    $('results').textContent = `${SnakePhysics.medal(score, mistakes, processLabels.length)} · ${Math.floor(runTime / 60)}:${String(Math.floor(runTime % 60)).padStart(2, '0')} · ${mistakes} mistakes · Best streak ${longestStreak}`;
     renderPicker();
   }
   function pause() {
@@ -256,7 +291,7 @@ if (typeof document !== 'undefined') (() => {
         sound('speed');
         announceBite('speed', 'SPEED SURGE!', '5 seconds of extra speed', pickup.image, pickup.x, pickup.y);
         $('hint').textContent = 'Speed snack! Faster for 5 seconds';
-        $('announcement').textContent = 'Speed boost for five seconds. Number order unchanged.';
+        $('announcement').textContent = 'Speed boost for five seconds. Lab step order unchanged.';
       }
     }
     for (let i = effects.length - 1; i >= 0; i--) {
@@ -266,32 +301,27 @@ if (typeof document !== 'undefined') (() => {
     steer(dt);
     for (let i = food.length - 1; i >= 0; i--) {
       const p = food[i];
-      if (Math.hypot(player.x - p.x, player.y - p.y) < 32) {
+      if (Math.hypot(player.x - p.x, player.y - p.y) < processSize() * .4 + 12) {
         const correct = SnakePhysics.number(sequence, p.number);
         digestion.push({ number: p.number, correct, distance: 0, age: 0, originX: p.x, originY: p.y }); food.splice(i, 1);
         biteTime = .48; biteCorrect = correct; feedbackTime = 1.5;
-        $('hint').textContent = correct ? `${p.number} — delicious! Watch it digest →` : `${p.number} — wrong order! Passing through…`;
+        $('hint').textContent = correct ? `${processLabel(p.number)} — delicious! Watch it digest →` : `${processLabel(p.number)} — wrong order! Passing through…`;
         burst(player.x, player.y, correct, correct ? 26 : 20);
-        announceBite(correct ? 'correct' : 'wrong', correct ? `${p.number} · PERFECT BITE!` : `${p.number} · WRONG NUMBER!`, correct ? 'Digesting → growth at the tail' : `No growth · You need ${sequence.next}`);
+        announceBite(correct ? 'correct' : 'wrong', correct ? `${processLabel(p.number)} · PERFECT BITE!` : `${processLabel(p.number)} · WRONG STEP!`, correct ? 'Digesting → growth at the tail' : `No growth · You need ${processLabel(sequence.next)}`);
         sound(correct ? 'bite' : 'wrong');
         if (correct) {
           streak++; longestStreak = Math.max(longestStreak, streak);
           score = sequence.correct; player.score = score;
-          const before = SnakePhysics.unlocked(totalCorrect); totalCorrect++;
-          try { localStorage.setItem('snake-number-unlocks', totalCorrect); } catch (_) {}
-          if (SnakePhysics.unlocked(totalCorrect) > before) {
-            const skin = skins[SnakePhysics.unlocked(totalCorrect) - 1];
-            $('announcement').textContent = `${skin.name} unlocked in both styles!`; renderPicker();
-            celebrate(`${skin.name} unlocked in both styles! Equip after your run.`, skin);
-          } else $('announcement').textContent = `${p.number} correct. Eat ${sequence.next} next.`;
+          totalCorrect++;
+          $('announcement').textContent = 'Correct lab step!';
           if (score % 10 === 0) {
-            const milestone = score === 40 ? '40! The final feast!' : `${score} complete! Next chapter`;
+            const milestone = score === processLabels.length ? 'All lab steps complete!' : `${score} complete! Next chapter`;
             if (toastTime > 0) $('celebration-text').textContent += ` ${milestone}`;
             else celebrate(milestone);
             burst(player.x, player.y, true, 24);
           }
           else if (streak % 4 === 0 && toastTime <= 0) celebrate('Perfect streak! Four in a row.');
-        } else { mistakes++; streak = 0; $('announcement').textContent = `Wrong number ${p.number}. Eat ${sequence.next} next. No growth.`; }
+        } else { mistakes++; streak = 0; $('announcement').textContent = `Wrong step ${processLabel(p.number)}. Eat ${processLabel(sequence.next)} next. No growth.`; }
       }
     }
     const body = SnakePhysics.body(player), tail = body[body.length - 1];
@@ -314,8 +344,24 @@ if (typeof document !== 'undefined') (() => {
       item.time += dt; item.x += item.vx * travel; item.y += item.vy * travel;
       if (item.time > 1.8) { food.push(numberedFood(item.number)); expelled.splice(i, 1); }
     }
-    if (sequence.next > 40 && !digestion.length && !expelled.length) {
-      end(); showOverlay('1–40 complete!', 'Every number digested in order. Great work!', 'Play again →'); return;
+    if (sequence.next > levels[level].end && !digestion.length && !expelled.length) {
+      completedLevels = Math.max(completedLevels, level + 1);
+      try { localStorage.setItem('snake-lab-levels', completedLevels); } catch (_) {}
+      const reward = skins[level + 1];
+      selectedSkin = reward;
+      try { localStorage.setItem('snake-arena-skin', reward.id); } catch (_) {}
+      boost = false; keys.clear(); pointer = null; releaseJoystick();
+      $('boost').classList.remove('active'); $('bite-feedback').hidden = true;
+      $('celebration').hidden = true;
+      if (level === levels.length - 1) {
+        end();
+        showOverlay('All 3 levels complete!', `${reward.name} snake unlocked! Every lab process completed.`, 'Play again →');
+      } else {
+        state = 'levelup';
+        showOverlay(`Level ${level + 1} complete!`, `${reward.name} snake unlocked! Next: Level ${level + 2}, series ${level + 2}. Choose your snake below.`, `Next level →`);
+        renderPicker();
+      }
+      sound('unlock'); updateHud(); return;
     }
     const outside = s => s.x < 15 || s.y < 15 || s.x > WORLD - 15 || s.y > WORLD - 15;
     if (outside(player)) { end(); return; }
@@ -507,7 +553,7 @@ if (typeof document !== 'undefined') (() => {
     const punch = !reducedMotion.matches ? 1 + impact * .035 : 1;
     ctx.save(); ctx.translate(width / 2 + shakeX, height / 2 + shakeY); ctx.scale(zoom * punch, zoom * punch); ctx.translate(-camera.x, -camera.y);
     const left = camera.x - width / zoom / 2, top = camera.y - height / zoom / 2;
-    const visible = (x, y, margin = 40) => x > left - margin && x < left + width / zoom + margin && y > top - margin && y < top + height / zoom + margin;
+    const visible = (x, y, margin = 140) => x > left - margin && x < left + width / zoom + margin && y > top - margin && y < top + height / zoom + margin;
     ctx.strokeStyle = '#dfe6eb'; ctx.lineWidth = 1;
     ctx.beginPath();
     for (let x = Math.floor(left / 128) * 128; x < left + width / zoom; x += 128) { ctx.moveTo(x, top); ctx.lineTo(x, top + height / zoom); }
@@ -524,10 +570,7 @@ if (typeof document !== 'undefined') (() => {
     ctx.restore();
     for (const p of food) {
       if (!visible(p.x, p.y)) continue;
-      ctx.fillStyle = '#52677d25'; ctx.beginPath(); ctx.arc(p.x + 3, p.y + 5, 23, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = '#e5edff'; ctx.beginPath(); ctx.arc(p.x, p.y, 21, 0, Math.PI * 2); ctx.fill();
-      ctx.strokeStyle = '#8da8ce'; ctx.lineWidth = 3; ctx.stroke();
-      ctx.fillStyle = '#193247'; ctx.font = 'bold 20px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(p.number, p.x, p.y); ctx.textBaseline = 'alphabetic';
+      drawProcess(p.number, p.x, p.y, processSize());
     }
     for (const pickup of pickups) {
       if (!visible(pickup.x, pickup.y)) continue;
@@ -604,7 +647,7 @@ if (typeof document !== 'undefined') (() => {
         ctx.beginPath(); ctx.ellipse(-2, -10, 13, 3, -.12, 0, Math.PI * 2); ctx.fill();
         ctx.restore();
         ctx.fillStyle = item.correct ? '#fff9da' : '#ffd3da'; ctx.font = '800 15px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.strokeStyle = '#162d3ac9'; ctx.lineWidth = 3; ctx.strokeText(item.number, x, y); ctx.fillText(item.number, x, y); ctx.textBaseline = 'alphabetic';
+        ctx.strokeStyle = '#162d3ac9'; ctx.lineWidth = 3; drawProcess(item.number, x, y, 28 / zoom); ctx.textBaseline = 'alphabetic';
         ctx.globalAlpha = 1;
       }
     }
@@ -616,11 +659,6 @@ if (typeof document !== 'undefined') (() => {
     }
     ctx.globalAlpha = 1;
     const target = food.find(p => p.number === sequence.next);
-    if (target) {
-      const dx = target.x - player.x, dy = target.y - player.y;
-      const distance = Math.hypot(dx, dy), offset = Math.min(85, distance);
-      drawNumber(sequence.next, player.x + dx / (distance || 1) * offset, player.y + dy / (distance || 1) * offset, true);
-    }
     ctx.restore();
     if (screenImpact) {
       const fade = Math.max(0, 1 - screenImpact.age / .8);
@@ -657,13 +695,12 @@ if (typeof document !== 'undefined') (() => {
     }
     ctx.restore();
     ctx.font = '900 17px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.strokeStyle = '#153016'; ctx.lineWidth = 3;
-    ctx.strokeText(item.number, item.x, item.y); ctx.fillStyle = '#fffed2'; ctx.fillText(item.number, item.x, item.y); ctx.textBaseline = 'alphabetic';
+    drawProcess(item.number, item.x, item.y, 40 / zoom); ctx.textBaseline = 'alphabetic';
     ctx.font = '900 13px system-ui'; ctx.fillStyle = '#d9ff55'; ctx.fillText('BLEURGH!', item.x, item.y - 30);
     ctx.globalAlpha = 1;
   }
   function drawNumber(number, x, y, correct) {
-    ctx.fillStyle = correct ? '#ffe190' : '#ff91a3'; ctx.beginPath(); ctx.arc(x, y, 12, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#172c37'; ctx.font = 'bold 13px system-ui'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(number, x, y); ctx.textBaseline = 'alphabetic';
+    drawProcess(number, x, y, 32 / zoom);
   }
   function frame(time) {
     const delta = Math.min(.1, (time - (last || time)) / 1000); last = time;
@@ -677,17 +714,41 @@ if (typeof document !== 'undefined') (() => {
     if (!document.hidden && (time - lastDraw >= (state === 'playing' ? renderInterval : 1000 / 15))) { draw(); lastDraw = time; }
     requestAnimationFrame(frame);
   }
-  function releaseJoystick() { joystickPointer = null; joystickVector = null; $('stick').style.transform = ''; }
+  function releaseJoystick() { joystickPointer = null; joystickVector = null; touchSteering = null; $('stick').style.transform = ''; }
   function joystickMove(e) {
     const r = $('joystick').getBoundingClientRect(), x = e.clientX - r.left - r.width / 2, y = e.clientY - r.top - r.height / 2;
     const distance = Math.hypot(x, y), scale = Math.min(1, 32 / (distance || 1));
     joystickVector = distance > 7 ? { x, y } : null; pointer = null;
     $('stick').style.transform = `translate(${x * scale}px,${y * scale}px)`;
   }
-  $('joystick').addEventListener('pointerdown', e => { if (state !== 'playing' || joystickPointer !== null) return; joystickPointer = e.pointerId; $('joystick').setPointerCapture(e.pointerId); joystickMove(e); });
+  $('joystick').addEventListener('pointerdown', e => { if (state !== 'playing' || joystickPointer !== null || touchSteering) return; joystickPointer = e.pointerId; $('joystick').setPointerCapture(e.pointerId); joystickMove(e); });
   $('joystick').addEventListener('pointermove', e => { if (e.pointerId === joystickPointer) joystickMove(e); });
   for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) $('joystick').addEventListener(type, e => { if (e.pointerId === joystickPointer) releaseJoystick(); });
-  canvas.addEventListener('pointermove', e => { if (e.pointerType === 'mouse' && state === 'playing') { const r = canvas.getBoundingClientRect(); pointer = { x: e.clientX - r.left, y: e.clientY - r.top }; } });
+  canvas.addEventListener('pointerdown', e => {
+    if (state !== 'playing' || e.pointerType === 'mouse' || touchSteering || joystickPointer !== null) return;
+    touchSteering = { id: e.pointerId, x: e.clientX, y: e.clientY };
+    pointer = null; joystickVector = null;
+    canvas.setPointerCapture(e.pointerId);
+  });
+  canvas.addEventListener('pointermove', e => {
+    if (state !== 'playing') return;
+    if (touchSteering && e.pointerId === touchSteering.id) {
+      const x = e.clientX - touchSteering.x, y = e.clientY - touchSteering.y;
+      const distance = Math.hypot(x, y), scale = Math.min(1, 32 / (distance || 1));
+      if (distance > 6) {
+        joystickVector = { x, y };
+        // Follow long drags so changing direction needs only a small thumb movement.
+        touchSteering.x = e.clientX - x * scale;
+        touchSteering.y = e.clientY - y * scale;
+      }
+      $('stick').style.transform = `translate(${x * scale}px,${y * scale}px)`;
+    } else if (e.pointerType === 'mouse') {
+      const r = canvas.getBoundingClientRect(); pointer = { x: e.clientX - r.left, y: e.clientY - r.top };
+    }
+  });
+  for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) canvas.addEventListener(type, e => {
+    if (touchSteering && e.pointerId === touchSteering.id) releaseJoystick();
+  });
   canvas.addEventListener('pointerleave', () => { pointer = null; });
   $('boost').addEventListener('pointerdown', e => { if (state !== 'playing') return; boost = true; $('boost').classList.add('active'); $('boost').setPointerCapture(e.pointerId); });
   for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) $('boost').addEventListener(type, () => { boost = false; $('boost').classList.remove('active'); });
@@ -699,9 +760,11 @@ if (typeof document !== 'undefined') (() => {
   window.addEventListener('keyup', e => keys.delete(e.key.toLowerCase()));
   $('start').addEventListener('click', () => {
     if (soundOn) try { const Audio = window.AudioContext || window.webkitAudioContext; if (Audio) { audio = audio || new Audio(); audio.resume(); } } catch (_) {}
-    if (state !== 'paused') reset(); state = 'playing'; last = 0; accumulator = 0;
+    if (state === 'levelup') reset(level + 1, true);
+    else if (state !== 'paused') reset();
+    state = 'playing'; last = 0; accumulator = 0;
     $('overlay').hidden = true; $('pause').disabled = false; $('start').blur();
-    $('hint').textContent = matchMedia('(pointer:coarse)').matches ? 'Steer with the joystick · Hold ⚡ to boost' : 'Mouse / WASD / arrows to steer · Space to boost · P to pause';
+    $('hint').textContent = matchMedia('(pointer:coarse)').matches ? 'Drag anywhere to steer · Hold ⚡ to boost' : 'Mouse / WASD / arrows to steer · Space to boost · P to pause';
   });
   $('pause').addEventListener('click', pause);
   $('sound').textContent = soundOn ? '♪' : '♪ off'; $('sound').setAttribute('aria-pressed', String(soundOn));
@@ -725,7 +788,7 @@ if (typeof document !== 'undefined') (() => {
     }));
     $('snake-options').replaceChildren(...skins.map(skin => {
       const button = document.createElement('button'); button.type = 'button';
-      const locked = skins.indexOf(skin) >= SnakePhysics.unlocked(totalCorrect);
+      const locked = skins.indexOf(skin) >= unlockedSkins();
       button.disabled = locked;
       button.className = 'snake-choice'; button.setAttribute('aria-pressed', String(skin === selectedSkin));
       button.setAttribute('aria-label', `Select ${skin.name} snake`);

@@ -60,14 +60,15 @@ test('game starts, renders, resizes and pauses on phone, tablet and PC layouts',
   const context=vm.createContext({document,window:{devicePixelRatio:3,addEventListener(type,fn){windowEvents[type]=fn;}},localStorage:{getItem:()=>null,setItem(){}},matchMedia:()=>({matches:width<900}),requestAnimationFrame:fn=>{callback=fn;},console});
   const source=fs.readFileSync(require.resolve('../snake.js'),'utf8').replace('fit(); reset(); renderPicker();', `
   globalThis.checkQuest = () => {
-    reset();snakes=[player];state='playing';const groupCount=food.length;const close=food.every(p=>Math.hypot(p.x-player.x,p.y-player.y)<260);
-    for(let value=1;value<=40;value++){
+    reset();snakes=[player];state='playing';const groupCount=food.length;const transitions=[];const close=food.every(p=>Math.hypot(p.x-player.x,p.y-player.y)<260);
+    for(let value=1;value<=16;value++){
       const next=food.find(p=>p.number===value);if(!next)throw new Error('Missing next number '+value);
       player.x=next.x;player.y=next.y;simulate(0);
       for(const item of digestion)item.distance=10000;simulate(0);
+      if(state==='levelup'){transitions.push({level,score,remaining:food.length});reset(level+1,true);snakes=[player];state='playing';}
     }
-    const result={groupCount,close,score,state,streak,longestStreak,mistakes,unlocks:SnakePhysics.unlocked(totalCorrect),results:$('results').textContent};
-    totalCorrect=0;selectedSkin=skins[0];reset();state='home';renderPicker();return result;
+    const result={groupCount,transitions,completedLevels,close,score,state,streak,longestStreak,mistakes,unlocks:SnakePhysics.unlocked(totalCorrect),results:$('results').textContent};
+    totalCorrect=0;completedLevels=0;selectedSkin=skins[0];reset();state='home';renderPicker();return result;
   };
   globalThis.checkSpeed = () => {
     reset(); state='playing';pickupImages.push(document.createElement('canvas'));spawnPickup();
@@ -90,9 +91,9 @@ test('game starts, renders, resizes and pauses on phone, tablet and PC layouts',
   };
   fit(); reset(); renderPicker();`);
   vm.runInContext(source,context);
-  const quest=context.checkQuest();assert.equal(quest.groupCount,40);assert.equal(quest.close,false);
-  assert.equal(quest.score,40);assert.equal(quest.state,'over');assert.equal(quest.longestStreak,40);
-  assert.equal(quest.mistakes,0);assert.equal(quest.unlocks,6);assert.match(quest.results,/Gold/);
+  const quest=context.checkQuest();assert.equal(quest.groupCount,5);assert.equal(quest.close,false);
+  assert.equal(quest.score,16);assert.equal(quest.state,'over');assert.equal(quest.longestStreak,16);
+  assert.equal(quest.completedLevels,3);assert.equal(quest.transitions.length,2);assert.equal(quest.transitions[0].score,5);assert.equal(quest.transitions[1].score,12);assert.ok(quest.transitions.every(t=>t.remaining===0));assert.equal(quest.mistakes,0);assert.equal(quest.unlocks,5);assert.match(quest.results,/Gold/);
   const snack=context.checkSpeed();assert.ok(snack.spawned>=7 && snack.spawned<=48);assert.equal(snack.spawned%7,0);assert.equal(snack.boosted.time,5);
   assert.equal(snack.boosted.remaining,0);assert.equal(snack.boosted.next,1);assert.equal(snack.boosted.length,170);assert.equal(snack.expired,0);
   const digestion=context.checkDigestion();assert.equal(digestion.snakeCount,5);assert.equal(digestion.before.length,digestion.initial);
@@ -106,6 +107,16 @@ test('game starts, renders, resizes and pauses on phone, tablet and PC layouts',
   options.children[1].events.click();assert.equal(options.children[1].disabled,true);assert.equal(options.children[0].attributes['aria-pressed'],'true');
   assert.equal(options.children.filter(b=>b.attributes['aria-pressed']==='true').length,1);
   elements.get('start').events.click();assert.equal(elements.get('overlay').hidden,true);
+  const arena=elements.get('arena'),stick=elements.get('stick');
+  arena.events.pointerdown({pointerType:'touch',pointerId:11,clientX:250,clientY:200});
+  arena.events.pointermove({pointerType:'touch',pointerId:11,clientX:290,clientY:200});
+  assert.equal(stick.style.transform,'translate(32px,0px)');
+  arena.events.pointerup({pointerId:12});assert.notEqual(stick.style.transform,'');
+  arena.events.pointercancel({pointerId:11});assert.equal(stick.style.transform,'');
+  arena.events.pointerdown({pointerType:'touch',pointerId:13,clientX:180,clientY:100});
+  arena.events.pointermove({pointerType:'touch',pointerId:13,clientX:180,clientY:140});
+  assert.equal(stick.style.transform,'translate(0px,32px)');
+  arena.events.lostpointercapture({pointerId:13});assert.equal(stick.style.transform,'');
   const joystick=elements.get('joystick');
   joystick.events.pointerdown({pointerId:1,clientX:95,clientY:58});
   const steering=elements.get('stick').style.transform;
