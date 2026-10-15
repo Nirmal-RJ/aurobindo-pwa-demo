@@ -109,7 +109,6 @@ if (typeof document !== 'undefined') (() => {
   let totalCorrect = 0;
   try { totalCorrect = Math.max(0, Math.floor(Number(localStorage.getItem('snake-number-unlocks')) || 0)); } catch (_) {}
   let selectedType = 'textured';
-  try { if (localStorage.getItem('snake-arena-type') === 'classic') selectedType = 'classic'; } catch (_) {}
   try { selectedSkin = skins.find(s => s.id === localStorage.getItem('snake-arena-skin')) || skins[0]; } catch (_) {}
   if (skins.indexOf(selectedSkin) >= unlockedSkins()) selectedSkin = skins[0];
   let sequence = { next: 1, correct: 0, total: processLabels.length }, digestion = [], expelled = [];
@@ -629,38 +628,35 @@ if (typeof document !== 'undefined') (() => {
     paint.fillStyle = glow; paint.fillRect(0, 0, 48, 48); sprites.set(key, tile); return tile;
   }
   function drawRibbon(body, visible, skin, paint = ctx, meals = []) {
-    // A continuous rounded silhouette hides seams between the lightweight tiles.
-    if (body.length > 8) {
-      paint.save(); paint.lineCap = 'round'; paint.lineJoin = 'round';
-      paint.beginPath(); paint.moveTo(body[0].x, body[0].y);
-      for (let i = 1; i < body.length - 7; i++) paint.lineTo(body[i].x, body[i].y);
-      paint.strokeStyle = tint(classicColor(skin.color), 0, .42); paint.lineWidth = 32; paint.stroke();
-      paint.strokeStyle = classicColor(skin.color); paint.lineWidth = 28; paint.stroke(); paint.restore();
+    if (body.length < 2) return;
+    // Adjacent strips share the same cross-section, so turns cannot pull joints apart.
+    const edges = body.map((point, index) => {
+      const front = body[Math.max(0, index - 1)], back = body[Math.min(body.length - 1, index + 1)];
+      const dx = front.x - back.x, dy = front.y - back.y, length = Math.hypot(dx, dy) || 1;
+      const taper = Math.min(1, (body.length - 1 - index) / 8);
+      const radius = (1 + 31 * Math.sin(taper * Math.PI / 2)) * bellyScale(index * 10, meals) / 2;
+      return {left: {x: point.x - dy / length * radius, y: point.y + dx / length * radius},
+        right: {x: point.x + dy / length * radius, y: point.y - dx / length * radius}};
+    });
+    function triangle(tile, a, b, c, second) {
+      paint.save(); paint.beginPath();
+      // Slightly expand triangle coverage to hide subpixel antialias seams.
+      const mx = (a.x + b.x + c.x) / 3, my = (a.y + b.y + c.y) / 3;
+      const expand = p => { const d = Math.hypot(p.x - mx, p.y - my) || 1; return {x:p.x + (p.x-mx)/d*.45,y:p.y + (p.y-my)/d*.45}; };
+      const aa=expand(a),bb=expand(b),cc=expand(c);
+      paint.moveTo(aa.x,aa.y);paint.lineTo(bb.x,bb.y);paint.lineTo(cc.x,cc.y);paint.closePath();paint.clip();
+      if (second) {
+        paint.transform(a.x-b.x,a.y-b.y,a.x-c.x,a.y-c.y,b.x+c.x-a.x,b.y+c.y-a.y);
+      } else paint.transform(b.x-a.x,b.y-a.y,c.x-a.x,c.y-a.y,a.x,a.y);
+      paint.drawImage(tile,0,0,1,1);paint.restore();
     }
-    for (let i = body.length - 1; i > 0;) {
-      // Two samples per tile on the main body; finer geometry only at the tail.
-      const frontIndex = Math.max(0, i - (i < body.length - 8 && i % 2 === 0 ? 2 : 1));
-      const back = body[i], front = body[frontIndex], backIndex = i;
-      i = frontIndex;
-      if (!visible(back.x, back.y) && !visible(front.x, front.y)) continue;
-      const dx = front.x - back.x, dy = front.y - back.y, distance = Math.hypot(dx, dy);
-      if (distance < .001) continue;
-      // Continuous widths at both ends avoid the staircase of constant-width tiles.
-      const tailWidth = index => {
-        const t = Math.min(1, (body.length - 1 - index) / 8);
-        return (1 + 31 * Math.sin(t * Math.PI / 2)) * bellyScale(index * 10, meals);
-      };
-      const backWidth = tailWidth(backIndex), frontWidth = tailWidth(frontIndex);
-      const diameter = Math.max(backWidth, frontWidth);
-      paint.save(); paint.translate((back.x + front.x) / 2, (back.y + front.y) / 2); paint.rotate(Math.atan2(dy, dx));
-      if (Math.abs(backWidth - frontWidth) > .1) {
-      paint.beginPath(); paint.moveTo(-distance / 2 - 1, -backWidth / 2);
-      paint.lineTo(distance / 2 + 1, -frontWidth / 2); paint.lineTo(distance / 2 + 1, frontWidth / 2);
-      paint.lineTo(-distance / 2 - 1, backWidth / 2); paint.closePath(); paint.clip();
-      }
-      const band = skin.band && Math.floor(backIndex / 10) !== Math.floor(frontIndex / 10) && backWidth > 22;
-      paint.drawImage(ribbonTile(band, skin), -distance / 2 - 3, -diameter / 2, distance + 6, diameter);
-      paint.restore();
+    for(let i=body.length-1;i>0;i--){
+      if(!visible(body[i].x,body[i].y)&&!visible(body[i-1].x,body[i-1].y))continue;
+      const front=edges[i-1],back=edges[i];
+      const band=skin.band && i%10===0 && i<body.length-5;
+      const tile=ribbonTile(band,skin);
+      triangle(tile,front.left,back.left,front.right,false);
+      triangle(tile,back.right,front.right,back.left,true);
     }
   }
   function drawClassic(body, visible, color, paint = ctx, meals = []) {
