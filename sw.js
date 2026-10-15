@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'aurobindo-shell-';
-const CACHE = `${CACHE_PREFIX}v327`;
+const CACHE = `${CACHE_PREFIX}v348`;
 const ASSETS = ['./', './index.html', './styles.css?v=30', './app.js?v=18', './tile-match.js?v=23', './symptom-match.html', './symptom-match.css?v=18', './symptom-match.js?v=20', './chromatogram.html', './chromatogram.css?v=23', './chromatogram.js?v=22', './assets/toggle%20button.png', './assets/4%20arrow%20toggle%20outline.png', './assets/hpcl-logo-new.png', './assets/game-1-card.png', './assets/game-2-card.png', './assets/game-3-card.png', './assets/game-4-card.png', './logo.png', './icon.svg', './icons/icon-192.png', './icons/icon-512.png', './manifest.webmanifest'];
 ASSETS.push('./cleaning-solution.html', './cleaning-solution.css?v=7', './cleaning-solution.js?v=6');
 ASSETS.splice(ASSETS.indexOf('./styles.css?v=30'), 1, './styles.css?v=43');
@@ -31,7 +31,8 @@ ASSETS.push('./assets/lane-rush-game-assets/user-car.png', './assets/test-tube-g
 ASSETS.push('./assets/good-bad-ugly-assets/opening-bg.webp', ...['1-fiat-default.webp','2-ambassador-white.webp','3-maruti-white.webp','4-honda-white.webp','5-benz-white.webp','6-ferrari-white.webp'].map(file => './assets/good-bad-ugly-assets/' + file));
 ASSETS.push('./good-bad-ugly-reverse.html', './good-bad-ugly-reverse.css?v=2');
 ASSETS.push('./good-bad-ugly.html', './good-bad-ugly.css?v=48', './good-bad-ugly.js?v=56');
-ASSETS.push('./snake.html', './snake.css', './snake.js?v=8');
+ASSETS.push('./audio/lab-process-bgm.mp3', './audio/snake-correct.mp3', './audio/snake-wrong.mp3');
+ASSETS.push('./snake.html', './snake.css?v=9', './snake.js?v=27');
 ASSETS.push(...[1, 2, 3, 4, 5].map(i => `./assets/snake-game-assets/spawnables/veg-${i}.webp`));
 ASSETS.push('./hazard-spotter.html', './hazard-spotter.css?v=6', './hazard-spotter.js?v=10', './hazard-spotter-settings.js?v=2', './assets/hazard-spotter-game-assets/home-bg.webp', './assets/hazard-spotter-game-assets/start-button.webp');
 ASSETS.push('./working-standard.html', './working-standard.css?v=7', './working-standard-data.js?v=1', './working-standard.js?v=7');
