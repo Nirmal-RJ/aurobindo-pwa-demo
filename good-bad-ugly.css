@@ -436,3 +436,48 @@ footer .exit,footer #pause{width:36px;min-height:44px;height:44px;flex:0 0 36px;
 /* Question sits behind the car: below upward driving, above downward driving. */
 body:not([data-direction="reverse"]) .prompt{margin:0 6px 6px}
 body[data-direction="reverse"] .prompt{margin:6px 6px 0}
+
+/* One continuous neon showroom. The wheel baseline is fixed at 56.5% of the scene, inside the platform rim. Car dimensions shrink to fit above this baseline. */
+.garage-screen{padding:0;background:#070a0e;backdrop-filter:none;overflow:auto;align-items:flex-start}
+.garage-panel{width:100%;height:100%;min-height:620px;max-height:none;margin:0;padding:0 4%;border:0;border-radius:0;box-shadow:none;overflow:visible;display:grid;grid-template-rows:15% 47% 16% 12% 7% 3%;background:linear-gradient(180deg,#0002,transparent 45%,#02060a44 75%,#0003),url('assets/good-bad-ugly-assets/garage-pg-bg.webp') center/100% 100% no-repeat}
+.garage-panel:before,.garage-panel #garage-level,.garage-panel #garage-goal{display:none}
+.garage-panel h2{align-self:center;margin:0;font-family:Race,Impact,sans-serif;font-size:clamp(30px,8.5vw,46px);line-height:.95;letter-spacing:0;color:#fff;text-shadow:0 3px 8px #000;position:relative;z-index:2}
+.garage-panel h2 br{display:block}.garage-panel h2 em{display:inline-block;position:relative;font-size:1.24em;color:#ff1236;font-style:italic;margin:3px 0 0}
+.garage-panel h2 em:before,.garage-panel h2 em:after{content:"";display:inline-block;width:27px;height:19px;vertical-align:middle;margin:0 12px;transform:skew(-16deg);background:repeating-conic-gradient(#d6e4edb3 0% 25%,transparent 0% 50%) 0/13px 13px;mask-image:linear-gradient(90deg,transparent,#000)}
+.garage-panel h2 em:after{transform:skew(-16deg) scaleX(-1)}
+.garage-showcase{--pedestal-contact:88.3%;position:relative;min-height:0;overflow:visible;isolation:isolate;background:none;border:0;box-shadow:none;margin:0 -4.35%;border-radius:0;perspective:1000px}
+.garage-showcase:before,.garage-showcase:after,.garage-display-platform,.garage-light,.garage-floor{display:none}
+.garage-car-rig{position:absolute;top:2%;bottom:calc(100% - var(--pedestal-contact));left:10%;right:10%;z-index:1;transform-style:preserve-3d;transform:rotateY(var(--garage-tilt,0deg));transition:transform .4s ease;animation:garage-showroom-idle 8s ease-in-out infinite}
+.garage-car-rig #garage-preview{position:absolute;inset:0;top:7%;display:block;width:100%;height:100%;margin:0;max-width:100%;max-height:100%;object-fit:contain;object-position:center bottom;transform:none;filter:drop-shadow(0 6px 3px #0009)}
+.garage-car-shadow{position:absolute;left:15%;right:12%;bottom:0;height:12%;border-radius:50%;background:#000c;filter:blur(7px);opacity:.8}
+.garage-preview-copy{position:absolute;z-index:2;bottom:0;left:6%;right:6%;height:14%;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:3px;background:linear-gradient(90deg,transparent,#030609b3 20%,#030609b3 80%,transparent)}
+.garage-preview-copy span{font-size:7px;font-weight:750;color:#b7d9d0;letter-spacing:2px;line-height:1;margin:0}
+.garage-preview-copy h3{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;margin:0;font-family:Race,Impact,sans-serif;font-size:clamp(23px,6.4vw,32px);line-height:1.1;color:#fff;text-shadow:0 2px 6px #000}
+.garage-preview-copy h3:before,.garage-preview-copy h3:after{content:"";width:28px;height:3px;background:#fa1238;transform:skew(30deg);box-shadow:0 0 10px #ff173c99}
+.garage-carousel{display:flex;align-items:center;gap:7px;min-height:0;min-width:0;padding:8px 0;margin:0}
+.garage-carousel .garage-grid{display:flex;flex:1;min-width:0;height:100%;gap:6px;padding:4px 2px 5px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0}
+.garage-grid::-webkit-scrollbar{display:none}
+.garage-card{flex:0 0 calc((100% - 12px)/3);min-width:0;min-height:0;justify-content:center;gap:3px;border-radius:9px;border:1px solid #617c8e99;background:linear-gradient(145deg,#14202ce8,#03090fee);padding:5px 2px;box-shadow:inset 0 1px 0 #ffffff0d;scroll-snap-align:center;transition:border-color .2s,background .2s,box-shadow .2s}
+.garage-card img{height:58%;width:100%;object-fit:contain;filter:drop-shadow(0 3px 3px #0009)}
+.garage-card strong{font-size:clamp(8px,2.1vw,11px);margin:0;line-height:1.15}.garage-card small{font-size:5px;line-height:1.3;letter-spacing:.1px;margin:0;color:#afc3d5}
+.garage-card.selected{border:1px solid #81ffd0;background:linear-gradient(#12382ae8,#04100de8);box-shadow:0 0 10px #48ffbd55,inset 0 0 12px #54ffc71c}.garage-card.selected small{color:#a3ffda}
+.garage-card:disabled{border-style:solid;background:#050b12df;cursor:default}.garage-card:disabled img{opacity:.4;filter:grayscale(1)}.garage-card:disabled strong{color:#b0bcc8}
+.garage-arrow{display:grid;place-items:center;flex:0 0 25px;width:25px;height:44px;padding:0;border:0;border-radius:7px;background:#02070cc4;color:#fff;font:34px/1 system-ui;cursor:pointer;text-shadow:0 2px 5px #000;transition:background .2s,opacity .2s}
+.garage-arrow:disabled{opacity:.22;cursor:default}.garage-arrow:hover:not(:disabled){background:#3d1424}.garage-arrow:active:not(:disabled){transform:scale(.92)}
+.garage-panel .car-paint{align-self:center;min-width:0;width:100%;margin:0;padding:5px 8px 7px;border:1px solid #7d95a899;border-radius:12px;background:linear-gradient(140deg,#0b151eee,#02070cef);text-align:left;box-shadow:0 4px 12px #0006}
+.garage-panel .car-paint legend{font-size:clamp(10px,2.8vw,13px);padding:0 5px;color:#edf4fa}
+.garage-panel .paint-options{display:grid;grid-template-columns:repeat(11,minmax(0,1fr));gap:2px;width:100%;max-width:none;margin:0}
+.garage-panel .paint-option{width:100%;height:34px;min-width:0;flex:auto;padding:0;background:none;border:1px solid transparent;border-radius:50%;box-shadow:none;transition:transform .2s,border-color .2s}
+.garage-panel .paint-option:before{width:clamp(17px,4.6vw,25px);height:clamp(17px,4.6vw,25px);box-shadow:inset 0 0 0 1px #ffffff88,0 2px 5px #0009}
+.garage-panel .paint-option[aria-pressed="true"]{border-color:#66ffca;background:#1b554144;box-shadow:0 0 8px #44ffba66;outline:0}
+.garage-panel .primary{align-self:center;position:relative;overflow:hidden;min-height:42px;height:85%;max-height:62px;width:100%;margin:0;padding:5px 12px;border:1px solid #ff8195;border-radius:3px;background:linear-gradient(160deg,#ff284a,#f00029 60%,#ba0025);box-shadow:inset 0 0 0 3px #4f001c, inset 0 0 0 4px #ff5c71,0 0 18px #ff153744;color:#fff;font-size:clamp(18px,5vw,25px);clip-path:polygon(4% 0,96% 0,100% 25%,100% 75%,96% 100%,4% 100%,0 75%,0 25%)}
+.garage-panel .primary:before,.garage-panel .primary:after{content:"";position:absolute;top:24%;bottom:24%;width:13%;background:repeating-conic-gradient(#ffffff38 0% 25%,transparent 0% 50%) 0/14px 14px;transform:skew(-12deg);pointer-events:none}
+.garage-panel .primary:before{left:5%}.garage-panel .primary:after{right:5%}
+.garage-panel .garage-link{align-self:center;justify-self:center;margin:0;padding:2px 14px;min-height:0;background:none;border:0;color:#d1dfef;font-size:10px;font-weight:700;line-height:1.2;letter-spacing:.5px}
+.garage-card:focus-visible,.garage-arrow:focus-visible,.garage-panel .paint-option:focus-visible{outline:2px solid #d6fff0;outline-offset:2px}
+@keyframes garage-showroom-idle{0%,100%{translate:0 0}50%{translate:0 -1px}}
+@media(min-width:460px){.garage-card{flex-basis:calc((100% - 30px)/6)}.garage-arrow{flex-basis:20px;width:20px}}
+@media(prefers-reduced-motion:reduce){.garage-car-rig{animation:none;transition:none}.garage-card,.garage-arrow,.garage-panel .paint-option{transition:none}}
+
+.answer-confetti-gif{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:5;pointer-events:none}
+@media(prefers-reduced-motion:reduce){.answer-confetti-gif{display:none}}

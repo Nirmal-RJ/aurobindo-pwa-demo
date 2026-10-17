@@ -203,3 +203,29 @@ test('Each upgraded level moves faster for the same answer count', () => {
  assert.equal(new GoodBadUglyRun(()=>.5,LANE_LABELS,99).level,6);
  assert.equal(new GoodBadUglyRun(()=>.5,LANE_LABELS,-1).level,1);
 });
+
+
+test('Garage preview shows the selected car, paint accent and reduced-motion-safe entrance', () => {
+ const vm=require('node:vm'),fs=require('node:fs');
+ const source=fs.readFileSync(require.resolve('../good-bad-ugly.js'),'utf8');
+ const preview=source.slice(source.indexOf('  function renderGaragePreview()'),source.indexOf('  function renderColors()'));
+ const nodes={},painted=[],animations=[];
+ const context=vm.createContext({CARS,CAR_COLORS:[{id:'blue',hex:'#287cce'}],progress:{selected:1,colors:['blue','blue']},reducedMotion:{matches:false},
+  $:id=>nodes[id]||(nodes[id]={style:{setProperty:(key,value)=>nodes[id][key]=value},animate:(frames,options)=>animations.push(options)}),showPaint:(image,index)=>painted.push(index)});
+ vm.runInContext(preview+';renderGaragePreview();',context);
+ assert.equal(nodes['garage-preview'].alt,'Ambassador');assert.equal(nodes['garage-preview-name'].textContent,'Ambassador');
+ assert.equal(nodes.garage['--garage-accent'],'#287cce');assert.deepEqual(painted,[1]);assert.equal(animations.length,1);
+ context.reducedMotion.matches=true;vm.runInContext('renderGaragePreview();',context);assert.equal(animations.length,1);
+});
+
+test('Garage arrows disable at collection boundaries and scroll by a viewport fraction', () => {
+ const vm=require('node:vm'),fs=require('node:fs');
+ const source=fs.readFileSync(require.resolve('../good-bad-ugly.js'),'utf8');
+ const navigation=source.slice(source.indexOf('  function updateGarageArrows()'),source.indexOf('  function renderGaragePreview()'));
+ const calls=[],nodes={'garage-cars':{scrollLeft:0,scrollWidth:600,clientWidth:240,scrollBy:options=>calls.push(options)},'garage-prev':{},'garage-next':{}};
+ const context=vm.createContext({$:id=>nodes[id],reducedMotion:{matches:false}});
+ vm.runInContext(navigation+';updateGarageArrows();scrollGarage(1);',context);
+ assert.equal(nodes['garage-prev'].disabled,true);assert.equal(nodes['garage-next'].disabled,false);assert.equal(calls[0].left,192);
+ nodes['garage-cars'].scrollLeft=360;context.reducedMotion.matches=true;vm.runInContext('updateGarageArrows();scrollGarage(-1);',context);
+ assert.equal(nodes['garage-prev'].disabled,false);assert.equal(nodes['garage-next'].disabled,true);assert.equal(calls[1].left,-192);assert.equal(calls[1].behavior,'instant');
+});

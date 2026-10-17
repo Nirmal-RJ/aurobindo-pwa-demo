@@ -146,10 +146,9 @@ if (typeof document !== 'undefined') (() => {
   applyEnvironment();
   function saveProgress() { try { localStorage.setItem(progressKey, JSON.stringify(progress.preferences())); } catch (_) {} }
   const paintedCars = new Map();
-  function paintedCar(index, colorId) {
-    const source = carAsset(CARS[index]);
+  function paintedCar(index, colorId, source = carAsset(CARS[index])) {
     if (colorId === 'original') return Promise.resolve(source);
-    const key = `${index}:${colorId}`;
+    const key = `${source}:${colorId}`;
     if (!paintedCars.has(key)) paintedCars.set(key, new Promise(resolve => {
       const image = new Image();
       image.onerror = () => resolve(source);
@@ -182,11 +181,36 @@ if (typeof document !== 'undefined') (() => {
   }
   function showPaint(image, index) {
     const color = progress.colors[index];
-    image.src = carAsset(CARS[index]);
+    const source = image.id === 'garage-preview'
+      ? `assets/good-bad-ugly-assets/cars-iso-view/${CARS[index].file.replace('.webp', '-front-view.webp')}`
+      : carAsset(CARS[index]);
+    image.src = source;
     image.dataset.paint = `${index}:${color}`;
-    paintedCar(index, color).then(source => { if (image.dataset.paint === `${index}:${color}`) image.src = source; });
+    paintedCar(index, color, source).then(source => { if (image.dataset.paint === `${index}:${color}`) image.src = source; });
   }
   function applyCar() { showPaint($('car'), progress.selected); $('car').alt = `Your ${CARS[progress.selected].name}, ${CAR_COLORS.find(color => color.id === progress.colors[progress.selected]).name}`; }
+  function updateGarageArrows() {
+    const row = $('garage-cars');
+    $('garage-prev').disabled = row.scrollLeft <= 1;
+    $('garage-next').disabled = row.scrollLeft >= row.scrollWidth - row.clientWidth - 1;
+  }
+  function scrollGarage(direction) {
+    const row = $('garage-cars');
+    row.scrollBy({ left: direction * row.clientWidth * .8, behavior: reducedMotion.matches ? 'instant' : 'smooth' });
+  }
+  function renderGaragePreview() {
+    const car = CARS[progress.selected];
+    showPaint($('garage-preview'), progress.selected);
+    $('garage-preview').alt = car.name;
+    $('garage-preview-name').textContent = car.name;
+    $('garage-preview-rank').textContent = car.rank;
+    const color = CAR_COLORS.find(item => item.id === progress.colors[progress.selected]);
+    $('garage').style.setProperty('--garage-accent', color.hex);
+    if (!reducedMotion.matches) $('garage-preview').animate([
+      { opacity: 0, transform: 'translateY(16px) scale(.92)', filter: 'brightness(1.8)' },
+      { opacity: 1, transform: 'translateY(0) scale(1)', filter: 'brightness(1)' }
+    ], { duration: 550, easing: 'cubic-bezier(.16,1,.3,1)' });
+  }
   function renderColors() {
     $('paint-title').textContent = `${CARS[progress.selected].name} paint`;
     $('car-colors').replaceChildren();
@@ -195,7 +219,7 @@ if (typeof document !== 'undefined') (() => {
       button.className = 'paint-option'; button.style.setProperty('--paint-color', color.hex);
       button.setAttribute('aria-label', color.name); button.title = color.name; button.setAttribute('aria-pressed', String(progress.colors[progress.selected] === color.id));
       button.addEventListener('click', () => {
-        progress.paint(color.id); saveProgress(); applyCar(); renderColors();
+        progress.paint(color.id); saveProgress(); applyCar(); renderColors(); renderGaragePreview();
         const image = $('garage-cars').children[progress.selected].querySelector('img'); showPaint(image, progress.selected);
         $('car-colors').children[CAR_COLORS.indexOf(color)].focus();
       });
@@ -207,8 +231,28 @@ if (typeof document !== 'undefined') (() => {
   track.classList.add('car-sway-enabled');
   function wrongImpact() { shell.classList.remove('wrong-impact'); void shell.offsetWidth; shell.classList.add('wrong-impact'); }
   shell.addEventListener('animationend', event => { if (event.target === shell) shell.classList.remove('wrong-impact'); });
-  function resetEffects() { boostRemaining = 0; shell.classList.remove('wrong-impact'); carPosition = .5; carAngle = 0; track.querySelectorAll('.answer-confetti').forEach(el => el.remove()); $('car').style.left = '0px'; $('car').style.transform = `translateX(${width * carPosition}px) translateX(-50%) rotate(${reverse ? 180 : 0}deg)`; $('boost-cue').hidden = true; $('powerup').classList.remove('show'); }
+  function resetEffects() { track.querySelectorAll('.answer-confetti-gif').forEach(image => image.remove()); boostRemaining = 0; shell.classList.remove('wrong-impact'); carPosition = .5; carAngle = 0; track.querySelectorAll('.answer-confetti').forEach(el => el.remove()); $('car').style.left = '0px'; $('car').style.transform = `translateX(${width * carPosition}px) translateX(-50%) rotate(${reverse ? 180 : 0}deg)`; $('boost-cue').hidden = true; $('powerup').classList.remove('show'); }
 
+  const buttonClick = new Audio('audio/gbu-button-click-sfx.mp3');
+  buttonClick.preload = 'auto';
+  buttonClick.volume = .25;
+  document.addEventListener('click', event => {
+    const button = event.target.closest('button');
+    if (!button || button.disabled) return;
+    try {
+      buttonClick.currentTime = 0;
+      buttonClick.play().catch(() => {});
+    } catch (_) { /* Audio availability must not interrupt button actions. */ }
+  }, { capture: true });
+  const countdownAudio = new Audio('audio/gbu-countdown-audio.wav');
+  countdownAudio.preload = 'auto';
+  countdownAudio.volume = .5;
+  function playCountdown(restart = false) {
+    try {
+      if (restart) countdownAudio.currentTime = 0;
+      countdownAudio.play().catch(() => {});
+    } catch (_) { /* Keep the visual countdown available if audio cannot play. */ }
+  }
   const bgMusic = new Audio('audio/lanerush-bgm.mp3');
   bgMusic.loop = true; bgMusic.volume = .35; bgMusic.preload = 'auto';
   function playMusic() { bgMusic.play().catch(() => {}); }
@@ -245,20 +289,14 @@ if (typeof document !== 'undefined') (() => {
   }
   function answerCelebration() {
     if (reducedMotion.matches) return;
-    const burst = document.createElement('div');
-    burst.className = 'answer-confetti';
+    track.querySelectorAll('.answer-confetti-gif').forEach(image => image.remove());
+    const burst = document.createElement('img');
+    burst.className = 'answer-confetti-gif';
+    burst.src = 'assets/good-bad-ugly-assets/confetti.gif';
+    burst.alt = '';
     burst.setAttribute('aria-hidden', 'true');
-    burst.style.setProperty('--celebration-color', ['#8effbc', '#ffdb7a', '#ff647e'][categoryIndex(run.round.answer)]);
-    for (let i = 0; i < 28; i++) {
-      const piece = document.createElement('i');
-      const angle = Math.PI * 2 * i / 28;
-      piece.style.setProperty('--dx', Math.cos(angle) * Math.min(width * .46, 100 + i % 4 * 18) + 'px');
-      piece.style.setProperty('--dy', Math.sin(angle) * (75 + i % 3 * 18) - 30 + 'px');
-      piece.style.setProperty('--spin', (i % 2 ? 240 : -240) + 'deg');
-      burst.append(piece);
-    }
     track.append(burst);
-    window.setTimeout(() => burst.remove(), 1050);
+    window.setTimeout(() => burst.remove(), 3000);
   }
   function showFeedback(correct) {
     const feedback = $('feedback'); feedback.replaceChildren();
@@ -268,6 +306,7 @@ if (typeof document !== 'undefined') (() => {
       const icon = makeIcon('check'), label = document.createElement('span');
       icon.setAttribute('aria-hidden', 'true'); label.textContent = 'Correct';
       feedback.append(icon, label);
+      answerCelebration();
       $(`gate-${run.round.lane}`).classList.add('match-pulse');
       return;
     }
@@ -285,8 +324,8 @@ if (typeof document !== 'undefined') (() => {
   }
   function hud() { $('race-level').textContent = `LEVEL ${progress.level}`; $('race-progress').textContent = `${Math.min(run.count + 1, ROUND_COUNT)} / ${ROUND_COUNT}`; }
   function nextRound() { const round = run.next(); elapsed = 0; readingRemaining = 2; $('question').textContent = round.prompt; $('round-time').style.transform = 'scaleX(1)'; $('feedback').textContent = ''; $('feedback').classList.remove('feedback-success', 'feedback-pop', 'bad'); $('gates').hidden = true; for (let i = 0; i < 3; i++) { $(`gate-${i}`).replaceChildren(); const icon = document.createElement('span'), label = document.createElement('strong'); icon.append(makeIcon(round.options[i] === 'Good' ? 'check' : 'warning')); icon.setAttribute('aria-hidden', 'true'); label.textContent = round.options[i]; $(`gate-${i}`).append(icon, label); $(`gate-${i}`).className = `gate lane-${categoryIndex(round.options[i])}`; } $('gates').style.transform = `translateY(${gatePosition(0, height, reverse)}px)`; }
-  function start() { if (state !== 'paused') bgMusic.currentTime = 0; playMusic(); $('instructions').hidden = true; $('home').hidden = true; unlockAudio(); if (state === 'paused') { state = 'playing'; $('overlay').classList.remove('race-report'); previous = 0; $('overlay').hidden = true; $('pause').disabled = false; return; } resetEffects(); applyCar(); applyEnvironment(); $('garage').hidden = true; $('unlock').hidden = true; $('boost-cue').querySelector('span').textContent = `LEVEL ${progress.level} | FIVE QUESTIONS`; $('overlay').classList.remove('race-report'); track.classList.remove('boosted'); if (layoutLevel !== progress.level) { levelOptions = progress.level === 1 ? [...LANE_LABELS] : shuffleLaneLabels(Math.random, levelOptions); layoutLevel = progress.level; } run = new GoodBadUglyRun(Math.random, levelOptions, progress.level); state = 'playing'; wait = 0; countdown = 0; previous = 0; lane = 1; hud(); updateLane(); countdown = 3; $('gates').hidden = true; $('feedback').textContent = ''; $('boost-cue').hidden = false; $('boost-cue').querySelector('strong').textContent = '3'; $('boost-cue').classList.add('count-beat'); $('question').textContent = 'Get ready to race'; $('overlay').hidden = true; $('pause').disabled = false; fit(); }
-  function pause() { if (state !== 'playing') return; state = 'paused'; bgMusic.pause(); $('overlay').classList.remove('race-report'); $('pause').disabled = true; $('overlay').hidden = false; $('tag').textContent = 'PIT STOP'; $('title').textContent = 'Race paused'; $('description').textContent = 'Your run is waiting. Ready to get back on track?'; $('review').hidden = true; $('start').textContent = 'Resume racing'; }
+  function start() { if (state !== 'paused') bgMusic.currentTime = 0; playMusic(); $('instructions').hidden = true; $('home').hidden = true; unlockAudio(); if (state === 'paused') { if (countdown > 0 || (countdownAudio.currentTime > 0 && countdownAudio.currentTime < 4)) playCountdown(); state = 'playing'; $('overlay').classList.remove('race-report'); previous = 0; $('overlay').hidden = true; $('pause').disabled = false; return; } resetEffects(); applyCar(); applyEnvironment(); $('garage').hidden = true; $('unlock').hidden = true; $('boost-cue').querySelector('span').textContent = `LEVEL ${progress.level} | FIVE QUESTIONS`; $('overlay').classList.remove('race-report'); track.classList.remove('boosted'); if (layoutLevel !== progress.level) { levelOptions = progress.level === 1 ? [...LANE_LABELS] : shuffleLaneLabels(Math.random, levelOptions); layoutLevel = progress.level; } run = new GoodBadUglyRun(Math.random, levelOptions, progress.level); state = 'playing'; wait = 0; countdown = 0; previous = 0; lane = 1; hud(); updateLane(); countdown = 3; playCountdown(true); $('gates').hidden = true; $('feedback').textContent = ''; $('boost-cue').hidden = false; $('boost-cue').querySelector('strong').textContent = '3'; $('boost-cue').classList.add('count-beat'); $('question').textContent = 'Get ready to race'; $('overlay').hidden = true; $('pause').disabled = false; fit(); }
+  function pause() { if (state !== 'playing') return; state = 'paused'; bgMusic.pause(); countdownAudio.pause(); $('overlay').classList.remove('race-report'); $('pause').disabled = true; $('overlay').hidden = false; $('tag').textContent = 'PIT STOP'; $('title').textContent = 'Race paused'; $('description').textContent = 'Your run is waiting. Ready to get back on track?'; $('review').hidden = true; $('start').textContent = 'Resume racing'; }
   function openGarage() {
     state = 'garage'; bgMusic.pause(); $('home').hidden = true; $('instructions').hidden = true; $('overlay').hidden = true; $('unlock').hidden = true; $('garage').hidden = false; $('pause').disabled = true;
     $('garage-level').textContent = progress.champion ? 'CHAMPION | ALL CARS UNLOCKED' : `LEVEL ${progress.level} | ${progress.level} / ${CARS.length} CARS UNLOCKED`;
@@ -298,7 +337,8 @@ if (typeof document !== 'undefined') (() => {
       showPaint(image, index); image.alt = car.name; name.textContent = car.name; status.textContent = index >= progress.level ? `LOCKED | CLEAR LEVEL ${index}` : index === progress.selected ? 'SELECTED' : 'TAP TO SELECT';
       card.append(image, name, status); card.addEventListener('click', () => { if (progress.select(index)) { saveProgress(); applyCar(); openGarage(); const cards = $('garage-cars').querySelectorAll('button'); cards[index].focus(); } }); $('garage-cars').append(card);
     });
-    renderColors();
+    renderColors(); renderGaragePreview();
+    requestAnimationFrame(updateGarageArrows);
     $('garage-race').textContent = `RACE LEVEL ${progress.level}`; $('garage-race').focus();
   }
   function celebrate(unlocked, clearedLevel) {
@@ -422,7 +462,22 @@ if (typeof document !== 'undefined') (() => {
     requestAnimationFrame(frame);
   }
   $('home-start').addEventListener('click', () => { playMusic(); unlockAudio(); $('home').hidden = true; $('instructions').hidden = false; $('level-start').focus(); }); $('level-start').addEventListener('click', openGarage); $('garage-race').addEventListener('click', start); $('unlock-garage').addEventListener('click', openGarage); $('home-garage').addEventListener('click', openGarage); $('garage-menu').addEventListener('click', () => { progress.level = 1; progress.selected = 0; progress.champion = false; layoutLevel = 0; applyCar(); applyEnvironment(); $('garage').hidden = true; $('home').hidden = false; state = 'home'; }); applyCar(); $('start').addEventListener('click', start); $('pause').addEventListener('click', pause);
+  $('garage-prev').addEventListener('click', () => scrollGarage(-1));
+  $('garage-next').addEventListener('click', () => scrollGarage(1));
+  $('garage-cars').addEventListener('scroll', updateGarageArrows, { passive: true });
+  window.addEventListener('resize', updateGarageArrows);
+  const garageShowcase = document.querySelector('.garage-showcase');
+  garageShowcase.addEventListener('pointermove', event => {
+    if (reducedMotion.matches || event.pointerType !== 'mouse') return;
+    const bounds = garageShowcase.getBoundingClientRect();
+    garageShowcase.style.setProperty('--garage-tilt', ((event.clientX - bounds.left) / bounds.width - .5) * 12 + 'deg');
+    garageShowcase.style.setProperty('--garage-pitch', (-(event.clientY - bounds.top) / bounds.height + .5) * 8 + 'deg');
+  });
+  garageShowcase.addEventListener('pointerleave', () => {
+    garageShowcase.style.setProperty('--garage-tilt', '0deg');
+    garageShowcase.style.setProperty('--garage-pitch', '0deg');
+  });
   track.addEventListener('pointerdown', e => { gestureX = e.clientX; }); track.addEventListener('pointerup', e => { if (gestureX === undefined) return; const delta = e.clientX - gestureX; if (Math.abs(delta) > 25) steer(lane + (delta > 0 ? 1 : -1)); else steer(Math.floor((e.clientX - track.getBoundingClientRect().left) / (width / 3))); gestureX = undefined; }); track.addEventListener('pointercancel', () => { gestureX = undefined; });
   window.addEventListener('keydown', e => { if (['ArrowLeft', 'ArrowRight'].includes(e.key)) { e.preventDefault(); steer(lane + (e.key === 'ArrowLeft' ? -1 : 1)); } if (['1', '2', '3'].includes(e.key)) steer(Number(e.key) - 1); if (e.key === 'Escape') pause(); });
-  document.addEventListener('visibilitychange', () => { if (document.hidden) { bgMusic.pause(); pause(); } previous = 0; }); window.addEventListener('pagehide', () => bgMusic.pause()); window.addEventListener('resize', fit); if ('ResizeObserver' in window) new ResizeObserver(fit).observe(track); fit(); requestAnimationFrame(frame);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) { bgMusic.pause(); pause(); } previous = 0; }); window.addEventListener('pagehide', () => { bgMusic.pause(); countdownAudio.pause(); }); window.addEventListener('resize', fit); if ('ResizeObserver' in window) new ResizeObserver(fit).observe(track); fit(); requestAnimationFrame(frame);
 })();
