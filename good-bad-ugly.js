@@ -288,15 +288,15 @@ if (typeof document !== 'undefined') (() => {
     return svg;
   }
   function answerCelebration() {
-    if (reducedMotion.matches) return;
     track.querySelectorAll('.answer-confetti-gif').forEach(image => image.remove());
     const burst = document.createElement('img');
     burst.className = 'answer-confetti-gif';
-    burst.src = 'assets/good-bad-ugly-assets/confetti.gif';
+    burst.onload = () => window.setTimeout(() => burst.remove(), 3000);
+    burst.onerror = () => burst.remove();
+    burst.src = './assets/good-bad-ugly-assets/confetti.gif';
     burst.alt = '';
     burst.setAttribute('aria-hidden', 'true');
     track.append(burst);
-    window.setTimeout(() => burst.remove(), 3000);
   }
   function showFeedback(correct) {
     const feedback = $('feedback'); feedback.replaceChildren();
@@ -304,17 +304,17 @@ if (typeof document !== 'undefined') (() => {
     feedback.classList.toggle('feedback-success', correct);
     if (correct) {
       const icon = makeIcon('check'), label = document.createElement('span');
-      icon.setAttribute('aria-hidden', 'true'); label.textContent = 'Correct';
+      icon.setAttribute('aria-hidden', 'true'); label.textContent = 'Correct!';
       feedback.append(icon, label);
       answerCelebration();
       $(`gate-${run.round.lane}`).classList.add('match-pulse');
       return;
     }
-    feedback.style.setProperty('--answer-color', ['#8effbc', '#ffdb7a', '#ff647e'][categoryIndex(run.round.answer)]);
+    feedback.style.setProperty('--answer-color', '#f4f7fb');
     const caption = document.createElement('small'), answer = document.createElement('strong'), hint = document.createElement('span');
-    caption.textContent = correct ? (run.streak >= 3 ? `${run.streak} IN A ROW!` : 'NAILED IT!') : 'THE RIGHT LANE WAS';
+    caption.textContent = 'Incorrect. Correct answer:';
     answer.textContent = run.round.answer.toUpperCase();
-    hint.textContent = correct ? 'Keep the streak going!' : ['GO LEFT', 'CHOOSE CENTER', 'GO RIGHT'][run.round.lane];
+    hint.textContent = ['\u2190 LEFT LANE', '\u2191 CENTER LANE', '\u2192 RIGHT LANE'][run.round.lane];
     feedback.append(caption, answer, hint);
     feedback.classList.remove('feedback-pop'); void feedback.offsetWidth; feedback.classList.add('feedback-pop');
   }
@@ -456,12 +456,45 @@ if (typeof document !== 'undefined') (() => {
         readingRemaining = Math.max(0, readingRemaining - dt);
         $('gates').hidden = readingRemaining > 0;
         elapsed += motionDt; const progress = Math.min(1, elapsed / run.duration); $('round-time').style.transform = `scaleX(${1 - progress})`; $('gates').style.transform = `translateY(${gatePosition(progress, height, reverse)}px)`;
-        if (progress >= 1) { const correct = run.resolve(lane); hud(); if (correct && run.count > 0) powerup(); sound(correct ? 'correct' : 'wrong'); $(`gate-${run.round.lane}`).classList.add('correct'); if (!correct) $(`gate-${lane}`).classList.add('wrong'); for (let i = 0; i < 3; i++) if (i !== run.round.lane) $(`gate-${i}`).classList.add('answer-dimmed'); showFeedback(correct); if (!correct) wrongImpact(); wait = correct ? .65 : 1.8; }
+        if (progress >= 1) { const correct = run.resolve(lane); hud(); if (correct && run.count > 0) powerup(); sound(correct ? 'correct' : 'wrong'); $(`gate-${run.round.lane}`).classList.add('correct'); if (!correct) $(`gate-${lane}`).classList.add('wrong'); for (let i = 0; i < 3; i++) if (i !== run.round.lane) $(`gate-${i}`).classList.add('answer-dimmed'); showFeedback(correct); if (!correct) wrongImpact(); wait = correct ? 1.65 : 1.8; }
       }
     } else if (state === 'home') road(dt);
     requestAnimationFrame(frame);
   }
-  $('home-start').addEventListener('click', () => { playMusic(); unlockAudio(); $('home').hidden = true; $('instructions').hidden = false; $('level-start').focus(); }); $('level-start').addEventListener('click', openGarage); $('garage-race').addEventListener('click', start); $('unlock-garage').addEventListener('click', openGarage); $('home-garage').addEventListener('click', openGarage); $('garage-menu').addEventListener('click', () => { progress.level = 1; progress.selected = 0; progress.champion = false; layoutLevel = 0; applyCar(); applyEnvironment(); $('garage').hidden = true; $('home').hidden = false; state = 'home'; }); applyCar(); $('start').addEventListener('click', start); $('pause').addEventListener('click', pause);
+  let transitioning = false;
+  async function transitionPage(from, to, change, backwards = false) {
+    if (transitioning) return;
+    if (typeof from.animate !== 'function') { change(); return; }
+    transitioning = true;
+    shell.classList.add('page-transitioning');
+    const direction = backwards ? -1 : 1;
+    const backdrop = document.createElement('div');
+    backdrop.className = 'page-transition-backdrop';
+    backdrop.setAttribute('aria-hidden', 'true');
+    shell.append(backdrop);
+    const animate = async (element, frames, duration) => {
+      const keyframes = reducedMotion.matches ? frames.map(frame => ({ opacity: frame.opacity })) : frames;
+      const animation = element.animate(keyframes, { duration: reducedMotion.matches ? 120 : duration, easing: 'cubic-bezier(.22,.75,.25,1)', fill: 'both' });
+      try { await animation.finished; } finally { animation.cancel(); }
+    };
+    try {
+      await animate(from, [
+        { opacity: 1, transform: 'perspective(1000px) translateZ(0) rotateY(0)' },
+        { opacity: 0, transform: `perspective(1000px) translateX(${-direction * 7}%) translateZ(-100px) rotateY(${direction * 12}deg)` }
+      ], 220);
+      change();
+      if (to.includes(raceScene)) shell.classList.add('transition-to-race');
+      await Promise.all(to.map(element => animate(element, [
+        { opacity: 0, transform: `perspective(1000px) translateX(${direction * 8}%) translateZ(-140px) rotateY(${-direction * 12}deg)` },
+        { opacity: 1, transform: 'perspective(1000px) translateX(0) translateZ(0) rotateY(0)' }
+      ], 440)));
+    } finally {
+      transitioning = false;
+      shell.classList.remove('page-transitioning', 'transition-to-race');
+      backdrop.remove();
+    }
+  }
+  $('home-start').addEventListener('click', () => { playMusic(); unlockAudio(); transitionPage($('home'), [$('garage')], openGarage); }); $('level-start').addEventListener('click', () => transitionPage($('instructions'), [raceScene, document.querySelector('.prompt')], start)); $('garage-race').addEventListener('click', () => transitionPage($('garage'), [$('instructions')], () => { state = 'instructions'; $('garage').hidden = true; $('instructions').hidden = false; $('level-start').textContent = 'Start racing'; $('level-start').focus(); })); $('unlock-garage').addEventListener('click', openGarage); $('home-garage').addEventListener('click', () => transitionPage($('home'), [$('garage')], openGarage)); $('garage-menu').addEventListener('click', () => transitionPage($('garage'), [$('home')], () => { progress.level = 1; progress.selected = 0; progress.champion = false; layoutLevel = 0; applyCar(); applyEnvironment(); $('garage').hidden = true; $('home').hidden = false; state = 'home'; }, true)); applyCar(); $('start').addEventListener('click', start); $('pause').addEventListener('click', pause);
   $('garage-prev').addEventListener('click', () => scrollGarage(-1));
   $('garage-next').addEventListener('click', () => scrollGarage(1));
   $('garage-cars').addEventListener('scroll', updateGarageArrows, { passive: true });

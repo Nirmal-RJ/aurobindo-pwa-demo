@@ -40,8 +40,8 @@ footer{background:linear-gradient(#111b2b,#070d16);border-top:1px solid #677b935
 @media(max-height:640px){header{padding:6px 12px}.dashboard{padding:5px 10px}.dashboard strong{font-size:21px}.prompt{padding:6px 8px 8px}footer{padding:7px 12px}}
 
 /* Transform-only impact and tyre effects keep animation off layout work. */
-.shell.wrong-impact{animation:race-impact .42s ease-out}
-.shell.wrong-impact:after{content:"";position:absolute;inset:0;z-index:9;pointer-events:none;background:radial-gradient(ellipse,transparent 40%,#ff17375c);border:2px solid #ff345a;animation:impact-flash .42s ease-out forwards}
+.shell.wrong-impact{animation:race-impact .9s ease-out}
+.shell.wrong-impact:after{content:"";position:absolute;inset:0;z-index:9;pointer-events:none;background:radial-gradient(ellipse,transparent 25%,#ff173799 75%,#ff1737e6 100%);border:5px solid #ff345a;box-shadow:inset 0 0 45px 12px #ff173799;animation:wrong-answer-flash .9s linear forwards}
 .tyre-trail{animation:tyre-fade .6s ease-out forwards;will-change:transform,opacity}
 .overlay{-webkit-backdrop-filter:blur(9px)}
 @keyframes race-impact{0%,100%{transform:translate3d(0,0,0)}15%{transform:translate3d(-7px,2px,0) rotate(-.5deg)}30%{transform:translate3d(7px,-2px,0) rotate(.5deg)}45%{transform:translate3d(-5px,1px,0)}60%{transform:translate3d(4px,-1px,0)}80%{transform:translate3d(-2px,0,0)}}
@@ -344,10 +344,10 @@ footer .exit,footer #pause{width:36px;min-height:44px;height:44px;flex:0 0 36px;
 @media(max-height:640px){.prompt{padding:9px 12px}.prompt-meta{margin-bottom:6px}.prompt h1{font-size:18px;line-height:1.35;margin-bottom:9px}}
 
 /* Caution board: restrained hazard edges around a clear reading area. */
-.prompt{padding:15px 14px 14px;border:1px solid #e6b82e;border-radius:10px;background:#f5d45b;box-shadow:0 3px 10px #0004}
-.prompt:before,.prompt:after{display:block;content:"";position:absolute;left:0;right:0;width:100%;height:5px;background:repeating-linear-gradient(135deg,#272719 0 8px,#f5d45b 8px 16px);transform:none;box-shadow:none}
+.prompt{padding:15px 14px 14px;border:6px solid transparent;border-radius:10px;background:linear-gradient(#fff,#fff) padding-box,repeating-linear-gradient(135deg,#171717 0 8px,#f5d45b 8px 16px) border-box;box-shadow:0 3px 10px #0004}
+.prompt:before,.prompt:after{display:none}
 .prompt:before{top:0}.prompt:after{top:auto;bottom:0}
-.prompt h1{color:#242414;font-weight:700;line-height:1.4}
+.prompt h1{color:#242414;font-weight:700;line-height:1.4;text-align:center;font-style:normal}
 .prompt-meta #race-level,.prompt-meta #race-progress{background:#292719;color:#fff1b1;font-weight:700}
 .prompt-meta .exit,.prompt-meta #pause{background:#292719;color:#fff1b1;border-color:#292719;border-radius:6px}
 .prompt .round-timer{background:#29271920}.prompt .round-timer i{background:#39351e}
@@ -479,5 +479,24 @@ body[data-direction="reverse"] .prompt{margin:6px 6px 0}
 @media(min-width:460px){.garage-card{flex-basis:calc((100% - 30px)/6)}.garage-arrow{flex-basis:20px;width:20px}}
 @media(prefers-reduced-motion:reduce){.garage-car-rig{animation:none;transition:none}.garage-card,.garage-arrow,.garage-panel .paint-option{transition:none}}
 
-.answer-confetti-gif{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:5;pointer-events:none}
-@media(prefers-reduced-motion:reduce){.answer-confetti-gif{display:none}}
+.answer-confetti-gif{position:absolute;left:0;bottom:0;width:100%;height:auto;max-height:100%;object-fit:contain;object-position:center bottom;z-index:5;pointer-events:none}
+
+
+/* Outcome feedback uses a single neutral highlight for every category. */
+.race-scene .gate.correct{--category:#f4f7fb;border:3px solid #f4f7fb;background:linear-gradient(180deg,#445464,#243240);box-shadow:0 0 0 2px #f4f7fb66,0 0 20px #ffffff40;filter:none}
+.race-scene .gate.correct span,.race-scene .gate.correct strong{color:#fff}
+.race-scene .gate.wrong{outline:2px solid #f4f7fb;animation:none}
+#feedback,#feedback.bad{--answer-color:#f4f7fb;color:#f4f7fb;font-style:normal}
+#feedback strong:before{content:none}
+#feedback.feedback-success{background:#182633f5;border:2px solid #f4f7fb;color:#fff;box-shadow:0 4px 16px #0006}
+@keyframes match-confirm{0%,100%{box-shadow:0 0 0 2px #f4f7fb66}45%{box-shadow:0 0 0 4px #f4f7fb,0 0 22px #ffffff55}}
+
+/* Prevent repeated actions while the page turns in depth. */
+.shell.page-transitioning{isolation:isolate}
+.shell.page-transitioning>*{pointer-events:none}
+
+.page-transition-backdrop{position:absolute;inset:0;z-index:8;background:#030b14;pointer-events:none}
+.shell.transition-to-race .race-scene{position:relative;z-index:9}
+.shell.transition-to-race .prompt{z-index:9}
+
+@keyframes wrong-answer-flash{0%,18%,36%,54%,72%,90%{opacity:1}27%,63%,100%{opacity:0}}
