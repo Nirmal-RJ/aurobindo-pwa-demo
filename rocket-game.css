@@ -176,7 +176,7 @@ dialog{max-width:min(460px,calc(100vw - 24px));max-height:calc(100dvh - 24px);ov
 .pad-rocket .flames i:nth-child(1){left:var(--exhaust-left);top:var(--exhaust-side-y)}
 .pad-rocket .flames i:nth-child(2){left:var(--exhaust-centre);top:var(--exhaust-centre-y)}
 .pad-rocket .flames i:nth-child(3){left:var(--exhaust-right);top:var(--exhaust-side-y)}
-.pad-rocket .flames i:before{content:'';position:absolute;inset:0;background:url('assets/rocket-game-assets/gifs/Fire Loop.gif') center top/100% 100% no-repeat;filter:drop-shadow(0 0 4px #ff9a00);transform-origin:50% 0;transition:opacity .18s linear,transform .3s ease!important}
+.pad-rocket .flames i:before{content:'';position:absolute;inset:0;background:url('assets/rocket-game-assets/gifs/fire Loop.gif') center top/100% 100% no-repeat;filter:drop-shadow(0 0 4px #ff9a00);transform-origin:50% 0;transition:opacity .18s linear,transform .3s ease!important}
 .pad-rocket .flames i.dead{opacity:1}
 .pad-rocket .flames i.dead:before{opacity:0;transform:scale(.5,.15)}
 .pad-rocket .flames i:after{content:'';position:absolute;left:-90%;top:-30%;width:280%;aspect-ratio:760/840;background:url('assets/rocket-game-assets/gifs/engine-blown-frames.webp') 0 0/700% 100% no-repeat;opacity:0}

@@ -452,3 +452,9 @@ The user reported excessively stretched tank-tubes and requested larger solvent 
 
 - Retry now shows only the yellow retry artwork and Retry button. Removed duplicate title/description and outer blue card chrome. Dialog retains an accessible name; other popup modes reset correctly.
 - Cache: CSS v38, JS v27, core v1, service worker v415.
+
+
+## Git publication checks
+
+- All 20 Rocketier tests and game/service-worker syntax checks passed before publication.
+- Corrected fire GIF URL casing to match the actual tracked gifs/fire Loop.gif for case-sensitive hosting.
