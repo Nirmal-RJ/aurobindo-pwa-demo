@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#031336"><title>Rocket'ier — Aurobindo Games</title>
+  <link rel="stylesheet" href="rocket-game.css?v=38">
+  <script defer src="rocket-game-core.js?v=1"></script><script defer src="rocket-game.js?v=27"></script>
+</head>
+<body>
+  <main id="game" class="game" data-screen="intro">
+    <div class="stardust" aria-hidden="true"></div>
+    <div id="storage-warning" role="alert" hidden></div>
+    <section id="intro" class="screen intro" aria-label="Rocket'ier opening">
+      <button id="start" class="image-button start"><img src="assets/rocket-game-assets/page-1/tap-to-start-button.webp" alt="Tap to start"></button>
+    </section>
+    <section id="brief" class="screen overlay-screen" hidden aria-label="Mission brief">
+      <img class="brief-art" src="assets/rocket-game-assets/page-2/mission=brief.webp" alt="Mission brief. Mix everyday solvents in the right ratios to fuel your rocket.">
+      <button id="start-mission" class="image-button wide"><img src="assets/rocket-game-assets/page-2/start-mission-button.webp" alt="Start mission"></button>
+    </section>
+    <section id="mission" class="screen overlay-screen" hidden aria-labelledby="mission-title">
+      <div class="mission-card">
+        <img class="mission-card-art" src="assets/rocket-game-assets/page-3/mission-1.webp" alt="">
+        <h1 id="mission-title"></h1><p id="mission-route"></p>
+        <p class="mission-copy">Distance to travel: <strong id="mission-distance"></strong> km<br>You should complete multiple journeys to reach <strong id="mission-destination"></strong>.<br>Fuel your rocket correctly to complete each journey!</p>
+        <button id="play" class="image-button"><img src="assets/rocket-game-assets/page-3/play-button.webp" alt="Play"></button>
+      </div>
+    </section>
+    <section id="hangar" class="screen hangar" hidden aria-labelledby="question-title">
+      <div id="hangar-closeup" class="hangar-closeup" aria-hidden="true"></div>
+      <div class="hud"><div class="timer"><strong id="countdown">—</strong></div><div id="engines" class="engine-panel" aria-label="Three engines"></div></div>
+      <div class="question glass"><p class="eyebrow" id="question-number"></p><p id="instruction">Choose a rocket from the conveyor</p></div>
+      <div id="fuel-system" class="fuel-system" hidden>
+        <div id="tanks" class="tanks"></div>
+        <svg id="pipe-network" class="pipe-network" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="pipe-metal"><stop stop-color="#d8f5ff"/><stop offset=".3" stop-color="#578bb3"/><stop offset=".55" stop-color="#f0fcff"/><stop offset="1" stop-color="#294c79"/></linearGradient></defs><g id="pipe-paths"></g></svg>
+        <div class="chamber"><div class="chamber-liquid" id="chamber-liquid"><i id="chamber-Water"></i><i id="chamber-ACN"></i><i id="chamber-MeOH"></i></div><img src="assets/rocket-game-assets/page-5/container.webp" alt=""><output id="chamber-total" class="sr-only">0% filled</output><button id="launch" hidden class="image-button" disabled><img src="assets/rocket-game-assets/page-5/launch-button.webp" alt="Launch"></button></div>
+      </div>
+      <div id="pad-rocket" class="pad-rocket" hidden><img id="rocket-top" class="rocket-top" alt=""><img id="rocket-bottom" class="rocket-bottom" alt="Selected rocket"><h1 id="question-title" class="rocket-model-name" hidden></h1><div id="flames" class="flames" aria-hidden="true"><i></i><i></i><i></i></div><div class="smoke" aria-hidden="true"></div></div>
+      <div id="conveyor" class="conveyor"><div id="rocket-track" class="rocket-track"></div><div class="belt" aria-hidden="true"></div></div>
+    </section>
+    <section id="cinematic" class="screen cinematic" hidden aria-label="Rocket flight"><div class="cinematic-path"><div id="cinematic-rocket" class="pad-rocket"></div></div></section>
+    <section id="journey" class="screen journey" hidden aria-labelledby="journey-title"><div id="planet-route" class="planet-route"></div><svg class="journey-path" viewBox="0 0 100 177.778" preserveAspectRatio="none" aria-hidden="true"><path class="route-dots" d="M20 147.556 C12 101 44 64 81 41.778"/><path id="route-covered" pathLength="1" d="M20 147.556 C12 101 44 64 81 41.778"/></svg><div id="journey-rocket" class="flight"><img src="assets/rocket-game-assets/page-6/rocket.webp" alt="Rocket travelling between planets"></div><div class="journey-content"><p class="eyebrow" id="journey-route"></p><h1 id="journey-title">Successful launch!</h1><progress id="distance-progress" max="100" value="0" aria-label="Mission distance travelled"></progress><dl id="journey-stats" class="glass stats"></dl><button id="continue" class="gold-button">Next question →</button></div></section>
+    <section id="complete" class="screen overlay-screen" hidden aria-labelledby="complete-title"><div class="award" aria-hidden="true">★</div><div class="glass"><p class="eyebrow">DESTINATION REACHED</p><h1 id="complete-title"></h1><p id="complete-details"></p><p id="stars"></p></div><button id="next-mission" class="gold-button">Next mission →</button><button id="export" class="text-button">Download game history</button><a class="back" href="index.html#/games">Back to Games</a></section>
+    <dialog id="popup"><div class="popup-body"><img id="popup-art" alt=""><h2 id="popup-title"></h2><p id="popup-text"></p><video id="lesson" controls playsinline hidden></video><button id="popup-action" class="gold-button"></button></div></dialog>
+    <p id="announcement" class="sr-only" aria-live="polite"></p>
+  </main>
+</body>
+</html>
