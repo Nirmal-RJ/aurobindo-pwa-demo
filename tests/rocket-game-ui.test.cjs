@@ -6,7 +6,9 @@ const vm = require('node:vm');
 
 function mount() {
   let time = 0, serial = 0, stored;
+  const preferences = new Map();
   const tasks = new Map(), elements = new Map();
+  const sounds = [], documentEvents = {}, windowEvents = {};
   const chemicalNames = ['Water', 'ACN', 'MeOH'];
   class Element {
     constructor() {
@@ -33,20 +35,25 @@ function mount() {
   elements.get('rocket-track').querySelectorAll = () => choices;
   elements.get('flames').children = [new Element(), new Element(), new Element()];
   const context = vm.createContext({
+    Audio: class {
+      constructor(src) { this.src = src; this.paused = true; this.plays = 0; this.currentTime = 0; sounds.push(this); }
+      play() { this.plays++; this.paused = false; return Promise.resolve(); }
+      pause() { this.paused = true; }
+    },
     console, performance: { now: () => time }, Date, Math, JSON, Blob,
-    localStorage: { getItem: () => stored || null, setItem: (_, value) => { stored = value; } },
+    localStorage: { getItem: key => key === 'aurobindo.rocketier.v1' ? stored || null : preferences.get(key) || null, setItem: (key, value) => { if (key === 'aurobindo.rocketier.v1') stored = value; else preferences.set(key, value); } },
     navigator: {}, location: {}, URL: { createObjectURL: () => 'blob:test', revokeObjectURL() {} },
     document: {
       getElementById: id => { assert.ok(elements.has(id), `Missing element ${id}`); return elements.get(id); },
       querySelector: selector => { const [, kind, c] = selector.match(/data-(fill|undo)="(\w+)"/); return elements.get(`${kind}-${c}`); },
-      addEventListener() {}, createElement: () => new Element()
+      addEventListener(name, fn) { (documentEvents[name] ||= []).push(fn); }, createElement: () => new Element()
     },
     setTimeout: (fn, delay) => { const id = ++serial; tasks.set(id, { fn, at: time + delay }); return id; },
     clearTimeout: id => tasks.delete(id),
     setInterval: (fn, delay) => { const id = ++serial; tasks.set(id, { fn, at: time + delay, delay }); return id; },
     clearInterval: id => tasks.delete(id)
   });
-  context.window = context; context.scrollTo = () => {}; context.addEventListener = () => {};
+  context.window = context; context.scrollTo = () => {}; context.addEventListener = (name, fn) => { (windowEvents[name] ||= []).push(fn); };
   for (const file of ['rocket-game-core.js', 'rocket-game.js']) vm.runInContext(fs.readFileSync(path.join(__dirname, '..', file), 'utf8'), context);
   function advance(ms) {
     const end = time + ms;
@@ -61,10 +68,19 @@ function mount() {
   }
   function begin(ready = true, variant = 1) {
     elements.get('start').click(); elements.get('start-mission').click(); elements.get('play').click(); choices[variant - 1].click();
-    if (ready) advance(3650);
+    if (ready) advance(5150);
   }
-  return { elements, choices, advance, begin, context, state: () => JSON.parse(stored) };
+  return { elements, choices, advance, begin, context, sounds, documentEvents, windowEvents, preferences, state: () => JSON.parse(stored) };
 }
+test('home cannot start until the asset loading gate is ready', () => {
+  const ui = mount(); ui.context.RocketPreload = { ready: false };
+  ui.elements.get('start').click();
+  assert.equal(ui.elements.get('game').dataset.screen, undefined);
+  ui.context.RocketPreload.ready = true;
+  ui.elements.get('start').click();
+  assert.equal(ui.elements.get('game').dataset.screen, 'brief');
+});
+
 test('page flow wires selection, correct fill, animation and next question', () => {
   const ui = mount(); ui.begin();
   let run = ui.state().runs[0], q = run.questions[0];
@@ -83,7 +99,9 @@ test('page flow wires selection, correct fill, animation and next question', () 
   assert.equal(ui.elements.get('hangar').classList.contains('launching'), true);
   ui.advance(3500);
   assert.equal(ui.elements.get('hangar').hidden, false);
-  ui.advance(200);
+  assert.equal(ui.elements.get('hangar').classList.contains('smoke-cover'), false);
+  assert.equal(ui.elements.get('hangar').classList.contains('launch-blackout'), false);
+  ui.advance(1000);
   assert.equal(ui.elements.get('hangar').classList.contains('launch-blackout'), true);
   ui.advance(800);
   assert.equal(ui.elements.get('cinematic').hidden, false);
@@ -101,6 +119,15 @@ test('page flow wires selection, correct fill, animation and next question', () 
   assert.equal(ui.elements.get('journey-rocket').dataset.from, '0');
   assert.ok(Number(ui.elements.get('journey-rocket').dataset.to) > 0);
   ui.advance(3300);
+  assert.equal(ui.elements.get('continue').disabled, true);
+  assert.equal(ui.elements.get('journey-title').hidden, true);
+  assert.equal(ui.elements.get('journey-stats').hidden, false);
+  assert.equal(ui.elements.get('journey-rocket').classList.contains('route-flying'), false);
+  const initialStats = ui.elements.get('journey-stats').innerHTML;
+  ui.advance(600);
+  assert.notEqual(ui.elements.get('journey-stats').innerHTML, initialStats);
+  assert.equal(ui.elements.get('continue').disabled, true);
+  ui.advance(900);
   assert.equal(ui.elements.get('continue').disabled, false);
   assert.equal(ui.elements.get('journey-rocket').classList.contains('route-arrived'), true);
   ui.elements.get('continue').click();
@@ -113,28 +140,62 @@ test('map resumes from cumulative distance and reaches the destination at missio
     const run = ui.state().runs[0], q = run.questions.at(-1);
     const recipe = ui.context.RocketGame.recipes[q.recipeId];
     for (const c of ['Water','ACN','MeOH']) for (let amount = 0; amount < recipe.mix[c]; amount += ui.context.RocketGame.increment(recipe,c)) ui.elements.get(`fill-${c}`).click();
-    ui.advance(650); ui.elements.get('launch').click(); ui.advance(11000);
+    ui.advance(650); ui.elements.get('launch').click(); ui.advance(11800);
     const rocket = ui.elements.get('journey-rocket');
     assert.ok(Math.abs(Number(rocket.dataset.from)-previous)<1e-10);
     const target = Number(rocket.dataset.to);
     assert.ok(target > previous && target <= 1);
+    assert.equal(ui.elements.get('journey-title').hidden, true);
+    assert.equal(ui.elements.get('journey-stats').hidden, true);
     ui.advance(3300);
+    assert.equal(ui.elements.get('journey-title').hidden, ui.state().runs[0].status !== 'completed');
+    ui.advance(1500);
     assert.equal(ui.elements.get('route-covered').style.strokeDashoffset, String(1-target));
     if (ui.state().runs[0].status === 'completed') {
       assert.equal(target,1); assert.equal(rocket.style.left,'81%');
+      ui.elements.get('continue').click();
+      assert.equal(ui.elements.get('complete').hidden, false);
+      assert.equal(ui.elements.get('complete-distance').textContent, '0 km');
+      ui.advance(1300);
+      const countingDistance = ui.elements.get('complete-distance').textContent;
+      assert.notEqual(countingDistance, '0 km');
+      ui.advance(1000);
+      assert.notEqual(ui.elements.get('complete-distance').textContent, countingDistance);
+      assert.equal(ui.elements.get('complete-time').textContent, `${ui.state().runs[0].inputSeconds.toFixed(1)}s`);
+      ui.elements.get('next-mission').click();
+      assert.equal(ui.elements.get('mission').hidden, false);
+      assert.equal(ui.elements.get('brief').hidden, true);
+      assert.equal(ui.elements.get('mission-title').textContent, 'Mission 2');
+      assert.equal(ui.state().runs.at(-1).missionId, 1);
       return;
     }
     previous = target;
-    ui.elements.get('continue').click(); ui.choices[0].click(); ui.advance(3650);
+    ui.elements.get('continue').click(); ui.choices[0].click(); ui.advance(5150);
   }
   assert.fail('Mission did not complete');
 });
 test('timeout opens failure/video/retry, resets input and retains damage', () => {
   const ui = mount(); ui.begin(); ui.advance(40100); ui.advance(3000);
   assert.equal(ui.elements.get('popup-title').textContent, 'Engine failure');
-  ui.elements.get('popup-action').click(); assert.equal(ui.elements.get('popup-title').textContent, 'Video coming soon');
-  ui.elements.get('popup-action').click(); assert.equal(ui.elements.get('popup-title').textContent, 'Ready for another try?');
+  assert.equal(ui.elements.get('hangar').classList.contains('failure-resting'), true);
   ui.elements.get('popup-action').click();
+  const recipeId = ui.state().runs[0].questions[0].recipeId;
+  assert.equal(ui.elements.get('lesson').hidden, false);
+  assert.equal(ui.elements.get('lesson').src, ui.context.RocketGame.recipes[recipeId].video);
+  assert.equal(ui.elements.get('lesson').currentTime, 0);
+  assert.equal(ui.elements.get('hangar').classList.contains('failure-resting'), true);
+  assert.equal(ui.elements.get('popup-title').textContent, ui.context.RocketGame.recipes[recipeId].name);
+  assert.equal(ui.elements.get('popup').classList.contains('video-popup'), true);
+  assert.equal(ui.elements.get('popup-text').hidden, true);
+  ui.elements.get('popup-action').click(); assert.equal(ui.elements.get('popup-title').textContent, 'Ready for another try?');
+  assert.equal(ui.elements.get('popup').classList.contains('video-popup'), false);
+  assert.equal(ui.elements.get('hangar').classList.contains('failure-resting'), true);
+  ui.elements.get('popup-action').click();
+  assert.equal(ui.elements.get('hangar').classList.contains('retry-preparing'), true);
+  assert.equal(ui.elements.get('hangar').classList.contains('failure-resting'), false);
+  assert.equal(ui.state().runs[0].questions[0].attempts.length, 1);
+  ui.advance(1549); assert.equal(ui.state().runs[0].questions[0].attempts.length, 1);
+  ui.advance(1);
   const run = ui.state().runs[0]; assert.equal(run.engines, 2); assert.equal(run.questions.length, 1);
   assert.equal(run.questions[0].attempts.length, 2); assert.equal(ui.elements.get('countdown').textContent, '40s');
   assert.equal(ui.elements.get('chamber-total').textContent, '0% filled');
@@ -151,6 +212,30 @@ test('holding fill repeats increments and releasing stops further input', () => 
   assert.equal(attempt.events.length, 2);
 });
 
+test('failed pointer capture still fills and a global release stops the hold', () => {
+  const ui = mount(); ui.begin();
+  const button = ui.elements.get('fill-Water');
+  button.setPointerCapture = () => { throw new Error('NotFoundError'); };
+  button.events.pointerdown({ button: 0, pointerId: 1, preventDefault() {} });
+  ui.advance(360);
+  assert.equal(ui.state().runs[0].questions[0].attempts[0].events.length, 2);
+  ui.windowEvents.pointerup.forEach(fn => fn());
+  ui.advance(400);
+  assert.equal(ui.state().runs[0].questions[0].attempts[0].events.length, 2);
+});
+
+test('legacy touch input holds and cancels without Pointer Events support', () => {
+  const ui = mount(); ui.begin();
+  const button = ui.elements.get('fill-Water');
+  let prevented = false;
+  button.events.touchstart({ preventDefault() { prevented = true; } });
+  ui.advance(360); assert.equal(prevented, true);
+  assert.equal(ui.state().runs[0].questions[0].attempts[0].events.length, 2);
+  ui.windowEvents.touchcancel.forEach(fn => fn());
+  ui.advance(400);
+  assert.equal(ui.state().runs[0].questions[0].attempts[0].events.length, 2);
+});
+
 test('each lost engine plays one blowout, stays off on retry, and leaves surviving fires running', () => {
   const ui = mount(); ui.begin();
   const fires = ui.elements.get('flames').children;
@@ -160,19 +245,24 @@ test('each lost engine plays one blowout, stays off on retry, and leaves survivi
     assert.equal(fires[remaining].classList.contains('blowing'), false);
     ui.advance(1150);
     assert.equal(fires[remaining].classList.contains('blowing'), true);
+    assert.equal(fires[remaining].classList.contains('smoking'), true);
     assert.equal(fires[remaining].classList.contains('dead'), true);
     for (let i = 0; i < remaining; i++) {
       assert.equal(fires[i].classList.contains('dead'), false);
       assert.equal(fires[i].classList.contains('blowing'), false);
+      assert.equal(fires[i].classList.contains('smoking'), false);
     }
     ui.advance(880);
     assert.equal(fires[remaining].classList.contains('blowing'), false);
+    assert.equal(fires[remaining].classList.contains('smoking'), true);
     ui.advance(1070);
+    assert.equal(fires[remaining].classList.contains('smoking'), false);
     assert.equal(ui.elements.get('hangar').classList.contains('failed-liftoff'), false);
     if (remaining) {
       ui.elements.get('popup-action').click();
       ui.elements.get('popup-action').click();
       ui.elements.get('popup-action').click();
+      ui.advance(1550);
       assert.equal(fires[remaining].classList.contains('dead'), true);
     } else assert.equal(ui.elements.get('popup-title').textContent, 'Mission failed');
   }
@@ -209,9 +299,17 @@ test('rocket docks and the fuel station prepares before starting the full countd
   ui.advance(200);
   assert.equal(ui.elements.get('question-title').hidden, false);
   assert.equal(ui.elements.get('fuel-system').hidden, true);
+  assert.equal(ui.elements.get('hangar').classList.contains('formula-reveal'), true);
+  ui.advance(1499);
+  assert.equal(ui.elements.get('fuel-system').hidden, true);
+  assert.equal(attempts().length, 0);
+  ui.elements.get('fill-Water').click();
+  assert.equal(attempts().length, 0);
+  ui.advance(1);
+  assert.equal(ui.elements.get('hangar').classList.contains('formula-reveal'), false);
+  assert.equal(ui.elements.get('hangar').classList.contains('filling'), true);
   ui.advance(650);
   assert.equal(ui.elements.get('fuel-system').hidden, false);
-  assert.equal(attempts().length, 0);
   ui.advance(899); assert.equal(attempts().length, 0);
   ui.advance(1); assert.equal(attempts().length, 1);
   assert.equal(ui.elements.get('countdown').textContent, '40s');
@@ -237,7 +335,7 @@ test('reduced-motion settings retain the continuous straight-line docking animat
   const topImage = ui.elements.get('rocket-top').src;
   ui.advance(1899); assert.equal(animations[0].cancelled, false);
   assert.equal(ui.state().runs[0].questions[0].attempts.length, 0);
-  ui.advance(1751);
+  ui.advance(3251);
   assert.equal(animations[0].cancelled, true);
   assert.equal(ui.elements.get('rocket-top').src, topImage);
   assert.equal(ui.elements.get('countdown').textContent, '40s');
@@ -290,16 +388,137 @@ test('full reservoirs drain in matching colours and undo reverses the same pipe'
     assert.equal(amount.style['--amount'], `${100-increment}%`);
     assert.equal(chamber.style.height, `${increment}%`);
     assert.equal(ui.elements.get(`amount-${c}`).textContent, `${increment}%`);
+    assert.equal(ui.elements.get(`amount-${c}`).dataset.delta, `+${increment}%`);
+    assert.equal(ui.elements.get(`amount-${c}`).dataset.changing, 'fill');
     assert.equal(pipe.dataset.flow, 'forward');
     assert.equal(ui.elements.get(`pipe-core-${c}`).dataset.flow, 'forward');
+    assert.equal(ui.elements.get(`pour-${c}`).dataset.flow, 'forward');
+    assert.equal(ui.elements.get('chamber-liquid').style['--surface'], `${100-increment}%`);
     ui.elements.get(`undo-${c}`).click();
     assert.equal(pipe.dataset.flow, 'reverse');
+    assert.equal(ui.elements.get(`amount-${c}`).dataset.delta, `\u2212${increment}%`);
+    assert.equal(ui.elements.get(`amount-${c}`).dataset.changing, 'undo');
+    assert.equal(ui.elements.get(`pour-${c}`).dataset.flow, 'reverse');
     assert.equal(amount.style['--amount'], '100%');
     assert.equal(chamber.style.height, '0%');
     assert.equal(ui.elements.get('launch').hidden, true);
     assert.equal(ui.elements.get(`amount-${c}`).textContent, '0%');
     ui.advance(650); assert.equal(pipe.dataset.flow, '');
     assert.equal(ui.elements.get(`pipe-core-${c}`).dataset.flow, '');
+    assert.equal(ui.elements.get(`pour-${c}`).dataset.flow, '');
+    assert.equal(ui.elements.get(`amount-${c}`).dataset.changing, '');
     assert.equal(ui.elements.get('launch').classList.contains('launch-ready'), false);
   }
+});
+
+test('flight rewards sequence damage, bonus and exit without changing cinematic duration', () => {
+  for (const losses of [0,1,2]) {
+    const ui = mount(); ui.begin();
+    for (let i=0;i<losses;i++) {
+      ui.advance(40000); ui.advance(3100);
+      ui.elements.get('popup-action').click();
+      ui.elements.get('popup-action').click();
+      ui.elements.get('popup-action').click();
+      ui.advance(1550);
+    }
+    const q=ui.state().runs[0].questions.at(-1), recipe=ui.context.RocketGame.recipes[q.recipeId];
+    for(const c of ['Water','ACN','MeOH']) for(let n=0;n<recipe.mix[c];n+=ui.context.RocketGame.increment(recipe,c)) ui.elements.get('fill-'+c).click();
+    ui.advance(650);ui.elements.get('launch').click();ui.advance(5300);
+    const scene=ui.elements.get('cinematic'),factor=[1,.67,.34][losses];
+    assert.equal(scene.style['--near-star-duration'],String(1.7/factor)+'s');
+    assert.equal(ui.elements.get('flight-penalty').hidden,true);
+    ui.advance(1200);
+    assert.equal(ui.elements.get('flight-penalty').hidden,losses===0);
+    if(losses) assert.equal(ui.elements.get('flight-speed').textContent,'SPEED \u2212'+(losses===1?33:66)+'%');
+    ui.advance(1600);
+    assert.equal(ui.elements.get('flight-bonus').hidden,false);
+    const saved=ui.state().runs[0].questions.at(-1).attempts.at(-1).timeSaved.toFixed(1);
+    assert.equal(ui.elements.get('flight-distance').textContent,'BONUS DISTANCE +'+saved+'%');
+    ui.advance(600);
+    assert.equal(scene.classList.contains('rewards-exit'),true);
+    assert.equal(scene.classList.contains('bonus-boost'),true);
+    ui.advance(3100);
+    assert.equal(ui.elements.get('journey').hidden,false);
+  }
+});
+
+test('sound effects follow liquid transfers, actual blowout, failure popup and correct launch', () => {
+  const ui = mount(); ui.begin();
+  const sound = name => ui.sounds.find(s => decodeURIComponent(s.src).endsWith(name+'.mp3'));
+  const liquid = sound('Liquid Flowing'), blast = sound('Engine Blast 1'), wrong = sound('Wrong Question'), correct = sound('Correct Question');
+  ui.elements.get('fill-Water').click();
+  assert.equal(liquid.loop,true); assert.equal(liquid.plays,1);
+  ui.elements.get('fill-Water').click(); assert.equal(liquid.plays,1);
+  ui.advance(650); assert.equal(liquid.paused,true);
+  ui.elements.get('undo-Water').click(); assert.equal(liquid.plays,2);
+  ui.advance(40000);
+  assert.equal(liquid.paused,true); assert.equal(blast.plays,0); assert.equal(wrong.plays,0);
+  ui.advance(1150); assert.equal(blast.plays,1); assert.equal(wrong.plays,0);
+  ui.advance(1950); assert.equal(wrong.plays,1);
+  ui.elements.get('popup-action').click();ui.elements.get('popup-action').click();ui.elements.get('popup-action').click();ui.advance(1550);
+  const q=ui.state().runs[0].questions[0], recipe=ui.context.RocketGame.recipes[q.recipeId];
+  for(const c of ['Water','ACN','MeOH']) for(let n=0;n<recipe.mix[c];n+=ui.context.RocketGame.increment(recipe,c)) ui.elements.get('fill-'+c).click();
+  ui.advance(650);ui.elements.get('launch').click();
+  assert.equal(correct.plays,1);assert.equal(wrong.plays,1);
+  for(const fn of ui.windowEvents.blur)fn();
+  assert.ok(ui.sounds.every(s=>s.paused));
+});
+test('button sound responds once per pointer press or keyboard click', async () => {
+  const ui=mount(), target={closest:selector=>selector==='button,a'?{}:null};
+  ui.documentEvents.pointerdown.forEach(fn=>fn({button:0,target}));
+  await Promise.resolve();await Promise.resolve();
+  const click=ui.sounds.find(s=>decodeURIComponent(s.src).endsWith('Button Click 2.mp3'));
+  assert.equal(click.plays,1);
+  ui.documentEvents.click.forEach(fn=>fn({detail:1,target}));assert.equal(click.plays,1);
+  ui.documentEvents.click.forEach(fn=>fn({detail:0,target}));assert.equal(click.plays,2);
+  for (const control of ['fill', 'undo', 'rocket']) {
+    const excluded = { closest: selector => selector === '[data-fill], [data-undo], .rocket-choice' ? { control } : selector === 'button,a' ? {} : null };
+    ui.documentEvents.pointerdown.forEach(fn => fn({ button: 0, target: excluded }));
+    ui.documentEvents.click.forEach(fn => fn({ detail: 0, target: excluded }));
+  }
+  assert.equal(click.plays, 2);
+});
+
+test('generated cues follow question, nose preparation, route travel and counting', () => {
+  const ui = mount(); ui.begin(false);
+  const sound = file => ui.sounds.find(s => s.src.endsWith(file));
+  const question = sound('formula-reveal.wav'), open = sound('nose-open.wav'), close = sound('nose-close.wav');
+  const zoom = sound('rocket-zoom.wav');
+  assert.equal(zoom.plays, 1); assert.equal(zoom.paused, false);
+  ui.advance(2099); assert.equal(question.plays, 0);
+  assert.equal(zoom.paused, true);
+  ui.advance(1); assert.equal(question.plays, 1); assert.equal(open.plays, 0);
+  ui.advance(1499); assert.equal(open.plays, 0);
+  ui.advance(1); assert.equal(open.plays, 1);
+  ui.advance(1550);
+  const recipe = ui.context.RocketGame.recipes[ui.state().runs[0].questions[0].recipeId];
+  for (const c of ['Water', 'ACN', 'MeOH']) for (let n=0; n<recipe.mix[c]; n+=ui.context.RocketGame.increment(recipe,c)) ui.elements.get('fill-'+c).click();
+  ui.advance(650); ui.elements.get('launch').click(); assert.equal(close.plays, 1);
+  ui.advance(11800);
+  const route = sound('route-glide.wav'), numbers = sound('number-count.wav');
+  assert.equal(route.plays, 0);
+  ui.advance(700); assert.equal(route.plays, 1);
+  ui.advance(2600); assert.equal(route.paused, true);
+  assert.equal(numbers.paused, false);
+  ui.advance(1500); assert.equal(numbers.paused, true);
+});
+
+test('penalty badge appears once per new engine loss while speed penalties persist', () => {
+  const ui=mount();ui.begin();
+  function loseEngine() {
+    ui.advance(40000);ui.advance(3100);
+    for(let i=0;i<3;i++)ui.elements.get('popup-action').click();
+    ui.advance(1550);
+  }
+  function flight(expectBadge, factor) {
+    const q=ui.state().runs[0].questions.at(-1), recipe=ui.context.RocketGame.recipes[q.recipeId];
+    for(const c of ['Water','ACN','MeOH'])for(let n=0;n<recipe.mix[c];n+=ui.context.RocketGame.increment(recipe,c))ui.elements.get('fill-'+c).click();
+    ui.advance(650);ui.elements.get('launch').click();ui.advance(5300);ui.advance(1200);
+    assert.equal(ui.elements.get('flight-penalty').hidden,!expectBadge);
+    assert.equal(ui.elements.get('cinematic').style['--near-star-duration'],String(1.7/factor)+'s');
+    const attempt=ui.state().runs[0].questions.at(-1).attempts.at(-1);
+    assert.equal(attempt.speed,7000000*factor);
+    ui.advance(5300);ui.advance(4800);ui.elements.get('continue').click();ui.choices[0].click();ui.advance(5150);
+  }
+  loseEngine();flight(true,.67);flight(false,.67);loseEngine();flight(true,.34);
 });

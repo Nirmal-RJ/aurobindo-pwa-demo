@@ -1,4 +1,4 @@
-(() => {
+﻿(() => {
   'use strict';
   const { Game, missions, recipes, chemicals, increment } = window.RocketGame;
   const $ = id => document.getElementById(id);
@@ -7,6 +7,38 @@
   const names = { Water: 'Water', ACN: 'ACN', MeOH: 'MeOH' };
   // Match liquid-sort's active gameplay palette.
   const colors = { Water: '#00cfff', ACN: '#b627ed', MeOH: '#ffbf25' };
+  const sounds = new Map();
+  const soundFiles = { correct: 'Correct Question.mp3', liquid: 'Liquid Flowing.mp3', blast: 'Engine Blast 1.mp3', wrong: 'Wrong Question.mp3', click: 'Button Click 2.mp3', question: 'generated/formula-reveal.wav', noseOpen: 'generated/nose-open.wav', noseClose: 'generated/nose-close.wav', numbers: 'generated/number-count.wav', route: 'generated/route-glide.wav', zoom: 'generated/rocket-zoom.wav' };
+  if (typeof Audio === 'function') for (const [name, file] of Object.entries(soundFiles)) {
+    const audio = new Audio(`${base}rocketier-audio/${file.split('/').map(encodeURIComponent).join('/')}`);
+    audio.preload = 'none'; audio.volume = ({ liquid: .45, click: .5, question: .5, noseOpen: .4, noseClose: .4, numbers: .26, route: .3, zoom: .4 })[name] ?? .8;
+    audio.loop = name === 'liquid'; sounds.set(name, audio);
+  }
+  function stopSound(name) {
+    const audio = sounds.get(name); if (!audio) return;
+    audio.pause(); audio.currentTime = 0;
+  }
+  function playSound(name, continuous = false) {
+    const audio = sounds.get(name); if (!audio || document.hidden) return;
+    if (continuous && !audio.paused) return;
+    try { audio.currentTime = 0; audio.play()?.catch(() => {}); } catch (_) { /* Sound must not block play. */ }
+  }
+  let soundsUnlocked = false;
+  function buttonSound(event) {
+    if (window.RocketPreload && !window.RocketPreload.ready) return;
+    if (event.target.closest('[data-fill], [data-undo], .rocket-choice')) return;
+    if (!event.target.closest('button,a') || event.target.closest('button:disabled')) return;
+    if (!soundsUnlocked) {
+      soundsUnlocked = true;
+      // Prime delayed effects within a user gesture for mobile autoplay policies.
+      for (const [name, audio] of sounds) if (name !== 'click') {
+        audio.muted = true;
+        try { Promise.resolve(audio.play()).then(() => { audio.pause(); audio.currentTime = 0; audio.muted = false; }).catch(() => { audio.muted = false; }); }
+        catch (_) { audio.muted = false; }
+      }
+    }
+    playSound('click');
+  }
   let transferTimer = null, transferPending = false, visualAttemptId = null;
   const pipeTimers = new Map();
   const screens = ['intro', 'brief', 'mission', 'hangar', 'cinematic', 'journey', 'complete'];
@@ -57,6 +89,7 @@
     heldButton = null;
   }
   function show(screen, immediate = false) {
+    ['question', 'noseOpen', 'noseClose', 'numbers', 'route', 'zoom'].forEach(stopSound);
     screenVersion++; stopHold(); clearInterval(tick); tick = null;
     $('popup').close(); $('lesson').pause();
     const frame = $('game');
@@ -93,6 +126,17 @@
     $('game').dataset.screen = screen;
   }
   function later(fn, delay) { const version = screenVersion; setTimeout(() => { if (version === screenVersion) fn(); }, delay); }
+  let animationSerial = 0;
+  function animateScene(element, frames, options) {
+    try { if (typeof element.animate === 'function') return element.animate(frames, options); } catch (_) { /* Fall back to CSS keyframes. */ }
+    if (!document.head) return null;
+    const name = `rocket-fallback-${++animationSerial}`, style = document.createElement('style');
+    style.textContent = `@keyframes ${name}{${frames.map((frame, i) => `${i / (frames.length - 1) * 100}%{${Object.entries(frame).map(([key, value]) => `${key.replace(/[A-Z]/g, c => `-${c.toLowerCase()}`)}:${value}`).join(';')}}`).join('')}}`;
+    document.head.appendChild(style);
+    const previous = element.style.getPropertyValue('animation'), priority = element.style.getPropertyPriority('animation');
+    element.style.setProperty('animation', `${name} ${options.duration}ms ${options.easing || 'linear'} ${options.fill || 'both'}`, 'important');
+    return { cancel() { style.remove(); if (previous) element.style.setProperty('animation', previous, priority); else element.style.removeProperty('animation'); } };
+  }
   function announce(message) { $('announcement').textContent = message; }
   function brief() {
     show('brief');
@@ -103,14 +147,18 @@
     [...$('flames').children].forEach((el, i) => {
       el.classList.toggle('dead', i >= game.run.engines);
       el.classList.toggle('blowing', i === blown);
+      el.classList.toggle('smoking', i === blown);
       if (i === blown) later(() => el.classList.remove('blowing'), 880);
+      if (i === blown) later(() => el.classList.remove('smoking'), 1800);
     });
   }
   function clearTransfers() {
+    stopSound('liquid');
+    chemicals.forEach(c => { const display = $(`amount-${c}`); if (display) { display.dataset.changing = ''; display.dataset.delta = ''; display.feedbackAnimation?.cancel(); } });
     clearTimeout(transferTimer); transferPending = false;
     $('chamber-liquid').classList.remove('is-mixing');
     pipeTimers.forEach(timer => clearTimeout(timer)); pipeTimers.clear();
-    chemicals.forEach(c => { const path = $(`pipe-flow-${c}`); if (path) path.dataset.flow = ''; const core = $(`pipe-core-${c}`); if (core) core.dataset.flow = ''; });
+    chemicals.forEach(c => { const path = $(`pipe-flow-${c}`); if (path) path.dataset.flow = ''; const core = $(`pipe-core-${c}`); if (core) core.dataset.flow = ''; $(`pour-${c}`).dataset.flow = ''; });
   }
   function updateLaunch() {
     const ready = game.phase === 'fill' && game.total === 100 && !transferPending;
@@ -120,21 +168,38 @@
     $('launch').setAttribute('aria-label', ready ? 'Mixture full. Launch rocket' : 'Launch when mixing chamber is full');
   }
   function animateTransfer(chemical, undo) {
+    playSound('liquid', true);
+    const display = $(`amount-${chemical}`);
+    const previousAmount = parseInt(display.textContent, 10) || 0;
+    const delta = game.mixture[chemical] - previousAmount;
+    display.dataset.delta = `${delta < 0 ? '\u2212' : '+'}${Math.abs(delta)}%`;
+    display.dataset.changing = undo ? 'undo' : 'fill';
+    display.feedbackAnimation?.cancel();
+    if (!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      display.feedbackAnimation = display.animate?.([
+        { transform: 'scale(1)', offset: 0 },
+        { transform: `translateY(${undo ? '1' : '-1'}px) scale(1.1)`, offset: .35 },
+        { transform: 'scale(1)', offset: 1 }
+      ], { duration: 260, easing: 'ease-out' });
+    }
     transferPending = true;
     clearTimeout(transferTimer);
     const flow = $(`pipe-flow-${chemical}`);
     flow.dataset.flow = undo ? 'reverse' : 'forward';
     const core = $(`pipe-core-${chemical}`); core.dataset.flow = flow.dataset.flow;
+    const pour = $(`pour-${chemical}`); pour.dataset.flow = flow.dataset.flow;
     clearTimeout(pipeTimers.get(chemical));
-    pipeTimers.set(chemical, setTimeout(() => { flow.dataset.flow = ''; core.dataset.flow = ''; pipeTimers.delete(chemical); }, 650));
+    pipeTimers.set(chemical, setTimeout(() => { flow.dataset.flow = ''; core.dataset.flow = ''; pour.dataset.flow = ''; display.dataset.changing = ''; display.dataset.delta = ''; pipeTimers.delete(chemical); }, 650));
     $('chamber-liquid').classList.add('is-mixing');
     transferTimer = setTimeout(() => {
+      stopSound('liquid');
       transferPending = false;
       $('chamber-liquid').classList.remove('is-mixing');
       updateLaunch();
     }, 650);
   }
   function renderMixture() {
+    $('chamber-liquid').style.setProperty('--surface', `${100 - game.total}%`);
     chemicals.forEach(c => {
       const remaining = 100 - game.mixture[c];
       $(`amount-${c}`).textContent = `${game.mixture[c]}%`;
@@ -164,12 +229,25 @@
       button.addEventListener('pointerdown', event => {
         if (event.button !== 0 || button.disabled) return;
         event.preventDefault(); stopHold(); heldButton = button;
-        button.setPointerCapture?.(event.pointerId); change();
+        try { button.setPointerCapture?.(event.pointerId); } catch (_) { /* Global release listeners still stop filling. */ }
+        change();
         if (game.phase === 'fill' && game.total < 100) hold = setInterval(change, 350);
       });
       button.addEventListener('pointerup', stopHold);
       button.addEventListener('pointercancel', stopHold);
       button.addEventListener('lostpointercapture', stopHold);
+      if (!window.PointerEvent) {
+        const legacyPress = event => {
+          if (button.disabled || (event.button !== undefined && event.button !== 0)) return;
+          event.preventDefault(); stopHold(); heldButton = button; change();
+          if (game.phase === 'fill' && game.total < 100) hold = setInterval(change, 350);
+        };
+        button.addEventListener('touchstart', legacyPress, { passive: false });
+        button.addEventListener('mousedown', legacyPress);
+        button.addEventListener('touchend', stopHold);
+        button.addEventListener('touchcancel', stopHold);
+        button.addEventListener('mouseup', stopHold);
+      }
       // Native keyboard/assistive-technology clicks have detail 0; pointer taps are handled above.
       button.addEventListener('click', event => { if (event.detail === 0) change(); });
     });
@@ -184,7 +262,7 @@
     $('hangar').style.backgroundImage = 'none';
     $('hangar-closeup').style.backgroundImage = `url('${base}page-4/page-4-bg-${planet}.webp')`;
     $('hangar-closeup').style.transform = 'scale(1)';
-    $('question-number').textContent = `${game.mission.origin} → ${game.mission.destination} · QUESTION ${game.run.questions.length}`;
+    $('question-number').textContent = `${game.mission.origin} \u2192 ${game.mission.destination} \u00b7 QUESTION ${game.run.questions.length}`;
     $('question-title').textContent = game.recipe.name;
     $('question-title').hidden = true;
     $('instruction').textContent = 'Choose your rocket for this journey!';
@@ -204,6 +282,7 @@
     // the OS disables decorative effects; never collapse it into image swaps.
     const travelMs = 1900, settleMs = 200, openMs = 650, tanksMs = 900;
     stage.classList.add('boarding');
+    playSound('zoom');
     $('instruction').textContent = 'Moving your rocket to the launch pad?';
     const sourceRect = button.querySelector?.('.rocket-model')?.getBoundingClientRect();
     rocket.dataset.variant = String(game.rocket);
@@ -213,16 +292,16 @@
     const targetRect = rocket.getBoundingClientRect?.();
     button.style.visibility = 'hidden';
     let travel, camera;
-    if (sourceRect && targetRect && targetRect.width && targetRect.height && rocket.animate) {
+    if (sourceRect && targetRect && targetRect.width && targetRect.height) {
       const dx = sourceRect.left - targetRect.left;
       const dy = sourceRect.top - targetRect.top;
       // Two endpoints only: the centre, size and every rocket part interpolate
       // along one straight path, with no overshoot, bounce or second placement.
-      travel = rocket.animate([
+      travel = animateScene(rocket, [
         { transform: `translate(${dx}px,${dy}px) scale(${sourceRect.width / targetRect.width},${sourceRect.height / targetRect.height})` },
         { transform: 'translate(0,0) scale(1,1)' }
       ], { duration: travelMs, easing: 'linear', fill: 'both' });
-      camera = scenery.animate([
+      camera = animateScene(scenery, [
         { transform: 'scale(1)' }, { transform: 'scale(1.22)' }
       ], { duration: travelMs, easing: 'linear', fill: 'both' });
     }
@@ -231,24 +310,31 @@
     // Only the camera scale changes; there is no page-4/page-5 image handoff.
     later(() => {
       scenery.style.transform = 'scale(1.22)';
+      stopSound('zoom');
       travel?.cancel(); camera?.cancel();
       $('conveyor').hidden = true;
       stage.classList.remove('selecting');
       stage.classList.add('docked');
       haptic(25);
       later(() => {
+        stage.classList.add('fuel-ready', 'formula-reveal');
         $('question-title').hidden = false;
+        playSound('question');
         announce(`Fuel formula: ${game.recipe.name}. Read the rocket panel before filling.`);
-        stage.classList.add('filling');
         later(() => {
-          $('fuel-system').hidden = false;
-          alignFuelSystem();
-          renderMixture();
+          stage.classList.remove('formula-reveal');
+          stage.classList.add('filling');
+          playSound('noseOpen');
           later(() => {
-            stage.classList.remove('boarding');
-            game.beginAttempt(); persist(); filling();
-          }, tanksMs);
-        }, openMs);
+            $('fuel-system').hidden = false;
+            alignFuelSystem();
+            renderMixture();
+            later(() => {
+              stage.classList.remove('boarding');
+              game.beginAttempt(); persist(); filling();
+            }, tanksMs);
+          }, openMs);
+        }, 1500);
       }, settleMs);
     }, travelMs);
   }
@@ -302,9 +388,10 @@
   }
   window.addEventListener('resize', alignFuelSystem);
   function filling() {
+    $('hangar').classList.add('fuel-ready');
     if (visualAttemptId !== game.attempt.id) { clearTransfers(); visualAttemptId = game.attempt.id; }
     $('hangar').classList.remove('engine-failure');
-    $('instruction').textContent = 'Hold Fill · Undo one step · Launch at 100%';
+    $('instruction').textContent = 'Hold Fill \u00b7 Undo one step \u00b7 Launch at 100%';
     renderMixture(); engines();
     const update = () => {
       if (game.phase !== 'fill') return;
@@ -320,6 +407,8 @@
     if (!game.attempt || game.attempt.outcome === 'active' || handledAttempt === game.attempt.id) return;
     handledAttempt = game.attempt.id; stopHold(); clearTransfers(); clearInterval(tick); persist(); renderMixture();
     if (game.attempt.outcome === 'correct') {
+      playSound('correct');
+      playSound('noseClose');
       engines();
       $('instruction').textContent = 'Perfect mixture. Ignition!';
       $('hangar').classList.remove('filling'); $('hangar').classList.add('launching'); haptic([40, 40, 100]);
@@ -327,13 +416,15 @@
       later(() => {
         $('hangar').classList.add('launch-blackout');
         later(flightCinematic, 800);
-      }, 3700);
+      }, 4500);
     } else {
       const stage = $('hangar');
-      stage.classList.add('failed-liftoff');
+      stage.classList.add('failed-liftoff', 'failure-resting');
+      playSound('noseClose');
       announce('Launch aborted. Watch the damaged engine. Returning to the pad.');
       haptic(35);
       later(() => {
+        playSound('blast');
         engines(game.run.engines);
         stage.classList.add('engine-failure');
         haptic([100, 60, 100]);
@@ -341,6 +432,7 @@
       later(() => stage.classList.remove('failed-liftoff'), 3000);
       $('instruction').textContent = game.attempt.outcome === 'timeout' ? 'Time expired. Engine lost.' : 'Incorrect mixture. Engine lost.';
       later(() => {
+        playSound('wrong');
         if (game.phase === 'failed') popup('Mission failed', 'All three engines are out. Restart this mission with three fresh engines.', 'page-7-3/mission-failed-panel.webp', 'Retry mission', brief);
         else popup('Engine failure', `${game.attempt.outcome === 'timeout' ? 'Time ran out.' : 'That mixture was incorrect.'} ${game.run.engines} engine${game.run.engines === 1 ? '' : 's'} remain. Review the lesson, then retry the same question.`, 'page-7-1/engine-failed-panel.webp', 'Watch video', video);
       }, 3100);
@@ -348,9 +440,17 @@
   }
   function positionGamePopup() {
     const dialog = $('popup');
-    if (!dialog.classList.contains('engine-popup') || !$('hangar').getBoundingClientRect) return;
+    if ((!dialog.classList.contains('engine-popup') && !dialog.classList.contains('video-popup')) || !$('hangar').getBoundingClientRect) return;
     const bounds = $('hangar').getBoundingClientRect();
     for (const key of ['left', 'top', 'width', 'height']) dialog.style.setProperty(`--popup-${key}`, `${bounds[key]}px`);
+    if (dialog.classList.contains('video-popup')) {
+      const viewport = window.visualViewport;
+      const viewportTop = viewport?.offsetTop || 0;
+      const top = Math.max(viewportTop, bounds.top);
+      const bottom = Math.min(viewportTop + (viewport?.height || window.innerHeight || bounds.height), bounds.top + bounds.height);
+      dialog.style.setProperty('--popup-top', `${top}px`);
+      dialog.style.setProperty('--popup-height', `${Math.max(0, bottom - top)}px`);
+    }
   }
   window.addEventListener('resize', positionGamePopup);
   window.addEventListener('scroll', positionGamePopup, { passive: true });
@@ -358,9 +458,12 @@
     stopHold(); $('popup-title').textContent = title; $('popup-text').textContent = text;
     const enginePanel = art === 'page-7-1/engine-failed-panel.webp';
     const retryPanel = art === 'page-7-2/retry-panel.webp';
-    const artOnly = enginePanel || retryPanel;
-    $('popup').classList.toggle('engine-popup', enginePanel);
+    const missionFailedPanel = art === 'page-7-3/mission-failed-panel.webp';
+    const artOnly = enginePanel || retryPanel || missionFailedPanel;
+    $('popup').classList.toggle('engine-popup', enginePanel || missionFailedPanel);
     $('popup').classList.toggle('retry-popup', retryPanel);
+    $('popup').classList.toggle('mission-failed-popup', missionFailedPanel);
+    $('popup').classList.remove('video-popup');
     positionGamePopup();
     $('popup-title').hidden = artOnly;
     $('popup-text').hidden = artOnly;
@@ -374,28 +477,70 @@
   function video() {
     const source = recipes[game.question.recipeId].video;
     game.run.events.push({ type: 'lesson-opened', at: new Date().toISOString(), questionId: game.question.id, attemptId: game.attempt.id, available: Boolean(source) }); persist();
-    popup(source ? 'Review the solution' : 'Video coming soon', source ? 'Watch the lesson before your next attempt.' : 'The lesson video will be added here. You can retry now.', '', 'Continue to retry', retryPopup);
+    popup(source ? 'Review the solution' : 'Video coming soon', source ? 'Watch the lesson before your next attempt.' : 'The lesson video will be added here. You can retry now.', '', 'Continue', retryPopup);
     if (source) {
-      $('lesson').hidden = false; $('lesson').src = source;
+      $('popup').classList.add('video-popup');
+      $('popup-title').textContent = recipes[game.question.recipeId].name;
+      $('popup').setAttribute('aria-label', `${recipes[game.question.recipeId].name} lesson`);
+      $('popup-text').hidden = true;
+      positionGamePopup();
+      $('lesson').hidden = false; $('lesson').src = source; $('lesson').currentTime = 0;
       $('lesson').play().catch(() => {});
     }
   }
   function retryPopup() {
     popup('Ready for another try?', 'The chamber will be emptied and the countdown will restart. Engine damage remains for this mission.', 'page-7-2/retry-panel.webp', 'Retry', () => {
-      if (game.retry()) { persist(); filling(); }
+      if (game.phase !== 'failure') return;
+      const stage = $('hangar');
+      stage.classList.remove('failure-resting', 'engine-failure');
+      stage.classList.add('retry-preparing', 'retry-station');
+      playSound('noseOpen');
+      later(() => {
+        stage.classList.remove('retry-preparing');
+        if (game.retry()) { persist(); filling(); }
+      }, 1550);
     });
   }
+  let penaltyRunId = null, lastShownEngines = 3;
   function flightCinematic() {
     const rocket = $('cinematic-rocket');
     rocket.dataset.variant = String(game.rocket);
     rocket.innerHTML = `<img class="rocket-top" src="${base}page-5/rocket-${game.rocket}-top.webp" alt=""><img class="rocket-bottom" src="${base}page-5/rocket-${game.rocket}-bottom.webp" alt=""><div class="flames" aria-hidden="true">${[0, 1, 2].map(i => `<i class="${i >= game.run.engines ? 'dead' : ''}"></i>`).join('')}</div>`;
-    $('cinematic').classList.remove('hovering', 'accelerating');
+    const scene = $('cinematic'), engines = game.run.engines;
+    if (penaltyRunId !== game.run.id) { penaltyRunId = game.run.id; lastShownEngines = 3; }
+    const showPenalty = engines < lastShownEngines;
+    const factor = engines === 3 ? 1 : engines === 2 ? .67 : .34;
+    const saved = game.attempt.timeSaved;
+    scene.classList.remove('hovering', 'accelerating', 'rewards-exit', 'bonus-boost');
+    scene.style.setProperty('--far-star-duration', `${5 / factor}s`);
+    scene.style.setProperty('--near-star-duration', `${1.7 / factor}s`);
+    $('flight-penalty').hidden = true;
+    $('flight-bonus').hidden = true;
+    $('flight-engines').textContent = `${engines} ENGINES ACTIVE`;
+    $('flight-speed').textContent = `SPEED \u2212${engines === 2 ? 33 : 66}%`;
     show('cinematic', true);
     announce('Rocket in flight. Accelerating toward the destination.');
+    if (showPenalty) later(() => { $('flight-penalty').hidden = false; lastShownEngines = engines; }, 1200);
+    if (saved > 0) later(() => {
+      $('flight-bonus').hidden = false;
+      playSound('numbers');
+      const started = performance.now();
+      function countBonus() {
+        const progress = Math.min(1, (performance.now() - started) / 650);
+        const value = saved * (1 - Math.pow(1 - progress, 3));
+        $('flight-saved').textContent = `${value.toFixed(1)}s SAVED`;
+        $('flight-distance').textContent = `BONUS DISTANCE +${value.toFixed(1)}%`;
+        if (progress < 1) later(countBonus, 30);
+        else stopSound('numbers');
+      }
+      countBonus();
+    }, showPenalty ? 2000 : 1600);
     later(() => $('cinematic').classList.add('hovering'), 2400);
     later(() => {
       $('cinematic').classList.remove('hovering');
       $('cinematic').classList.add('accelerating');
+      scene.classList.add('rewards-exit');
+      if (saved > 0) scene.classList.add('bonus-boost');
     }, 3400);
     later(journey, 6500);
   }
@@ -427,67 +572,128 @@
     $('continue').disabled = true;
     later(() => {
       const frames = Array.from({length:61}, (_, i) => frame(previous + (target-previous)*i/60));
-      const animation = rocket.animate?.(frames, {duration:2600, easing:'cubic-bezier(.4,0,.2,1)', fill:'forwards'});
-      const pathAnimation = trail.animate?.([{strokeDashoffset:1-previous},{strokeDashoffset:1-target}], {duration:2600,easing:'cubic-bezier(.4,0,.2,1)',fill:'forwards'});
+      playSound('route');
+      const animation = animateScene(rocket, frames, {duration:2600, easing:'cubic-bezier(.4,0,.2,1)', fill:'forwards'});
+      const pathAnimation = animateScene(trail, [{strokeDashoffset:1-previous},{strokeDashoffset:1-target}], {duration:2600,easing:'cubic-bezier(.4,0,.2,1)',fill:'forwards'});
       later(() => {
         Object.assign(rocket.style, frame(target)); trail.style.strokeDashoffset = String(1-target);
         animation?.cancel(); pathAnimation?.cancel();
         rocket.classList.add('route-arrived');
-        $('continue').disabled = false;
+        stopSound('route');
+        rocket.classList.remove('route-flying');
+        if (game.run.status === 'completed') {
+          $('journey-title').hidden = false;
+          $('journey').classList.add('destination-reached');
+          announce(`Journey complete! Welcome to ${game.mission.destination}!`);
+        }
+        animateJourneyStats();
       }, 2600);
     }, 700);
     rocket.classList.remove('route-arrived');
+    rocket.classList.add('route-flying');
+  }
+  function animateJourneyStats() {
+    playSound('numbers');
+    $('journey-stats').hidden = false;
+    $('journey-stats').classList.add('counting');
+    const started = performance.now();
+    function tick() {
+      const progress = Math.min(1, (performance.now() - started) / 1400);
+      renderJourneyStats(1 - Math.pow(1 - progress, 3));
+      if (progress < 1) later(tick, 30);
+      else {
+        $('journey-stats').classList.remove('counting');
+        stopSound('numbers');
+        $('continue').disabled = false;
+      }
+    }
+    tick();
+  }
+  function renderJourneyStats(fraction) {
+    const m = game.mission, a = game.attempt;
+    $('journey-stats').innerHTML = [
+      ['Distance travelled', `${fmt(a.appliedDistance * fraction)} km`],
+      ['Distance remaining', `${fmt((m.distance - game.run.distance) * fraction)} km`],
+      ['Time saved', seconds(a.timeSaved * fraction)],
+      ['Speed', `${fmt(a.speed * fraction)} miles`]
+    ].map(([label, value]) => `<div class="journey-stat"><dt>${label}</dt><dd>${value}</dd></div>`).join('');
   }
   function journey() {
     show('journey'); const m = game.mission, a = game.attempt;
     $('journey').style.backgroundImage = `url('${base}page-6/page-6-bg-${m.id + 1}.webp')`;
     $('planet-route').innerHTML = ['Earth', 'Venus', 'Mars', 'Mercury', 'Jupiter', 'Saturn', 'Uranus', 'Neptune'].map((p, i) => `<span class="${i <= m.id + 1 ? 'active' : ''}">${p}</span>`).join('');
-    $('journey-route').textContent = `${m.origin} → ${m.destination}`;
-    $('journey-title').textContent = game.run.status === 'completed' ? 'Yay! Mission complete!' : 'Yay! Journey complete!';
+    $('journey-route').textContent = `${m.origin} \u2192 ${m.destination}`;
+    $('journey-title').textContent = 'Yay! Journey complete!';
+    $('journey-title').hidden = true;
+    $('journey').classList.remove('destination-reached');
+    $('journey-stats').hidden = true;
+    $('journey-stats').classList.remove('counting');
     $('distance-progress').value = game.run.distance / m.distance * 100;
-    $('journey-stats').innerHTML = [
-      ['Distance travelled', `${fmt(a.appliedDistance)} km`],
-      ['Distance remaining', `${fmt(m.distance - game.run.distance)} km`],
-      ['Time saved', seconds(a.timeSaved)],
-      ['Speed', `${fmt(a.speed)} miles`]
-    ].map(([label, value]) => `<div class="journey-stat"><dt>${label}</dt><dd>${value}</dd></div>`).join('');
+    renderJourneyStats(0);
     animateJourneyRoute();
     $('continue').textContent = 'Continue mission';
     $('continue').setAttribute('aria-label', game.run.status === 'completed' ? 'Continue to mission results' : 'Continue mission to the next question');
   }
   function complete() {
     show('complete'); const m = game.mission;
-    $('complete-title').textContent = m.id === 6 ? 'Solar journey complete!' : `Welcome to ${m.destination}!`;
-    $('complete-details').textContent = `${fmt(game.run.distance)} km travelled · ${seconds(game.run.inputSeconds)} input time · ${game.run.questions.reduce((n, q) => n + q.attempts.length, 0)} attempts`;
-    $('stars').textContent = `${'★'.repeat(m.stars)} Mission award · ${game.stars}/10 total stars`;
-    $('next-mission').textContent = m.id === 6 ? 'Back to Games' : 'Next mission →';
+    $('complete-title').textContent = m.id === 6 ? "You've reached Neptune! Solar journey complete!" : `You've reached ${m.destination}! Get ready for your next mission!`;
+    const distance = game.run.distance, inputSeconds = game.run.inputSeconds;
+    $('complete-distance').textContent = '0 km';
+    $('complete-time').textContent = seconds(0);
+    later(() => {
+      playSound('numbers');
+      const started = performance.now();
+      function count() {
+        const progress = Math.min(1, (performance.now() - started) / 1500);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        $('complete-distance').textContent = `${fmt(distance * eased)} km`;
+        $('complete-time').textContent = seconds(inputSeconds * eased);
+        if (progress < 1) later(count, 30);
+        else stopSound('numbers');
+      }
+      count();
+    }, 700);
+    $('next-mission').setAttribute('aria-label', m.id === 6 ? 'Back to Games' : 'Next mission');
   }
-  $('start').addEventListener('click', brief);
-  $('start-mission').addEventListener('click', () => {
+  $('start').addEventListener('click', () => { if (window.RocketPreload && !window.RocketPreload.ready) return; brief(); });
+  function missionPopup() {
     game.startMission(); persist(); show('mission');
     $('mission-title').textContent = `Mission ${game.mission.id + 1}`;
-    $('mission-route').textContent = `${game.mission.origin} → ${game.mission.destination}`;
+    $('mission-route').textContent = `${game.mission.origin} \u2192 ${game.mission.destination}`;
     $('mission-distance').textContent = fmt(game.mission.distance);
     $('mission-destination').textContent = game.mission.destination;
-  });
+  }
+  $('start-mission').addEventListener('click', missionPopup);
   $('play').addEventListener('click', hangar);
   $('launch').addEventListener('click', () => { if (transferPending) return; stopHold(); game.submit(); processOutcome(); });
   $('continue').addEventListener('click', () => {
     if (game.run.status === 'completed') complete();
     else { game.nextQuestion(); persist(); hangar(); }
   });
-  $('next-mission').addEventListener('click', () => { if (game.mission.id === 6) location.href = 'index.html#/games'; else brief(); });
+  $('next-mission').addEventListener('click', () => { if (game.mission.id === 6) location.href = 'index.html#/games'; else missionPopup(); });
   $('popup-action').addEventListener('click', () => { const fn = popupAction; $('lesson').pause(); $('popup').close(); fn?.(); });
   $('popup').addEventListener('cancel', event => event.preventDefault());
-  $('lesson').addEventListener('error', () => { $('lesson').hidden = true; $('popup-text').textContent = 'Video unavailable. You can continue to retry.'; });
-  $('export').addEventListener('click', () => {
-    persist(); const url = URL.createObjectURL(new Blob([JSON.stringify(game.data, null, 2)], { type: 'application/json' }));
-    const link = document.createElement('a'); link.href = url; link.download = `rocketier-history-${Date.now()}.json`; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
-  });
+  $('lesson').addEventListener('error', () => { $('lesson').hidden = true; $('popup-text').hidden = false; $('popup-text').textContent = 'Video unavailable. You can continue to retry.'; });
   document.addEventListener('click', event => { if (event.target.closest('button,a')) haptic(); });
-  window.addEventListener('blur', stopHold);
-  document.addEventListener('visibilitychange', () => { stopHold(); if (document.hidden) persist(); });
+  document.addEventListener('pointerdown', event => { if (event.button === 0) buttonSound(event); }, true);
+  if (!window.PointerEvent) {
+    let lastTouchSound = -1000;
+    document.addEventListener('touchstart', event => { lastTouchSound = performance.now(); buttonSound(event); }, { capture: true, passive: true });
+    document.addEventListener('mousedown', event => { if (event.button === 0 && performance.now() - lastTouchSound > 700) buttonSound(event); }, true);
+  }
+  window.addEventListener('pointerup', stopHold);
+  window.addEventListener('pointercancel', stopHold);
+  window.addEventListener('touchend', stopHold);
+  window.addEventListener('touchcancel', stopHold);
+  window.addEventListener('mouseup', stopHold);
+  window.visualViewport?.addEventListener('resize', () => { positionGamePopup(); alignFuelSystem(); });
+  document.addEventListener('click', event => { if (event.detail === 0) buttonSound(event); }, true);
+  function silenceSounds() { for (const name of sounds.keys()) stopSound(name); }
+  window.addEventListener('blur', () => { stopHold(); silenceSounds(); });
+  document.addEventListener('visibilitychange', () => { stopHold(); if (document.hidden) { silenceSounds(); $('lesson').pause(); persist(); } });
   window.addEventListener('pagehide', () => {
+    silenceSounds();
+    $('lesson').pause();
     if (game.phase === 'fill') {
       game.attempt.lastElapsedSeconds = game.elapsed;
       game.attempt.events.push({ type: 'page-hidden', elapsedSeconds: game.elapsed, at: new Date().toISOString() });
@@ -497,5 +703,4 @@
   if (storageFailed) warn();
   // Do not overwrite a possible IndexedDB recovery before its read completes.
   if (saved) persist();
-  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 })();

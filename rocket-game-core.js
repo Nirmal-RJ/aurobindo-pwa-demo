@@ -6,10 +6,10 @@
   const chemicals = ['Water', 'ACN', 'MeOH'];
   // Recipes and pourSize algorithm match liquid-sort.js.
   const recipes = [
-    { name: 'Column Cleaning', mix: { Water: 90, ACN: 5, MeOH: 5 }, video: '' },
-    { name: 'Strong Wash Solvent', mix: { Water: 20, ACN: 80, MeOH: 0 }, video: '' },
-    { name: 'Needle Wash Solvent', mix: { Water: 50, ACN: 0, MeOH: 50 }, video: '' },
-    { name: 'Column Storage (C18)', mix: { Water: 30, ACN: 70, MeOH: 0 }, video: '' }
+    { name: 'Column Cleaning', mix: { Water: 90, ACN: 5, MeOH: 5 }, video: 'assets/rocket-game-assets/cleaning-solution-videos/column-cleaning.mp4' },
+    { name: 'Strong Wash Solvent', mix: { Water: 20, ACN: 80, MeOH: 0 }, video: 'assets/rocket-game-assets/cleaning-solution-videos/strong-wash.mp4' },
+    { name: 'Needle Wash Solvent', mix: { Water: 50, ACN: 0, MeOH: 50 }, video: 'assets/rocket-game-assets/cleaning-solution-videos/needle-wash.mp4' },
+    { name: 'Column Storage (C18)', mix: { Water: 30, ACN: 70, MeOH: 0 }, video: 'assets/rocket-game-assets/cleaning-solution-videos/column-storage.mp4' }
   ];
   const planets = ['Earth', 'Venus', 'Mars', 'Mercury', 'Jupiter', 'Saturn', 'Uranus', 'Neptune'];
   const missions = [

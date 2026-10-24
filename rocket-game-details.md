@@ -1,5 +1,69 @@
 # Rocket'ier game details
 
+Mobile compatibility: preserve essential motion through CSS keyframe fallback when Web Animations is absent; provide measured cqw/viewport-unit fallback before Play unlocks. Support legacy touch input, handle lost/failed pointer capture, and stop Fill on global release/cancellation. Include Safari-prefixed visual effects, visualViewport modal sizing and explicit inline video playback. Browser-engine QA is documented in artifacts/rocket-mobile-qa/verification.md; distinguish it from physical-device video/audio/performance verification. Shared deployments require HTTPS for asset caching.
+
+Background music removed: no BGM playback or soundtrack preload. Retain gameplay sound effects. This supersedes all earlier background music creation/playback/mix instructions.
+
+Music mix revision: make BGM very mild in gameplay and dotted-route results (2.5% media volume), and barely audible under lesson videos (0.8%), replacing the previous video pause. Keep fades and background-tab pausing.
+
+Music style/control revision: remove the toggle and play music automatically after Start. Use the new 16-second, 120 BPM playful major-key arcade soundtrack with bouncy bass, cheeky synth melody and light percussion, replacing the slow atmospheric version. Preserve lesson/background pausing and automatic gesture recovery; ignore the obsolete toggle preference.
+
+Background music playback: start the preloaded loop on Start at quiet volume, fade smoothly, and provide a music toggle that remembers its preference separately from game history. Pause during lesson videos and when backgrounded; resume from the same position when appropriate. This supersedes the earlier pending-playback status.
+
+Background music asset: generated/space-background-loop.wav is an original 24-second, 80 BPM stereo space soundtrack with wrapped tails for continuous looping. Included in home preload; playback integration and music controls are pending.
+
+Penalty badge frequency: frontend-only, show the red penalty badge once on the first successful flight after each new engine loss. Hide it on subsequent flights with unchanged damage. Preserve all engine/speed/distance rules and parallax speed.
+
+Docking/route audio revision: play generated/rocket-zoom.wav during the 1900ms docking zoom and stop at arrival. Replace the dotted-route low hum with a lighter space arpeggio and arrival chime; preload both through the asset manifest.
+
+Retry/video button revision: use page-7-3/retry-mission-button.webp on the Try Again popup while preserving its existing retry behavior. Label the video-page action “Continue”.
+
+Original animation cues: use the short generated formula chime, nose-open/nose-close servo swishes, number-count ticks and dotted-route glide from rocketier-audio/generated. Synchronize with their animations, stop counting/travel cues at completion, and include them in home preloading. Preserve supplied MP3 artwork/audio.
+
+Failed-launch return revision: use more prominent localized black smoke. On landing keep the nose closed and fuel station retracted through failure, lesson and retry dialogs. Only after Retry, reopen the nose for 650ms and lower the station for 900ms, then create the fresh attempt and start its full timer. Do not restore equipment automatically at the end of the failed liftoff.
+
+Engine failure smoke: show a short blackish plume at only the newly broken engine, synchronized with its explosion for wrong answers/timeouts. Keep it localized and fade before the popup. Use lightweight relative-size gradient puffs with transform/opacity animation; reduced motion uses a stationary fade.
+
+Smoke behavior correction: keep the light plume at the bottom throughout launch. Remove the upward/full-screen takeover after the rocket exits; proceed to the existing blackout transition.
+
+Smoke intensity correction: use only three smaller, low-opacity launch clouds with restrained expansion and a very light final haze. Supersedes the earlier dense full-screen smoke appearance; preserve ascent visibility and transition timing.
+
+Smoke visibility revision: keep smoke in the bottom 35% during liftoff. Once the rocket exits at 3500ms, let smoke cover the full screen over 1000ms, then black out and transition to flight (5300ms after correct launch). Preserve a clear view of ascent before takeover.
+
+Successful launch drama: release rolling exhaust clouds from the pad that expand to fill the hangar before blackout. Add a short camera shake that builds during liftoff and settles before blackout. Keep existing launch/cinematic timing; reduced motion suppresses shake and uses a gentle smoke fade.
+
+Button sound exception: Fill, Undo and rocket selection must not play the UI click audio. Keep liquid-transfer sounds for Fill/Undo and click audio for other UI buttons.
+
+Gameplay audio: use rocketier-audio/Correct Question.mp3 on correct answers, Liquid Flowing.mp3 continuously during Fill/Undo transfers, Engine Blast 1.mp3 at the visible engine explosion, Wrong Question.mp3 on failure/timeout popup appearance, and Button Click 2.mp3 on UI presses. Include all supplied audio in the home loading manifest; stop playback when backgrounded and avoid stacking repeated liquid loops.
+
+Home asset-loading requirement: lock Start until all production images, videos and audio are completely downloaded into the reusable browser media cache. Show real byte progress with retry handling; reuse unchanged files and limit parallel downloads on poor connections. Generate the asset manifest with npm run assets:rocket (also automatic before dev/start), including future assets placed under assets/rocket-game-assets; exclude reference/old artwork. Service worker serves cached media and video byte ranges so playback/seek works offline after setup.
+
+Lesson player layout revision: use almost the full visible portrait game area like a reel, with a compact recipe topic at the top and dedicated Continue to retry row below. Remove oversized card padding and redundant description. Preserve full video content, controls and aspect ratio.
+
+Lesson videos supplied: use the matching column-cleaning.mp4, strong-wash.mp4, needle-wash.mp4 and column-storage.mp4 from cleaning-solution-videos in the existing failure lesson popup. Restart playback for each lesson opening and preserve the retry flow.
+
+Flight feedback revision: reflect surviving engine factors in star scrolling speed. Reveal red engine-count/speed-penalty badge followed by gold time-saved/bonus-distance badge with counting numbers, smooth settle entrances and light sweeps. Sweep both away at final boost with gold star streaks for earned bonus. Keep existing cinematic duration and gameplay calculations.
+
+Tank display attention revision: larger centred percentage digits in each artwork window, solvent-coloured glow and a brief scale/settle on Fill/Undo. Show the actual signed transfer amount temporarily below the window without overlapping solvent names. Held filling maintains glow; reduced motion suppresses movement.
+
+Reading pause adjustment: use 1500ms instead of three seconds for the question-first pause. Total preparation is now 5150ms; all other sequencing stays the same.
+
+Question-first sequence revision: reveal the recipe after travel/settle, with dim scenery and the attention effect; hold three seconds with fuel station, HUD and flames hidden and nose closed. Then open the nose and lower equipment before enabling filling and starting the countdown. Total preparation is 6650ms, superseding the earlier post-equipment reveal.
+
+Formula entrance revision: after docking/tank preparation, dim scenery and announce the recipe with a cyan sweep, slight scale/settle and two outline pulses. Hold for 1800ms before enabling filling and starting the full countdown (5450ms total preparation). Reduced motion uses a simple fade and retains reading time. Supersedes the earlier title reveal during nose opening and 3650ms countdown start.
+
+Journey rocket fire revision: remove the added fire GIF from the journey-results route rocket. This supersedes the earlier request to show fire on that screen.
+
+Liquid continuity revision: show coloured jets inside the chamber from each pipe inlet to the moving liquid surface, with impact ripples, flowing highlights and gentle waves. Chamber rise follows a short arrival delay and settles within the existing transfer window; held fills remain continuous and Undo reverses flow.
+
+Completion values and navigation revision: align distance/time in the artwork's right-hand value column and animate both from zero after screen entrance. Next Mission opens the next numbered mission popup directly (for example, after Mercury, Mission 4), skipping the mission brief and starting that mission's fresh run.
+
+Page-8 completion revision: follow page-8/page-8-reference.webp using page-8-bg.webp and next-mission-button.webp. Fill only the reference's destination message, distance and time areas. Remove extra cards, stars, attempt totals, history export and back link from this screen. This supersedes the earlier completion-screen history-download requirement; retain stored history.
+
+Journey animation sequence revision: move the route rocket first with the supplied fire GIF behind it, then reveal and count up all results values smoothly before enabling Continue. Show “Yay! Journey complete!” only after reaching the destination planet, with a prominent celebratory entrance and planet pulse. Intermediate launches have no completion heading.
+
+Mission-failed popup revision: show page-7-3/mission-failed-panel.webp itself as a popup over the current game screen, with retry-mission-button.webp inside its lower area. Remove the blue surrounding card and duplicate title/description. Preserve the accessible dialog name and existing retry-mission behavior.
+
 Agreed specification, 24 October 2026. The updated Rocket'ier Game Flow (2).docx and subsequent user clarifications govern this implementation; clarifications override conflicting document text.
 
 ## Screens and presentation

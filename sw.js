@@ -1,5 +1,6 @@
-const CACHE_PREFIX = 'aurobindo-shell-';
-const CACHE = `${CACHE_PREFIX}v415`;
+importScripts('./rocket-game-assets.js?v=31d10e50960e69bf', './rocket-asset-cache.js?v=1');
+﻿const CACHE_PREFIX = 'aurobindo-shell-';
+const CACHE = `${CACHE_PREFIX}v450`;
 const ASSETS = ['./', './index.html', './styles.css?v=30', './app.js?v=18', './tile-match.js?v=23', './symptom-match.html', './symptom-match.css?v=18', './symptom-match.js?v=20', './chromatogram.html', './chromatogram.css?v=23', './chromatogram.js?v=22', './assets/toggle%20button.png', './assets/4%20arrow%20toggle%20outline.png', './assets/hpcl-logo-new.png', './assets/game-1-card.png', './assets/game-2-card.png', './assets/game-3-card.png', './assets/game-4-card.png', './logo.png', './icon.svg', './icons/icon-192.png', './icons/icon-512.png', './manifest.webmanifest'];
 ASSETS.push('./cleaning-solution.html', './cleaning-solution.css?v=7', './cleaning-solution.js?v=6');
 ASSETS.splice(ASSETS.indexOf('./styles.css?v=30'), 1, './styles.css?v=46');
@@ -55,10 +56,15 @@ self.addEventListener('install', event => {
   })());
 });
 self.addEventListener('activate', event => {
-  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim()));
+  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith(CACHE_PREFIX) && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim()));
 });
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET' || new URL(event.request.url).origin !== self.location.origin) return;
+  if (new URL(event.request.url).pathname.includes('/assets/rocket-game-assets/')) {
+    event.respondWith(caches.open(RocketAssetCache.cacheName).then(async cache =>
+      (await RocketAssetCache.cachedResponse(event.request, cache, ROCKET_ASSETS, self.registration.scope)) || fetch(event.request)));
+    return;
+  }
   if (/\.(?:mp4|webm)(?:\?|$)/i.test(event.request.url)) {
     event.respondWith(fetch(event.request));
     return;
@@ -84,6 +90,4 @@ ASSETS.push('./audio/gbu-countdown-audio.wav');
 
 ASSETS.push('./assets/good-bad-ugly-assets/confetti.gif');
 
-ASSETS.push('./rocket-game.html','./rocket-game.css?v=38','./rocket-game-core.js?v=1','./rocket-game.js?v=27','./assets/rocket-game-assets/page-1/page-1-bg.webp','./assets/rocket-game-assets/page-1/tap-to-start-button.webp','./assets/rocket-game-assets/page-2/mission=brief.webp','./assets/rocket-game-assets/page-2/page-2-bg.webp','./assets/rocket-game-assets/page-2/start-mission-button.webp','./assets/rocket-game-assets/page-3/mission-1.webp','./assets/rocket-game-assets/page-3/play-button.webp','./assets/rocket-game-assets/page-4/conveyer-belt.webp','./assets/rocket-game-assets/page-4/page-4-bg-earth.webp','./assets/rocket-game-assets/page-4/page-4-bg-jupiter.webp','./assets/rocket-game-assets/page-4/page-4-bg-mars.webp','./assets/rocket-game-assets/page-4/page-4-bg-mercury.webp','./assets/rocket-game-assets/page-4/page-4-bg-neptune.webp','./assets/rocket-game-assets/page-4/page-4-bg-saturn.webp','./assets/rocket-game-assets/page-4/page-4-bg-uranus.webp','./assets/rocket-game-assets/page-4/page-4-bg-venus.webp','./assets/rocket-game-assets/page-4/rocket-1.webp','./assets/rocket-game-assets/page-4/rocket-2.webp','./assets/rocket-game-assets/page-4/rocket-3.webp','./assets/rocket-game-assets/page-4/rocket-4.webp','./assets/rocket-game-assets/page-4/rocket-5.webp','./assets/rocket-game-assets/page-5/container.webp','./assets/rocket-game-assets/page-5/engine-panel.webp','./assets/rocket-game-assets/page-5/fill-button.webp','./assets/rocket-game-assets/page-5/launch-button.webp','./assets/rocket-game-assets/page-5/page-5-bg-earth.webp','./assets/rocket-game-assets/page-5/page-5-bg-jupiter.webp','./assets/rocket-game-assets/page-5/page-5-bg-mars.webp','./assets/rocket-game-assets/page-5/page-5-bg-mercury.webp','./assets/rocket-game-assets/page-5/page-5-bg-neptune.webp','./assets/rocket-game-assets/page-5/page-5-bg-saturn.webp','./assets/rocket-game-assets/page-5/page-5-bg-uranus.webp','./assets/rocket-game-assets/page-5/page-5-bg-venus.webp','./assets/rocket-game-assets/page-5/rocket-1-bottom.webp','./assets/rocket-game-assets/page-5/rocket-1-top.webp','./assets/rocket-game-assets/page-5/rocket-2-bottom.webp','./assets/rocket-game-assets/page-5/rocket-2-top.webp','./assets/rocket-game-assets/page-5/rocket-3-bottom.webp','./assets/rocket-game-assets/page-5/rocket-3-top.webp','./assets/rocket-game-assets/page-5/rocket-4-bottom.webp','./assets/rocket-game-assets/page-5/rocket-4-top.webp','./assets/rocket-game-assets/page-5/rocket-5-bottom.webp','./assets/rocket-game-assets/page-5/rocket-5-top.webp','./assets/rocket-game-assets/page-5/solvent-tank.webp','./assets/rocket-game-assets/page-5/tank-bar.webp','./assets/rocket-game-assets/page-5/tank-tubes.webp','./assets/rocket-game-assets/page-5/timer.webp','./assets/rocket-game-assets/page-5/undo-button.webp','./assets/rocket-game-assets/page-6/continue-mission-button.webp','./assets/rocket-game-assets/page-6/details-panel.webp','./assets/rocket-game-assets/page-6/page-6-bg-1.webp','./assets/rocket-game-assets/page-6/page-6-bg-2.webp','./assets/rocket-game-assets/page-6/page-6-bg-3.webp','./assets/rocket-game-assets/page-6/page-6-bg-4.webp','./assets/rocket-game-assets/page-6/page-6-bg-5.webp','./assets/rocket-game-assets/page-6/page-6-bg-6.webp','./assets/rocket-game-assets/page-6/page-6-bg-7.webp','./assets/rocket-game-assets/page-6/rocket.webp','./assets/rocket-game-assets/page-7-1/engine-failed-panel.webp','./assets/rocket-game-assets/page-7-1/watch-video-button.webp','./assets/rocket-game-assets/page-7-2/retry-button.webp','./assets/rocket-game-assets/page-7-2/retry-panel.webp','./assets/rocket-game-assets/page-7-3/mission-failed-panel.webp','./assets/rocket-game-assets/page-7-3/retry-mission-button.webp','./assets/rocket-game-assets/page-8/next-mission-button.webp','./assets/rocket-game-assets/page-8/page-8-bg.webp');
-
-ASSETS.push('./assets/rocket-game-assets/gifs/fire%20Loop.gif','./assets/rocket-game-assets/gifs/engine-blown-frames.webp');
+ASSETS.push('./rocket-game.html','./rocket-game.css?v=61','./rocket-game-core.js?v=2','./rocket-game.js?v=58','./rocket-game-assets.js?v=31d10e50960e69bf','./rocket-asset-cache.js?v=1','./rocket-game-loader.js?v=2');

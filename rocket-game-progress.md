@@ -1,5 +1,269 @@
 # Rocket'ier context and progress
 
+## Git publication preparation
+
+- User requested publishing the completed Rocket'ier changes. Rechecked game/loader/service-worker syntax and all 36 targeted tests; passed. Whitespace validation cleaned up before staging.
+- Publication includes game refinements, generated sound effects, supplied recipe videos/audio, asset preload/cache, mobile compatibility changes, tests and browser QA evidence. BGM remains removed.
+
+## Latest work: mobile animation compatibility and real-engine verification
+
+- Added a CSS-keyframe fallback for essential docking/camera/route motion if native Element.animate is missing or throws. The same timings and endpoint geometry apply.
+- Loader adds a measured equivalent stylesheet on browsers without cqw units, replacing container and modern viewport units before unlocking Start. Resizes update the measurement. Added Safari-prefixed masking/blur, touch-selection suppression and legacy viewport height fallback.
+- Hardened Fill input: pointer-capture failure is caught; global release/cancel stops holds; legacy touch/mouse input and gesture sound priming are available without Pointer Events. Lesson modal follows visualViewport resizing; explicit inline video attributes and hidden-page playback cleanup added.
+- Installed Playwright and WebKit in the system temp QA directory, not project dependencies. Added optional tests/rocket-mobile.browser.cjs and test:rocket:browser command. Screenshots/report in artifacts/rocket-mobile-qa.
+- Browser verification: Chromium touch 393x851, WebKit touch 390x844, WebKit 320x568 with native animation/container-unit capabilities disabled all passed full animated touch/success/failure/retry flows without page errors. Separate Chromium/WebKit checks passed reduced-motion preparation and portrait/landscape resizing. Native and fallback docking/route tests verify changing coordinates, not just animation existence.
+- Chromium lesson reached readyState 4. Windows WebKit did not decode the MP4 even in a separate uncached probe; do not claim physical iPhone video/audio verification. Full report records the limitation. Actual phone/GIF frame pacing/audio/low-power behavior still requires device testing.
+- Validation: syntax and all 36 targeted tests passed, including pointer-capture failure and legacy touch cancellation. Share via HTTPS so the mandatory service-worker preload can operate.
+- Cache: CSS v61, JS v58, core v2, loader v2, helper v1, service worker v450.
+
+## Latest change: remove background music completely
+
+- Removed BGM playback, volume/lifecycle/recovery code, soundtrack WAV and music generator/npm command. Rebuilt the manifest without BGM: 88 assets / 18.5MB.
+- All gameplay sound effects remain; blur/background/page-exit cleanup still silences effects. Removed obsolete BGM tests.
+- Validation: syntax checks and all 34 remaining targeted tests passed. Search confirmed no music references in runtime JS, asset manifest or package scripts.
+- Cache: CSS v60, JS v57, core v2, loader/helper v1, regenerated manifest, service worker v449.
+
+## Latest adjustment: very mild music in gameplay, videos and route results
+
+- Reduced BGM to 2.5% during hangar gameplay and dotted-path journey results, and 0.8% beneath lesson videos. Other screens retain their existing level. Lesson music now stays barely audible instead of pausing; background/blur still pauses playback.
+- Volume transitions resolve from the incoming screen state and fade smoothly without a loud startup burst when resuming in these screens.
+- Validation: syntax and all 38 targeted tests passed, including gameplay/video/result volume levels and background lifecycle. Live audio mix verification pending.
+- Cache: CSS v60, JS v56, core v2, loader/helper v1, service worker v448.
+
+## Latest refinement: playful music and no toggle
+
+- Removed the music-toggle button, styling and preference logic. Music starts automatically on Start; obsolete saved mute choices no longer suppress it without a visible control. Normal UI gestures retry blocked playback. Lesson/background pause and position-preserving resume remain.
+- Replaced the slow ambient soundtrack with an original 16-second / 120 BPM major-key arcade loop: bouncy alternating bass, offbeat chord stabs, toy-like pitch-bent melody and light percussion. Stereo PCM is now 1.46MB (smaller than the former 2.20MB). Updated generator and preload revision; total preload approximately 20.0MB.
+- Validation: syntax and all 38 targeted tests passed, including no-toggle automatic music, gesture recovery, waveform seam/headroom and updated duration. Live listening/mobile playback verification pending.
+- Cache: CSS v60, JS v55, core v2, loader/helper v1, regenerated manifest, service worker v447.
+
+## Latest fix: audible music startup and blocked-playback recovery
+
+- Confirmed soundtrack serves correctly (HTTP 200, audio/wav, 2,304,044 bytes). Raised music volume from 13% to 30%; start with audible gain inside the user gesture rather than zero-volume playback.
+- Start/music-control gestures restore focused playback state. If playback is blocked, the control now shows TAP with an accessible retry label; tapping retries without switching the preference off. Other UI gestures retry paused music when appropriate, while lesson playback remains protected.
+- Validation: syntax and all 38 targeted tests passed, including simulated autoplay rejection, visible TAP state and successful gesture recovery. Live browser listening remains unverified; a specific browser-side root cause could not be confirmed without live access.
+- Cache: CSS v59, JS v54, core v2, loader/helper v1, service worker v446.
+
+## Latest feature: looping background music playback
+
+- Wired the preloaded space-background-loop.wav to start on the player's Start gesture and loop quietly at 13% volume beneath effects. Smooth 350ms fades for music changes; pause/resume preserves playback position.
+- Added a compact 44px music toggle after Start, with accessible label/pressed state and remembered on/off preference in aurobindo.rocketier.music, separate from game history.
+- Music pauses immediately during lesson videos, blur/hidden/page exit; resumes after leaving the lesson or returning to the game if enabled. Autoplay rejections are caught; sound effects retain their existing lifecycle.
+- Validation: syntax and all 37 targeted tests passed, including start-only playback, loop/volume, lesson/background pause, position-preserving resume, stored mute preference and history separation. Live browser audio mix/device verification pending.
+- Cache: CSS v59, JS v53, core v2, loader/helper v1, service worker v445.
+
+## Latest asset: original looping background soundtrack
+
+- Created generated/space-background-loop.wav: an original 24-second / 80 BPM atmospheric space loop, stereo 24kHz/16-bit PCM, 2.20 MB. Soft four-chord synth pads, bass pulse, sparse arpeggio and delayed melody; tails wrap across the loop boundary. No abrupt fade-to-silence between repetitions.
+- Source: build-rocket-music.cjs; regenerate with npm run music:rocket, then npm run assets:rocket. Track is included in preload (89 files / 20.7MB). Playback integration/music controls are not yet implemented; this request created the soundtrack asset.
+- Validation: generator/service-worker syntax and all 35 targeted tests passed, including stereo format/duration, peak headroom and continuous waveform slope at the seam. Live listening verification remains pending.
+- Cache: CSS v58, JS v52, core v2, loader/helper v1, regenerated manifest, service worker v444.
+
+## Latest adjustment: show engine penalty only after new damage
+
+- Presentation-only tracking now reveals the red engine/speed badge on the first successful flight after a newly lower engine count. Further flights with the same damage hide it; another lost engine reveals the updated badge once. Tracking resets for a new run and updates only when the badge actually appears.
+- Speed factors, engine logic, distance calculations and parallax speeds are unchanged. Bonus entry uses the earlier timing when no penalty badge is shown.
+- Validation: syntax and all 34 targeted tests passed, including new-loss/repeated-flight/new-loss sequence with unchanged speed values.
+- Cache: CSS v58, JS v52, core v2, loader/helper v1, service worker v443.
+
+## Latest refinement: docking whoosh and lighter route audio
+
+- Created rocket-zoom.wav: a 1900ms rising whoosh with a soft docking tone, synchronized to conveyor-to-pad movement. Stops at docking and on navigation/backgrounding.
+- Replaced the previous low route hum with a lighter, clean space arpeggio and small arrival chime, preserving 2600ms route synchronization and lowering its mix volume.
+- Regenerated sounds and content-revisioned preload manifest: 88 files / 18.5MB. New zoom adds approximately 89KB; supplied audio is unchanged.
+- Validation: syntax and all 33 targeted tests passed, including zoom start/stop and waveform format/headroom/endpoints. Live listening/mobile playback verification pending.
+- Cache: CSS v58, JS v51, core v2, loader/helper v1, regenerated manifest, service worker v442.
+
+## Latest adjustment: retry button artwork and video Continue label
+
+- Try Again/retry popup now uses page-7-3/retry-mission-button.webp instead of the generic gold button, centred at native 588:147 proportions. Existing same-question retry behavior remains.
+- Video popup action now reads “Continue”.
+- Validation: syntax checks and all 33 targeted tests passed. Source button artwork inspected; live visual verification pending.
+- Cache: CSS v58, JS v50, core v2, loader/helper v1, service worker v441.
+
+## Latest feature: original short animation sound cues
+
+- Created five deterministic synthesized WAV cues in rocketier-audio/generated: formula-reveal (0.72s ascending chime), nose-open (0.65s servo/swish), nose-close (0.6s descending servo/latch), number-count (1.52s soft digital ticks), route-glide (2.6s airy low glide). Original supplied MP3s remain unchanged. Source generator: build-rocket-sounds.cjs; regenerate with npm run sounds:rocket then npm run assets:rocket.
+- Wired question cue to the formula entrance; nose cues to initial/retry opening and successful/failed closing; count cue to cinematic bonus, journey statistics and completion totals; route cue to dotted-path movement. Counting/travel audio stops at completion, all new cues stop on screen changes/backgrounding. Conservative per-cue volumes and existing mobile gesture priming apply.
+- Mono 24kHz / 16-bit PCM with fades and 35% peak headroom, approximately 286KB total. Preload manifest now includes 87 assets / 18.4MB, reusing unchanged cache entries.
+- Validation: syntax and all 33 targeted tests passed. New tests cover cue timing, count/travel cleanup, WAV format/duration/headroom/endpoints. HTTP verified all five clips. Live listening/mobile playback verification pending.
+- Cache: CSS v57, JS v49, core v2, loader/helper v1, regenerated manifest, service worker v440.
+
+## Latest refinement: stronger dark smoke and deferred retry equipment
+
+- Enlarged black/charcoal engine puffs, increased density and extended their fade, with smoke cleanup at 1800ms after blowout. Still only two transform/opacity puffs at the damaged nozzle, with reduced-motion fallback.
+- Failed liftoff now ends with nose closed and fuel station fully retracted. A persistent failure-resting state keeps both parked through the failure popup, lesson and retry popup. Removed automatic equipment return from abort keyframes.
+- Only Retry reopens the nose (650ms), then lowers the station (900ms). The new attempt/full countdown begins after this 1550ms preparation, retaining engine damage. Suppressed a second automatic tank descent after retry preparation ends.
+- Validation: syntax and all 31 targeted tests passed. Integration checks parked state throughout lesson/retry, delayed new attempt with full timer, and existing failure/audio sequencing. Live visual verification pending.
+- Cache: CSS v57, JS v48, core v2, loader/helper v1, service worker v439.
+
+## Latest feature: dark smoke at failed engine
+
+- Added two small black/charcoal gradient puffs at the newly failed nozzle, synchronized with the existing engine blowout (wrong answers and timeout). Smoke trails upward briefly and fades completely before the failure popup; other engines remain clear.
+- Smoke anchors share existing variant-specific exhaust coordinates and scale with the rocket at mobile/tablet widths. Uses only transform/opacity animations on two local elements, no new downloads, canvas particles, per-frame JavaScript or blur filters. Promotion is limited to the active smoke state and clears after 1450ms. Reduced motion uses one stationary fading puff.
+- Validation: syntax and all 31 targeted tests passed; UI coverage checks only the newly failed engine smokes, surviving engines stay clear and smoke cleans up before the popup. Existing geometry tests cover 320/390/560px stages. Real-device frame rate/visual verification remains pending; performance on every mobile cannot be guaranteed without device testing.
+- Cache: CSS v56, JS v47, core v2, loader/helper v1, service worker v438.
+
+## Latest adjustment: keep launch smoke low
+
+- Removed the post-exit smoke-cover cue and the expanding smoke viewport. Light smoke stays confined to the bottom 35% throughout; its faint haze appears during launch, without a new rise after the rocket leaves. Existing blackout/cinematic timing retained.
+- Validation: syntax and all 31 targeted tests passed, including no smoke-cover cue at rocket exit. Live visual verification pending.
+- Cache: CSS v55, JS v46, core v2, loader/helper v1, service worker v437.
+
+## Latest adjustment: drastically lighter launch smoke
+
+- Reduced visible clouds from six to three, shrank their starting dimensions, reduced expansion from 4.5x to 2x and lowered peak opacity from 94% to 30%. Final haze is now a faint transparent veil rather than dense coverage.
+- Existing ascent/shake/transition timing stays unchanged.
+- Validation: inspected smoke CSS overrides; service-worker syntax and both service-worker tests passed. Live visual verification pending.
+- Cache: CSS v54, JS v45, core v2, loader/helper v1, service worker v436.
+
+## Latest refinement: preserve liftoff visibility before smoke takeover
+
+- Confined exhaust to the bottom 35% of the hangar during ascent, with a soft upper edge. Rocket remains visible above the low rolling smoke.
+- After the rocket finishes its 3500ms ascent, expand smoke over the full scene for 1000ms. Start blackout at 4500ms, then enter the flight scene at 5300ms. Shake still settles before the smoke takeover. Reduced motion keeps the same sequence without shake/rolling clouds.
+- Validation: syntax checks and all 31 targeted tests passed; launch integration checks the smoke-cover cue before blackout and updated cinematic timing. Live visual verification pending.
+- Cache: CSS v53, JS v45, core v2, loader/helper v1, service worker v435.
+
+## Latest feature: successful-launch smoke and camera shake
+
+- Added six staggered, soft exhaust clouds anchored at the pad. They roll outward, expand and climb across the hangar, followed by a warm-lit smoke haze that fills the scene before the existing blackout. Plume sits above gameplay art and below the blackout; it ignores input.
+- Successful launch shakes the hangar gently at ignition, builds to 3px vibration through liftoff, then settles by 3600ms before the 3700ms blackout. Failure sequences and cinematic timing stay unchanged. Resetting the hangar for the next question clears the effect automatically.
+- Reduced motion removes camera shake/rolling clouds and uses a simple haze fade. Effects are CSS gradients/transforms; no additional download assets.
+- Validation: syntax checks and all 31 targeted tests passed. Live browser rendering/performance verification remains pending.
+- Cache: CSS v52, JS v44, core v2, loader/helper v1, service worker v434.
+
+## Latest adjustment: quieter gameplay controls
+
+- Excluded Fill, Undo and conveyor rocket selection from Button Click 2 playback for both pointer and keyboard activation. Liquid transfer and other gameplay effects remain unchanged.
+- Validation: syntax checks and all 31 targeted tests passed, including excluded-control click coverage.
+- Cache: CSS v51, JS v44, core v2, loader/helper v1, service worker v433.
+
+## Latest feature: gameplay sound effects and audio preloading
+
+- Wired Correct Question.mp3 on correct submission; Liquid Flowing.mp3 for Fill/Undo transfers (single continuous loop while held, stopped at settlement/reset); Engine Blast 1.mp3 at the 1150ms visible engine blowout; Wrong Question.mp3 when the failure/timeout/mission-failed popup appears at 3100ms; Button Click 2.mp3 on enabled UI presses, with pointer/keyboard deduplication.
+- Added mobile user-gesture priming for delayed effects, playback rejection handling, quieter liquid/click levels and silence on blur/background/page exit. No sound loads from retry-loading button while the preload gate is locked. Other supplied audio files remain unassigned.
+- Rebuilt preload manifest: all nine supplied MP3s are included, for 82 total assets / 18.2 MB. Existing cached media is reused through per-file content revisions.
+- Validation: syntax checks, all 29 Rocket tests and 2 service-worker tests passed (31 total); new audio tests verify transfer loop reuse/stop, blast and failure timing, correct-answer cue, background cleanup, pointer/keyboard click deduplication. HTTP verified all nine audio files. Live browser audio playback/mix verification pending.
+- Cache: CSS v51, JS v43, core v2, loader/helper v1, regenerated manifest, service worker v432.
+
+## Latest feature: home loading gate and reusable offline media cache
+
+- Rocket home now shows a byte-weighted progress bar, percentage, file count and downloaded MB; Start remains hidden/disabled until every listed asset is completely cached and a controlling service worker is ready. Game event handling also enforces the lock.
+- Generated manifest covers 73 production assets (17.7 MB), including all four videos, images/GIFs and future audio/font formats under assets/rocket-game-assets. Reference/old artwork is excluded. npm run assets:rocket rebuilds it; predev/prestart run it automatically. Run that command after adding/replacing assets before static deployment. Manifest URL and per-file keys use content revisions, so updates fetch changed files while reusing unchanged files.
+- Four parallel downloads, reduced to two on save-data/2G connections. Streaming byte progress, three attempts per failed file, 30-second inactivity watchdog, explicit retry and saved-file reuse. Completed files survive reload; partially downloaded individual files restart. Never unlock on missing assets or cache failures.
+- Added separate rocketier-media-v1 cache and service-worker lookup, including proper 206/416 byte ranges for offline video seeking. Shell upgrades preserve this cache. Rocket runtime media is no longer redundantly precached by shell installation; the home loader handles it. Other-game video handling stays unchanged.
+- New files: build-rocket-assets.cjs, rocket-game-assets.js (generated), rocket-asset-cache.js, rocket-game-loader.js and tests/rocket-game-loader.test.cjs. Updated npm scripts and service-worker tests.
+- Validation: all 27 Rocket core/UI/loader tests passed; syntax checks passed; HTTP verified complete responses for all 73 manifest assets. Loader tests cover concurrency, weighted progress, exact cache revisions, incomplete retries, readiness lock, manifest coverage and video ranges. Browser/offline device verification remains pending (no browser tool or Playwright available).
+- Cache: CSS v51, JS v42, core v2, loader/helper v1, content-revisioned manifest, service worker v431.
+- Service-worker installation/cache-preservation tests also passed (29 targeted tests total).
+
+## Latest refinement: reel-sized lesson player
+
+- Video popup fills the visible game area, replacing the padded blue card. A compact recipe-topic row sits above a flexible full-size player; Continue to retry has its own reserved bottom row. Removed the redundant lesson description.
+- Video uses contain fitting to preserve the full frame and native playback controls. Popup tracks hangar bounds on resize/scroll and clamps its height to the visible viewport. Video-specific styling resets for retry/other dialogs; playback errors reveal the fallback message.
+- Validation: syntax checks and all 21 core/UI tests passed; coverage verifies recipe title, expanded-video mode, hidden description and mode reset on retry. Browser playback/layout verification remains pending.
+- Cache: CSS v50, JS v41, core v2, service worker v430.
+
+## Latest feature: recipe lesson videos connected
+
+- Mapped all four recipes to their corresponding supplied MP4 files in cleaning-solution-videos: column-cleaning, strong-wash, needle-wash and column-storage.
+- Watch Video now opens the matching lesson in the existing popup with playback controls and starts it from the beginning. Continue to retry, damage persistence and unavailable-video error handling remain intact.
+- Validation: all mapped files exist, syntax checks and all 21 core/UI tests passed; UI coverage confirms matching video source, visible player and reset playback time. Browser playback remains unverified.
+- MP4 requests retain the existing service worker network passthrough for browser range/seek support; these videos are not offline-precached.
+- Cache: CSS v49, JS v40, core v2, service worker v429.
+
+## Latest feature: cinematic engine penalty and time bonus rewards
+
+- Flight stars now scroll at the surviving engine factor (100%, 67%, 34%) without extending the 6500ms cinematic.
+- When damaged, a red badge enters at 1200ms with active engines and the exact 33%/66% speed penalty. Gold time-saved/bonus-distance badge follows at 2000ms (1600ms without damage), counting up over 650ms. Both use a scale/slide settle and a light sweep, then lift/fade out together at the 3400ms acceleration cue. Bonus boost tints star streaks gold.
+- Placement stays below the central rocket. Hidden badges reset for every cinematic; screen-version guards protect updates. Reduced motion uses fades. Distance/speed calculations and attempt timing remain unchanged.
+- Validation: syntax and all 21 core/UI tests passed, including undamaged/two-engine/one-engine flight, parallax duration, penalty values, exact bonus count, coordinated exit and results timing. Live browser visual verification pending.
+- Cache: CSS v49, JS v39, core v1, service worker v428.
+
+## Latest refinement: prominent tank percentage feedback
+
+- Enlarged/boldened percentage digits and centred them horizontally/vertically in equal digital-window bounds on all three tanks, using tabular digits.
+- Fill/Undo briefly brighten digits with the solvent glow and a small 260ms scale/vertical settle. A centred temporary signed amount appears immediately below the display, above solvent names; uses the actual transferred amount, including capped changes. Held Fill retains a continuous glow while each increment pops. Reduced motion omits movement.
+- Feedback clears after transfer settlement or on scene/reset cleanup. No new interaction or timer changes.
+- Validation: game/service-worker syntax checks and all 20 core/UI tests passed, including signed Fill/Undo delta and feedback cleanup. Live visual alignment verification remains pending.
+- Cache: CSS v48, JS v38, core v1, service worker v427.
+
+## Latest adjustment: shorter question reading pause
+
+- Reduced the question-first reading pause from 3000ms to 1500ms. Total preparation is now 5150ms; equipment sequencing and full countdown remain unchanged.
+- Validation: syntax checks and all 20 core/UI tests passed with updated timing assertions.
+- Cache: CSS v47, JS v37, core v1, service worker v426.
+
+## Latest refinement: question first, equipment afterward
+
+- After the rocket travels and settles (2100ms), dim the scenery and reveal the recipe with the approved attention effect. Give three full seconds to read with the nose closed, fuel station hidden, HUD hidden and flames suppressed.
+- Then reveal HUD/flames, open the nose (650ms) and lower the fuel system (900ms). Only after preparation finishes does filling unlock and the full countdown start. Total sequence is now 6650ms; reduced motion retains the reading time.
+- Validation: syntax checks and all 20 core/UI tests passed, including question-first timing, hidden equipment during the reading pause, blocked input, and full countdown after equipment preparation. Live visual verification pending.
+- Cache: CSS v47, JS v36, core v1, service worker v425.
+
+## Latest feature: attention-grabbing formula entrance
+
+- After the existing 3650ms docking/preparation sequence, dim the scenery and reveal the recipe panel with a cyan light sweep, slight scale/settle and two outline pulses. Keep the full recipe readable in place, with no typing effect or sound.
+- Added an 1800ms reveal/reading window before starting the fresh countdown. Fill controls remain disabled; total preparation is now 5450ms. Reduced motion uses a gentle fade with the same reading window. All callbacks retain screen-version guards.
+- Validation: syntax and core/UI tests cover no attempt/input during the reveal, then full countdown after it. Live browser visual verification remains pending.
+- Cache: CSS v46, JS v35, core v1, service worker v424.
+
+## Latest adjustment: remove journey rocket fire
+
+- Removed the added fire GIF pseudo-element from the journey-results rocket at the user's request. Route movement and results sequence remain unchanged.
+- Validation: removed both journey flame CSS rules and checked service-worker syntax. Visual browser verification pending.
+- Cache: CSS v45, JS v34, core v1, service worker v423.
+
+## Latest refinement: continuous pouring into the chamber
+
+- Added three persistent coloured inlet jets inside the chamber glass, aligned with the pipe inlets. Their lengths follow the moving total liquid surface, with falling highlights and expanding impact ripples so transfer continues visibly beyond the tubes.
+- Chamber levels ease upward after a short 100ms arrival delay and settle within the existing 650ms transfer window. Added translucent depth highlights and softer rolling surface motion. Hold input keeps streams running; Undo reverses their direction. Reset/timeout clears stream state alongside pipe state. Reduced motion suppresses decorative ripple/highlight movement.
+- Validation: syntax checks and all 20 core/UI tests passed; transfer coverage includes stream direction, surface target and cleanup. Live browser visual verification remains pending. Recording could not be decoded: no local Python runtime or ffmpeg was available.
+- Cache: CSS v44, JS v34, core v1, service worker v422.
+
+## Latest refinement: dim scenery during filling
+
+- Once docking and tank preparation finish, fade the hangar background to 55% brightness over 800ms. Only scenery is filtered; rocket, fuel station, flames, HUD and controls keep their brightness. Reduced motion switches brightness immediately.
+- The next question's selection resets the dimming through the existing hangar class reset. Retries retain the dim background.
+- Validation: game and service-worker syntax checks passed. CSS targets the separate scenery layer; live browser visual verification remains pending.
+- Cache: CSS v43, JS v33, core v1, service worker v421.
+
+## Latest fix: completion value alignment, count-up and direct next mission
+
+- Moved distance/time values inward to the artwork's right-hand value column, vertically centred at 72.5%/78% of the stage. Reduced type size and added tabular digits to fit long distances clear of the frame.
+- Both values start at zero, wait for the 700ms screen entrance, then ease up to the exact mission totals over 1500ms. Screen-version guards stop stale counting after navigation.
+- Next Mission now starts the newly unlocked run and opens its numbered mission popup directly, bypassing the brief. Start Mission shares the same popup setup. Final mission retains return to Games.
+- Validation: syntax checks and all 20 core/UI tests passed; integration coverage verifies completion count-up, final time, direct numbered popup and newly started mission run. Live browser visual verification remains pending.
+- Cache: CSS v42, JS v32, core v1, service worker v420.
+
+## Latest fix: corrupted route arrow and text encoding
+
+- Replaced corrupted route arrows and middle-dot separators in browser JavaScript with explicit Unicode escapes. Replaced corrupted em dashes/arrows in HTML with named entities. Mission popup now displays the intended planet-to-planet arrow.
+- Validation: game/service-worker syntax checks and all 20 core/UI tests passed. Searched game HTML/JS/core for the corrupted character sequences.
+- Cache: CSS v41, JS v31, core v1, service worker v419.
+
+## Latest refinement: page-8 artwork completion screen
+
+- Inspected page-8-reference.webp and page-8-bg.webp. Completion now uses the supplied full-stage background and green next-mission-button.webp, proportionally placed to match the reference.
+- Only the reference's destination message, distance travelled and time taken populate the blank artwork areas. Removed the extra star, blue glass card, attempt totals, star totals, history-download button and Back to Games link, per the user's request for no extra content. History persistence remains intact. Final mission keeps its existing return-to-games action with an accessible button label.
+- Validation: game/service-worker syntax and all 20 core/UI tests passed. Source artwork inspected; live browser visual verification remains pending.
+- Cache: CSS v41, JS v30, core v1, service worker v418.
+
+## Latest refinement: sequenced journey results and destination celebration
+
+- Hide the completion heading on intermediate launches. Only reveal “Yay! Journey complete!” after the route rocket reaches the destination at full mission distance, with a gold scale/slide entrance and expanding planet rings. Reduced motion uses a simple title fade and suppresses rings.
+- Keep statistics hidden during the existing 700ms entrance and 2600ms route movement. After arrival, reveal the panel and count all four values from zero to their exact formatted results over 1400ms with eased progression. Continue unlocks after counting completes. Screen-version guards cancel stale updates.
+- Added supplied gifs/fire Loop.gif behind the route rocket while flying; flame follows its rotation and fades out at arrival.
+- Validation: game/service-worker syntax checks and all 20 core/UI tests passed. Updated tests verify flight precedes statistics, values change during counting, Continue stays locked, intermediate launches hide the heading, and destination arrival reveals it. Live browser visual verification remains pending.
+- Cache: CSS v40, JS v29, core v1, service worker v417.
+
+## Latest adjustment: mission-failed artwork popup
+
+- Mission failure now uses the red page-7-3/mission-failed-panel.webp as the entire popup, centred over the current hangar. Removed the blue outer card and duplicate visible title/description; the dialog retains its accessible name.
+- Supplied retry-mission-button.webp sits inside the lower area of the red panel. Retry Mission keeps its existing mission restart behavior. Reuses the engine popup's game-bound positioning and animated entrance, with a transparent overlay background.
+- Validation: game and service-worker syntax checks passed; all 20 core/UI tests passed. Live browser visual verification remains pending.
+- Cache: CSS v39, JS v28, core v1, service worker v416.
+
 Last updated: 24 October 2026, after enlarging docked rockets and rebalancing the filling scene.
 
 This is the continuation/handoff file for the Rocket'ier work. Read this first when conversation context is lost, then read `rocket-game-details.md` and the relevant source files. This document records decisions and observed progress; the working code and newer user instructions take precedence if they differ.
