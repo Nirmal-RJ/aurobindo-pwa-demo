@@ -118,10 +118,10 @@ dialog{max-width:min(460px,calc(100vw - 24px));max-height:calc(100dvh - 24px);ov
 .rocket-model .rocket-bottom,.pad-rocket .rocket-bottom{position:absolute;top:32%;bottom:auto;left:0;width:100%;height:68%;object-fit:fill}
 .filling .pad-rocket .rocket-top{transform:rotate(168deg)}
 .hangar:not(.selecting) .question{display:none}
-.rocket-model-name{position:absolute;left:33%;top:48%;width:34%;height:16%;z-index:1;display:flex;align-items:center;justify-content:center;margin:0;padding:1px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:clamp(9px,3cqw,17px);font-weight:900;line-height:1.12;letter-spacing:.01em;text-transform:uppercase;color:#15334c;text-shadow:0 1px 0 #fff,0 2px 0 #9ba9b7,1px 2px 1px #66778880,0 -1px 0 #ffffffc0;overflow-wrap:normal;pointer-events:none;animation:engraving-reveal 1.4s cubic-bezier(.2,.8,.2,1) both!important}
-.pad-rocket[data-variant="2"] .rocket-model-name{left:34%;top:49%;width:33%;height:15%}
-.pad-rocket[data-variant="3"] .rocket-model-name{left:34%;top:48%;width:32%;height:15%}
-.pad-rocket[data-variant="4"] .rocket-model-name{left:30%;top:49%;width:33%;height:15%}
+.rocket-model-name{position:absolute;left:32%;top:48%;width:36%;height:16%;z-index:1;display:flex;align-items:center;justify-content:center;margin:0;padding:1px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:clamp(10px,3.15cqw,18px);font-weight:900;line-height:1.12;letter-spacing:.01em;text-transform:uppercase;color:#15334c;text-shadow:none;overflow-wrap:normal;pointer-events:none;animation:engraving-reveal 1.4s cubic-bezier(.2,.8,.2,1) both!important}
+.pad-rocket[data-variant="2"] .rocket-model-name{left:33%;top:49%;width:35%;height:15%}
+.pad-rocket[data-variant="3"] .rocket-model-name{left:33%;top:48%;width:34%;height:15%}
+.pad-rocket[data-variant="4"] .rocket-model-name{left:29%;top:49%;width:35%;height:15%}
 /* Full reservoirs drain into a persistent, layered receiving chamber. */
 .tank-liquid{left:17%;right:17%;top:27%;bottom:31%;background:#001730;isolation:isolate}
 .tank-liquid i{transition:height .6s linear!important;background:linear-gradient(90deg,#ffffff38,var(--liquid) 25%,var(--liquid) 75%,#001b3433);opacity:.95}
@@ -301,7 +301,7 @@ dialog{max-width:min(460px,calc(100vw - 24px));max-height:calc(100dvh - 24px);ov
 .formula-reveal .rocket-model-name{animation:formula-arrive .65s cubic-bezier(.16,1,.3,1) both!important}
 .formula-reveal .rocket-model-name:before{content:'';position:absolute;inset:-8%;border-radius:6px;background:linear-gradient(110deg,transparent 25%,#a5f5ffcc 50%,transparent 75%);background-size:300% 100%;pointer-events:none;mix-blend-mode:screen;animation:formula-sweep .85s .15s ease-out both!important}
 .formula-reveal .rocket-model-name:after{opacity:1;animation:formula-pulse .75s .2s ease-out 2 both!important}
-@keyframes formula-arrive{from{opacity:0;transform:scale(.85);filter:drop-shadow(0 0 14px #3eeaff)}60%{opacity:1;transform:scale(1.08);filter:drop-shadow(0 0 8px #3eeaff)}to{opacity:1;transform:scale(1);filter:none}}
+@keyframes formula-arrive{from{opacity:0;transform:scale(.85)}60%{opacity:1;transform:scale(1.08)}to{opacity:1;transform:scale(1)}}
 @keyframes formula-sweep{from{background-position:150% 0;opacity:0}20%{opacity:1}to{background-position:-50% 0;opacity:0}}
 @keyframes formula-pulse{from{opacity:1;transform:scale(1);box-shadow:0 0 10px #42eaff,inset 0 0 8px #42eaff88}to{opacity:0;transform:scale(1.18);box-shadow:0 0 18px #42eaff00}}
 @media(prefers-reduced-motion:reduce){.formula-reveal .rocket-model-name{animation:station-reveal .3s ease both!important}.formula-reveal .rocket-model-name:before,.formula-reveal .rocket-model-name:after{display:none}}

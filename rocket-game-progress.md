@@ -1,5 +1,12 @@
 # Rocket'ier context and progress
 
+## Latest refinement: clearer question lettering on phones
+
+- Removed the engraved text-shadow layers and cyan drop-shadow from the formula entrance. Kept the entrance scale/sweep/panel emphasis.
+- Increased recipe text approximately 5% (3cqw to 3.15cqw, clamp 10–18px) and widened each variant's label by two percentage points while retaining its centre. This prevents Column Cleaning from overflowing at 320px.
+- Validation: browser-measured all four recipes on all five rocket variants at 320/390/560px; all 60 combinations fit with computed text-shadow none. Service-worker syntax and both service-worker tests passed.
+- Cache: CSS v62, JS v58, core v2, loader v3, helper v1, service worker v452. User authorized publication to origin/main after readability verification.
+
 ## Latest fix: first-visit missing mission brief artwork
 
 - User reported mission brief art missing after the first download, returning after closing/reopening. Download completion did not validate or refresh the page's earlier image requests, which could have failed before service-worker control.

@@ -28,7 +28,7 @@ test('service worker upgrades preserve the separate downloaded rocket media cach
   vm.runInNewContext(fs.readFileSync(require('node:path').join(__dirname, '../sw.js'), 'utf8'), {
     self: { addEventListener(name, handler) { handlers[name] = handler; }, clients: { claim: async () => {} } },
     importScripts() {},
-    caches: { keys: async () => ['aurobindo-shell-v430', 'aurobindo-shell-v451', 'rocketier-media-v1', 'other-app'], delete: async key => { deleted.push(key); } }
+    caches: { keys: async () => ['aurobindo-shell-v430', 'aurobindo-shell-v452', 'rocketier-media-v1', 'other-app'], delete: async key => { deleted.push(key); } }
   });
   let activation;
   handlers.activate({ waitUntil(promise) { activation = promise; } });
