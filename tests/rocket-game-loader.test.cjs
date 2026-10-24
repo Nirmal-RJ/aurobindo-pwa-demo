@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
-const { preload } = require('../rocket-game-loader.js');
+const { preload, prepareImages } = require('../rocket-game-loader.js');
 const { assetKey, cachedResponse } = require('../rocket-asset-cache.js');
 const base = 'https://game.test/app/';
 test('home loader unlocks Play only after complete downloads and worker readiness', async () => {
@@ -17,7 +17,7 @@ test('home loader unlocks Play only after complete downloads and worker readines
     ROCKET_ASSETS: [{ url: 'asset', revision: 'v1', bytes: 4 }],
     RocketAssetCache: require('../rocket-asset-cache.js'),
     fetch: () => new Promise(resolve => { deliver = resolve; }),
-    Headers, Blob, Response, AbortController, setTimeout, clearTimeout
+    Headers, Blob, Response, AbortController, URL, setTimeout, clearTimeout
   };
   context.window = context;
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../rocket-game-loader.js'), 'utf8'), context);
@@ -30,6 +30,26 @@ test('home loader unlocks Play only after complete downloads and worker readines
   assert.equal(elements.get('load-progress').value, 100);
   assert.equal(elements.get('start').disabled, false);
   assert.equal(elements.get('asset-loader').hidden, true);
+});
+
+test('initially broken artwork is rebound to the cache revision and must decode before readiness', async () => {
+  const entry = { url: 'assets/rocket-game-assets/page-2/mission=brief.webp', revision: 'new-art', bytes: 10 };
+  let release, ready = false;
+  const image = { src: entry.url, naturalWidth: 0, getAttribute() { return this.src; }, decode() { return new Promise(resolve => { release = () => { this.naturalWidth = 770; resolve(); }; }); } };
+  const pending = prepareImages({ images: [image], entries: [entry], base, assetKey }).then(() => { ready = true; });
+  assert.equal(image.src, assetKey(entry, base));
+  assert.equal(image.loading, 'eager');
+  assert.equal(ready, false);
+  release(); await pending; assert.equal(ready, true);
+});
+
+test('artwork decode retries once and reports a permanent failure instead of entering with missing art', async () => {
+  const entry = { url: 'art.webp', revision: 'v1', bytes: 10 };
+  let calls = 0;
+  const image = { src: entry.url, naturalWidth: 0, getAttribute() { return this.src; }, removeAttribute() {}, decode() { calls++; if (calls === 1) return Promise.reject(new Error('Early request failed')); this.naturalWidth = 100; return Promise.resolve(); } };
+  await prepareImages({ images: [image], entries: [entry], base, assetKey }); assert.equal(calls, 2);
+  image.naturalWidth = 0; image.decode = () => Promise.reject(new Error('Missing'));
+  await assert.rejects(prepareImages({ images: [image], entries: [entry], base, assetKey }), /Could not prepare art.webp/);
 });
 function memoryCache() {
   const entries = new Map();

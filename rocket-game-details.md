@@ -1,5 +1,7 @@
 # Rocket'ier game details
 
+First-load artwork readiness: after asset downloads and service-worker activation, rebind initial page images to their verified content-revisioned cache URLs and await successful decoding before Start unlocks. Retry failed initial image loads; do not require closing/reopening the game to recover mission brief art.
+
 Mobile compatibility: preserve essential motion through CSS keyframe fallback when Web Animations is absent; provide measured cqw/viewport-unit fallback before Play unlocks. Support legacy touch input, handle lost/failed pointer capture, and stop Fill on global release/cancellation. Include Safari-prefixed visual effects, visualViewport modal sizing and explicit inline video playback. Browser-engine QA is documented in artifacts/rocket-mobile-qa/verification.md; distinguish it from physical-device video/audio/performance verification. Shared deployments require HTTPS for asset caching.
 
 Background music removed: no BGM playback or soundtrack preload. Retain gameplay sound effects. This supersedes all earlier background music creation/playback/mix instructions.

@@ -67,6 +67,8 @@
         });
         $('load-status').textContent = 'Finishing offline setup…';
         await workerReady;
+        $('load-status').textContent = 'Preparing mission artwork…';
+        await api.prepareImages({ images: Array.from(document.images || []), entries: root.ROCKET_ASSETS, base: document.baseURI, assetKey: root.RocketAssetCache.assetKey });
         root.RocketPreload.ready = true;
         $('load-progress').value = 100; $('load-percent').textContent = '100%';
         $('load-status').textContent = 'Ready for launch!';
@@ -81,6 +83,38 @@
     start();
   }
 })(typeof window !== 'undefined' ? window : globalThis, () => {
+  async function prepareImages({ images, entries, base, assetKey }) {
+    const byPath = new Map(entries.map(entry => [new URL(entry.url, base).pathname, entry]));
+    await Promise.all(images.map(async image => {
+      const source = image.getAttribute('src');
+      if (!source) return;
+      const entry = byPath.get(new URL(source, base).pathname);
+      if (!entry) return;
+      const key = assetKey(entry, base);
+      // The original request may have failed before the service worker controlled this page.
+      // Rebind to the exact verified cache entry, then wait for a renderable image.
+      image.loading = 'eager';
+      for (let attempt = 0; attempt < 2; attempt++) {
+        let timer, cleanup = () => {};
+        try {
+          if (attempt) image.removeAttribute('src');
+          image.src = key;
+          const decoded = typeof image.decode === 'function' ? image.decode() : new Promise((resolve, reject) => {
+            const loaded = () => image.naturalWidth ? resolve() : reject(new Error('Image is empty.'));
+            const failed = () => reject(new Error('Image could not be loaded.'));
+            cleanup = () => { image.removeEventListener('load', loaded); image.removeEventListener('error', failed); };
+            image.addEventListener('load', loaded); image.addEventListener('error', failed);
+            if (image.complete) loaded();
+          });
+          await Promise.race([decoded, new Promise((_, reject) => { timer = setTimeout(() => reject(new Error('Artwork took too long to prepare.')), 15000); })]);
+          if (!image.naturalWidth) throw new Error('Image is empty.');
+          return;
+        } catch (_) {
+          if (attempt === 1) throw new Error(`Could not prepare ${entry.url.split('/').pop()}.`);
+        } finally { clearTimeout(timer); cleanup(); }
+      }
+    }));
+  }
   async function preload({ entries, cache, base, assetKey, concurrency = 4, onProgress = () => {}, fetcher = fetch }) {
     const total = entries.reduce((n, entry) => n + entry.bytes, 0), amounts = new Map();
     let complete = 0, cursor = 0, failure;
@@ -127,5 +161,5 @@
     }));
     if (failure) throw failure;
   }
-  return { preload };
+  return { preload, prepareImages };
 });

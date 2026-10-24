@@ -1,6 +1,6 @@
 importScripts('./rocket-game-assets.js?v=31d10e50960e69bf', './rocket-asset-cache.js?v=1');
 ﻿const CACHE_PREFIX = 'aurobindo-shell-';
-const CACHE = `${CACHE_PREFIX}v450`;
+const CACHE = `${CACHE_PREFIX}v451`;
 const ASSETS = ['./', './index.html', './styles.css?v=30', './app.js?v=18', './tile-match.js?v=23', './symptom-match.html', './symptom-match.css?v=18', './symptom-match.js?v=20', './chromatogram.html', './chromatogram.css?v=23', './chromatogram.js?v=22', './assets/toggle%20button.png', './assets/4%20arrow%20toggle%20outline.png', './assets/hpcl-logo-new.png', './assets/game-1-card.png', './assets/game-2-card.png', './assets/game-3-card.png', './assets/game-4-card.png', './logo.png', './icon.svg', './icons/icon-192.png', './icons/icon-512.png', './manifest.webmanifest'];
 ASSETS.push('./cleaning-solution.html', './cleaning-solution.css?v=7', './cleaning-solution.js?v=6');
 ASSETS.splice(ASSETS.indexOf('./styles.css?v=30'), 1, './styles.css?v=46');
@@ -90,4 +90,4 @@ ASSETS.push('./audio/gbu-countdown-audio.wav');
 
 ASSETS.push('./assets/good-bad-ugly-assets/confetti.gif');
 
-ASSETS.push('./rocket-game.html','./rocket-game.css?v=61','./rocket-game-core.js?v=2','./rocket-game.js?v=58','./rocket-game-assets.js?v=31d10e50960e69bf','./rocket-asset-cache.js?v=1','./rocket-game-loader.js?v=2');
+ASSETS.push('./rocket-game.html','./rocket-game.css?v=61','./rocket-game-core.js?v=2','./rocket-game.js?v=58','./rocket-game-assets.js?v=31d10e50960e69bf','./rocket-asset-cache.js?v=1','./rocket-game-loader.js?v=3');

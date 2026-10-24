@@ -16,6 +16,7 @@
     "predev": "npm run assets:rocket",
     "prestart": "npm run assets:rocket",
     "sounds:rocket": "node build-rocket-sounds.cjs",
-    "test:rocket:browser": "node tests/rocket-mobile.browser.cjs"
+    "test:rocket:browser": "node tests/rocket-mobile.browser.cjs",
+    "test:rocket:first-load": "node tests/rocket-first-load.browser.cjs"
   }
 }

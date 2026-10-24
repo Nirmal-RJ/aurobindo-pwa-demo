@@ -1,5 +1,13 @@
 # Rocket'ier context and progress
 
+## Latest fix: first-visit missing mission brief artwork
+
+- User reported mission brief art missing after the first download, returning after closing/reopening. Download completion did not validate or refresh the page's earlier image requests, which could have failed before service-worker control.
+- After downloads and worker activation, loader now rebinds existing artwork to its exact content-revisioned cache URL and awaits image decoding/natural dimensions before unlocking Start. Hidden-screen images are eager-loaded. Failed decoding retries once; persistent failure keeps the gate locked with Retry instead of entering with missing art.
+- Added prepareImages regression tests and tests/rocket-first-load.browser.cjs (test:rocket:first-load). Browser test intentionally aborts the initial unversioned mission-brief request, holds decoding to verify the gate stays locked, then confirms the brief appears without reopening.
+- Validation: syntax and all 38 targeted tests passed; cold-first-load regression passed in Chromium and WebKit with touch-enabled 390x844 viewports. No physical phone verification yet.
+- Cache: CSS v61, JS v58, core v2, loader v3, helper v1, service worker v451. User authorized publication to origin/main after first-load verification.
+
 ## Git publication preparation
 
 - User requested publishing the completed Rocket'ier changes. Rechecked game/loader/service-worker syntax and all 36 targeted tests; passed. Whitespace validation cleaned up before staging.

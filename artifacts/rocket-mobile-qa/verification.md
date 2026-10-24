@@ -13,6 +13,8 @@ The full flows exercised moving conveyor, continuous docking (measured changing 
 
 All 36 core/UI/loader/service-worker tests and syntax checks passed. Added regression coverage for failed pointer capture, global release and legacy touch cancellation.
 
+First-load follow-up: all 38 targeted tests passed after adding image readiness checks. A separate cold-context Chromium/WebKit regression deliberately aborted the initial mission-brief request, verified Start remained locked during decoding, and confirmed recovered artwork appeared immediately on the first visit without reopening. Run with `npm run test:rocket:first-load` using the same Playwright environment.
+
 ## Compatibility changes
 
 - CSS keyframes preserve essential docking/route movement if native Web Animations is absent or rejects an animation.
