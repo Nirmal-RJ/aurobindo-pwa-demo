@@ -270,3 +270,13 @@ Rocket-selection prompt: center it in the hangar, repeatedly pulse its cyan glow
 Tank interaction: the entire solvent tank is a tap/hold-to-fill target in addition to the visible Fill button. Use the same increments, timing, feedback and capacity/input locks. A button press must never count twice through event bubbling. Release/cancel stops the hold; retain keyboard access through the original button.
 
 Rocket selection spotlight: dim hangar scenery while awaiting selection, illuminate the conveyor with a gentle cyan pulse, and highlight each rocket. End selection highlights when boarding begins, preserving the existing smooth background transition, prompt fade, moving belt and docking sequence.
+
+Selection spotlight frequency: show the dimmed scenery, highlighted belt and glowing rockets only before the first rocket pickup of each mission run. Subsequent pickups use normal lighting. The centered animated prompt and conveyor movement remain unchanged. A new/retried mission restarts the first-pickup spotlight.
+
+Selection prompt artwork: use page-4/pick-your-rocket1.png and pick-your-rocket2.png in place of the visible text panel. Center and enlarge the sign, alternate the frames and animate gentle downward pointing until selection. Keep accessible instructions, boarding fade and first-pickup-only lighting behavior.
+
+Pick Your Rocket placement/speed: anchor the sign near the bottom directly above the rockets (bottom 20.5%, centered 40% width). Alternate artwork every 300ms while keeping the gentle 1.8s downward-pointing animation and existing fade on selection.
+
+Selection sign pointing motion: smoothly dip downward and return, travelling from -6px to +10px over 1.8 seconds. Preserve the independently adjustable artwork-alternation speed (currently user-set 0.4s full cycle).
+
+Selection artwork filenames updated: current supplied frames are page-4/pick-your-rocket1-black.png and pick-your-rocket2-black.png. Regenerate the asset manifest after renaming/replacing files.

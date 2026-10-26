@@ -513,6 +513,7 @@ test('generated cues follow question, nose preparation, route travel and countin
 
 test('new rockets reset engine penalties and show a new badge if damaged', () => {
   const ui=mount();ui.begin();
+  assert.equal(ui.elements.get('hangar').classList.contains('selection-spotlight'),true);
   function loseEngine() {
     ui.advance(40000);ui.advance(3100);
     for(let i=0;i<3;i++)ui.elements.get('popup-action').click();
@@ -526,7 +527,7 @@ test('new rockets reset engine penalties and show a new badge if damaged', () =>
     assert.equal(ui.elements.get('cinematic').style['--near-star-duration'],String(1.7/factor)+'s');
     const attempt=ui.state().runs[0].questions.at(-1).attempts.at(-1);
     assert.equal(attempt.speed,7000000*factor);
-    ui.advance(5300);ui.advance(4800);ui.elements.get('continue').click();ui.choices[0].click();ui.advance(5150);
+    ui.advance(5300);ui.advance(4800);ui.elements.get('continue').click();assert.equal(ui.elements.get('hangar').classList.contains('selection-spotlight'),false);ui.choices[0].click();ui.advance(5150);
   }
   loseEngine();flight(true,.67);flight(false,1);loseEngine();flight(true,.67);
 });

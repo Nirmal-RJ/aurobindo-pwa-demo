@@ -535,10 +535,21 @@ img{-webkit-user-drag:none}
 .tank{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;cursor:pointer}
 
 /* Selection spotlight: dim scenery, keep the assembly line and choices luminous. */
-.hangar.selecting:not(.boarding) .hangar-closeup{filter:brightness(.35) saturate(.8)}
+.hangar.selecting.selection-spotlight:not(.boarding) .hangar-closeup{filter:brightness(.35) saturate(.8)}
 .conveyor:before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;border-top:1px solid #7ceeff88;border-bottom:1px solid #7ceeff88;background:linear-gradient(0deg,#1aa9df35,transparent 65%),radial-gradient(ellipse at 50% 100%,#33d8ff45,transparent 75%);box-shadow:inset 0 0 20px #31caff55;opacity:0;transition:opacity .45s ease}
-.selecting:not(.boarding) .conveyor:before{opacity:1;animation:conveyor-spotlight 2.4s ease-in-out infinite}
+.selecting.selection-spotlight:not(.boarding) .conveyor:before{opacity:1;animation:conveyor-spotlight 2.4s ease-in-out infinite}
 .rocket-choice .rocket-model{transition:filter .45s ease}
-.selecting:not(.boarding) .rocket-choice .rocket-model{filter:brightness(1.18) drop-shadow(0 0 3px #ddffff) drop-shadow(0 0 7px #27d5ff)}
-.selecting:not(.boarding) .rocket-choice:hover .rocket-model,.selecting:not(.boarding) .rocket-choice:focus-visible .rocket-model{filter:brightness(1.3) drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px #ffe572)}
+.selecting.selection-spotlight:not(.boarding) .rocket-choice .rocket-model{filter:brightness(1.18) drop-shadow(0 0 3px #ddffff) drop-shadow(0 0 7px #27d5ff)}
+.selecting.selection-spotlight:not(.boarding) .rocket-choice:hover .rocket-model,.selecting.selection-spotlight:not(.boarding) .rocket-choice:focus-visible .rocket-model{filter:brightness(1.3) drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px #ffe572)}
 @keyframes conveyor-spotlight{0%,100%{opacity:.65}50%{opacity:1}}
+
+/* Supplied two-frame selection sign replaces the text-panel presentation. */
+.hangar.selecting .question{top:auto;bottom:20.5%;left:30%;width:40%;height:auto;transform:translateY(0);transform-origin:50% 100%;aspect-ratio:240/415;padding:0;border:0;border-radius:0;background:none;box-shadow:none}
+.hangar.selecting .question #instruction{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;animation:none!important}
+.pick-rocket-art{display:block;position:absolute;inset:0;pointer-events:none}
+.pick-rocket-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.pick-rocket-art img:nth-child(2){opacity:0}
+.hangar.selecting:not(.boarding) .question{animation:pick-rocket-point 1.8s ease-in-out infinite!important}
+.selecting:not(.boarding) .pick-rocket-art img:nth-child(2){animation:pick-rocket-alternate .4s steps(1,end) infinite}
+@keyframes pick-rocket-point{0%,100%{transform:translateY(-6px) scale(1)}50%{transform:translateY(10px) scale(1.035)}}
+@keyframes pick-rocket-alternate{0%,100%{opacity:0}50%{opacity:1}}

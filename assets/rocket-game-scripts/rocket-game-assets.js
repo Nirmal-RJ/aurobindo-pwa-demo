@@ -101,6 +101,11 @@ self.ROCKET_ASSETS = [
     "revision": "2fb8193df540d25c"
   },
   {
+    "url": "../rocket-game-assets/page-4/blinker.gif",
+    "bytes": 30825,
+    "revision": "0b5e41080ecb5696"
+  },
+  {
     "url": "../rocket-game-assets/page-4/conveyer-belt.webp",
     "bytes": 28024,
     "revision": "a73abb6b4e903312"
@@ -144,6 +149,16 @@ self.ROCKET_ASSETS = [
     "url": "../rocket-game-assets/page-4/page-4-bg-venus.webp",
     "bytes": 121388,
     "revision": "a2acfa5ffc8d787b"
+  },
+  {
+    "url": "../rocket-game-assets/page-4/pick-your-rocket1-black.png",
+    "bytes": 22616,
+    "revision": "09d8de4ca6c59806"
+  },
+  {
+    "url": "../rocket-game-assets/page-4/pick-your-rocket2-black.png",
+    "bytes": 22497,
+    "revision": "0947e01ec6678973"
   },
   {
     "url": "../rocket-game-assets/page-4/rocket-1.webp",

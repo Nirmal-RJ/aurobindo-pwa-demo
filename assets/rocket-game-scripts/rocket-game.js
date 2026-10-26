@@ -291,6 +291,7 @@
   function hangar() {
     clearTransfers();
     show('hangar'); $('hangar').className = 'screen hangar selecting';
+    $('hangar').classList.toggle('selection-spotlight', !game.run.events.some(event => event.type === 'rocket-selected'));
     const planet = game.mission.origin.toLowerCase();
     $('hangar').style.backgroundImage = 'none';
     $('hangar-closeup').style.backgroundImage = `url('${base}page-4/page-4-bg-${planet}.webp')`;

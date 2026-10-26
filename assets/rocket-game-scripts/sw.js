@@ -1,11 +1,11 @@
-importScripts('./rocket-game-assets.js?v=8e89f790b2b7948b', './rocket-asset-cache.js?v=1');
+importScripts('./rocket-game-assets.js?v=2c4dd6497c4be3f1', './rocket-asset-cache.js?v=1');
 
 const SHELL_PREFIX = 'rocketier-shell-';
-const SHELL = `${SHELL_PREFIX}v29`;
+const SHELL = `${SHELL_PREFIX}v33`;
 const SHELL_FILES = [
-  './rocket-game.html', './rocket-game.css?v=86', './rocket-game-core.js?v=6',
-  './rocket-game.js?v=76', './rocket-game-loader.js?v=4',
-  './rocket-game-assets.js?v=8e89f790b2b7948b', './rocket-asset-cache.js?v=1'
+  './rocket-game.html', './rocket-game.css?v=90', './rocket-game-core.js?v=6',
+  './rocket-game.js?v=77', './rocket-game-loader.js?v=4',
+  './rocket-game-assets.js?v=2c4dd6497c4be3f1', './rocket-asset-cache.js?v=1'
 ];
 
 self.addEventListener('install', event => {

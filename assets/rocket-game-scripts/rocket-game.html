@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#031336"><title>Rocket'ier &mdash; Aurobindo Games</title>
-  <link rel="stylesheet" href="rocket-game.css?v=86">
-  <script defer src="rocket-game-assets.js?v=8e89f790b2b7948b"></script><script defer src="rocket-asset-cache.js?v=1"></script><script defer src="rocket-game-loader.js?v=4"></script>
-  <script defer src="rocket-game-core.js?v=6"></script><script defer src="rocket-game.js?v=76"></script>
+  <link rel="stylesheet" href="rocket-game.css?v=90">
+  <script defer src="rocket-game-assets.js?v=2c4dd6497c4be3f1"></script><script defer src="rocket-asset-cache.js?v=1"></script><script defer src="rocket-game-loader.js?v=4"></script>
+  <script defer src="rocket-game-core.js?v=6"></script><script defer src="rocket-game.js?v=77"></script>
 </head>
 <body>
   <main id="game" class="game" data-screen="intro">
@@ -32,7 +32,9 @@
     <section id="hangar" class="screen hangar" hidden aria-labelledby="question-title">
       <div id="hangar-closeup" class="hangar-closeup" aria-hidden="true"></div>
       <div class="hud"><div class="timer"><strong id="countdown">&mdash;</strong></div><div id="engines" class="engine-panel" aria-label="Three engines"></div></div>
-      <div class="question glass"><p class="eyebrow" id="question-number"></p><p id="instruction">Choose a rocket from the conveyor</p></div>
+      <div class="question glass"><p class="eyebrow" id="question-number"></p>
+        <p id="instruction">
+          Choose a rocket from the conveyor</p><span class="pick-rocket-art" aria-hidden="true"><img src="../rocket-game-assets/page-4/pick-your-rocket1-black.png" alt=""><img src="../rocket-game-assets/page-4/pick-your-rocket2-black.png" alt=""></span></div>
       <div id="fuel-system" class="fuel-system" hidden>
         <button id="undo-mixture" data-undo="last" class="image-button shared-undo" type="button" aria-label="Undo last fill" disabled><img src="../rocket-game-assets/page-5/undo-button.webp" alt="Undo"></button>
         <div id="tanks" class="tanks"></div>

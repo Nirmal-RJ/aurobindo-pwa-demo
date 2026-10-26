@@ -963,3 +963,26 @@ The user reported excessively stretched tank-tubes and requested larger solvent 
 - During selection, dim the background to 35% brightness with the existing smooth filter transition. Add a cyan glowing conveyor bed with a 2.4s breathing highlight and individually outlined/glowing rocket models; hover/focus adds a warmer highlight.
 - Highlights apply only before boarding. Existing selection prompt pulse, moving belt, rocket choice hit targets, docking and unselected-rocket fade remain intact; scenery restores smoothly when boarding starts.
 - CSS v86, scoped shell v29. Chromium selection-screen visual check at 390px completed.
+
+## 26 October 2026: selection spotlight only on first pickup
+- Scoped background dimming, conveyor glow and per-rocket spotlight to the first pickup of each mission run, detected from rocket-selected history. Later pickups have normal lighting. Restarting a mission or beginning the next mission gets the initial spotlight again.
+- Preserved centered prompt pulse/blink, conveyor motion, hover behavior and docking effects. CSS v87, JS v77, scoped shell v30.
+- All 46 tests passed, including first-selection spotlight and normal lighting for subsequent pickups. No additional browser visual check for this gating change.
+
+## 26 October 2026: alternating Pick Your Rocket artwork
+- Replaced the visible selection text panel with the two supplied PNG images, centered and enlarged. Alternate the blue-arrow frame over the red-arrow frame every 900ms, with a gentle 1.8s downward-pointing motion.
+- Retained accessible instruction text, first-pickup-only spotlight, conveyor motion and boarding fade. Input remains unobstructed. CSS v88, scoped shell v31; images included in generated asset preload manifest.
+- Chromium screenshot verified centered placement at 390px. All 46 tests passed. Completed documentation after the interrupted implementation turn.
+
+## 26 October 2026: lower selection sign and faster alternation
+- Anchored Pick Your Rocket above the conveyor at bottom:20.5%, maintaining centered 40% width. Downward-pointing motion now moves from -8px to 0 around its bottom edge so it stays above the rockets.
+- Increased red/blue alternation from one frame per 900ms to one per 300ms (600ms full cycle); retained the smooth 1.8s pointing motion and boarding fade.
+- CSS v89, scoped shell v32. Chromium screenshot verified the lowered placement at 390px.
+
+## 26 October 2026: stronger downward pointing motion
+- Increased sign travel to dip from -6px to +10px and return over the existing smooth 1.8s loop, pointing toward the conveyor more clearly. Preserved the user's adjusted 0.4s artwork-alternation cycle and all selection/boarding behavior.
+- CSS v90, scoped shell v33. CSS change reviewed; no new browser check for this small movement adjustment.
+
+## 26 October 2026: selection artwork release checks
+- Included the current user-renamed pick-your-rocket1-black.png and pick-your-rocket2-black.png files and regenerated the asset manifest to replace stale original PNG paths. Included the supplied blinker.gif in the generated asset set.
+- Preserved user-set 0.4s alternation, downward pointing motion and first-pickup-only spotlight. Rocketier syntax checks and all 46 tests pass after manifest refresh. Removed trailing whitespace in the selection markup.
