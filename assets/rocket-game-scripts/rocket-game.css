@@ -26,8 +26,9 @@ body{overflow-x:hidden}
 .overlay-screen>.glass{max-width:100%;overflow-wrap:anywhere}
 .brief-art{max-height:50svh;object-fit:contain}
 #brief{height:max(var(--scene-height),177.778cqw);padding:0;display:block}
-#brief .brief-art{position:absolute;top:15%;left:5%;width:90%;height:auto;max-height:none}
-#brief .wide{position:absolute;top:73%;left:20%;width:60%;max-width:none}
+#brief .brief-frame{position:absolute;top:15%;left:5%;width:90%;animation:float 5s ease-in-out infinite}
+#brief .brief-art{position:relative;top:auto;left:auto;width:100%;height:auto;max-height:none;animation:none}
+#brief .wide{position:absolute;top:82%;left:16.667%;width:66.666%;max-width:none}
 #mission{display:block;padding:0;height:max(var(--scene-height),177.778cqw)}
 #mission:before{content:'';position:absolute;inset:-8px;background:url('../rocket-game-assets/page-2/page-2-bg.webp') center/100% 100%;filter:blur(5px)}
 .mission-card{position:absolute;top:25%;left:11%;width:78%;aspect-ratio:770/972;z-index:2;animation:arrive .6s ease-out}
@@ -522,3 +523,22 @@ img{-webkit-user-drag:none}
 
 /* Supplied combined success artwork replaces the separate hero and speech bubble. */
 #journey .journey-hero{left:48%;bottom:38%;width:48%;z-index:4}
+
+/* Keep the selection invitation centered and alive until a rocket is chosen. */
+.hangar.selecting .question{top:50%;left:14%;width:72%;transform:translateY(-50%);pointer-events:none}
+.hangar.selecting:not(.boarding) .question{animation:choose-rocket-pulse 2s ease-in-out infinite!important}
+.hangar.selecting:not(.boarding) .question #instruction{animation:choose-rocket-blink 2s ease-in-out infinite!important}
+@keyframes choose-rocket-pulse{0%,100%{transform:translateY(-50%) scale(1);box-shadow:inset 0 0 15px #45cfff66,0 0 8px #21baff44}50%{transform:translateY(-50%) scale(1.045);box-shadow:inset 0 0 22px #45cfffaa,0 0 24px #21baffaa}}
+@keyframes choose-rocket-blink{0%,100%{opacity:.65;text-shadow:0 0 2px #64eaff}50%{opacity:1;text-shadow:0 0 10px #64eaff}}
+
+/* The entire reservoir is a forgiving hold-to-fill target. */
+.tank{touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;cursor:pointer}
+
+/* Selection spotlight: dim scenery, keep the assembly line and choices luminous. */
+.hangar.selecting:not(.boarding) .hangar-closeup{filter:brightness(.35) saturate(.8)}
+.conveyor:before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;border-top:1px solid #7ceeff88;border-bottom:1px solid #7ceeff88;background:linear-gradient(0deg,#1aa9df35,transparent 65%),radial-gradient(ellipse at 50% 100%,#33d8ff45,transparent 75%);box-shadow:inset 0 0 20px #31caff55;opacity:0;transition:opacity .45s ease}
+.selecting:not(.boarding) .conveyor:before{opacity:1;animation:conveyor-spotlight 2.4s ease-in-out infinite}
+.rocket-choice .rocket-model{transition:filter .45s ease}
+.selecting:not(.boarding) .rocket-choice .rocket-model{filter:brightness(1.18) drop-shadow(0 0 3px #ddffff) drop-shadow(0 0 7px #27d5ff)}
+.selecting:not(.boarding) .rocket-choice:hover .rocket-model,.selecting:not(.boarding) .rocket-choice:focus-visible .rocket-model{filter:brightness(1.3) drop-shadow(0 0 4px #fff) drop-shadow(0 0 10px #ffe572)}
+@keyframes conveyor-spotlight{0%,100%{opacity:.65}50%{opacity:1}}

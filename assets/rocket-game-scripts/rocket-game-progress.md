@@ -938,3 +938,28 @@ The user reported excessively stretched tank-tubes and requested larger solvent 
 - Updated current-state snapshots in details/progress and documented the established GitHub Pages production URL, validation and publishing steps in README.
 - Release checks: 44 Rocketier tests, 2 root service-worker tests, JavaScript syntax and whitespace checks passed. WebKit migration/offline smoke passed: root redirect, dedicated worker control, offline reload, artwork, moving conveyor and video byte ranges. Git fetch confirmed main matched origin/main before release.
 - Release scope includes the complete accumulated Rocketier folder migration, five-recipe/video configuration, artwork/UI/animation updates, pace tracking and strict agent instructions.
+
+## 26 October 2026: engine chances reset per selected rocket
+- User explicitly changed engine damage from mission-wide to per rocket. selectRocket resets engines to 3 and records previous/new counts on rocket-selected. Same-question retries still retain damage; all-three-loss mission failure remains unchanged.
+- Immediately refresh flames/HUD on selection. Penalty badge tracking now keys by question so a newly damaged rocket can display its penalty even if the prior rocket lost the same number of engines. No animations removed or reduced.
+- Core v6, JS v75, scoped shell v25. All 45 tests passed, including two/one-engine launches followed by a fresh rocket, preserved mission distance/history, restored full speed and recurring penalty badges. No physical-device visual verification this turn.
+
+## 26 October 2026: Start Mission stays inside the brief frame
+- Wrapped mission-brief artwork and Start Mission in one proportional frame. Button anchors at 82% of artwork height instead of 73% of screen height, with centered 66.666% artwork-relative width.
+- Preserved the original 5-second float animation on the shared frame so artwork and button move together; retained button hover/press behavior and all page transitions.
+- CSS v83, scoped shell v26. Chromium geometry checks passed at 320x568, 390x844, 768x1024, 1440x900 and 844x390. Button consistently occupies 82%-92.44% of artwork height and remains inside the frame.
+
+## 26 October 2026: centered animated rocket-selection prompt
+- Centered Choose your rocket vertically in the hangar (top:50% with translateY(-50%)), retaining horizontal centering. Added repeating 2-second gentle scale/glow pulse and readable text blink while selecting.
+- Both attention loops stop immediately when boarding begins, allowing the existing 350ms selection fade to work unchanged. Prompt ignores pointer input; conveyor/docking and all other effects preserved.
+- CSS v84, scoped shell v27. Scoped selectors and whitespace checked; no browser visual check this turn.
+
+## 26 October 2026: full-tank fill touch target
+- Tapping or holding anywhere on a solvent tank now uses the same fill/increment/animation path as its Fill button. Pointer capture, release/cancel and legacy touch/mouse handling apply to the tank surface too; full capacity and input-phase locks still apply.
+- Ignore button-origin events bubbling through the tank to prevent double increments. Tank taps retain liquid sound rather than an extra UI click sound. Existing keyboard-accessible Fill button, Undo and all effects preserved.
+- CSS v85, JS v76, scoped shell v28. All 46 tests passed, including surface hold/release and bubbled-button deduplication. No physical-device verification this turn.
+
+## 26 October 2026: spotlight rocket selection
+- During selection, dim the background to 35% brightness with the existing smooth filter transition. Add a cyan glowing conveyor bed with a 2.4s breathing highlight and individually outlined/glowing rocket models; hover/focus adds a warmer highlight.
+- Highlights apply only before boarding. Existing selection prompt pulse, moving belt, rocket choice hit targets, docking and unselected-rocket fade remain intact; scenery restores smoothly when boarding starts.
+- CSS v86, scoped shell v29. Chromium selection-screen visual check at 390px completed.

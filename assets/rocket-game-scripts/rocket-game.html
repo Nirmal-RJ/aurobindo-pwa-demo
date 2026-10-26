@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#031336"><title>Rocket'ier &mdash; Aurobindo Games</title>
-  <link rel="stylesheet" href="rocket-game.css?v=82">
+  <link rel="stylesheet" href="rocket-game.css?v=86">
   <script defer src="rocket-game-assets.js?v=8e89f790b2b7948b"></script><script defer src="rocket-asset-cache.js?v=1"></script><script defer src="rocket-game-loader.js?v=4"></script>
-  <script defer src="rocket-game-core.js?v=5"></script><script defer src="rocket-game.js?v=74"></script>
+  <script defer src="rocket-game-core.js?v=6"></script><script defer src="rocket-game.js?v=76"></script>
 </head>
 <body>
   <main id="game" class="game" data-screen="intro">
@@ -16,8 +16,10 @@
       <div id="asset-loader" class="asset-loader" role="status"><p class="loading-title">Preparing your rocket</p><div class="loading-meter"><progress id="load-progress" max="100" value="0" aria-label="Game assets loaded"></progress><strong id="load-percent">0%</strong></div><p id="load-status">Loading mission assets...</p><button id="load-retry" class="gold-button" hidden>Retry loading</button></div>
     </section>
     <section id="brief" class="screen overlay-screen" hidden aria-label="Mission brief">
+      <div class="brief-frame">
       <img class="brief-art" src="../rocket-game-assets/page-2/mission=brief.webp" alt="Mission brief. Mix everyday solvents in the right ratios to fuel your rocket.">
       <button id="start-mission" class="image-button wide"><img src="../rocket-game-assets/page-2/start-mission-button.webp" alt="Start mission"></button>
+      </div>
     </section>
     <section id="mission" class="screen overlay-screen" hidden aria-labelledby="mission-title">
       <div class="mission-card">

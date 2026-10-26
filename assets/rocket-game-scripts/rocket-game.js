@@ -26,7 +26,7 @@
   let soundsUnlocked = false;
   function buttonSound(event) {
     if (window.RocketPreload && !window.RocketPreload.ready) return;
-    if (event.target.closest('[data-fill], [data-undo], .rocket-choice')) return;
+    if (event.target.closest('[data-fill], [data-undo], .rocket-choice, .tank')) return;
     if (!event.target.closest('button,a') || event.target.closest('button:disabled')) return;
     if (!soundsUnlocked) {
       soundsUnlocked = true;
@@ -248,30 +248,37 @@
         processOutcome();
         if (game.total === 100 || game.phase !== 'fill') stopHold();
       };
-      button.addEventListener('pointerdown', event => {
+      for (const surface of [button, $(`tank-${c}`)]) {
+        const listen = (name, handler, options) => surface.addEventListener(name, event => {
+          // The button's event bubbles through its tank: handle that press only once.
+          if (surface !== button && event.target?.closest?.('[data-fill]')) return;
+          handler(event);
+        }, options);
+      listen('pointerdown', event => {
         if (event.button !== 0 || button.disabled) return;
-        event.preventDefault(); stopHold(); heldButton = button;
-        try { button.setPointerCapture?.(event.pointerId); } catch (_) { /* Global release listeners still stop filling. */ }
+        event.preventDefault(); stopHold(); heldButton = surface;
+        try { surface.setPointerCapture?.(event.pointerId); } catch (_) { /* Global release listeners still stop filling. */ }
         change();
         if (game.phase === 'fill' && game.total < 100) hold = setInterval(change, 350);
       });
-      button.addEventListener('pointerup', stopHold);
-      button.addEventListener('pointercancel', stopHold);
-      button.addEventListener('lostpointercapture', stopHold);
+      listen('pointerup', stopHold);
+      listen('pointercancel', stopHold);
+      listen('lostpointercapture', stopHold);
       if (!window.PointerEvent) {
         const legacyPress = event => {
           if (button.disabled || (event.button !== undefined && event.button !== 0)) return;
-          event.preventDefault(); stopHold(); heldButton = button; change();
+          event.preventDefault(); stopHold(); heldButton = surface; change();
           if (game.phase === 'fill' && game.total < 100) hold = setInterval(change, 350);
         };
-        button.addEventListener('touchstart', legacyPress, { passive: false });
-        button.addEventListener('mousedown', legacyPress);
-        button.addEventListener('touchend', stopHold);
-        button.addEventListener('touchcancel', stopHold);
-        button.addEventListener('mouseup', stopHold);
+        listen('touchstart', legacyPress, { passive: false });
+        listen('mousedown', legacyPress);
+        listen('touchend', stopHold);
+        listen('touchcancel', stopHold);
+        listen('mouseup', stopHold);
       }
       // Native keyboard/assistive-technology clicks have detail 0; pointer taps are handled above.
-      button.addEventListener('click', event => { if (event.detail === 0) change(); });
+      listen('click', event => { if (event.detail === 0 && !button.disabled) change(); });
+      }
     });
   }
   $('undo-mixture').addEventListener('click', () => {
@@ -298,7 +305,7 @@
     $('rocket-track').innerHTML = Array.from({ length: 10 }, (_, n) => `<button class="rocket-choice" data-rocket="${n % 5 + 1}" aria-label="Choose rocket ${n % 5 + 1}"><span class="rocket-model" data-variant="${n % 5 + 1}" aria-hidden="true"><img class="rocket-top" src="${base}page-5/rocket-${n % 5 + 1}-top.webp" alt=""><img class="rocket-bottom" src="${base}page-5/rocket-${n % 5 + 1}-bottom.webp" alt=""></span></button>`).join('');
     $('rocket-track').querySelectorAll('button').forEach(button => button.addEventListener('click', () => {
       if (!game.selectRocket(Number(button.dataset.rocket))) return;
-      haptic(); persist(); prepare(button);
+      haptic(); engines(); persist(); prepare(button);
     }));
     engines(); announce(`Prepare ${game.recipe.name}. Choose your rocket.`);
   }
@@ -546,7 +553,7 @@
     rocket.dataset.variant = String(game.rocket);
     rocket.innerHTML = `<img class="rocket-top" src="${base}page-5/rocket-${game.rocket}-top.webp" alt=""><img class="rocket-bottom" src="${base}page-5/rocket-${game.rocket}-bottom.webp" alt=""><div class="flames" aria-hidden="true">${[0, 1, 2].map(i => `<i class="${i >= game.run.engines ? 'dead' : ''}"></i>`).join('')}</div>`;
     const scene = $('cinematic'), engines = game.run.engines;
-    if (penaltyRunId !== game.run.id) { penaltyRunId = game.run.id; lastShownEngines = 3; }
+    if (penaltyRunId !== game.question.id) { penaltyRunId = game.question.id; lastShownEngines = 3; }
     const showPenalty = engines < lastShownEngines;
     const factor = engines === 3 ? 1 : engines === 2 ? .67 : .34;
     const saved = game.attempt.timeSaved;

@@ -77,8 +77,10 @@
     }
     selectRocket(rocket) {
       if (this.phase !== 'select' || !Number.isInteger(rocket) || rocket < 1 || rocket > 5) return false;
+      const previousEngines = this.run.engines;
+      this.run.engines = 3;
       this.rocket = rocket; this.phase = 'preparing';
-      this.run.events.push({ type: 'rocket-selected', rocket, at: iso(), questionId: this.question.id });
+      this.run.events.push({ type: 'rocket-selected', rocket, at: iso(), questionId: this.question.id, enginesBefore: previousEngines, enginesAfter: 3 });
       return true;
     }
     beginAttempt() {

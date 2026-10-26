@@ -28,7 +28,7 @@ function mount() {
   }
   const html = fs.readFileSync(path.join(__dirname, '../assets/rocket-game-scripts/rocket-game.html'), 'utf8');
   for (const [, id] of html.matchAll(/id="([^"]+)"/g)) elements.set(id, new Element());
-  for (const c of chemicalNames) for (const kind of ['fill','undo','amount','liquid','dispensed','pipe-art','pipe-outline','pipe-metal','pipe-core','pipe-flow']) {
+  for (const c of chemicalNames) for (const kind of ['tank','fill','undo','amount','liquid','dispensed','pipe-art','pipe-outline','pipe-metal','pipe-core','pipe-flow']) {
     const e = new Element(); e.dataset[kind] = c; elements.set(`${kind}-${c}`, e);
   }
   const choices = [1,2,3,4,5].map(n => { const e = new Element(); e.dataset.rocket = n; return e; });
@@ -480,7 +480,7 @@ test('button sound responds once per pointer press or keyboard click', async () 
   ui.documentEvents.click.forEach(fn=>fn({detail:1,target}));assert.equal(click.plays,1);
   ui.documentEvents.click.forEach(fn=>fn({detail:0,target}));assert.equal(click.plays,2);
   for (const control of ['fill', 'undo', 'rocket']) {
-    const excluded = { closest: selector => selector === '[data-fill], [data-undo], .rocket-choice' ? { control } : selector === 'button,a' ? {} : null };
+    const excluded = { closest: selector => selector === '[data-fill], [data-undo], .rocket-choice, .tank' ? { control } : selector === 'button,a' ? {} : null };
     ui.documentEvents.pointerdown.forEach(fn => fn({ button: 0, target: excluded }));
     ui.documentEvents.click.forEach(fn => fn({ detail: 0, target: excluded }));
   }
@@ -511,7 +511,7 @@ test('generated cues follow question, nose preparation, route travel and countin
   ui.advance(1500); assert.equal(numbers.paused, true);
 });
 
-test('penalty badge appears once per new engine loss while speed penalties persist', () => {
+test('new rockets reset engine penalties and show a new badge if damaged', () => {
   const ui=mount();ui.begin();
   function loseEngine() {
     ui.advance(40000);ui.advance(3100);
@@ -528,7 +528,7 @@ test('penalty badge appears once per new engine loss while speed penalties persi
     assert.equal(attempt.speed,7000000*factor);
     ui.advance(5300);ui.advance(4800);ui.elements.get('continue').click();ui.choices[0].click();ui.advance(5150);
   }
-  loseEngine();flight(true,.67);flight(false,.67);loseEngine();flight(true,.34);
+  loseEngine();flight(true,.67);flight(false,1);loseEngine();flight(true,.67);
 });
 
 test('third timeout uses the mission-failed astronaut', () => {
@@ -549,4 +549,17 @@ test('wrong-answer engine failure also shows the sad astronaut', () => {
   assert.equal(ui.elements.get('popup-title').textContent, 'Engine failure');
   assert.equal(ui.elements.get('popup-hero').hidden, false);
   assert.match(ui.elements.get('popup-hero').src, /astronaut-hero-lose-[123]\.webp$/);
+});
+
+test('tank surface fills on hold, stops on release and ignores bubbled Fill presses', () => {
+ const ui=mount();ui.begin();const tank=ui.elements.get('tank-Water');
+ const recipe=ui.context.RocketGame.recipes[ui.state().runs[0].questions[0].recipeId];
+ const step=ui.context.RocketGame.increment(recipe,'Water');
+ tank.events.pointerdown({button:0,pointerId:1,preventDefault(){}});
+ assert.equal(ui.elements.get('chamber-total').textContent,`${step}% filled`);
+ ui.advance(350);assert.equal(ui.elements.get('chamber-total').textContent,`${step*2}% filled`);
+ tank.events.pointerup({});ui.advance(350);
+ assert.equal(ui.elements.get('chamber-total').textContent,`${step*2}% filled`);
+ tank.events.pointerdown({button:0,target:{closest:()=>({})},preventDefault(){}});
+ assert.equal(ui.elements.get('chamber-total').textContent,`${step*2}% filled`);
 });

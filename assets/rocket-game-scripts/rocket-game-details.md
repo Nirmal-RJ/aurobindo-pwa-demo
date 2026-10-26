@@ -259,3 +259,14 @@ Percentage trail color: Fill's rising signed amount echoes use green text/glow; 
 Journey speech bubble wording: use 'Yay! Journey complete!' (supersedes 'This journey completed!').
 
 Journey success artwork revision: replace the separate winning astronaut and speech-bubble text with page-6/journey-success-1.webp. Show the supplied combined image above the stats card after EVERY successful launch, once route travel finishes (not only at destination). Retain entrance/idle animation, route progression, destination ring and stats counting.
+
+### Engine chances belong to each rocket (supersedes mission-wide damage)
+Every newly selected rocket starts with three working engines/chances, even when selecting the same visual variant again. Wrong answers/timeouts and retries on that rocket retain its damage. Successful launches with two/one engines retain the existing 0.67/0.34 speed and distance factors. After continuing to the next question and selecting a rocket, reset to three engines without resetting mission distance, question history or elapsed-time totals. Losing all three on one rocket still triggers mission failure and Retry Mission. Track the reset in the rocket-selected event; retain previous attempt engine snapshots. Penalty-badge tracking is per rocket/question.
+
+Mission brief responsive placement: artwork and Start Mission share a proportional floating wrapper. Anchor the button to artwork coordinates (top 82%, left 16.667%, width 66.666%), never viewport/screen height. Preserve their shared float and button interactions so the action remains inside the box at all screen proportions.
+
+Rocket-selection prompt: center it in the hangar, repeatedly pulse its cyan glow/scale and softly blink the text until a rocket is selected. Stop attention loops on boarding and retain the existing fade-out and docking sequence.
+
+Tank interaction: the entire solvent tank is a tap/hold-to-fill target in addition to the visible Fill button. Use the same increments, timing, feedback and capacity/input locks. A button press must never count twice through event bubbling. Release/cancel stops the hold; retain keyboard access through the original button.
+
+Rocket selection spotlight: dim hangar scenery while awaiting selection, illuminate the conveyor with a gentle cyan pulse, and highlight each rocket. End selection highlights when boarding begins, preserving the existing smooth background transition, prompt fade, moving belt and docking sequence.

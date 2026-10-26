@@ -130,3 +130,20 @@ test('mission pace includes all resolved attempts and best spans completed missi
  assert.equal(bestMissionPace([]),null); assert.equal(missionPace({questions:[]}).averageSeconds,null);
  assert.equal(bestMissionPace([JSON.parse(JSON.stringify(run)),JSON.parse(JSON.stringify(other))]),12);
 });
+
+test('each selected rocket starts with three engines while retries retain its damage', () => {
+ for (const losses of [1,2]) {
+  const {game,advance}=setup();
+  for(let i=0;i<losses;i++){advance(40);game.submit(true);game.retry();}
+  assert.equal(game.run.engines,3-losses);
+  fillCorrect(game);advance(10);const launched=game.submit();
+  assert.equal(launched.engineFactor,losses===1?.67:.34);
+  const distance=game.run.distance;const questions=game.run.questions.length;
+  game.nextQuestion();game.selectRocket(2);game.beginAttempt();
+  assert.equal(game.run.engines,3);assert.equal(game.attempt.enginesBefore,3);
+  assert.equal(game.run.distance,distance);assert.equal(game.run.questions.length,questions+1);
+  assert.equal(launched.enginesAfter,3-losses);
+  assert.equal(game.run.events.at(-1).enginesAfter,3);
+  fillCorrect(game);assert.equal(game.submit().engineFactor,1);
+ }
+});
