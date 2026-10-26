@@ -1,6 +1,6 @@
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { Game, recipes, missions, increment, bag } = require('../rocket-game-core.js');
+const { Game, recipes, missions, increment, bag } = require('../assets/rocket-game-scripts/rocket-game-core.js');
 
 function setup(mission = 0) {
   let time = 0;
@@ -13,17 +13,17 @@ function fillCorrect(game) {
     while (game.mixture[c] < game.recipe.mix[c]) game.change(c);
   }
 }
-test('recipe bags exhaust four unique recipes and never repeat across boundaries', () => {
+test('recipe bags exhaust five unique recipes and never repeat across boundaries', () => {
   let last;
   for (let i = 0; i < 100; i++) {
-    const next = bag(last); assert.equal(new Set(next).size, 4); assert.notEqual(next[0], last); last = next[3];
+    const next = bag(last); assert.equal(new Set(next).size, 5); assert.notEqual(next[0], last); last = next.at(-1);
   }
 });
 test('pour increments match liquid-sort data and algorithm', () => {
-  assert.deepEqual(recipes.map(r => ['Water', 'ACN', 'MeOH'].map(c => increment(r, c))), [[30,5,5],[10,20,10],[25,10,25],[15,35,10]]);
+  assert.deepEqual(recipes.map(r => ['Water', 'ACN', 'MeOH'].map(c => increment(r, c))), [[30,5,5],[10,20,10],[25,10,25],[15,35,10],[5,15,15]]);
   const fs = require('node:fs');
   const source = fs.readFileSync(require('node:path').join(__dirname, '../liquid-sort.js'), 'utf8');
-  for (const r of recipes) assert.ok(source.includes(`name: '${r.name}', mix: { Water: ${r.mix.Water}, ACN: ${r.mix.ACN}, MeOH: ${r.mix.MeOH} }`));
+  for (const r of recipes.slice(0, 4).map(r => ({ ...r, name: r.name === 'C Column Wash' ? 'Column Cleaning' : r.name }))) assert.ok(source.includes(`name: '${r.name}', mix: { Water: ${r.mix.Water}, ACN: ${r.mix.ACN}, MeOH: ${r.mix.MeOH} }`));
 });
 test('fill capacity and solvent-specific undo are bounded; partial launch rejected', () => {
   const { game } = setup();
@@ -33,6 +33,18 @@ test('fill capacity and solvent-specific undo are bounded; partial launch reject
   game.change('Water', true); assert.equal(game.total, 100 - increment(game.recipe, 'Water'));
   for (let i = 0; i < 30; i++) game.change('Water', true);
   assert.equal(game.total, 0);
+});
+
+test('D Column Wash accepts 10/45/45 with matching fill and undo steps', () => {
+  const { game } = setup();
+  game.queue = [recipes.findIndex(r => r.name === 'D Column Wash')];
+  game.nextQuestion(); game.selectRocket(1); game.beginAttempt();
+  assert.deepEqual(game.recipe.mix, { Water: 10, ACN: 45, MeOH: 45 });
+  fillCorrect(game);
+  game.change('ACN', true); assert.equal(game.mixture.ACN, 30);
+  game.change('ACN'); assert.equal(game.total, 100);
+  assert.equal(game.submit().outcome, 'correct');
+  assert.match(game.recipe.video, /d-column-wash\.webm$/);
 });
 test('correct launch applies time bonus and stores complete attempt data', () => {
   const { game, advance } = setup(); fillCorrect(game); advance(29);
@@ -94,4 +106,27 @@ test('all seven missions reach Neptune and award exactly ten stars with preserve
   assert.equal(game.stars, 10); assert.equal(game.data.runs.length, 7); assert.equal(game.data.unlocked, 6);
   assert.equal(game.data.completed.length, 7);
   assert.equal(game.data.runs.reduce((sum, r) => sum + r.awardedStars, 0), 10);
+});
+
+ test('shared undo restores actual last fills in reverse order and logs them', () => {
+  const { game } = setup();
+  game.change('Water'); const first = {...game.mixture};
+  game.change('ACN');
+  assert.equal(game.undoLast(), 'ACN'); assert.deepEqual(game.mixture, first);
+  while (game.total < 100) game.change('MeOH');
+  const last = game.attempt.events.at(-1).amount;
+  assert.equal(game.undoLast(), 'MeOH'); assert.equal(game.total, 100-last);
+  while(game.fillHistory.length) game.undoLast();
+  assert.equal(game.total,0); assert.equal(game.undoLast(),false);
+  assert.equal(game.attempt.events.at(-1).source,'shared-undo');
+ });
+
+test('mission pace includes all resolved attempts and best spans completed missions only', () => {
+ const {missionPace,bestMissionPace}=require('../assets/rocket-game-scripts/rocket-game-core.js');
+ const run={missionId:0,status:'completed',questions:[{attempts:[{outcome:'incorrect',elapsedSeconds:10},{outcome:'timeout',elapsedSeconds:40},{outcome:'correct',elapsedSeconds:10},{outcome:'active',elapsedSeconds:0}]}]};
+ assert.deepEqual(missionPace(run),{attemptCount:3,responseSeconds:60,averageSeconds:20});
+ const other={missionId:4,status:'completed',questions:[{attempts:[{outcome:'correct',elapsedSeconds:12}]}]};
+ assert.equal(bestMissionPace([run,other,{...other,status:'failed',questions:[{attempts:[{outcome:'incorrect',elapsedSeconds:1}]}]}]),12);
+ assert.equal(bestMissionPace([]),null); assert.equal(missionPace({questions:[]}).averageSeconds,null);
+ assert.equal(bestMissionPace([JSON.parse(JSON.stringify(run)),JSON.parse(JSON.stringify(other))]),12);
 });

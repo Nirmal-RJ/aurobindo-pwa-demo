@@ -13,7 +13,7 @@ function mount() {
   class Element {
     constructor() {
       this.events = {}; this.dataset = {}; this.children = []; this.hidden = false; this.disabled = false;
-      this.style = { setProperty(k, v) { this[k] = v; } }; this.parentElement = { classList: { toggle() {}, remove() {} } };
+      this.style = { setProperty(k, v) { this[k] = v; } }; this.parentElement = { appendChild() {}, classList: { toggle() {}, remove() {} } };
       this.attributes = {}; const classes = new Set();
       this.classList = { add: (...items) => items.forEach(i => classes.add(i)), remove: (...items) => items.forEach(i => classes.delete(i)), toggle: (i, on) => on ? classes.add(i) : classes.delete(i), contains: i => classes.has(i) };
     }
@@ -26,9 +26,9 @@ function mount() {
       return chemicalNames.map(c => elements.get(`${selector === '[data-fill]' ? 'fill' : 'undo'}-${c}`));
     }
   }
-  const html = fs.readFileSync(path.join(__dirname, '../rocket-game.html'), 'utf8');
+  const html = fs.readFileSync(path.join(__dirname, '../assets/rocket-game-scripts/rocket-game.html'), 'utf8');
   for (const [, id] of html.matchAll(/id="([^"]+)"/g)) elements.set(id, new Element());
-  for (const c of chemicalNames) for (const kind of ['fill','undo','amount','liquid','dispensed','pipe-outline','pipe-metal','pipe-core','pipe-flow']) {
+  for (const c of chemicalNames) for (const kind of ['fill','undo','amount','liquid','dispensed','pipe-art','pipe-outline','pipe-metal','pipe-core','pipe-flow']) {
     const e = new Element(); e.dataset[kind] = c; elements.set(`${kind}-${c}`, e);
   }
   const choices = [1,2,3,4,5].map(n => { const e = new Element(); e.dataset.rocket = n; return e; });
@@ -46,7 +46,7 @@ function mount() {
     document: {
       getElementById: id => { assert.ok(elements.has(id), `Missing element ${id}`); return elements.get(id); },
       querySelector: selector => { const [, kind, c] = selector.match(/data-(fill|undo)="(\w+)"/); return elements.get(`${kind}-${c}`); },
-      addEventListener(name, fn) { (documentEvents[name] ||= []).push(fn); }, createElement: () => new Element()
+      addEventListener(name, fn) { (documentEvents[name] ||= []).push(fn); }, createElement: () => Object.assign(new Element(), { remove() {} })
     },
     setTimeout: (fn, delay) => { const id = ++serial; tasks.set(id, { fn, at: time + delay }); return id; },
     clearTimeout: id => tasks.delete(id),
@@ -54,7 +54,7 @@ function mount() {
     clearInterval: id => tasks.delete(id)
   });
   context.window = context; context.scrollTo = () => {}; context.addEventListener = (name, fn) => { (windowEvents[name] ||= []).push(fn); };
-  for (const file of ['rocket-game-core.js', 'rocket-game.js']) vm.runInContext(fs.readFileSync(path.join(__dirname, '..', file), 'utf8'), context);
+  for (const file of ['rocket-game-core.js', 'rocket-game.js']) vm.runInContext(fs.readFileSync(path.join(__dirname, '../assets/rocket-game-scripts', file), 'utf8'), context);
   function advance(ms) {
     const end = time + ms;
     while (true) {
@@ -120,7 +120,6 @@ test('page flow wires selection, correct fill, animation and next question', () 
   assert.ok(Number(ui.elements.get('journey-rocket').dataset.to) > 0);
   ui.advance(3300);
   assert.equal(ui.elements.get('continue').disabled, true);
-  assert.equal(ui.elements.get('journey-title').hidden, true);
   assert.equal(ui.elements.get('journey-stats').hidden, false);
   assert.equal(ui.elements.get('journey-rocket').classList.contains('route-flying'), false);
   const initialStats = ui.elements.get('journey-stats').innerHTML;
@@ -145,23 +144,27 @@ test('map resumes from cumulative distance and reaches the destination at missio
     assert.ok(Math.abs(Number(rocket.dataset.from)-previous)<1e-10);
     const target = Number(rocket.dataset.to);
     assert.ok(target > previous && target <= 1);
-    assert.equal(ui.elements.get('journey-title').hidden, true);
     assert.equal(ui.elements.get('journey-stats').hidden, true);
     ui.advance(3300);
-    assert.equal(ui.elements.get('journey-title').hidden, ui.state().runs[0].status !== 'completed');
+    assert.equal(ui.elements.get('journey-hero').hidden, false);
+    assert.match(ui.elements.get('journey-hero').src, /journey-success-1\.webp$/);
     ui.advance(1500);
     assert.equal(ui.elements.get('route-covered').style.strokeDashoffset, String(1-target));
     if (ui.state().runs[0].status === 'completed') {
       assert.equal(target,1); assert.equal(rocket.style.left,'81%');
       ui.elements.get('continue').click();
       assert.equal(ui.elements.get('complete').hidden, false);
-      assert.equal(ui.elements.get('complete-distance').textContent, '0 km');
-      ui.advance(1300);
-      const countingDistance = ui.elements.get('complete-distance').textContent;
-      assert.notEqual(countingDistance, '0 km');
-      ui.advance(1000);
-      assert.notEqual(ui.elements.get('complete-distance').textContent, countingDistance);
-      assert.equal(ui.elements.get('complete-time').textContent, `${ui.state().runs[0].inputSeconds.toFixed(1)}s`);
+      assert.equal(ui.elements.get('best-pace-row').hidden, true);
+      ui.advance(2200);
+      const settledPace = ui.elements.get('complete-pace').textContent;
+      assert.equal(ui.elements.get('best-pace-row').hidden, true);
+      ui.advance(1499);
+      assert.equal(ui.elements.get('best-pace-row').hidden, true);
+      assert.equal(ui.elements.get('complete-pace').textContent, settledPace);
+      ui.advance(1);
+      assert.equal(ui.elements.get('best-pace-row').hidden, false);
+      ui.advance(1500);
+      assert.equal(ui.elements.get('complete-best-pace').textContent, settledPace);
       ui.elements.get('next-mission').click();
       assert.equal(ui.elements.get('mission').hidden, false);
       assert.equal(ui.elements.get('brief').hidden, true);
@@ -177,10 +180,13 @@ test('map resumes from cumulative distance and reaches the destination at missio
 test('timeout opens failure/video/retry, resets input and retains damage', () => {
   const ui = mount(); ui.begin(); ui.advance(40100); ui.advance(3000);
   assert.equal(ui.elements.get('popup-title').textContent, 'Engine failure');
+  assert.equal(ui.elements.get('popup-hero').hidden, false);
+  assert.match(ui.elements.get('popup-hero').src, /astronaut-hero-lose-[123]\.webp$/);
   assert.equal(ui.elements.get('hangar').classList.contains('failure-resting'), true);
   ui.elements.get('popup-action').click();
   const recipeId = ui.state().runs[0].questions[0].recipeId;
   assert.equal(ui.elements.get('lesson').hidden, false);
+  assert.equal(ui.elements.get('popup-hero').hidden, true);
   assert.equal(ui.elements.get('lesson').src, ui.context.RocketGame.recipes[recipeId].video);
   assert.equal(ui.elements.get('lesson').currentTime, 0);
   assert.equal(ui.elements.get('hangar').classList.contains('failure-resting'), true);
@@ -197,7 +203,7 @@ test('timeout opens failure/video/retry, resets input and retains damage', () =>
   ui.advance(1549); assert.equal(ui.state().runs[0].questions[0].attempts.length, 1);
   ui.advance(1);
   const run = ui.state().runs[0]; assert.equal(run.engines, 2); assert.equal(run.questions.length, 1);
-  assert.equal(run.questions[0].attempts.length, 2); assert.equal(ui.elements.get('countdown').textContent, '40s');
+  assert.equal(run.questions[0].attempts.length, 2); assert.equal(ui.elements.get('countdown').textContent, 'T-40');
   assert.equal(ui.elements.get('chamber-total').textContent, '0% filled');
 });
 test('holding fill repeats increments and releasing stops further input', () => {
@@ -312,7 +318,7 @@ test('rocket docks and the fuel station prepares before starting the full countd
   assert.equal(ui.elements.get('fuel-system').hidden, false);
   ui.advance(899); assert.equal(attempts().length, 0);
   ui.advance(1); assert.equal(attempts().length, 1);
-  assert.equal(ui.elements.get('countdown').textContent, '40s');
+  assert.equal(ui.elements.get('countdown').textContent, 'T-40');
 });
 test('reduced-motion settings retain the continuous straight-line docking animation', () => {
   const ui = mount(), animations = [];
@@ -338,7 +344,7 @@ test('reduced-motion settings retain the continuous straight-line docking animat
   ui.advance(3251);
   assert.equal(animations[0].cancelled, true);
   assert.equal(ui.elements.get('rocket-top').src, topImage);
-  assert.equal(ui.elements.get('countdown').textContent, '40s');
+  assert.equal(ui.elements.get('countdown').textContent, 'T-40');
 });
 test('fuel nozzle aligns with the opening of all five variants at different stage sizes', () => {
   const mouths = [[248.5/497,12/489],[234/466,12/480],[228.5/454,10/412],[225/483,11/471],[253.5/507,11/468]];
@@ -357,16 +363,16 @@ test('fuel nozzle aligns with the opening of all five variants at different stag
     assert.ok(Math.abs(parseFloat(fuel.style.left) + width*.42 - (body.left-20+body.width*x)) < .001);
     assert.ok(Math.abs(parseFloat(fuel.style.height) + parseFloat(fuel.style.top) - (body.top-30+body.height*y+height*.006)) < .001);
     const tankWidth = width*.84*.976/3;
-    assert.ok(Math.abs(parseFloat(ui.elements.get('tanks').style.height)/tankWidth - 1591/989) < .001);
+    assert.ok(Math.abs(parseFloat(ui.elements.get('tanks').style.height)/tankWidth - 428/229) < .001);
     for (const c of ['Water','ACN','MeOH']) {
       const d = ui.elements.get(`pipe-flow-${c}`).attributes.d;
       const i = ['Water','ACN','MeOH'].indexOf(c), assemblyWidth = width*.84;
       const startX = i*(tankWidth+assemblyWidth*.012)+tankWidth*.5;
-      const startY = tankWidth*1591/989*.972;
+      const startY = tankWidth*428/229*.972;
       const coordinates = d.match(/-?\d+(?:\.\d+)?/g).map(Number);
       assert.ok(Math.abs(coordinates[0]-startX)<.001);
       assert.ok(Math.abs(coordinates[1]-startY)<.001);
-      const endY = tankWidth*1591/989+assemblyWidth*.18+assemblyWidth*.88*798/1972*.14;
+      const endY = tankWidth*428/229+assemblyWidth*.12+assemblyWidth*.76*798/1972*.14;
       assert.ok(Math.abs(coordinates.at(-1)-endY)<.001);
       assert.equal(d, ui.elements.get(`pipe-metal-${c}`).attributes.d);
       assert.equal(d, ui.elements.get(`pipe-core-${c}`).attributes.d);
@@ -387,6 +393,7 @@ test('full reservoirs drain in matching colours and undo reverses the same pipe'
     const increment = ui.context.RocketGame.increment(recipe,c);
     assert.equal(amount.style['--amount'], `${100-increment}%`);
     assert.equal(chamber.style.height, `${increment}%`);
+    ui.advance(288);
     assert.equal(ui.elements.get(`amount-${c}`).textContent, `${increment}%`);
     assert.equal(ui.elements.get(`amount-${c}`).dataset.delta, `+${increment}%`);
     assert.equal(ui.elements.get(`amount-${c}`).dataset.changing, 'fill');
@@ -394,7 +401,7 @@ test('full reservoirs drain in matching colours and undo reverses the same pipe'
     assert.equal(ui.elements.get(`pipe-core-${c}`).dataset.flow, 'forward');
     assert.equal(ui.elements.get(`pour-${c}`).dataset.flow, 'forward');
     assert.equal(ui.elements.get('chamber-liquid').style['--surface'], `${100-increment}%`);
-    ui.elements.get(`undo-${c}`).click();
+    ui.elements.get('undo-mixture').click();
     assert.equal(pipe.dataset.flow, 'reverse');
     assert.equal(ui.elements.get(`amount-${c}`).dataset.delta, `\u2212${increment}%`);
     assert.equal(ui.elements.get(`amount-${c}`).dataset.changing, 'undo');
@@ -402,6 +409,7 @@ test('full reservoirs drain in matching colours and undo reverses the same pipe'
     assert.equal(amount.style['--amount'], '100%');
     assert.equal(chamber.style.height, '0%');
     assert.equal(ui.elements.get('launch').hidden, true);
+    ui.advance(288);
     assert.equal(ui.elements.get(`amount-${c}`).textContent, '0%');
     ui.advance(650); assert.equal(pipe.dataset.flow, '');
     assert.equal(ui.elements.get(`pipe-core-${c}`).dataset.flow, '');
@@ -450,7 +458,7 @@ test('sound effects follow liquid transfers, actual blowout, failure popup and c
   assert.equal(liquid.loop,true); assert.equal(liquid.plays,1);
   ui.elements.get('fill-Water').click(); assert.equal(liquid.plays,1);
   ui.advance(650); assert.equal(liquid.paused,true);
-  ui.elements.get('undo-Water').click(); assert.equal(liquid.plays,2);
+  ui.elements.get('undo-mixture').click(); assert.equal(liquid.plays,2);
   ui.advance(40000);
   assert.equal(liquid.paused,true); assert.equal(blast.plays,0); assert.equal(wrong.plays,0);
   ui.advance(1150); assert.equal(blast.plays,1); assert.equal(wrong.plays,0);
@@ -521,4 +529,24 @@ test('penalty badge appears once per new engine loss while speed penalties persi
     ui.advance(5300);ui.advance(4800);ui.elements.get('continue').click();ui.choices[0].click();ui.advance(5150);
   }
   loseEngine();flight(true,.67);flight(false,.67);loseEngine();flight(true,.34);
+});
+
+test('third timeout uses the mission-failed astronaut', () => {
+  const ui = mount(); ui.begin();
+  for (let i=0;i<3;i++) {
+    ui.advance(40100); ui.advance(3000);
+    if (i<2) { ui.elements.get('popup-action').click(); ui.elements.get('popup-action').click(); ui.elements.get('popup-action').click(); ui.advance(1550); }
+  }
+  assert.equal(ui.elements.get('popup-title').textContent, 'Mission failed');
+  assert.equal(ui.elements.get('popup-hero').hidden, false);
+  assert.match(ui.elements.get('popup-hero').src, /astronaut-hero-lose-[123]\.webp$/);
+});
+
+test('wrong-answer engine failure also shows the sad astronaut', () => {
+  const ui = mount(); ui.begin();
+  for(let i=0;i<30;i++) ui.elements.get('fill-Water').click();
+  ui.advance(650); ui.elements.get('launch').click(); ui.advance(3100);
+  assert.equal(ui.elements.get('popup-title').textContent, 'Engine failure');
+  assert.equal(ui.elements.get('popup-hero').hidden, false);
+  assert.match(ui.elements.get('popup-hero').src, /astronaut-hero-lose-[123]\.webp$/);
 });

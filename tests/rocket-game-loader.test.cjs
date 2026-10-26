@@ -3,9 +3,41 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
-const { preload, prepareImages } = require('../rocket-game-loader.js');
-const { assetKey, cachedResponse } = require('../rocket-asset-cache.js');
+const { preload, prepareImages, waitForControl } = require('../assets/rocket-game-scripts/rocket-game-loader.js');
+const { assetKey, cachedResponse } = require('../assets/rocket-game-scripts/rocket-asset-cache.js');
 const base = 'https://game.test/app/';
+
+test('moving the game folder reuses existing revisioned media cache keys', () => {
+  const oldEntry = { url: 'assets/rocket-game-assets/page-1/page-1-bg.webp', revision: 'same' };
+  const movedEntry = { ...oldEntry, url: '../rocket-game-assets/page-1/page-1-bg.webp' };
+  assert.equal(assetKey(oldEntry, base), assetKey(movedEntry, base + 'assets/rocket-game-scripts/'));
+});
+
+test('already active worker explicitly claims an uncontrolled page and cleans up its listener', async () => {
+  const listeners = new Set();
+  const container = {
+    controller: null,
+    addEventListener: (_, fn) => listeners.add(fn),
+    removeEventListener: (_, fn) => listeners.delete(fn)
+  };
+  let requested = 0;
+  const worker = { postMessage(message) {
+    assert.equal(message.type, 'ROCKET_CLAIM_CLIENTS'); requested++;
+    container.controller = worker;
+    for (const listener of [...listeners]) listener();
+  } };
+  await waitForControl(container, { active: worker });
+  assert.equal(requested, 1); assert.equal(listeners.size, 0);
+  await waitForControl(container, { active: worker });
+  assert.equal(requested, 1);
+});
+
+test('control wait rejects with a useful error and cleans up when a worker never claims', async () => {
+  const listeners = new Set();
+  const container = { controller: null, addEventListener: (_, fn) => listeners.add(fn), removeEventListener: (_, fn) => listeners.delete(fn) };
+  await assert.rejects(waitForControl(container, { active: { postMessage() {} } }, 5), /could not take control/);
+  assert.equal(listeners.size, 0);
+});
 test('home loader unlocks Play only after complete downloads and worker readiness', async () => {
   const elements = new Map(['load-retry','load-status','load-progress','load-percent','start','asset-loader'].map(id => [id, { hidden: false, disabled: id === 'start', addEventListener() {} }]));
   let deliver;
@@ -15,12 +47,12 @@ test('home loader unlocks Play only after complete downloads and worker readines
     navigator: { serviceWorker: { register: async () => registration, ready: Promise.resolve(registration), controller: worker } },
     caches: { open: async () => memoryCache() },
     ROCKET_ASSETS: [{ url: 'asset', revision: 'v1', bytes: 4 }],
-    RocketAssetCache: require('../rocket-asset-cache.js'),
+    RocketAssetCache: require('../assets/rocket-game-scripts/rocket-asset-cache.js'),
     fetch: () => new Promise(resolve => { deliver = resolve; }),
     Headers, Blob, Response, AbortController, URL, setTimeout, clearTimeout
   };
   context.window = context;
-  vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../rocket-game-loader.js'), 'utf8'), context);
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../assets/rocket-game-scripts/rocket-game-loader.js'), 'utf8'), context);
   await new Promise(resolve => setImmediate(resolve));
   assert.equal(context.RocketPreload.ready, false);
   assert.equal(elements.get('start').disabled, true);
@@ -100,16 +132,16 @@ test('cached media serves full content, seek ranges, suffix ranges and invalid-r
   assert.equal(await cachedResponse(new Request(`${url}?rocketAsset=new`), cache, entries, base), null);
 });
 test('generated manifest includes all recipe videos and runtime art, omits references, and matches file sizes', () => {
-  const root = path.join(__dirname, '..'), context = { self: {} };
+  const root = path.join(__dirname, '../assets/rocket-game-scripts'), context = { self: {} };
   vm.runInNewContext(fs.readFileSync(path.join(root, 'rocket-game-assets.js'), 'utf8'), context);
   const entries = context.self.ROCKET_ASSETS, urls = new Set(entries.map(e => e.url));
-  for (const recipe of require('../rocket-game-core.js').recipes) assert.ok(urls.has(recipe.video));
+  for (const recipe of require('../assets/rocket-game-scripts/rocket-game-core.js').recipes) assert.ok(urls.has(recipe.video));
   for (const entry of entries) {
     assert.equal(entry.bytes, fs.statSync(path.join(root, entry.url)).size);
     assert.doesNotMatch(entry.url, /reference|[- ]old\./i);
   }
   const sources = ['rocket-game.js', 'rocket-game.html', 'rocket-game.css'].map(p => fs.readFileSync(path.join(root, p), 'utf8')).join('\n');
-  for (const match of sources.matchAll(/assets\/rocket-game-assets\/([^'"`]+)/g)) {
+  for (const match of sources.matchAll(/\.\.\/rocket-game-assets\/([^'"`]+)/g)) {
     assert.ok(urls.has(decodeURIComponent(match[0])), `Unlisted asset ${match[0]}`);
   }
 });

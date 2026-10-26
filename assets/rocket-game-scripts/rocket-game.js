@@ -2,7 +2,7 @@
   'use strict';
   const { Game, missions, recipes, chemicals, increment } = window.RocketGame;
   const $ = id => document.getElementById(id);
-  const base = 'assets/rocket-game-assets/';
+  const base = '../rocket-game-assets/';
   const key = 'aurobindo.rocketier.v1';
   const names = { Water: 'Water', ACN: 'ACN', MeOH: 'MeOH' };
   // Match liquid-sort's active gameplay palette.
@@ -95,14 +95,13 @@
     const frame = $('game');
     const previous = frame.dataset.screen;
     const outgoing = screens.includes(previous) ? $(previous) : null;
-    const reducedMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     const version = screenVersion;
     const reveal = () => {
       if (version !== screenVersion) return;
       screens.forEach(id => { $(id).hidden = id !== screen; });
       window.scrollTo(0, 0);
     };
-    if (!immediate && outgoing && previous !== screen && outgoing.animate && !reducedMotion) {
+    if (!immediate && outgoing && previous !== screen && outgoing.animate) {
       frame.inert = true;
       frame.classList.add('transitioning');
       const exit = outgoing.animate([
@@ -154,7 +153,7 @@
   }
   function clearTransfers() {
     stopSound('liquid');
-    chemicals.forEach(c => { const display = $(`amount-${c}`); if (display) { display.dataset.changing = ''; display.dataset.delta = ''; display.feedbackAnimation?.cancel(); } });
+    chemicals.forEach(c => { const display = $(`amount-${c}`); if (display) { display.dataset.changing = ''; display.dataset.delta = ''; display.feedbackAnimation?.cancel(); clearTimeout(display.countTimer); display.countTimer = null; } });
     clearTimeout(transferTimer); transferPending = false;
     $('chamber-liquid').classList.remove('is-mixing');
     pipeTimers.forEach(timer => clearTimeout(timer)); pipeTimers.clear();
@@ -171,11 +170,33 @@
     playSound('liquid', true);
     const display = $(`amount-${chemical}`);
     const previousAmount = parseInt(display.textContent, 10) || 0;
-    const delta = game.mixture[chemical] - previousAmount;
+    const delta = game.attempt.events[game.attempt.events.length - 1].amount;
+    const targetAmount = game.mixture[chemical];
+    clearTimeout(display.countTimer);
+    let countFrame = 0;
+    const countStep = () => {
+      const progress = Math.min(1, ++countFrame / 18);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      display.textContent = `${Math.round(previousAmount + (targetAmount - previousAmount) * eased)}%`;
+      display.countTimer = progress < 1 ? setTimeout(countStep, 16) : null;
+    };
+    display.countTimer = setTimeout(countStep, 16);
     display.dataset.delta = `${delta < 0 ? '\u2212' : '+'}${Math.abs(delta)}%`;
     display.dataset.changing = undo ? 'undo' : 'fill';
+    // Five visual echoes celebrate one transfer; they never change the amount.
+    for (let i = 0; i < 5; i++) {
+      const gain = document.createElement('span');
+      gain.className = `transfer-gain${undo ? ' is-undo' : ''}`;
+      gain.dataset.amount = display.dataset.delta;
+      gain.style.setProperty('--burst-delay', `${i * 85}ms`);
+      gain.style.setProperty('--echo-opacity', [1, .7, .5, .35, .22][i]);
+      gain.style.setProperty('--echo-scale', 1 - i * .06);
+      gain.setAttribute('aria-hidden', 'true');
+      display.parentElement.appendChild(gain);
+      setTimeout(() => gain.remove(), 1000 + i * 85);
+    }
     display.feedbackAnimation?.cancel();
-    if (!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+    {
       display.feedbackAnimation = display.animate?.([
         { transform: 'scale(1)', offset: 0 },
         { transform: `translateY(${undo ? '1' : '-1'}px) scale(1.1)`, offset: .35 },
@@ -202,23 +223,24 @@
     $('chamber-liquid').style.setProperty('--surface', `${100 - game.total}%`);
     chemicals.forEach(c => {
       const remaining = 100 - game.mixture[c];
-      $(`amount-${c}`).textContent = `${game.mixture[c]}%`;
+      if (!$(`amount-${c}`).countTimer) $(`amount-${c}`).textContent = `${game.mixture[c]}%`;
       $(`amount-${c}`).setAttribute('aria-label', `${names[c]}: ${game.mixture[c]}% dispensed`);
       $(`liquid-${c}`).style.setProperty('--amount', `${remaining}%`);
       $(`chamber-${c}`).style.height = `${game.mixture[c]}%`;
       $(`chamber-${c}`).style.backgroundColor = colors[c];
       const fill = document.querySelector(`[data-fill="${c}"]`);
       fill.disabled = game.phase !== 'fill' || game.total >= 100;
-      document.querySelector(`[data-undo="${c}"]`).disabled = game.phase !== 'fill' || !game.mixture[c];
+
     });
+    $('undo-mixture').disabled = game.phase !== 'fill' || !game.fillHistory?.length;
     $('chamber-total').textContent = `${game.total}% filled`;
     updateLaunch();
   }
   function makeTanks() {
     // Keep the layer elements alive so CSS interpolates their levels smoothly.
     clearTransfers();
-    $('pipe-paths').innerHTML = chemicals.map(c => `<g style="--flow-color:${colors[c]}"><path id="pipe-outline-${c}" class="pipe-outline"/><path id="pipe-metal-${c}" class="pipe-metal"/><path id="pipe-core-${c}" class="pipe-core"/><path id="pipe-flow-${c}" class="pipe-flow" style="--flow-color:${colors[c]}"/></g>`).join('');
-    $('tanks').innerHTML = chemicals.map(c => `<div id="tank-${c}" class="tank" style="--liquid:${colors[c]}"><div class="tank-liquid"><i id="liquid-${c}" style="--amount:100%"></i></div><img class="tank-art" src="${base}page-5/solvent-tank.webp" alt=""><output id="amount-${c}" aria-label="${c} dispensed">0%</output><span class="tank-name">${names[c]}</span><div class="tank-controls"><button type="button" data-fill="${c}" aria-label="Fill ${c}, ${increment(game.recipe, c)} percent per step"><img src="${base}page-5/fill-button.webp" alt="Fill"></button><button type="button" data-undo="${c}" aria-label="Undo ${increment(game.recipe, c)} percent ${c}"><img src="${base}page-5/undo-button.webp" alt="Undo"></button></div></div>`).join('');
+    $('pipe-paths').innerHTML = chemicals.map(c => `<g style="--flow-color:${colors[c]}"><svg id="pipe-art-${c}" overflow="hidden" preserveAspectRatio="none"><image href="${base}page-5/tank-tubes.webp" width="636" height="186"/></svg><path id="pipe-outline-${c}" class="pipe-outline"/><path id="pipe-metal-${c}" class="pipe-metal"/><path id="pipe-core-${c}" class="pipe-core"/><path id="pipe-flow-${c}" class="pipe-flow" style="--flow-color:${colors[c]}"/></g>`).join('');
+    $('tanks').innerHTML = chemicals.map(c => `<div id="tank-${c}" class="tank" style="--liquid:${colors[c]}"><div class="tank-liquid"><i id="liquid-${c}" style="--amount:100%"></i></div><img class="tank-art" src="${base}page-5/solvent-tank.webp" alt=""><output id="amount-${c}" aria-label="${c} dispensed">0%</output><span class="tank-name">${names[c]}</span><div class="tank-controls"><button type="button" data-fill="${c}" aria-label="Fill ${c}, ${increment(game.recipe, c)} percent per step"><img src="${base}page-5/fill-button.webp" alt="Fill"></button></div></div>`).join('');
     $('tanks').querySelectorAll('[data-fill]').forEach(button => {
       const c = button.dataset.fill;
       const change = () => {
@@ -251,10 +273,14 @@
       // Native keyboard/assistive-technology clicks have detail 0; pointer taps are handled above.
       button.addEventListener('click', event => { if (event.detail === 0) change(); });
     });
-    $('tanks').querySelectorAll('[data-undo]').forEach(button => button.addEventListener('click', () => {
-      stopHold(); if (game.change(button.dataset.undo, true)) { animateTransfer(button.dataset.undo, true); haptic(); persist(); renderMixture(); } processOutcome();
-    }));
   }
+  $('undo-mixture').addEventListener('click', () => {
+    stopHold();
+    const chemical = game.undoLast();
+    if (chemical) { animateTransfer(chemical, true); haptic(); persist(); renderMixture(); }
+    processOutcome();
+  });
+
   function hangar() {
     clearTransfers();
     show('hangar'); $('hangar').className = 'screen hangar selecting';
@@ -266,7 +292,7 @@
     $('question-title').textContent = game.recipe.name;
     $('question-title').hidden = true;
     $('instruction').textContent = 'Choose your rocket for this journey!';
-    $('countdown').textContent = `${game.mission.seconds}s`;
+    $('countdown').textContent = `T-${game.mission.seconds}`;
     $('countdown').parentElement.classList.remove('urgent');
     $('fuel-system').hidden = true; $('pad-rocket').hidden = true; $('conveyor').hidden = false;
     $('rocket-track').innerHTML = Array.from({ length: 10 }, (_, n) => `<button class="rocket-choice" data-rocket="${n % 5 + 1}" aria-label="Choose rocket ${n % 5 + 1}"><span class="rocket-model" data-variant="${n % 5 + 1}" aria-hidden="true"><img class="rocket-top" src="${base}page-5/rocket-${n % 5 + 1}-top.webp" alt=""><img class="rocket-bottom" src="${base}page-5/rocket-${n % 5 + 1}-bottom.webp" alt=""></span></button>`).join('');
@@ -353,10 +379,10 @@
     const assemblyWidth = stageRect.width * .84;
     const gap = assemblyWidth * .012;
     const tankWidth = (assemblyWidth - 2 * gap) / 3;
-    const tankHeight = tankWidth * 1591 / 989;
-    const chamberWidth = assemblyWidth * .88;
+    const tankHeight = tankWidth * 428 / 229;
+    const chamberWidth = assemblyWidth * .76;
     const chamberHeight = chamberWidth * 798 / 1972;
-    const pipeGap = assemblyWidth * .18;
+    const pipeGap = assemblyWidth * .12;
     const assemblyHeight = tankHeight + pipeGap + chamberHeight;
     fuel.style.left = `${bodyRect.left - stageRect.left + bodyRect.width * mouthX - assemblyWidth / 2}px`;
     fuel.style.right = 'auto';
@@ -367,22 +393,31 @@
     const network = $('pipe-network');
     network.setAttribute('viewBox', `0 0 ${assemblyWidth} ${assemblyHeight}`);
     const chamberY = tankHeight + pipeGap;
-    const stroke = Math.max(7, tankWidth * .105);
+    // Map each supplied pipe segment to the tank outlet and chamber socket.
+    const shapes = [
+      { box:[24,24,184,153], start:55, end:166, points:[[55,42],[55,103],[110,103],[166,103],[166,158]] },
+      { box:[270,24,60,153], start:299, end:299, points:[[299,42],[299,158]] },
+      { box:[378,24,206,153], start:544, end:420, points:[[544,42],[544,103],[482,103],[420,103],[420,158]] }
+    ];
     chemicals.forEach((c, i) => {
       const startX = i * (tankWidth + gap) + tankWidth * .5;
       const startY = tankHeight * .972;
-      const endX = assemblyWidth * .06 + chamberWidth * [.33, .5, .67][i];
+      const endX = assemblyWidth * .12 + chamberWidth * [.33, .5, .67][i];
       const endY = chamberY + chamberHeight * .14;
-      const midY = (startY + endY) / 2;
-      const direction = Math.sign(endX - startX);
-      const radius = Math.min(Math.abs(endX - startX) / 2, (endY - startY) / 4, stroke * 1.2);
-      const d = Math.abs(endX - startX) < 1
-        ? `M ${startX} ${startY} L ${endX} ${endY}`
-        : `M ${startX} ${startY} V ${midY - radius} Q ${startX} ${midY} ${startX + direction * radius} ${midY} H ${endX - direction * radius} Q ${endX} ${midY} ${endX} ${midY + radius} V ${endY}`;
+      const shape = shapes[i], [bx,by,bw,bh] = shape.box;
+      const sx = i === 1 ? tankWidth / 229 * 1.1 : (endX-startX)/(shape.end-shape.start);
+      const sy = (endY-startY)/116;
+      const x = v => startX+(v-shape.start)*sx, y = v => startY+(v-42)*sy;
+      const art = $(`pipe-art-${c}`);
+      art.setAttribute('viewBox', `${bx} ${by} ${bw} ${bh}`);
+      art.setAttribute('x',x(bx)); art.setAttribute('y',y(by));
+      art.setAttribute('width',bw*sx); art.setAttribute('height',bh*sy);
+      const d = i === 1 ? `M ${startX} ${startY} L ${endX} ${endY}`
+        : `M ${startX} ${startY} C ${x(shape.start)} ${y(103)} ${x(shape.start)} ${y(103)} ${x(shape.points[2][0])} ${y(103)} S ${endX} ${y(103)} ${endX} ${endY}`;
       ['outline', 'metal', 'core', 'flow'].forEach((part, j) => {
         const path = $(`pipe-${part}-${c}`);
         path.setAttribute('d', d);
-        path.setAttribute('stroke-width', [stroke + 4, stroke + 1, stroke * .66, stroke * .32][j]);
+        path.setAttribute('stroke-width', [0, 0, Math.min(sx,sy)*17, Math.min(sx,sy)*5][j]);
       });
     });
   }
@@ -395,7 +430,7 @@
     renderMixture(); engines();
     const update = () => {
       if (game.phase !== 'fill') return;
-      $('countdown').textContent = `${Math.ceil(game.remaining)}s`;
+      $('countdown').textContent = `T-${Math.ceil(game.remaining)}`;
       $('countdown').parentElement.classList.toggle('urgent', game.remaining <= 10);
       if (game.remaining <= 0) { game.submit(true); processOutcome(); }
     };
@@ -460,6 +495,10 @@
     const retryPanel = art === 'page-7-2/retry-panel.webp';
     const missionFailedPanel = art === 'page-7-3/mission-failed-panel.webp';
     const artOnly = enginePanel || retryPanel || missionFailedPanel;
+    const hero = $('popup-hero');
+    hero.hidden = !(missionFailedPanel || enginePanel);
+    if (!hero.hidden) hero.src = `${base}astronaut-hero/astronaut-hero-lose-${1 + Math.floor(Math.random() * 3)}.webp`;
+    $('popup').classList.toggle('has-astronaut', !hero.hidden);
     $('popup').classList.toggle('engine-popup', enginePanel || missionFailedPanel);
     $('popup').classList.toggle('retry-popup', retryPanel);
     $('popup').classList.toggle('mission-failed-popup', missionFailedPanel);
@@ -582,7 +621,6 @@
         stopSound('route');
         rocket.classList.remove('route-flying');
         if (game.run.status === 'completed') {
-          $('journey-title').hidden = false;
           $('journey').classList.add('destination-reached');
           announce(`Journey complete! Welcome to ${game.mission.destination}!`);
         }
@@ -593,6 +631,7 @@
     rocket.classList.add('route-flying');
   }
   function animateJourneyStats() {
+    $('journey-hero').hidden = false;
     playSound('numbers');
     $('journey-stats').hidden = false;
     $('journey-stats').classList.add('counting');
@@ -623,8 +662,8 @@
     $('journey').style.backgroundImage = `url('${base}page-6/page-6-bg-${m.id + 1}.webp')`;
     $('planet-route').innerHTML = ['Earth', 'Venus', 'Mars', 'Mercury', 'Jupiter', 'Saturn', 'Uranus', 'Neptune'].map((p, i) => `<span class="${i <= m.id + 1 ? 'active' : ''}">${p}</span>`).join('');
     $('journey-route').textContent = `${m.origin} \u2192 ${m.destination}`;
-    $('journey-title').textContent = 'Yay! Journey complete!';
-    $('journey-title').hidden = true;
+    $('journey-hero').hidden = true;
+    $('journey-hero').src = `${base}page-6/journey-success-1.webp`;
     $('journey').classList.remove('destination-reached');
     $('journey-stats').hidden = true;
     $('journey-stats').classList.remove('counting');
@@ -637,29 +676,42 @@
   function complete() {
     show('complete'); const m = game.mission;
     $('complete-title').textContent = m.id === 6 ? "You've reached Neptune! Solar journey complete!" : `You've reached ${m.destination}! Get ready for your next mission!`;
-    const distance = game.run.distance, inputSeconds = game.run.inputSeconds;
-    $('complete-distance').textContent = '0 km';
-    $('complete-time').textContent = seconds(0);
-    later(() => {
+    const pace = window.RocketGame.missionPace(game.run);
+    game.run.pace = pace;
+    const best = window.RocketGame.bestMissionPace(game.data.runs);
+    game.data.bestMissionPaceSeconds = best;
+    persist();
+    $('complete-pace').textContent = '0.0';
+    $('complete-best-pace').textContent = '0.0';
+    $('complete-pace').setAttribute('aria-label', `This mission: ${pace.averageSeconds?.toFixed(1) ?? 'unavailable'} seconds per answer`);
+    $('complete-best-pace').setAttribute('aria-label', `All-time best: ${best?.toFixed(1) ?? 'unavailable'} seconds per answer`);
+    $('best-pace-row').hidden = true;
+    function countPace(id, value, done) {
       playSound('numbers');
       const started = performance.now();
       function count() {
         const progress = Math.min(1, (performance.now() - started) / 1500);
         const eased = 1 - Math.pow(1 - progress, 3);
-        $('complete-distance').textContent = `${fmt(distance * eased)} km`;
-        $('complete-time').textContent = seconds(inputSeconds * eased);
+        $(id).textContent = value === null ? '?' : (value * eased).toFixed(1);
         if (progress < 1) later(count, 30);
-        else stopSound('numbers');
+        else { stopSound('numbers'); done?.(); }
       }
       count();
-    }, 700);
+    }
+    later(() => countPace('complete-pace', pace.averageSeconds, () => {
+      // Give the player a full reading pause after the first value settles.
+      later(() => {
+        $('best-pace-row').hidden = false;
+        countPace('complete-best-pace', best);
+      }, 1500);
+    }), 700);
     $('next-mission').setAttribute('aria-label', m.id === 6 ? 'Back to Games' : 'Next mission');
   }
   $('start').addEventListener('click', () => { if (window.RocketPreload && !window.RocketPreload.ready) return; brief(); });
   function missionPopup() {
     game.startMission(); persist(); show('mission');
     $('mission-title').textContent = `Mission ${game.mission.id + 1}`;
-    $('mission-route').textContent = `${game.mission.origin} \u2192 ${game.mission.destination}`;
+    $('mission-route').textContent = `${game.mission.origin} to ${game.mission.destination}`;
     $('mission-distance').textContent = fmt(game.mission.distance);
     $('mission-destination').textContent = game.mission.destination;
   }
@@ -670,7 +722,7 @@
     if (game.run.status === 'completed') complete();
     else { game.nextQuestion(); persist(); hangar(); }
   });
-  $('next-mission').addEventListener('click', () => { if (game.mission.id === 6) location.href = 'index.html#/games'; else missionPopup(); });
+  $('next-mission').addEventListener('click', () => { if (game.mission.id === 6) location.href = '../../index.html#/games'; else missionPopup(); });
   $('popup-action').addEventListener('click', () => { const fn = popupAction; $('lesson').pause(); $('popup').close(); fn?.(); });
   $('popup').addEventListener('cancel', event => event.preventDefault());
   $('lesson').addEventListener('error', () => { $('lesson').hidden = true; $('popup-text').hidden = false; $('popup-text').textContent = 'Video unavailable. You can continue to retry.'; });

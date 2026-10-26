@@ -4,12 +4,13 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, () => {
   'use strict';
   const chemicals = ['Water', 'ACN', 'MeOH'];
-  // Recipes and pourSize algorithm match liquid-sort.js.
+  // Original four ratios and pourSize algorithm come from liquid-sort.js; D Column Wash extends the recipe set.
   const recipes = [
-    { name: 'Column Cleaning', mix: { Water: 90, ACN: 5, MeOH: 5 }, video: 'assets/rocket-game-assets/cleaning-solution-videos/column-cleaning.mp4' },
-    { name: 'Strong Wash Solvent', mix: { Water: 20, ACN: 80, MeOH: 0 }, video: 'assets/rocket-game-assets/cleaning-solution-videos/strong-wash.mp4' },
-    { name: 'Needle Wash Solvent', mix: { Water: 50, ACN: 0, MeOH: 50 }, video: 'assets/rocket-game-assets/cleaning-solution-videos/needle-wash.mp4' },
-    { name: 'Column Storage (C18)', mix: { Water: 30, ACN: 70, MeOH: 0 }, video: 'assets/rocket-game-assets/cleaning-solution-videos/column-storage.mp4' }
+    { name: 'C Column Wash', mix: { Water: 90, ACN: 5, MeOH: 5 }, video: '../rocket-game-assets/cleaning-solution-videos/c-column-wash.webm' },
+    { name: 'Strong Wash Solvent', mix: { Water: 20, ACN: 80, MeOH: 0 }, video: '../rocket-game-assets/cleaning-solution-videos/strong-wash.webm' },
+    { name: 'Needle Wash Solvent', mix: { Water: 50, ACN: 0, MeOH: 50 }, video: '../rocket-game-assets/cleaning-solution-videos/needle-wash.webm' },
+    { name: 'Column Storage (C18)', mix: { Water: 30, ACN: 70, MeOH: 0 }, video: '../rocket-game-assets/cleaning-solution-videos/column-storage.webm' },
+    { name: 'D Column Wash', mix: { Water: 10, ACN: 45, MeOH: 45 }, video: '../rocket-game-assets/cleaning-solution-videos/d-column-wash.webm' }
   ];
   const planets = ['Earth', 'Venus', 'Mars', 'Mercury', 'Jupiter', 'Saturn', 'Uranus', 'Neptune'];
   const missions = [
@@ -33,6 +34,16 @@
     }
     if (result[0] === last) [result[0], result[1]] = [result[1], result[0]];
     return result;
+  }
+  function missionPace(run) {
+    const attempts = (run.questions || []).flatMap(q => q.attempts || [])
+      .filter(a => ['correct', 'incorrect', 'timeout'].includes(a.outcome) && Number.isFinite(a.elapsedSeconds) && a.elapsedSeconds >= 0);
+    const total = attempts.reduce((sum, a) => sum + a.elapsedSeconds, 0);
+    return { attemptCount: attempts.length, responseSeconds: total, averageSeconds: attempts.length ? total / attempts.length : null };
+  }
+  function bestMissionPace(runs) {
+    const averages = runs.filter(r => r.status === 'completed').map(r => missionPace(r).averageSeconds).filter(n => n !== null);
+    return averages.length ? Math.min(...averages) : null;
   }
   class Game {
     constructor(saved, now = () => performance.now(), random = Math.random) {
@@ -74,6 +85,7 @@
       if (!['preparing', 'retry'].includes(this.phase)) return false;
       this.mixture = empty(); this.started = this.now(); this.phase = 'fill';
       this.attempt = { id: id(), startedAt: iso(), rocket: this.rocket, limitSeconds: this.mission.seconds, enginesBefore: this.run.engines, outcome: 'active', events: [], mixture: empty() };
+      this.fillHistory = [];
       this.question.attempts.push(this.attempt); return true;
     }
     change(chemical, undo = false) {
@@ -83,10 +95,22 @@
       const amount = undo ? -Math.min(step, this.mixture[chemical]) : Math.min(step, 100 - this.total);
       if (!amount) return false;
       this.mixture[chemical] += amount;
+      if (!undo) this.fillHistory.push({ chemical, amount });
       this.attempt.mixture = { ...this.mixture };
       this.attempt.events.push({ type: undo ? 'undo' : 'fill', chemical, increment: step, amount, elapsedSeconds: this.elapsed, at: iso(), mixture: { ...this.mixture } });
       this.attempt.lastElapsedSeconds = this.elapsed;
       return true;
+    }
+    undoLast() {
+      if (this.phase !== 'fill' || !this.fillHistory?.length) return false;
+      if (this.remaining <= 0) { this.submit(true); return false; }
+      const { chemical, amount } = this.fillHistory.pop();
+      const removed = Math.min(amount, this.mixture[chemical]);
+      this.mixture[chemical] -= removed;
+      this.attempt.mixture = { ...this.mixture };
+      this.attempt.events.push({ type: 'undo', chemical, increment: increment(this.recipe, chemical), amount: -removed, elapsedSeconds: this.elapsed, at: iso(), mixture: { ...this.mixture }, source: 'shared-undo' });
+      this.attempt.lastElapsedSeconds = this.elapsed;
+      return chemical;
     }
     submit(timeout = false) {
       if (this.phase !== 'fill') return null;
@@ -115,6 +139,8 @@
           this.run.unlockedMissionId = this.data.unlocked;
         }
       } else this.phase = 'failure';
+      this.run.pace = missionPace(this.run);
+      this.data.bestMissionPaceSeconds = bestMissionPace(this.data.runs);
       return this.attempt;
     }
     retry() {
@@ -123,5 +149,5 @@
     }
     get stars() { return this.data.completed.reduce((sum, i) => sum + missions[i].stars, 0); }
   }
-  return { Game, missions, recipes, chemicals, increment, bag };
+  return { Game, missions, recipes, chemicals, increment, bag, missionPace, bestMissionPace };
 });

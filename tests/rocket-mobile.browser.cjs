@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const output = 'artifacts/rocket-mobile-qa';
 fs.mkdirSync(output, { recursive: true });
-const url = process.env.ROCKET_URL || 'http://localhost:4173/rocket-game.html';
+const url = process.env.ROCKET_URL || 'http://localhost:4173/assets/rocket-game-scripts/rocket-game.html';
 async function run(type, options, label, width, height, fallback = false) {
   const browser = await type.launch({ headless: true, ...options });
   try {
@@ -16,6 +16,7 @@ async function run(type, options, label, width, height, fallback = false) {
       CSS.supports = (property, value) => property === 'width' && value === '1cqw' ? false : supports(property, value);
     });
     const page = await context.newPage(), errors = [];
+    if (process.env.ROCKET_REDUCED_MOTION === '1') await page.emulateMedia({reducedMotion:'reduce'});
     page.on('pageerror', e => errors.push(e.message));
     await page.goto(url);
     await page.waitForFunction(() => window.RocketPreload?.ready, {}, { timeout: 90000 });
@@ -35,6 +36,8 @@ async function run(type, options, label, width, height, fallback = false) {
     await page.waitForTimeout(300);
     assert.notEqual((await page.locator('#pad-rocket').boundingBox()).y, moving.y, 'Docking must change position');
     await page.waitForFunction(() => document.querySelector('#hangar').classList.contains('formula-reveal'));
+    assert.equal(await page.locator('.rocket-model-name').evaluate(el => getComputedStyle(el, '::before').animationName), 'formula-sweep');
+    assert.notEqual(await page.locator('.rocket-model-name').evaluate(el => getComputedStyle(el, '::after').display), 'none');
     assert.equal(await page.locator('#fuel-system').isVisible(), false);
     await page.waitForFunction(() => !document.querySelector('#hangar').classList.contains('boarding') && !document.querySelector('[data-fill="Water"]').disabled);
     await page.screenshot({ path: `${output}/${label}-filling.png` });
@@ -47,7 +50,7 @@ async function run(type, options, label, width, height, fallback = false) {
     await fill.tap({ force: true });
     let state = await page.evaluate(() => JSON.parse(localStorage.getItem('aurobindo.rocketier.v1')));
     assert.equal(state.runs.at(-1).questions.at(-1).attempts.at(-1).events.length, 1, 'Touch tap adds exactly one increment');
-    await page.locator('[data-undo="Water"]').tap({ force: true });
+    await page.locator('#undo-mixture').tap({ force: true });
     await page.evaluate(() => {
       const state = JSON.parse(localStorage.getItem('aurobindo.rocketier.v1'));
       const recipe = RocketGame.recipes[state.runs.at(-1).questions.at(-1).recipeId];
@@ -57,6 +60,9 @@ async function run(type, options, label, width, height, fallback = false) {
     await page.locator('#launch').tap({ force: true });
     await page.waitForTimeout(1400);
     assert.ok(await page.locator('.launch-plume i').first().evaluate(el => getComputedStyle(el).opacity > 0), 'Launch smoke must animate');
+    assert.equal(await page.locator('#hangar').evaluate(el => getComputedStyle(el).animationName), 'launch-camera-shake');
+    assert.notEqual(await page.locator('.launch-plume i').first().evaluate(el => getComputedStyle(el).display), 'none');
+    assert.equal(await page.locator('.launch-plume i').first().evaluate(el => getComputedStyle(el).animationName), 'launch-cloud-roll');
     await page.screenshot({ path: `${output}/${label}-launch.png` });
     await page.waitForFunction(() => !document.querySelector('#cinematic').hidden, {}, { timeout: 10000 });
     assert.ok(await page.locator('.cinematic-path').evaluate(el => el.getAnimations().some(a => a.playState === 'running')), 'Flight must animate');
@@ -91,7 +97,7 @@ async function run(type, options, label, width, height, fallback = false) {
     assert.ok(video.width > width * .75 && video.height > height * .6);
     await page.locator('#popup-action').tap({ force: true }); await page.locator('#popup-action').tap({ force: true });
     await page.waitForFunction(() => !document.querySelector('#hangar').classList.contains('boarding') && !document.querySelector('[data-fill="Water"]').disabled);
-    assert.equal(await page.locator('#countdown').textContent(), '40s');
+    assert.equal(await page.locator('#countdown').textContent(), 'T-40');
     assert.deepEqual(errors, []);
     console.log(JSON.stringify({ label, width, height, fallback, animations: 'passed', touch: 'passed', failureRetry: 'passed', video, errors }));
     await context.close();

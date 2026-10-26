@@ -1,5 +1,5 @@
-:root{color-scheme:dark;font-family:Arial,Helvetica,sans-serif;color:#f1fbff;background:#02091b;font-synthesis:none}*{box-sizing:border-box}body{margin:0}button,a{-webkit-tap-highlight-color:transparent}button{font:inherit;cursor:pointer}button:disabled{cursor:default;filter:grayscale(1);opacity:.55}button:focus-visible,a:focus-visible{outline:3px solid #fff;outline-offset:4px}button{touch-action:manipulation}img{max-width:100%;display:block}h1,h2,p{margin:0}h1{font-size:clamp(20px,5vw,30px)}[hidden]{display:none!important}.game{position:relative;isolation:isolate;width:100%;max-width:560px;min-height:100svh;margin:auto;overflow:hidden;background:#031336 url('assets/rocket-game-assets/page-2/page-2-bg.webp') center/cover;box-shadow:0 0 90px #0a36794d}.screen{position:relative;min-height:max(780px,100svh);animation:arrive .5s ease-out}.topbar{position:absolute;inset:max(10px,env(safe-area-inset-top)) 12px auto;z-index:8;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;font-weight:800;letter-spacing:.6px}.topbar a,.text-button,.back{color:#d9f7ff;text-decoration:none;border:1px solid #4ea6c77a;background:#031538c9;padding:10px;border-radius:20px}.text-button{font-size:11px}.stardust{position:absolute;inset:-20%;pointer-events:none;z-index:1;background-image:radial-gradient(circle,#a4efff 1px,transparent 2px),radial-gradient(circle,#fff 1px,transparent 2px);background-size:93px 151px,173px 229px;opacity:.25;animation:stars 24s linear infinite}.intro{background:url('assets/rocket-game-assets/page-1/page-1-bg.webp') center top/100% 100%;min-height:100svh;aspect-ratio:9/16}.image-button{background:none;border:0;padding:0;transition:transform .2s;position:relative;z-index:2}.image-button:hover{transform:scale(1.035)}.image-button:active,.gold-button:active{transform:scale(.96)}.start{position:absolute;bottom:5%;width:67%;left:16.5%;animation:breathe 2.5s ease-in-out infinite}.intro-note{position:absolute;bottom:1.5%;width:100%;text-align:center;font-size:12px;text-shadow:0 2px 6px #000}.overlay-screen{padding:85px 22px 40px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;text-align:center}.brief-art{width:100%;animation:float 5s ease-in-out infinite}.glass{background:linear-gradient(145deg,#062659eb,#020d2bef);border:1px solid #45dafa;border-radius:20px;box-shadow:0 0 22px #0acbff24,inset 0 0 20px #1d64b63d;padding:20px}.glass p{font-size:14px;line-height:1.65;margin-top:10px}.wide{width:75%;max-width:320px}.eyebrow{font-size:10px!important;font-weight:800;letter-spacing:2px;color:#73dfff;margin-bottom:8px!important}.mission-orbit{font-size:110px;color:#ffd64e;text-shadow:0 0 50px #ff9d00;animation:orbit 15s linear infinite}.mission-popup{width:100%;padding:30px 18px}.mission-popup h1{font-size:40px}.hangar{height:max(850px,100svh);background-position:center;background-size:100% 100%;transition:background-image .5s}.hud{position:absolute;top:65px;left:7%;width:86%;display:flex;justify-content:space-between;gap:15px}.timer,.engine-panel{display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid #34d9ff;background:#001b4be6;box-shadow:inset 0 0 15px #174ea9,0 0 8px #22caff6b;border-radius:12px;padding:7px 14px;min-width:110px;font-size:25px}.timer.urgent{color:#ff8c80;animation:urgent .6s alternate infinite}.engine-panel img{width:24px;height:35px;object-fit:contain;transition:filter .5s,opacity .5s}.engine-panel .dead{filter:grayscale(1);opacity:.3}.question{position:absolute;top:130px;left:6%;width:88%;text-align:center;padding:12px;z-index:2}.question h1{font-size:21px}.question p{font-size:12px;margin-top:5px}.fuel-system{position:absolute;inset:245px 7% auto;height:330px;z-index:3;animation:descend .8s cubic-bezier(.2,.8,.2,1)}.tanks{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;position:relative;z-index:2}.tank{position:relative;aspect-ratio: .62;--liquid:#48d6ff}.tank-art{position:absolute;width:100%;height:100%;z-index:1}.tank-liquid{position:absolute;left:17%;right:17%;top:27%;bottom:31%;overflow:hidden;border-radius:8px;background:#021e4a}.tank-liquid i{position:absolute;bottom:0;width:100%;height:var(--amount,0%);background:linear-gradient(0deg,var(--liquid),#ffffff77);box-shadow:0 0 15px var(--liquid);transition:height .2s}.tank-liquid i:after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse,#ffffffaa 1px,transparent 3px) 0 0/21px 29px;animation:bubbles 1.4s linear infinite}.tank output{position:absolute;top:14.8%;left:17%;width:66%;z-index:2;text-align:center;font:bold clamp(12px,3vw,19px) monospace;color:#80ffdb}
-.tank-name{position:absolute;top:40%;left:10%;width:80%;z-index:2;text-align:center;font-size:12px;font-weight:900;text-shadow:0 1px 3px #000}.tank-controls{position:absolute;left:7%;right:7%;bottom:12%;display:flex;z-index:2;gap:2px}.tank-controls button{width:50%;background:none;border:0;padding:0;min-height:40px;touch-action:none;user-select:none;-webkit-user-select:none}.tank-controls img{width:100%}.tank-step{position:absolute;top:100%;width:100%;text-align:center;font-size:10px;color:#9ceeff}.pipelines{position:absolute;top:47%;left:11%;width:78%;height:36%;object-fit:fill;z-index:0}.chamber{position:absolute;top:77%;left:8%;width:84%;aspect-ratio:2.48;z-index:2}.chamber>img{position:absolute;inset:0;width:100%;height:100%}.chamber-liquid{position:absolute;left:23%;right:23%;bottom:35%;height:45%;border-radius:10px;display:flex;align-items:flex-end;overflow:hidden}.chamber-liquid i{height:100%;transition:width .2s;opacity:.8}.chamber output{position:absolute;top:6%;width:100%;text-align:center;color:#fff;font-size:12px;text-shadow:0 2px 5px #000;z-index:2}.chamber button{position:absolute;top:32%;left:27%;width:46%}.pad-rocket{position:absolute;left:34%;width:32%;top:69%;height:24%;z-index:2;transition:transform 1s;animation:rocket-in .7s ease-out}.rocket-bottom{position:absolute;bottom:0;width:100%;height:78%;object-fit:contain}.rocket-top{position:absolute;top:0;width:100%;height:33%;object-fit:contain;transform-origin:90% 90%;transition:transform .7s}.filling .rocket-top{transform:rotate(28deg)}.launching .fuel-system{transform:translateY(-140%);opacity:0;transition:transform .8s,opacity .6s}.launching .pad-rocket{animation:liftoff 1.7s ease-in forwards}.flames{position:absolute;left:12%;right:12%;top:94%;height:40%;display:flex;justify-content:space-around;opacity:0}.flames i{width:23%;height:100%;background:linear-gradient(#fff8a0,#ffb500,#fb4c00,transparent);border-radius:20% 20% 70% 70%;filter:drop-shadow(0 0 8px #ff9a00);animation:fire .15s alternate infinite}.launching .flames{opacity:1}.flames i.dead{opacity:0}.engine-failure{animation:failure .2s 4}.engine-failure:after{content:'';position:absolute;inset:0;z-index:5;pointer-events:none;box-shadow:inset 0 0 90px 25px #ff1717b0;animation:urgent .4s alternate infinite}.smoke{position:absolute;inset:75% 0 -30%;opacity:0;background:radial-gradient(ellipse,#9a9b9dcc,transparent 65%);filter:blur(8px)}.engine-failure .smoke{animation:smoke 1s ease-out forwards}.conveyor{position:absolute;bottom:0;left:0;width:100%;height:27%;overflow:hidden;z-index:4}.conveyor>p{font-weight:900;letter-spacing:2px;font-size:11px;text-align:center;text-shadow:0 2px 4px #000}.rocket-track{display:flex;gap:22px;width:max-content;align-items:flex-end;height:77%;animation:convey 12s linear infinite}.rocket-choice{background:none;border:0;width:75px;height:95%;padding:8px;flex-shrink:0;transition:transform .2s}.rocket-choice:hover{transform:translateY(-12px)}.rocket-choice img{height:100%;width:100%;object-fit:contain}.belt{position:absolute;bottom:0;width:200%;height:20%;background:url('assets/rocket-game-assets/page-4/conveyer-belt.webp') repeat-x center/auto 100%;animation:belt 3s linear infinite}.journey{background-position:center;background-size:cover;overflow:hidden}.planet-route{position:absolute;top:75px;left:5%;width:90%;display:flex;justify-content:space-between;border-top:2px solid #4cdbff;padding-top:10px;font-size:8px;color:#abc7da}.planet-route span.active{color:#ffdc69;text-shadow:0 0 10px #ffd400}.flight{position:absolute;left:12%;top:33%;width:22%;animation:flight 4s ease-in-out infinite}.flight img{filter:drop-shadow(0 0 18px #ffd15f)}.journey-content{position:absolute;top:49%;left:7%;width:86%;text-align:center}.journey h1{font-size:25px}.stats{display:grid;grid-template-columns:1fr auto;gap:12px 8px;text-align:left;margin:18px 0;font-size:12px}.stats dt{color:#a6d4ed}.stats dd{margin:0;font-weight:800;text-align:right}.gold-button{display:block;width:100%;padding:15px 22px;border:2px solid #ffeaa4;border-radius:40px;background:linear-gradient(#ffed62,#ffb700 60%,#ff9500);color:#092039;font-weight:900;font-size:17px;box-shadow:0 4px 0 #c45e00,0 0 20px #ffb70033;transition:transform .2s}.gold-button:hover{transform:translateY(-2px)}progress{width:100%;height:12px;margin-top:14px;accent-color:#43e9ee}.award{font-size:130px;color:#ffd13f;text-shadow:0 0 45px #ffb700;animation:float 3s ease-in-out infinite}.back{font-size:13px}dialog{padding:0;border:1px solid #5ae0ff;border-radius:24px;background:#031333;color:#fff;max-width:460px;width:90%;max-height:90svh;box-shadow:0 0 50px #1cd0ff55;animation:arrive .35s ease-out}dialog::backdrop{background:#000b;backdrop-filter:blur(6px)}.popup-body{padding:20px;text-align:center;display:grid;gap:16px}.popup-body>img{max-height:230px;object-fit:contain;margin:auto}.popup-body p{line-height:1.6;font-size:14px}.popup-body video{width:100%;max-height:45svh}#storage-warning{position:relative;z-index:10;background:#8d2b15;padding:55px 15px 12px;font-size:12px}.sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0)}
+:root{color-scheme:dark;font-family:Arial,Helvetica,sans-serif;color:#f1fbff;background:#02091b;font-synthesis:none}*{box-sizing:border-box}body{margin:0}button,a{-webkit-tap-highlight-color:transparent}button{font:inherit;cursor:pointer}button:disabled{cursor:default;filter:grayscale(1);opacity:.55}button:focus-visible,a:focus-visible{outline:3px solid #fff;outline-offset:4px}button{touch-action:manipulation}img{max-width:100%;display:block}h1,h2,p{margin:0}h1{font-size:clamp(20px,5vw,30px)}[hidden]{display:none!important}.game{position:relative;isolation:isolate;width:100%;max-width:560px;min-height:100svh;margin:auto;overflow:hidden;background:#031336 url('../rocket-game-assets/page-2/page-2-bg.webp') center/cover;box-shadow:0 0 90px #0a36794d}.screen{position:relative;min-height:max(780px,100svh);animation:arrive .5s ease-out}.topbar{position:absolute;inset:max(10px,env(safe-area-inset-top)) 12px auto;z-index:8;display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;font-weight:800;letter-spacing:.6px}.topbar a,.text-button,.back{color:#d9f7ff;text-decoration:none;border:1px solid #4ea6c77a;background:#031538c9;padding:10px;border-radius:20px}.text-button{font-size:11px}.stardust{position:absolute;inset:-20%;pointer-events:none;z-index:1;background-image:radial-gradient(circle,#a4efff 1px,transparent 2px),radial-gradient(circle,#fff 1px,transparent 2px);background-size:93px 151px,173px 229px;opacity:.25;animation:stars 24s linear infinite}.intro{background:url('../rocket-game-assets/page-1/page-1-bg.webp') center top/100% 100%;min-height:100svh;aspect-ratio:9/16}.image-button{background:none;border:0;padding:0;transition:transform .2s;position:relative;z-index:2}.image-button:hover{transform:scale(1.035)}.image-button:active,.gold-button:active{transform:scale(.96)}.start{position:absolute;bottom:5%;width:67%;left:16.5%;animation:breathe 2.5s ease-in-out infinite}.intro-note{position:absolute;bottom:1.5%;width:100%;text-align:center;font-size:12px;text-shadow:0 2px 6px #000}.overlay-screen{padding:85px 22px 40px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;text-align:center}.brief-art{width:100%;animation:float 5s ease-in-out infinite}.glass{background:linear-gradient(145deg,#062659eb,#020d2bef);border:1px solid #45dafa;border-radius:20px;box-shadow:0 0 22px #0acbff24,inset 0 0 20px #1d64b63d;padding:20px}.glass p{font-size:14px;line-height:1.65;margin-top:10px}.wide{width:75%;max-width:320px}.eyebrow{font-size:10px!important;font-weight:800;letter-spacing:2px;color:#73dfff;margin-bottom:8px!important}.mission-orbit{font-size:110px;color:#ffd64e;text-shadow:0 0 50px #ff9d00;animation:orbit 15s linear infinite}.mission-popup{width:100%;padding:30px 18px}.mission-popup h1{font-size:40px}.hangar{height:max(850px,100svh);background-position:center;background-size:100% 100%;transition:background-image .5s}.hud{position:absolute;top:65px;left:7%;width:86%;display:flex;justify-content:space-between;gap:15px}.timer,.engine-panel{display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid #34d9ff;background:#001b4be6;box-shadow:inset 0 0 15px #174ea9,0 0 8px #22caff6b;border-radius:12px;padding:7px 14px;min-width:110px;font-size:25px}.timer.urgent{color:#ff8c80;animation:urgent .6s alternate infinite}.engine-panel img{width:24px;height:35px;object-fit:contain;transition:filter .5s,opacity .5s}.engine-panel .dead{filter:grayscale(1);opacity:.3}.question{position:absolute;top:130px;left:6%;width:88%;text-align:center;padding:12px;z-index:2}.question h1{font-size:21px}.question p{font-size:12px;margin-top:5px}.fuel-system{position:absolute;inset:245px 7% auto;height:330px;z-index:3;animation:descend .8s cubic-bezier(.2,.8,.2,1)}.tanks{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;position:relative;z-index:2}.tank{position:relative;aspect-ratio: .62;--liquid:#48d6ff}.tank-art{position:absolute;width:100%;height:100%;z-index:1}.tank-liquid{position:absolute;left:17%;right:17%;top:27%;bottom:31%;overflow:hidden;border-radius:8px;background:#021e4a}.tank-liquid i{position:absolute;bottom:0;width:100%;height:var(--amount,0%);background:linear-gradient(0deg,var(--liquid),#ffffff77);box-shadow:0 0 15px var(--liquid);transition:height .2s}.tank-liquid i:after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse,#ffffffaa 1px,transparent 3px) 0 0/21px 29px;animation:bubbles 1.4s linear infinite}.tank output{position:absolute;top:14.8%;left:17%;width:66%;z-index:2;text-align:center;font:bold clamp(12px,3vw,19px) monospace;color:#80ffdb}
+.tank-name{position:absolute;top:40%;left:10%;width:80%;z-index:2;text-align:center;font-size:12px;font-weight:900;text-shadow:0 1px 3px #000}.tank-controls{position:absolute;left:7%;right:7%;bottom:12%;display:flex;z-index:2;gap:2px}.tank-controls button{width:50%;background:none;border:0;padding:0;min-height:40px;touch-action:none;user-select:none;-webkit-user-select:none}.tank-controls img{width:100%}.tank-step{position:absolute;top:100%;width:100%;text-align:center;font-size:10px;color:#9ceeff}.pipelines{position:absolute;top:47%;left:11%;width:78%;height:36%;object-fit:fill;z-index:0}.chamber{position:absolute;top:77%;left:8%;width:84%;aspect-ratio:2.48;z-index:2}.chamber>img{position:absolute;inset:0;width:100%;height:100%}.chamber-liquid{position:absolute;left:23%;right:23%;bottom:35%;height:45%;border-radius:10px;display:flex;align-items:flex-end;overflow:hidden}.chamber-liquid i{height:100%;transition:width .2s;opacity:.8}.chamber output{position:absolute;top:6%;width:100%;text-align:center;color:#fff;font-size:12px;text-shadow:0 2px 5px #000;z-index:2}.chamber button{position:absolute;top:32%;left:27%;width:46%}.pad-rocket{position:absolute;left:34%;width:32%;top:69%;height:24%;z-index:2;transition:transform 1s;animation:rocket-in .7s ease-out}.rocket-bottom{position:absolute;bottom:0;width:100%;height:78%;object-fit:contain}.rocket-top{position:absolute;top:0;width:100%;height:33%;object-fit:contain;transform-origin:90% 90%;transition:transform .7s}.filling .rocket-top{transform:rotate(28deg)}.launching .fuel-system{transform:translateY(-140%);opacity:0;transition:transform .8s,opacity .6s}.launching .pad-rocket{animation:liftoff 1.7s ease-in forwards}.flames{position:absolute;left:12%;right:12%;top:94%;height:40%;display:flex;justify-content:space-around;opacity:0}.flames i{width:23%;height:100%;background:linear-gradient(#fff8a0,#ffb500,#fb4c00,transparent);border-radius:20% 20% 70% 70%;filter:drop-shadow(0 0 8px #ff9a00);animation:fire .15s alternate infinite}.launching .flames{opacity:1}.flames i.dead{opacity:0}.engine-failure{animation:failure .2s 4}.engine-failure:after{content:'';position:absolute;inset:0;z-index:5;pointer-events:none;box-shadow:inset 0 0 90px 25px #ff1717b0;animation:urgent .4s alternate infinite}.smoke{position:absolute;inset:75% 0 -30%;opacity:0;background:radial-gradient(ellipse,#9a9b9dcc,transparent 65%);filter:blur(8px)}.engine-failure .smoke{animation:smoke 1s ease-out forwards}.conveyor{position:absolute;bottom:0;left:0;width:100%;height:27%;overflow:hidden;z-index:4}.conveyor>p{font-weight:900;letter-spacing:2px;font-size:11px;text-align:center;text-shadow:0 2px 4px #000}.rocket-track{display:flex;gap:22px;width:max-content;align-items:flex-end;height:77%;animation:convey 12s linear infinite}.rocket-choice{background:none;border:0;width:75px;height:95%;padding:8px;flex-shrink:0;transition:transform .2s}.rocket-choice:hover{transform:translateY(-12px)}.rocket-choice img{height:100%;width:100%;object-fit:contain}.belt{position:absolute;bottom:0;width:200%;height:20%;background:url('../rocket-game-assets/page-4/conveyer-belt.webp') repeat-x center/auto 100%;animation:belt 3s linear infinite}.journey{background-position:center;background-size:cover;overflow:hidden}.planet-route{position:absolute;top:75px;left:5%;width:90%;display:flex;justify-content:space-between;border-top:2px solid #4cdbff;padding-top:10px;font-size:8px;color:#abc7da}.planet-route span.active{color:#ffdc69;text-shadow:0 0 10px #ffd400}.flight{position:absolute;left:12%;top:33%;width:22%;animation:flight 4s ease-in-out infinite}.flight img{filter:drop-shadow(0 0 18px #ffd15f)}.journey-content{position:absolute;top:49%;left:7%;width:86%;text-align:center}.journey h1{font-size:25px}.stats{display:grid;grid-template-columns:1fr auto;gap:12px 8px;text-align:left;margin:18px 0;font-size:12px}.stats dt{color:#a6d4ed}.stats dd{margin:0;font-weight:800;text-align:right}.gold-button{display:block;width:100%;padding:15px 22px;border:2px solid #ffeaa4;border-radius:40px;background:linear-gradient(#ffed62,#ffb700 60%,#ff9500);color:#092039;font-weight:900;font-size:17px;box-shadow:0 4px 0 #c45e00,0 0 20px #ffb70033;transition:transform .2s}.gold-button:hover{transform:translateY(-2px)}progress{width:100%;height:12px;margin-top:14px;accent-color:#43e9ee}.award{font-size:130px;color:#ffd13f;text-shadow:0 0 45px #ffb700;animation:float 3s ease-in-out infinite}.back{font-size:13px}dialog{padding:0;border:1px solid #5ae0ff;border-radius:24px;background:#031333;color:#fff;max-width:460px;width:90%;max-height:90svh;box-shadow:0 0 50px #1cd0ff55;animation:arrive .35s ease-out}dialog::backdrop{background:#000b;backdrop-filter:blur(6px)}.popup-body{padding:20px;text-align:center;display:grid;gap:16px}.popup-body>img{max-height:230px;object-fit:contain;margin:auto}.popup-body p{line-height:1.6;font-size:14px}.popup-body video{width:100%;max-height:45svh}#storage-warning{position:relative;z-index:10;background:#8d2b15;padding:55px 15px 12px;font-size:12px}.sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0)}
 @keyframes arrive{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:none}}@keyframes float{50%{transform:translateY(-9px)}}@keyframes breathe{50%{transform:scale(1.04);filter:drop-shadow(0 0 12px #ffc849)}}@keyframes stars{to{transform:translate(30px,100px)}}@keyframes orbit{to{transform:rotate(360deg)}}@keyframes descend{from{transform:translateY(-130%);opacity:0}to{transform:none;opacity:1}}@keyframes bubbles{to{background-position:0 -29px}}@keyframes urgent{to{filter:brightness(1.5)}}@keyframes rocket-in{from{transform:translate(-100% ,60%) scale(.5)}to{transform:none}}@keyframes liftoff{20%{transform:translateY(10px)}100%{transform:translateY(-1200px) scale(.5)}}@keyframes fire{to{transform:scaleY(.7)}}@keyframes smoke{to{opacity:1;transform:translateY(-70px) scale(2)}}@keyframes failure{50%{transform:translateX(4px)}}@keyframes convey{to{transform:translateX(-485px)}}@keyframes belt{to{transform:translateX(-25%)}}@keyframes flight{50%{transform:translate(70px,-70px) rotate(7deg)}}
 @media(min-width:600px){body{padding:20px}.game{border:1px solid #174576;border-radius:28px}.intro{min-height:960px}.screen{min-height:960px}.hangar{height:1000px}.fuel-system{height:380px}.tank-controls button{min-height:48px}.pad-rocket{top:68%}}
 @media(max-width:360px){.topbar{font-size:9px}.question h1{font-size:18px}.fuel-system{left:4%;right:4%;height:290px}.tank-controls button{min-height:36px}.stats{font-size:11px}.glass{padding:15px}}
@@ -26,16 +26,18 @@ body{overflow-x:hidden}
 .overlay-screen>.glass{max-width:100%;overflow-wrap:anywhere}
 .brief-art{max-height:50svh;object-fit:contain}
 #brief{height:max(var(--scene-height),177.778cqw);padding:0;display:block}
-#brief .brief-art{position:absolute;top:25%;left:5%;width:90%;height:auto;max-height:none}
+#brief .brief-art{position:absolute;top:15%;left:5%;width:90%;height:auto;max-height:none}
 #brief .wide{position:absolute;top:73%;left:20%;width:60%;max-width:none}
 #mission{display:block;padding:0;height:max(var(--scene-height),177.778cqw)}
-#mission:before{content:'';position:absolute;inset:-8px;background:url('assets/rocket-game-assets/page-2/page-2-bg.webp') center/100% 100%;filter:blur(5px)}
+#mission:before{content:'';position:absolute;inset:-8px;background:url('../rocket-game-assets/page-2/page-2-bg.webp') center/100% 100%;filter:blur(5px)}
 .mission-card{position:absolute;top:25%;left:11%;width:78%;aspect-ratio:770/972;z-index:2;animation:arrive .6s ease-out}
 .mission-card-art{position:absolute;inset:0;width:100%;height:100%}
-.mission-card h1{position:absolute;top:5.2%;left:15%;width:70%;font-size:7cqw;font-weight:700;line-height:1.2;color:#ffdc57;text-shadow:0 2px 0 #bb6300,0 0 10px #ffae0055}
-.mission-card #mission-route{position:absolute;top:15.1%;left:25%;width:50%;font-weight:600;font-size:3.15cqw;line-height:1.2}
-.mission-copy{position:absolute;top:26%;left:3%;width:94%;font-weight:600;font-size:3.15cqw;line-height:1.2;text-align:center}
-.mission-copy strong{color:#ffe348;font-weight:700}
+.mission-card h1{position:absolute;top:7.5%;left:15%;width:70%;font-size:4.8cqw;font-weight:700;line-height:1.2;color:#fff52b;text-shadow:none;text-transform:uppercase}
+.mission-card #mission-route{position:absolute;top:17.2%;left:6%;width:88%;margin:0;font-weight:700;font-size:4.4cqw;line-height:1.2;color:#fff52b;text-transform:uppercase}
+.mission-copy{position:absolute;top:26.8%;left:6%;width:88%;font-weight:600;font-size:3.5cqw;line-height:1.12;text-align:center;color:#fff}
+.mission-copy p{margin:0;font:inherit;line-height:inherit}
+.mission-copy strong{color:inherit;font-weight:600}
+.mission-distance-label{color:#fff52b}
 .mission-card #play{position:absolute;bottom:4%;left:17%;width:66%}
 .start{bottom:max(4%,env(safe-area-inset-bottom))}
 .journey{padding:70% 7% 30px;min-height:var(--scene-height)}
@@ -84,8 +86,8 @@ dialog{max-width:min(460px,calc(100vw - 24px));max-height:calc(100dvh - 24px);ov
 .hangar:not(.selecting) #question-number,.hangar:not(.selecting) #instruction{display:none}
 .hud{top:max(1.7%,env(safe-area-inset-top));left:14%;width:68%;height:6%;gap:10%;z-index:2}
 .timer,.engine-panel{min-width:0;width:45%;height:100%;border:0;border-radius:0;box-shadow:none;padding:0;background-color:transparent;background-repeat:no-repeat;background-position:center;background-size:100% 100%}
-.timer{background-image:url('assets/rocket-game-assets/page-5/timer.webp');padding-left:12%;font-size:clamp(16px,4.3cqw,25px)}
-.engine-panel{background-image:url('assets/rocket-game-assets/page-5/engine-panel.webp');gap:5%}
+.timer{background-image:url('../rocket-game-assets/page-5/timer.webp');padding-left:12%;font-size:clamp(16px,4.3cqw,25px)}
+.engine-panel{background-image:url('../rocket-game-assets/page-5/engine-panel.webp');gap:5%}
 .engine-panel img{width:18%;height:72%;object-fit:contain}
 .fuel-system{inset:10% 3% auto;height:56%}
 .tanks{gap:1.2%;height:auto;align-items:start}
@@ -125,14 +127,14 @@ dialog{max-width:min(460px,calc(100vw - 24px));max-height:calc(100dvh - 24px);ov
 /* Full reservoirs drain into a persistent, layered receiving chamber. */
 .tank-liquid{left:17%;right:17%;top:27%;bottom:31%;background:#001730;isolation:isolate}
 .tank-liquid i{transition:height .6s linear!important;background:linear-gradient(90deg,#ffffff38,var(--liquid) 25%,var(--liquid) 75%,#001b3433);opacity:.95}
-.tank-liquid i:before{content:'';position:absolute;top:0;left:-10%;width:120%;height:5px;border-radius:50%;background:#ffffff88;box-shadow:0 0 8px var(--liquid);animation:liquid-surface 1.4s ease-in-out infinite!important}
+.tank-liquid i:before{content:'';position:absolute;top:0;left:0;width:100%;height:1px;background:#dcffff80;pointer-events:none}
 .tank-liquid i:after{animation:bubbles 2s linear infinite!important;opacity:.35}
 .chamber-liquid{left:24%;right:24%;bottom:37%;height:43%;display:flex;flex-direction:column-reverse;align-items:stretch;justify-content:flex-start;border-radius:9%;background:transparent}
 .chamber-liquid i{width:100%;height:0;flex:none;opacity:.92;transition:height .6s linear!important;position:relative;box-shadow:inset 8px 0 12px #ffffff33,inset -8px 0 10px #00192d33}
 .chamber-liquid i:after{content:'';position:absolute;inset:0;background:radial-gradient(circle,#ffffff8a 1px,transparent 2px) 0 0/17px 23px;opacity:.4;animation:bubbles 1.6s linear infinite!important}
-.chamber-liquid.is-mixing{filter:brightness(1.18)}
-.chamber-liquid i:before{content:"";position:absolute;top:0;left:-10%;width:120%;height:4px;background:#ffffff80;border-radius:50%;animation:liquid-surface 1s ease-in-out infinite!important}
-.chamber-liquid.is-mixing i:after{opacity:.8;animation-duration:.65s!important}
+.chamber-liquid.is-mixing{filter:none}
+.chamber-liquid i:before{content:none}
+.chamber-liquid.is-mixing i:after{opacity:.25;animation-duration:1.6s!important}
 .pipe-network{position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:0;pointer-events:none}
 .pipe-network path{fill:none;stroke-linecap:round;stroke-linejoin:round}
 .pipe-outline{stroke:#0b263d}.pipe-metal{stroke:url(#pipe-metal)}.pipe-core{stroke:#12334e;transition:stroke .16s linear!important}.pipe-core[data-flow="forward"],.pipe-core[data-flow="reverse"]{stroke:var(--flow-color);filter:drop-shadow(0 0 4px var(--flow-color))}
@@ -153,11 +155,7 @@ dialog{max-width:min(460px,calc(100vw - 24px));max-height:calc(100dvh - 24px);ov
 .docked .hud,.docked .question{animation:station-reveal .45s ease both!important}
 @keyframes station-reveal{from{opacity:0}to{opacity:1}}
 @keyframes assembly-right{from{transform:translate3d(-50%,0,0)}to{transform:translate3d(0,0,0)}}
-@media(prefers-reduced-motion:reduce){
-  *,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
-  /* The assembly line is gameplay motion: retain its synchronized loop at a gentler speed. */
-  .rocket-track,.belt{animation-duration:24s!important;animation-iteration-count:infinite!important;animation-play-state:running}
-}
+
 
 /* Three independent exhausts, anchored to the nozzle mouths, above the rocket artwork. */
 .pad-rocket .flames{inset:0;width:100%;height:100%;display:block;opacity:0;z-index:3;transition:opacity .45s ease!important;pointer-events:none}
@@ -177,10 +175,10 @@ dialog{max-width:min(460px,calc(100vw - 24px));max-height:calc(100dvh - 24px);ov
 .pad-rocket .flames i:nth-child(1){left:var(--exhaust-left);top:var(--exhaust-side-y)}
 .pad-rocket .flames i:nth-child(2){left:var(--exhaust-centre);top:var(--exhaust-centre-y)}
 .pad-rocket .flames i:nth-child(3){left:var(--exhaust-right);top:var(--exhaust-side-y)}
-.pad-rocket .flames i:before{content:'';position:absolute;inset:0;background:url('assets/rocket-game-assets/gifs/fire Loop.gif') center top/100% 100% no-repeat;filter:drop-shadow(0 0 4px #ff9a00);transform-origin:50% 0;transition:opacity .18s linear,transform .3s ease!important}
+.pad-rocket .flames i:before{content:'';position:absolute;inset:0;background:url('../rocket-game-assets/gifs/fire Loop.gif') center top/100% 100% no-repeat;filter:drop-shadow(0 0 4px #ff9a00);transform-origin:50% 0;transition:opacity .18s linear,transform .3s ease!important}
 .pad-rocket .flames i.dead{opacity:1}
 .pad-rocket .flames i.dead:before{opacity:0;transform:scale(.5,.15)}
-.pad-rocket .flames i:after{content:'';position:absolute;left:-90%;top:-30%;width:280%;aspect-ratio:760/840;background:url('assets/rocket-game-assets/gifs/engine-blown-frames.webp') 0 0/700% 100% no-repeat;opacity:0}
+.pad-rocket .flames i:after{content:'';position:absolute;left:-90%;top:-30%;width:280%;aspect-ratio:760/840;background:url('../rocket-game-assets/gifs/engine-blown-frames.webp') 0 0/700% 100% no-repeat;opacity:0}
 .pad-rocket .flames i.blowing:after{animation:engine-blow-frames .7s steps(7,jump-none) forwards,engine-blow-fade .88s linear forwards!important}
 @keyframes engine-blow-frames{from{background-position:0 0}to{background-position:100% 0}}
 @keyframes engine-blow-fade{0%{opacity:0;transform:scale(.7)}10%,75%{opacity:1}100%{opacity:0;transform:scale(1.12) translateY(6%)}}
@@ -212,7 +210,7 @@ dialog{max-width:min(460px,calc(100vw - 24px));max-height:calc(100dvh - 24px);ov
 #popup.engine-popup::backdrop{background:transparent;backdrop-filter:none}
 #popup.engine-popup .popup-body{position:relative;width:84%;max-width:none;padding:0;display:block;animation:engine-panel-in .65s cubic-bezier(.16,1,.3,1) both!important}
 #popup.engine-popup #popup-art{width:100%;height:auto;max-height:none;margin:0;filter:drop-shadow(0 0 10px #ff502344)}
-#popup.engine-popup #popup-action{position:absolute;left:23%;top:67%;width:54%;height:19%;min-height:0;margin:0;padding:0;border:0;border-radius:0;box-shadow:none;background:transparent url('assets/rocket-game-assets/page-7-1/watch-video-button.webp') center/contain no-repeat;font-size:0;animation:engine-action-in .45s .25s ease both!important}
+#popup.engine-popup #popup-action{position:absolute;left:23%;top:67%;width:54%;height:19%;min-height:0;margin:0;padding:0;border:0;border-radius:0;box-shadow:none;background:transparent url('../rocket-game-assets/page-7-1/watch-video-button.webp') center/contain no-repeat;font-size:0;animation:engine-action-in .45s .25s ease both!important}
 #popup.engine-popup #popup-action:hover{filter:brightness(1.12);transform:scale(1.04)}
 @keyframes engine-overlay-in{from{opacity:0}to{opacity:1}}
 @keyframes engine-panel-in{from{opacity:0;transform:translateY(24px) scale(.82)}65%{opacity:1;transform:translateY(-3px) scale(1.025)}to{opacity:1;transform:translateY(0) scale(1)}}
@@ -257,11 +255,11 @@ dialog{max-width:min(460px,calc(100vw - 24px));max-height:calc(100dvh - 24px);ov
 #journey .flight img{width:100%;transform:rotate(20deg);filter:drop-shadow(0 0 10px #ffbf5b80)}
 #journey .journey-content{position:absolute;inset:0;width:100%;height:100%;text-align:center;pointer-events:none}
 #journey-title{position:absolute;left:52%;top:57%;width:44%;font-size:clamp(13px,3.5cqw,21px);line-height:1.2;font-weight:800;text-transform:uppercase;text-shadow:0 2px 4px #00102d;animation:station-reveal .6s ease both!important}
-#journey-stats{position:absolute;left:52%;top:63%;width:44%;aspect-ratio:478/408;display:grid;grid-template-columns:1fr;grid-template-rows:repeat(4,1fr);gap:0;margin:0;padding:0;border:0;border-radius:0;box-shadow:none;background:transparent url('assets/rocket-game-assets/page-6/details-panel.webp') center/100% 100% no-repeat;animation:results-panel-in .65s ease both!important}
+#journey-stats{position:absolute;left:52%;top:63%;width:44%;aspect-ratio:478/408;display:grid;grid-template-columns:1fr;grid-template-rows:repeat(4,1fr);gap:0;margin:0;padding:0;border:0;border-radius:0;box-shadow:none;background:transparent url('../rocket-game-assets/page-6/details-panel.webp') center/100% 100% no-repeat;animation:results-panel-in .65s ease both!important}
 .journey-stat{position:relative;min-width:0}
 .journey-stat dt{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
 #journey-stats .journey-stat dd{position:absolute;left:29%;top:57%;width:65%;margin:0;text-align:center;font-size:clamp(9px,2.65cqw,16px);line-height:1.15;color:#ffe78a;font-weight:800;white-space:nowrap;text-shadow:0 1px 3px #00102d}
-#journey #continue{position:absolute;left:55%;top:87%;width:41%;height:6%;min-height:0;padding:0;border:0;border-radius:0;box-shadow:none;background:transparent url('assets/rocket-game-assets/page-6/continue-mission-button.webp') center/contain no-repeat;font-size:0;pointer-events:auto;animation:station-reveal .6s .25s ease both!important}
+#journey #continue{position:absolute;left:55%;top:87%;width:41%;height:6%;min-height:0;padding:0;border:0;border-radius:0;box-shadow:none;background:transparent url('../rocket-game-assets/page-6/continue-mission-button.webp') center/contain no-repeat;font-size:0;pointer-events:auto;animation:station-reveal .6s .25s ease both!important}
 #journey #continue:hover{filter:brightness(1.12)}
 @keyframes results-rocket-hover{0%,100%{transform:translate(0,0)}50%{transform:translate(3px,-8px)}}
 @keyframes results-panel-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
@@ -279,7 +277,7 @@ dialog{max-width:min(460px,calc(100vw - 24px));max-height:calc(100dvh - 24px);ov
 #journey-stats{left:48%;top:62%;width:48%;height:24%;aspect-ratio:auto;border:1.5px solid #4adfff;border-radius:6cqw;background:linear-gradient(135deg,#082b51ed,#02122ced);padding:2% 3%;box-shadow:inset 0 0 15px #33cfff22}
 #journey-stats .journey-stat{padding-left:28%;display:flex;flex-direction:column;justify-content:center;gap:3px;border-bottom:1px solid #54d8ff66}
 #journey-stats .journey-stat:last-child{border:0}
-#journey-stats .journey-stat:before{content:'';position:absolute;left:0;top:12%;height:76%;aspect-ratio:1;background-image:url('assets/rocket-game-assets/page-6/details-panel.webp');background-size:597.5% 510%;background-position:11.3% 3%;border-radius:50%}
+#journey-stats .journey-stat:before{content:'';position:absolute;left:0;top:12%;height:76%;aspect-ratio:1;background-image:url('../rocket-game-assets/page-6/details-panel.webp');background-size:597.5% 510%;background-position:11.3% 3%;border-radius:50%}
 #journey-stats .journey-stat:nth-child(2):before{background-position:11.3% 32%}
 #journey-stats .journey-stat:nth-child(3):before{background-position:11.3% 60.4%}
 #journey-stats .journey-stat:nth-child(4):before{background-position:11.3% 90.5%}
@@ -304,31 +302,28 @@ dialog{max-width:min(460px,calc(100vw - 24px));max-height:calc(100dvh - 24px);ov
 @keyframes formula-arrive{from{opacity:0;transform:scale(.85)}60%{opacity:1;transform:scale(1.08)}to{opacity:1;transform:scale(1)}}
 @keyframes formula-sweep{from{background-position:150% 0;opacity:0}20%{opacity:1}to{background-position:-50% 0;opacity:0}}
 @keyframes formula-pulse{from{opacity:1;transform:scale(1);box-shadow:0 0 10px #42eaff,inset 0 0 8px #42eaff88}to{opacity:0;transform:scale(1.18);box-shadow:0 0 18px #42eaff00}}
-@media(prefers-reduced-motion:reduce){.formula-reveal .rocket-model-name{animation:station-reveal .3s ease both!important}.formula-reveal .rocket-model-name:before,.formula-reveal .rocket-model-name:after{display:none}}
+
 
 /* Continuous inlet jets meet the moving liquid surface inside the glass. */
 .chamber-liquid{--surface:100%;isolation:isolate}
-.chamber-liquid i{transition:height .5s .1s cubic-bezier(.25,.6,.4,1)!important;background-image:linear-gradient(90deg,#001f4022,transparent 30%,#ffffff33 58%,transparent 80%,#001f4033)}
-.chamber-liquid i:before{height:6px;background:linear-gradient(180deg,#eaffffaa,#ffffff22);animation:pour-surface 1.7s ease-in-out infinite!important;transform-origin:center}
-.chamber-liquid.is-mixing i:before{animation-duration:.65s!important}
-.chamber-pour{position:absolute;left:var(--pour-x);top:0;width:4%;height:clamp(3%,var(--surface),100%);z-index:4;opacity:0;pointer-events:none;transform:translateX(-50%);border-radius:0 0 40% 40%;background:linear-gradient(90deg,transparent,var(--flow-color) 18%,#eaffff 48%,var(--flow-color) 76%,transparent);background-size:100% 100%;transition:height .5s .1s cubic-bezier(.25,.6,.4,1),opacity .12s;filter:drop-shadow(0 0 2px var(--flow-color))}
-.chamber-pour[data-flow="forward"],.chamber-pour[data-flow="reverse"]{opacity:.9}
-.chamber-pour:before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(180deg,transparent 0 7px,#ffffff99 9px,transparent 12px);animation:pour-fall .28s linear infinite}
-.chamber-pour:after{content:'';position:absolute;left:50%;bottom:-4px;width:650%;height:8px;border:1px solid var(--flow-color);border-top:2px solid #eaffff;border-radius:50%;background:radial-gradient(ellipse,var(--flow-color),transparent 65%);animation:pour-impact .5s ease-out infinite;transform-origin:center}
+/* Continuous levels, with no expanding splash rings or elliptical layer caps. */
+.chamber-liquid i{overflow:hidden;transition:height .6s linear!important;background-image:linear-gradient(90deg,#001f4022,transparent 30%,#ffffff22 58%,transparent 80%,#001f4033)}
+.chamber-liquid:after{content:'';position:absolute;left:0;right:0;top:var(--surface);height:1px;background:linear-gradient(90deg,transparent,#dfffffa0 25%,#dfffffa0 75%,transparent);pointer-events:none;z-index:3;transition:top .6s linear!important}
+.chamber-pour{position:absolute;left:var(--pour-x);top:0;width:2.8%;height:clamp(0%,var(--surface),100%);z-index:4;opacity:0;pointer-events:none;transform:translateX(-50%);border-radius:0;background:linear-gradient(90deg,var(--flow-color),#eaffff99 48%,var(--flow-color));transition:height .6s linear,opacity .16s;filter:none}
+.chamber-pour[data-flow="forward"],.chamber-pour[data-flow="reverse"]{opacity:.8}
+.chamber-pour:before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(180deg,transparent 0 10px,#ffffff45 12px,transparent 16px);animation:pour-fall .4s linear infinite}
+.chamber-pour:after{content:none}
 .chamber-pour[data-flow="reverse"]:before{animation-direction:reverse}
-.chamber-pour[data-flow="reverse"]:after{animation-direction:reverse}
-@keyframes pour-fall{to{background-position:0 24px}}
-@keyframes pour-impact{from{opacity:1;transform:translateX(-50%) scale(.35,.6)}to{opacity:0;transform:translateX(-50%) scale(1.4,1.1)}}
-@keyframes pour-surface{0%,100%{transform:translateX(-2%) rotate(-1deg) scaleY(.75)}50%{transform:translateX(2%) rotate(1deg) scaleY(1.2)}}
-@media(prefers-reduced-motion:reduce){.chamber-pour:before,.chamber-pour:after,.chamber-liquid i:before{animation:none!important}}
+@keyframes pour-fall{to{background-position:0 32px}}
+
 
 /* Ease distracting scenery back after the fuel station is ready. */
 .hangar-closeup{filter:brightness(1);transition:filter .8s ease}
 .fuel-ready .hangar-closeup{filter:brightness(.55)}
-@media(prefers-reduced-motion:reduce){.hangar-closeup{transition:none}}
+
 
 /* Page 8: supplied completion artwork and its matching action. */
-#complete.completion-art{position:relative;height:max(var(--scene-height),177.778cqw);min-height:var(--scene-height);padding:0;background:url('assets/rocket-game-assets/page-8/page-8-bg.webp') center/100% 100% no-repeat}
+#complete.completion-art{position:relative;height:max(var(--scene-height),177.778cqw);min-height:var(--scene-height);padding:0;background:url('../rocket-game-assets/page-8/page-8-bg.webp') center/100% 100% no-repeat}
 .completion-message{position:absolute;left:18%;top:64.5%;width:64%;font-size:clamp(12px,3.5cqw,21px);line-height:1.15;font-weight:600;text-align:center;color:#fff}
 .completion-value{position:absolute;left:65%;width:21%;text-align:right;font-size:clamp(9px,2.65cqw,16px);font-weight:700;line-height:1.2;color:#fff1a5;transform:translateY(-50%);font-variant-numeric:tabular-nums;white-space:nowrap}
 .completion-distance{top:72.5%}
@@ -343,8 +338,8 @@ dialog{max-width:min(460px,calc(100vw - 24px));max-height:calc(100dvh - 24px);ov
 #journey.destination-reached:after{content:'';position:absolute;left:81%;top:23.5%;width:24%;aspect-ratio:1;border:2px solid #ffe88e;border-radius:50%;pointer-events:none;animation:destination-ring 1.5s ease-out 2 both}
 @keyframes destination-title-in{from{opacity:0;transform:translateY(-25px) scale(.45);filter:blur(6px)}55%{opacity:1;transform:translateY(0) scale(1.16);filter:blur(0)}to{opacity:1;transform:scale(1)}}
 @keyframes destination-ring{from{opacity:1;transform:translate(-50%,-50%) scale(.3);box-shadow:0 0 25px #ffd65c}to{opacity:0;transform:translate(-50%,-50%) scale(2.4)}}
-@media(prefers-reduced-motion:reduce){#journey.destination-reached #journey-title{animation:station-reveal .3s ease both!important}#journey.destination-reached:after{display:none}}
-#popup.mission-failed-popup #popup-action{left:20%;top:56%;width:60%;height:20%;background-image:url('assets/rocket-game-assets/page-7-3/retry-mission-button.webp')}
+
+#popup.mission-failed-popup #popup-action{left:20%;top:56%;width:60%;height:20%;background-image:url('../rocket-game-assets/page-7-3/retry-mission-button.webp')}
 
 #hangar:not(.formula-reveal) .rocket-model-name{animation:none!important}
 #hangar:not(.formula-reveal) .rocket-model-name:after{animation:none!important;opacity:0}
@@ -353,7 +348,7 @@ dialog{max-width:min(460px,calc(100vw - 24px));max-height:calc(100dvh - 24px);ov
 
 /* Keep feedback centred on the tank's inset digital window. */
 .tank output{left:17%;top:14.8%;width:66%;height:9%;display:flex;align-items:center;justify-content:center;font-size:clamp(13px,3.8cqw,22px);font-weight:900;line-height:1;font-variant-numeric:tabular-nums;color:#dfffff;text-shadow:0 0 3px var(--liquid);z-index:4;pointer-events:none;transition:color .15s,text-shadow .15s}
-.tank output[data-changing="fill"],.tank output[data-changing="undo"]{color:#fff;text-shadow:0 0 4px #fff,0 0 9px var(--liquid),0 0 15px var(--liquid)}
+.tank output[data-changing="fill"],.tank output[data-changing="undo"]{color:#fff;text-shadow:none}
 .tank output:after{content:attr(data-delta);position:absolute;left:0;top:115%;width:100%;height:90%;display:flex;align-items:center;justify-content:center;border-radius:5px;background:#001322e8;border:1px solid var(--liquid);color:#fff;font-size:clamp(10px,2.7cqw,16px);font-weight:800;text-shadow:0 0 5px var(--liquid);opacity:0;transform:translateY(2px);transition:opacity .15s,transform .15s}
 .tank output[data-changing="fill"]:after,.tank output[data-changing="undo"]:after{opacity:1;transform:translateY(0)}
 
@@ -372,7 +367,7 @@ dialog{max-width:min(460px,calc(100vw - 24px));max-height:calc(100dvh - 24px);ov
 @keyframes flight-badge-enter{from{opacity:0;transform:translateY(22px) scale(.75);filter:blur(5px)}65%{opacity:1;transform:translateY(-2px) scale(1.03);filter:blur(0)}to{opacity:1;transform:none}}
 @keyframes flight-badge-shine{to{transform:translateX(120%)}}
 @keyframes flight-rewards-exit{to{opacity:0;transform:translateY(-40px) scale(.94);filter:blur(4px)}}
-@media(prefers-reduced-motion:reduce){.flight-badge{animation:station-reveal .3s ease both!important}.flight-badge:after{display:none}.rewards-exit .flight-rewards{animation:launch-blackout .3s reverse both!important}}
+
 
 /* Reel-sized lesson, with independent topic and action rows. */
 #popup.video-popup{position:fixed;inset:auto;left:var(--popup-left,50%);top:var(--popup-top,1dvh);width:var(--popup-width,min(560px,100vw));height:var(--popup-height,98dvh);max-width:100vw;max-height:100dvh;margin:0;border:0;border-radius:0;background:#020916;box-shadow:none;overflow:hidden}
@@ -410,7 +405,7 @@ dialog{max-width:min(460px,calc(100vw - 24px));max-height:calc(100dvh - 24px);ov
 @keyframes launch-cloud-roll{0%{opacity:0;transform:translate(-50%,10%) scale(.12)}15%{opacity:.22}65%{opacity:.3}100%{opacity:.24;transform:translate(var(--drift),var(--rise)) scale(2) rotate(18deg)}}
 @keyframes launch-haze{from{opacity:0}to{opacity:1}}
 @keyframes launch-camera-shake{0%,15%,100%{transform:translate(0,0)}22%{transform:translate(-1px,1px)}26%{transform:translate(1px,-1px)}30%{transform:translate(-2px,1px)}34%{transform:translate(2px,-2px)}38%{transform:translate(-3px,2px)}42%{transform:translate(3px,-2px)}46%{transform:translate(-3px,-1px)}50%{transform:translate(2px,3px)}54%{transform:translate(-3px,-2px)}58%{transform:translate(3px,1px)}62%{transform:translate(-2px,2px)}66%{transform:translate(2px,-2px)}70%{transform:translate(-2px,1px)}75%{transform:translate(1px,-1px)}82%{transform:translate(-1px,1px)}90%{transform:translate(0,0)}}
-@media(prefers-reduced-motion:reduce){#hangar.launching{animation:none!important}.launching .launch-plume i{display:none}.launching .launch-plume:after{animation:launch-haze 1s 1s ease both!important}}
+
 
 /* Two small gradient puffs, only at the newly damaged nozzle. No blur filters or particles. */
 .engine-soot{position:absolute;left:50%;top:-8%;width:220%;height:180%;transform:translateX(-50%);pointer-events:none;z-index:1}
@@ -418,7 +413,7 @@ dialog{max-width:min(460px,calc(100vw - 24px));max-height:calc(100dvh - 24px);ov
 #hangar .smoking .engine-soot:before{animation:engine-soot-rise 1.6s .08s ease-out both!important;will-change:transform,opacity}
 #hangar .smoking .engine-soot:after{animation:engine-soot-rise 1.45s .3s ease-out both!important;--soot-drift:15%;will-change:transform,opacity}
 @keyframes engine-soot-rise{0%{opacity:0;transform:translate(0,10%) scale(.3)}20%{opacity:1}60%{opacity:.95}100%{opacity:0;transform:translate(var(--soot-drift,-20%),-75%) scale(1.65)}}
-@media(prefers-reduced-motion:reduce){#hangar .smoking .engine-soot:before{animation:engine-soot-fade 1.2s ease both!important;will-change:opacity}#hangar .smoking .engine-soot:after{display:none}}
+
 @keyframes engine-soot-fade{0%,100%{opacity:0}25%,60%{opacity:.65}}
 
 /* Keep the failed rocket closed until the lesson/retry flow returns to gameplay. */
@@ -427,10 +422,10 @@ dialog{max-width:min(460px,calc(100vw - 24px));max-height:calc(100dvh - 24px);ov
 .retry-preparing .fuel-system{animation:none!important;transform:translateY(0);opacity:1;transition:transform .9s .65s ease,opacity .7s .65s ease!important}
 .retry-preparing .rocket-top{transition:transform .65s ease!important}
 .retry-station:not(.failed-liftoff) .fuel-system{animation:none!important}
-@media(prefers-reduced-motion:reduce){.retry-preparing .fuel-system,.retry-preparing .rocket-top{transition:none!important}}
+
 
 /* Supplied retry artwork replaces the generic gold action in Try Again. */
-#popup.retry-popup #popup-action{width:80%;aspect-ratio:588/147;min-height:44px;height:auto;justify-self:center;margin:0;padding:0;border:0;border-radius:0;background:transparent url('assets/rocket-game-assets/page-7-3/retry-mission-button.webp') center/contain no-repeat;box-shadow:none;font-size:0}
+#popup.retry-popup #popup-action{width:80%;aspect-ratio:588/147;min-height:44px;height:auto;justify-self:center;margin:0;padding:0;border:0;border-radius:0;background:transparent url('../rocket-game-assets/page-7-3/retry-mission-button.webp') center/contain no-repeat;box-shadow:none;font-size:0}
 #popup.retry-popup #popup-action:hover{filter:brightness(1.1)}
 
 
@@ -441,3 +436,89 @@ dialog{max-width:min(460px,calc(100vw - 24px));max-height:calc(100dvh - 24px);ov
 .image-button,.tank-controls button,.rocket-choice{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 img{-webkit-user-drag:none}
 @supports not (height:100svh){.game{--scene-height:max(640px,100vh)}.screen{min-height:var(--scene-height)}}
+
+/* Enlarged reservoir controls and shared last-pour undo. */
+.tank{aspect-ratio:229/428}
+.tank output{top:12%;left:13%;width:74%;height:13%;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:600;font-size:clamp(19px,5.6cqw,31px);letter-spacing:-.025em;color:#fff;text-shadow:none}
+.tank output:after{display:none}
+.tank-liquid{left:17%;right:17%;top:31%;bottom:30%;background:#001730}
+.tank-name{top:50.5%;left:12%;width:76%;transform:translateY(-50%);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:600;font-size:clamp(14px,4.1cqw,23px);line-height:1.2;letter-spacing:.01em;text-shadow:0 1px 3px #001d36;pointer-events:none}
+.tank-controls{left:8%;right:8%;top:74%;bottom:auto;height:15%;gap:0}
+.tank-controls button{display:flex;align-items:center;justify-content:center;line-height:1;width:100%;height:100%;flex:1;overflow:visible;border-radius:6px;background:linear-gradient(#ffe65b,#ffbf00);border:1px solid #fff3a2;box-shadow:0 2px 0 #bb7400;color:#171c22;font-weight:900;font-size:clamp(15px,4.6cqw,26px)}
+.tank-controls [data-fill] img{display:none}
+.tank-controls [data-fill]:after{content:'FILL'}
+.tank-controls button:before{inset:-5px 0}
+.chamber{left:12%;width:76%}
+.shared-undo{position:absolute;left:73%;bottom:9%;width:19%;z-index:5;touch-action:manipulation}
+.shared-undo img{width:100%}
+.shared-undo:disabled{opacity:.45}
+.pipe-outline,.pipe-metal{display:none}
+.pipe-core{stroke:transparent}
+.pipe-core[data-flow]{filter:drop-shadow(0 0 2px var(--flow-color))}
+.pipe-flow[data-flow="forward"],.pipe-flow[data-flow="reverse"]{stroke-dasharray:5 12;stroke:#fff;opacity:.9}
+
+/* One leading amount and four soft echoes form a continuous transfer trail.
+   Full-tank layers make percentage translations responsive without layout animation. */
+.transfer-gain{position:absolute;inset:0;z-index:6;pointer-events:none;user-select:none;color:#63ff94;font:700 clamp(17px,4.8cqw,27px)/1.1 system-ui,-apple-system,"Segoe UI",sans-serif;font-variant-numeric:tabular-nums;transform-origin:50% 68%;animation:transfer-gain-rise .95s linear var(--burst-delay,0ms) both!important;will-change:transform,opacity}
+.transfer-gain:after{content:attr(data-amount);position:absolute;left:50%;top:68%;white-space:nowrap;transform:translate(-50%,-50%);text-shadow:0 1px 2px #002d15,0 0 5px #28e86c}
+.transfer-gain.is-undo{transform-origin:50% 30%;animation-name:transfer-gain-fall!important;color:#ff6575}
+.transfer-gain.is-undo:after{top:30%;text-shadow:0 1px 2px #450610,0 0 5px #ff344e}
+@keyframes transfer-gain-rise{
+  0%{opacity:0;transform:translate3d(0,0,0) scale(var(--echo-scale))}
+  12%{opacity:var(--echo-opacity)}
+  65%{opacity:var(--echo-opacity)}
+  100%{opacity:0;transform:translate3d(0,-38%,0) scale(.38)}
+}
+@keyframes transfer-gain-fall{
+  0%{opacity:0;transform:translate3d(0,0,0) scale(var(--echo-scale))}
+  12%{opacity:var(--echo-opacity)}
+  65%{opacity:var(--echo-opacity)}
+  100%{opacity:0;transform:translate3d(0,38%,0) scale(.38)}
+}
+/* Directional transfer feedback is essential to this interaction. Keep its
+   gentle transform travel under reduced motion, as with the docking sequence. */
+
+/* Highlight the digital amount for the full transfer, preserving its bounce. */
+.tank output[data-changing="fill"]{color:#eaffff;text-shadow:0 0 4px #fff8,0 0 10px var(--liquid),0 0 16px var(--liquid);background:radial-gradient(ellipse,#00d7ff26,transparent 72%)}
+.tank output[data-changing="undo"]{color:#fff0c4;text-shadow:0 0 4px #fff8,0 0 10px #ffd36a,0 0 16px #ffd36a88;background:radial-gradient(ellipse,#ffd36a26,transparent 72%)}
+
+/* Sad astronaut enters above the existing panel after its entrance starts. */
+#popup.engine-popup .popup-body>.popup-hero{position:absolute;left:50%;bottom:82%;width:60%;height:auto;max-height:28vh;max-height:28dvh;object-fit:contain;margin:0;z-index:2;pointer-events:none;transform-origin:50% 100%;filter:drop-shadow(0 5px 8px #00132990);animation:astronaut-entrance .85s .12s cubic-bezier(.16,1,.3,1) both,astronaut-breathe 3.5s .97s ease-in-out infinite}
+#popup.has-astronaut .popup-body{margin-top:12%}
+@keyframes astronaut-entrance{0%{opacity:0;transform:translate(-50%,24px) scale(.7) rotate(-7deg)}65%{opacity:1;transform:translate(-50%,-5px) scale(1.04) rotate(2deg)}100%{opacity:1;transform:translate(-50%,0) scale(1) rotate(0)}}
+@keyframes astronaut-breathe{0%,100%{transform:translate(-50%,0) rotate(0)}50%{transform:translate(-50%,-4px) rotate(-1deg)}}
+
+/* The banner masks the cropped astronaut base while the head stays above it. */
+#popup.has-astronaut .popup-body{isolation:isolate}
+#popup.has-astronaut .popup-body>.popup-hero{z-index:0}
+#popup.has-astronaut #popup-art{position:relative;z-index:1}
+#popup.has-astronaut #popup-action{z-index:2}
+
+/* Mission pace values align with the supplied page-8 result panel. */
+#complete .completion-message{position:absolute;inset:auto;width:1px;height:1px}
+#complete .pace-stat{position:absolute;left:36%;width:52%;display:flex;align-items:baseline;gap:.12em;white-space:nowrap;font-family:Arial,Helvetica,sans-serif;font-weight:900;font-size:clamp(26px,8cqw,45px);line-height:1;color:#82f9ff;text-shadow:0 2px 0 #003b67,0 4px 5px #0009;transform-origin:50% 50%;animation:pace-arrive .75s .55s cubic-bezier(.16,1,.3,1) both}
+#complete .pace-current{top:61.5%}
+#complete .pace-best{top:70%;color:#ffe45c;text-shadow:0 2px 0 #926100,0 4px 5px #0009;animation-delay:0s}
+.pace-stat strong{font:inherit;letter-spacing:-.06em;font-variant-numeric:tabular-nums}
+.pace-stat span{font-size:.7em}
+.pace-stat small{font-size:.52em;letter-spacing:-.03em}
+.pace-stat:after{content:'';position:absolute;inset:-15% -2%;pointer-events:none;background:linear-gradient(110deg,transparent 30%,#ffffff80 50%,transparent 70%);mix-blend-mode:screen;opacity:0;animation:pace-sweep .9s 2.15s ease-out both}
+.pace-best:after{animation-delay:1.5s}
+#complete .completion-distance,#complete .completion-time{top:82%;width:40%;font-size:clamp(9px,2.5cqw,14px);color:#daf7ff;text-align:center;animation:station-reveal .6s 1.7s both}
+#complete .completion-distance{left:10%}
+#complete .completion-time{left:50%}
+#complete .completion-distance:before{content:'Distance: '}
+#complete .completion-time:before{content:'Time: '}
+@keyframes pace-arrive{from{opacity:0;transform:translateY(14px) scale(.82);filter:blur(3px)}65%{opacity:1;transform:translateY(-2px) scale(1.04);filter:blur(0)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes pace-sweep{0%{opacity:0;transform:translateX(-75%)}30%{opacity:.65}100%{opacity:0;transform:translateX(75%)}}
+
+/* The winning astronaut peeks from behind the destination's results card. */
+#journey .journey-hero{position:absolute;left:61%;bottom:36%;width:28%;height:auto;z-index:2;pointer-events:none;transform-origin:50% 100%;animation:journey-hero-in .85s cubic-bezier(.16,1,.3,1) both,journey-hero-idle 3.5s .85s ease-in-out infinite}
+#journey #journey-stats{z-index:3}
+#journey #journey-title{top:auto;bottom:calc(36% + 28cqw + 16px);left:49%;width:46%;padding:2% 3%;border:1px solid #ffe27e;border-radius:14px;background:linear-gradient(135deg,#10385a,#041831);z-index:4;font-size:clamp(12px,3.3cqw,19px);text-transform:none}
+#journey-title:after{content:'';position:absolute;left:55%;top:100%;border:8px solid transparent;border-top-color:#ffe27e;pointer-events:none}
+@keyframes journey-hero-in{from{opacity:0;transform:translateY(22px) scale(.75) rotate(-6deg)}65%{opacity:1;transform:translateY(-4px) scale(1.04) rotate(2deg)}to{opacity:1;transform:translateY(0) scale(1) rotate(0)}}
+@keyframes journey-hero-idle{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+
+/* Supplied combined success artwork replaces the separate hero and speech bubble. */
+#journey .journey-hero{left:48%;bottom:38%;width:48%;z-index:4}

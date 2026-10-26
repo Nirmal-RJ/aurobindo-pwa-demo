@@ -43,15 +43,7 @@
             worker.addEventListener('statechange', check); check();
           });
           await navigator.serviceWorker.ready;
-          if (navigator.serviceWorker.controller !== registration.active) await new Promise((resolve, reject) => {
-            const timeout = setTimeout(() => { navigator.serviceWorker.removeEventListener('controllerchange', check); reject(new Error('Offline setup needs a retry.')); }, 15000);
-            function check() {
-              if (navigator.serviceWorker.controller === registration.active) {
-                clearTimeout(timeout); navigator.serviceWorker.removeEventListener('controllerchange', check); resolve();
-              }
-            }
-            navigator.serviceWorker.addEventListener('controllerchange', check); check();
-          });
+          await api.waitForControl(navigator.serviceWorker, registration);
         })();
         workerReady.catch(() => {}); // Downloads and worker setup run together; report either failure below.
         const connection = navigator.connection;
@@ -83,6 +75,22 @@
     start();
   }
 })(typeof window !== 'undefined' ? window : globalThis, () => {
+  function waitForControl(container, registration, timeoutMs = 15000) {
+    if (registration.active && container.controller === registration.active) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const cleanup = () => { clearTimeout(timeout); container.removeEventListener('controllerchange', check); };
+      function check() {
+        if (registration.active && container.controller === registration.active) { cleanup(); resolve(); }
+      }
+      const timeout = setTimeout(() => { cleanup(); reject(new Error('Offline setup could not take control of this page.')); }, timeoutMs);
+      container.addEventListener('controllerchange', check);
+      // An already-active worker does not run its activate handler again on Retry.
+      // Explicitly request a fresh claim instead of waiting for an event it may never emit.
+      try { registration.active?.postMessage({ type: 'ROCKET_CLAIM_CLIENTS' }); }
+      catch (error) { cleanup(); reject(error); return; }
+      check();
+    });
+  }
   async function prepareImages({ images, entries, base, assetKey }) {
     const byPath = new Map(entries.map(entry => [new URL(entry.url, base).pathname, entry]));
     await Promise.all(images.map(async image => {
@@ -161,5 +169,5 @@
     }));
     if (failure) throw failure;
   }
-  return { preload, prepareImages };
+  return { preload, prepareImages, waitForControl };
 });

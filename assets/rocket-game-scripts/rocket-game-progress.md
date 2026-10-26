@@ -1,4 +1,43 @@
+## Mandatory preservation rule for all future AI agents and contributors
+
+This is an explicit, continuing user instruction. It applies across future sessions, context resets, refactors, fixes, and migrations.
+
+- Do not remove existing features, content, assets, or effects, or disable, shorten, tone down, replace, or reduce an approved animation without explicit user permission for that specific change.
+- A general request to improve smoothness, clean up code, optimize performance, improve accessibility, or fix another feature is NOT permission to remove or suppress existing effects. Explain any necessary collateral change and obtain permission before applying it. Continue independent authorized work meanwhile.
+- Preserve approved timing, sequencing, intensity, movement, and continuity. In particular, preserve the question entrance/sweep/pulses, launch camera shake, launch smoke, docking, transitions, liquid flow, and directional percentage trails.
+- Do not reintroduce global near-zero animation/transition durations (such as 0.01ms), hidden effects, stationary substitutions, or reduced-motion/browser/device branches that suppress approved motion. Any such behavioral change requires explicit permission first.
+- Before editing Rocket'ier, read this rule and the current game details/progress. Older historical notes proposing reduced-motion suppression are superseded by this rule. A later explicit user request may authorize a specific exception; record it clearly.
+- Review the diff for collateral animation changes and verify affected sequences before declaring completion. Use the existing browser checks, including ROCKET_REDUCED_MOTION=1 when motion handling changes. Report anything not visually verified; passing logic tests alone does not prove animation quality.
+- Update rocket-game-progress.md after every feature/fix, recording exactly what changed and how it was checked. Never silently remove this rule or weaken it.
+
 # Rocket'ier context and progress
+
+## Current release snapshot - 26 October 2026
+
+This snapshot supersedes conflicting historical entries below; mandatory preservation instructions remain in force.
+
+- Runtime: assets/rocket-game-scripts/rocket-game.html; root rocket-game.html redirects here. Dedicated scoped worker; sibling rocket-game-assets holds media. Five recipes, including D Column Wash (Water 10%, ACN 45%, MeOH 45%), with matching WebM lessons.
+- Fuel controls: enlarged tank displays, centered solvent labels, one Fill per tank and a shared last-fill Undo attached beside the chamber. Animated digit counting/highlights; five green rising Fill echoes and red falling Undo echoes. Preserve all approved attention, docking, shake, smoke and transition effects.
+- Failure: randomly choose any of three sad astronauts for incorrect-answer, timeout or mission-failed popups, animated above/behind the banner.
+- Journey results: supplied page-6/journey-success-1.webp above the stats card after EVERY successful launch once route travel finishes. It replaces the separate win astronaut and speech bubble. Preserve route motion, destination ring and stat counting.
+- Completion: new page-8 artwork with current average response time and best average across all completed missions. Include resolved correct/wrong/timeout attempts; exclude animation/video time and incomplete attempts. Store run.pace and player bestMissionPaceSeconds, deriving legacy results from history.
+- Current pace finishes counting, holds for 1.5 seconds, then best pace appears/counts. Bottom distance/time removed from this screen by explicit request; history preserved.
+- Runtime versions: CSS 82, presentation JS 74, core 5, loader 4, cache helper 1, scoped shell 24. Asset manifest rebuilt for 95 runtime assets (~25 MB).
+- Release validation: 44 Rocketier tests plus 2 root worker tests and syntax/whitespace checks pass. Browser checks and deployment evidence are recorded in progress notes; Windows WebKit is not a physical iPhone test.
+
+
+## 26 October 2026: game files grouped into two sibling folders
+
+Current runtime location: `assets/rocket-game-scripts/`. This progress file and `rocket-game-details.md` moved here as well. Earlier entries use historical root paths.
+
+- `assets/rocket-game-assets/` holds images, GIFs, sounds and videos. `assets/rocket-game-scripts/` holds the HTML, CSS, game/core/loader/cache JS, generated manifest, build utilities, documentation and dedicated `sw.js`.
+- Entry point: `assets/rocket-game-scripts/rocket-game.html`. Games card points here; old root `rocket-game.html` is a compatibility redirect.
+- All runtime media paths now use `../rocket-game-assets/`. Builders work relative to their own folder; root npm scripts and repository tests point to the new source location. Back to Games points to `../../index.html#/games`.
+- Dedicated worker installs seven runtime files under its own scope. It handles media cache/range requests and removes only older `rocketier-shell-*` caches. Shared root worker no longer imports Rocketier scripts or requires its manifest. Existing `rocketier-media-v1` URLs and saved player data are retained, avoiding forced re-download/data loss.
+- Both folders can be hosted together independently (HTTPS/localhost). README explains entry point, configuration and asset builds. Test infrastructure and shared app remain at repository root.
+- Validation: game checks and 40 targeted tests plus two shared-worker tests passed. Chromium passed offline simulation. WebKit passed after actually stopping the temporary test server, including redirect, dedicated control, offline reload, art, moving conveyor and cached WebM byte ranges. WebKit's simulated-offline flag itself caused a harness failure; actual server-disconnection verification succeeded.
+- Versions: game CSS v63, presentation JS v59, core v3, loader v4, cache helper v1. Dedicated shell v1; shared shell v456. Asset manifest rebuilt for sibling-relative URLs.
+
 
 ## Latest refinement: clearer question lettering on phones
 
@@ -737,3 +776,165 @@ The user reported excessively stretched tank-tubes and requested larger solvent 
 
 - All 20 Rocketier tests and game/service-worker syntax checks passed before publication.
 - Corrected fire GIF URL casing to match the actual tracked gifs/fire Loop.gif for case-sensitive hosting.
+
+
+## 26 October 2026: loader stalled at 99% during worker handover
+
+- Screenshot error maps to the loader's 15-second controllerchange timeout, after media downloads have completed. Existing Retry only waited for worker control again; an already-active worker does not repeat its activate handler.
+- Added an explicit ROCKET_CLAIM_CLIENTS message from the loader and a service-worker handler calling clients.claim(). Retained the control gate and timeout, with listener/timer cleanup and clearer failure text. Media cache is preserved.
+- Loader v4 and service-worker cache v453. Preserved existing uncommitted artwork, manifest and layout edits.
+- Validation: game/loader/cache/service-worker syntax passed; all 38 Rocketier tests passed, including newly covered active-worker handover and timeout cleanup. Live browser reproduction remains unverified.
+
+
+## 26 October 2026: iPhone/Mac compatibility investigation
+
+- User reports asset loading and stationary conveyor on unspecified iPhone/Mac versions; user does not have OS/browser/in-app-browser details. Exact failure not reproduced and no new runtime patch was made speculatively in this investigation.
+- Re-ran existing full browser checks against the current local code: Chromium 393x851, WebKit 390x844, and WebKit 320x568 with container units/native animation disabled all passed. Conveyor transform changes, docking, touch controls, screen resizing, success/failure/retry and route movement passed without page errors. All three test runs reached inline video readyState 4 in this run.
+- This is Windows browser-engine automation, not physical Apple hardware/Low Power Mode testing. Existing screenshots were regenerated; report saved as artifacts/rocket-mobile-qa/apple-compatibility-review-2026-10-26.json.
+- Verified all 199 shared service-worker shell asset paths exist locally. The mandatory shell installation and mandatory media cache remain possible failure points under network/storage restrictions; that does not establish these as the affected users' cause.
+- Conveyor already has explicit reduced-motion infinite-loop rules and older-layout fallback. Existing local v453 worker-claim / loader-v4 fix from the previous task has not been pushed in this investigation.
+
+
+## 26 October 2026: mission popup text matched to supplied page-3 reference
+
+- Inspected C:/Users/Admin/Downloads/page-3-reference.webp. Mission heading is now uppercase yellow at 4.8cqw, centred in the header; route is larger uppercase yellow at 4.4cqw and top 17.2% of the panel.
+- Copy starts at 26.8%, uses 3.5cqw type with 1.12 line height, and follows the reference's paragraph breaks. Distance label is yellow; the number and instruction text are white. Dynamic route uses ?Earth to Venus? rather than the smaller arrow line.
+- Verified in WebKit at 320, 390 and 560px viewport widths: no text overflow; inspected the 390px screenshot. Syntax checks passed. Local review screenshots are in .preview/mission-*.png.
+- Cache: CSS v63, JS v59, loader v4, core v2, helper v1, service worker v454. Existing artwork and other pending changes preserved.
+
+
+## 26 October 2026: five question/video configuration
+
+- Renamed original Column Cleaning to C Column Wash, retaining Water/ACN/MeOH 90/5/5 and its recipe index. Appended D Column Wash with 10/45/45, preserving existing recipe indices/history snapshots.
+- Mapped all five questions to supplied .webm videos: c-column-wash, strong-wash, needle-wash, column-storage and d-column-wash. Original three other mixtures unchanged.
+- Shuffle now naturally includes all five questions per bag; boundary repeat prevention and same-question retry preserved. D uses existing increment algorithm: Water 5%, ACN 15%, MeOH 15% per fill/undo step.
+- Regenerated content-versioned asset manifest: 89 runtime assets, 24.6 MB. Core v3; service worker v455. CSS v63, presentation JS v59, loader v4.
+- Updated recipe tests for five-question bags and D-specific filling/undo/validation. Video playback codecs were not changed or re-encoded.
+
+
+## 26 October 2026: enlarged fuel controls and shared Undo
+- Replaced page-5 solvent-tank, tank-tubes and undo-button artwork with the supplied Downloads files. Tank proportions now use 229/428; enlarged white digital readouts still show dispensed percentage starting at 0%.
+- One full-width Fill control per tank, with large centered text. Removed individual Undo controls; a common round Undo beside the chamber reverses the most recent fill portion, including a capacity-clamped final portion. Each reversal is recorded in attempt history. Retry starts with an empty undo stack.
+- New pipe artwork is split into three SVG viewports and individually fitted between reservoir outlets and chamber sockets; animated colored streams follow each bend in both directions. Preserved reservoir/chamber level transitions and launch gating while liquid settles.
+- Preserved mouth alignment for all five rocket variants, docking, nose, failure and launch sequences. Runtime remains in assets/rocket-game-scripts; artwork in assets/rocket-game-assets.
+- CSS v64, presentation JS v60, core v4, scoped shell v2; regenerated the asset revision manifest.
+- Validation: syntax checks and all 41 Rocketier automated tests pass, including shared undo, liquid animation state, five-variant nozzle alignment and existing launch/failure flows. Browser visual check performed at 390px; full Chromium/WebKit checks pending below.
+- Browser validation complete: Chromium 393px, WebKit 390px and WebKit 320px with animation/CSS fallbacks passed docking, touch fill, shared Undo, correct launch, failure and retry; landscape fit also passed. No JavaScript errors. WebKit video decoding remains unverified (readyState 0 in Windows harness); no video files were changed. Root worker tests (2) and whitespace checks passed.
+
+## 26 October 2026: smoother liquid surfaces
+- Reviewed the supplied 160014 screen recording. Removed the oversized expanding oval splash ring and rounded caps on individual liquid layers; empty layers no longer draw floating surface shapes.
+- Added one subtle straight highlight at the combined chamber surface. Reservoir levels, chamber levels and inlet stream length now share a steady 600ms transition with no delayed chamber easing. Narrowed and softened the inlet stream, reduced bubbling during mixing and removed brightness jumps.
+- Preserved solvent colors, fill amounts, shared Undo and launch settling. CSS v65; scoped worker shell v3.
+- Verified mid-fill and mid-Undo in a local Chromium browser; syntax and whitespace checks passed. No gameplay logic changed.
+
+
+## 26 October 2026: centered tank labels and cleaner typography
+- Vertically centered Water, ACN and MeOH in the glass area (50.5% of tank height, offset by half the label height).
+- Changed chemical labels and percentage displays to a system UI font with semibold weight; removed heavy percentage glow and reduced label shadow for cleaner readability.
+- CSS v66 and scoped shell v4; no changes to fill amounts, flow or game timing.
+
+
+## 26 October 2026: launch-style countdown
+- Countdown now displays T-40, T-39, etc. during selection and timed filling, using the existing mission duration. Timing and timeout logic unchanged.
+- Presentation JS v61; scoped shell v5. JavaScript syntax checked.
+
+## 26 October 2026: floating transfer percentages
+- Each successful fill step now creates an independent +amount% particle above the chemical name, drifting downward and fading over 900ms. Shared Undo uses a warm-tinted minus amount particle at the source tank with the same downward movement.
+- Amount comes from the actual before/after mixture delta, including truncated fills; holding Fill produces one particle per increment. Particles ignore pointer input, are hidden from accessibility announcements and remove themselves after 950ms. Reduced-motion users receive a stationary fade.
+- CSS v67, presentation JS v62, scoped shell v6. All 41 Rocketier tests passed; local Chromium fill and Undo visual check completed.
+
+
+## 26 October 2026: stronger five-echo power-up effect
+- Each fill/Undo now emits five downward percentage echoes staggered 90ms apart with slight horizontal spread, larger bold text, brighter solvent-colored glow and a 1.35s lifetime. Removed the small dark pill background. Echoes repeat the actual transferred amount visually; game amounts remain unchanged.
+- Automatic particle cleanup and reduced-motion fades preserved. CSS v68, JS v63, scoped shell v7.
+
+
+## 26 October 2026: directional shrinking percentage bursts
+- Fill echoes now rise from the bottom of the tank glass to the top; Undo echoes descend from top to bottom. Both shrink continuously from 1.25x to 0.4x while fading, retaining five staggered echoes and actual transfer values. Reduced-motion fades preserved for both directions.
+- CSS v69; scoped shell v8. Whitespace check passed; gameplay logic unchanged.
+
+## 26 October 2026: coordinated percentage trail
+- Reviewed rocket-game-details animation continuity requirements. Replaced layout-animated top positions with full-tank compositor transform layers; Fill rises and Undo falls over the same glass bounds while shrinking steadily.
+- One readable leading number now has four progressively softer, smaller echoes at 85ms spacing. Removed sideways scattering and heavy glow; shortened each flight to 950ms to reduce accumulation while holding Fill. Retained actual amounts, five echoes, cleanup and reduced-motion fallback.
+- CSS v70, JS v64, scoped shell v9. All 41 tests passed; Chromium fill/Undo visual check completed.
+
+## 26 October 2026: stationary percentage trail fix
+- Reviewed the 162410 recording: amounts appeared near their starting positions and faded instead of travelling. The reduced-motion rule intentionally replaced travel with stationary fades, matching the observed behavior.
+- Removed that trail-specific override so essential Fill-up/Undo-down motion and shrinking remain active, consistent with the explicitly requested sequence and existing docking behavior. Other reduced-motion rules remain unchanged.
+- CSS v71; scoped shell v10. Verified in Chromium with reduced motion enabled: Undo transforms changed from y=11.96px/scale=.90 to y=30.55px/scale=.75 during travel.
+
+## 26 October 2026: restore approved attention, shake and smoke
+- User explicitly required the original question attention, launch camera shake and launch smoke, smooth animation continuity, and no removal/reduction without permission. Strict instruction placed at the top of both details and progress documents.
+- Removed reduced-motion suppression blocks, including the global .01ms animation/transition shortcut, hidden question sweep/pulses, disabled launch shake/clouds and shortened reward/retry effects. Restored original page transitions and tank-display bounce under the same setting.
+- Confirmed formula-arrive, formula-sweep, formula-pulse, launch-cloud-roll, launch-haze and launch-camera-shake keyframes exactly match Git HEAD. Original timing/intensity retained; three restrained lower-screen clouds remain as previously approved. Did not restore the rejected oval liquid splash.
+- CSS v72, JS v65, scoped shell v11. All 41 tests and syntax checks passed. Chromium full gameplay passed with reduced motion enabled, explicitly checking question sweep/pulse visibility, camera shake and cloud animation, plus launch/failure/retry. Added these assertions and an optional ROCKET_REDUCED_MOTION=1 mode to the browser regression script; updated its old countdown expectation to T-40.
+
+
+## 26 October 2026: permanent instructions for future agents
+- Strengthened the mandatory preservation rule at the top of details and progress. Added root AGENTS.md so future repository agents discover it before editing, including changes outside the game folder. General optimization/accessibility requests do not authorize effect suppression; specific explicit permission is required. Runtime files unchanged.
+
+## 26 October 2026: highlighted animated digital amounts
+- Digital amount values now ease through intermediate percentages over 288ms on Fill and Undo, restarting from the currently visible value on rapid input. Fill highlights use the solvent color; Undo highlights use warm gold. Existing bounce, five-echo trails and all other approved animations remain unchanged.
+- Floating transfer amounts now use the actual recorded transfer event, so rapid input cannot accidentally report the difference from a partially animated readout. Count timers are cancelled with transfer cleanup; underlying mixture values and launch readiness are unaffected.
+- CSS v73, JS v66, scoped shell v12. All 41 tests passed with readout completion checks. Chromium Fill/Undo visual check completed.
+
+## 26 October 2026: sad astronaut popup entrances
+- Copied all four supplied astronaut-hero WebP images into the game assets and regenerated preload manifest (93 files). Timeout with surviving engines shows lose-1; mission failed shows lose-2. Win assets are available/preloaded for later placement, not shown on failure screens.
+- Added a noninteractive astronaut above the existing popup artwork: 850ms slide/scale/tilt settle with a slight overshoot, then gentle 3.5s idle motion. Existing popup entrance, art, actions and game sequences preserved. Hero hides on video/retry/other popups.
+- CSS v74, JS v67, scoped shell v13. All 42 tests passed, including timeout hero, hiding on lesson and third-timeout mission failure. Chromium real-time timeout visual check passed at 390px; mission-failure selection verified in tests.
+
+## 26 October 2026: astronaut on wrong-answer engine failure
+- Corrected the overly narrow visibility condition: lose-1 now appears on every engine-failed popup, including wrong answers as well as timeouts. Mission failed continues to use lose-2. Existing entrance/idle animations and popup actions unchanged.
+- JS v68, scoped shell v14. All 43 tests passed, including a new actual wrong-answer launch regression. Layout unchanged from the previously browser-verified timeout popup.
+
+## 26 October 2026: three randomized sad astronauts
+- Added supplied astronaut-hero-lose-3.webp. Every engine failure (wrong answer or timeout) and mission-failed popup independently chooses one of the three sad images with equal probability; no image is tied to a particular failure page. Existing entrance/idle animation, layout and actions unchanged.
+- JS v69, scoped shell v15; regenerated preload manifest (94 files). All 43 tests passed with failure checks accepting any of the three images. No new visual animation changes.
+
+## 26 October 2026: astronaut tucked behind banner
+- Lowered the astronaut to overlap the banner top (bottom:82%) and explicitly stacked the astronaut behind the popup artwork, with the action above both. The banner now conceals the cut-off base. Preserved all entrance/idle animation definitions and random selection.
+- CSS v75, scoped shell v16. Chromium wrong-answer popup checked with all three images at 390px; banner and action remain unobstructed.
+
+## 26 October 2026: Undo housing alignment
+- Used the user's updated metallic/yellow undo-button.webp artwork. Enlarged shared Undo from 14% to 24% of fuel assembly width, positioned at left:75%, bottom:7% to sit against the chamber right edge and align with its body, matching the reference.
+- Preserved shared-Undo behavior, disabled state, interaction animations and all other effects. CSS v76; scoped shell v17; rebuilt asset manifest to include the updated artwork revision. Chromium fill/Undo visual check completed at 390px.
+
+## 26 October 2026: animated mission pace results
+- Used the replaced page-8 background and reference. Current mission pace is shown in cyan and all-time best in gold, aligned with the artwork labels. Preserved distance/time as a compact lower summary and existing Next Mission navigation; destination message remains accessible.
+- Mission pace = sum of elapsedSeconds / resolved attempt count, including correct, incorrect and timeout attempts within that run. Animation/video time is excluded by the existing timer model. Active/interrupted attempts without a resolved result are excluded.
+- User confirmed all-time best compares COMPLETED runs across ALL missions. Lowest valid average wins, including the current completion. No completed data yields null rather than a fabricated best; historical attempts can be used without new fields.
+- Each submission stores run.pace {attemptCount,responseSeconds,averageSeconds} and data.bestMissionPaceSeconds in existing persistence/history. Completion recomputes from attempt history and persists it, preserving compatibility with previous saves.
+- Retained existing result counting sound and distance/time count-up; added staggered scale/slide/blur settles, animated pace counting and cyan/gold light sweeps. Existing gameplay effects unchanged.
+- CSS v77, JS v70, core v5, scoped shell v18; refreshed asset manifest. All 44 tests and syntax checks passed. Chromium near-completion fixture verified entry/count-up, persistence and final layout at 390px and 320px. Core test covers retries/timeouts, cross-mission minimum, failed-run exclusion and serialized legacy history.
+
+## 26 October 2026: reading pause between pace results
+- Current pace finishes its 1500ms count-up, then holds for a full 1500ms before the best-pace row appears and starts its own count-up. Best-row entrance and sheen remain animated; counting audio stops during the reading pause.
+- Removed the completion-screen bottom distance/time elements at the user's explicit request. Underlying history and journey statistics remain intact.
+- CSS v78, JS v71, scoped shell v19. All 44 tests passed, including assertions immediately before/after the 1500ms pause. Browser appearance was not rechecked for this timing-only/layout-removal update.
+
+## 26 October 2026: winning astronaut on journey results
+- Added a randomly selected win-1/win-2 astronaut above and behind the journey stats card when the destination is reached, matching the existing completion-announcement timing. Lower body overlaps behind the card; the announcement is now a speech bubble saying This journey completed! above the character.
+- Added animated slide/scale/tilt entrance and gentle idle movement, retaining the existing title celebration, destination ring, rocket route animation and stat counting. Reset character visibility for each journey.
+- CSS v79, JS v72, scoped shell v20. All 44 tests passed with win-image and reveal-state assertions. Chromium near-completion fixture checked the layered card/astronaut; bubble moved closer to the head after inspection.
+
+## 26 October 2026: green/red transfer trails
+- Per user request, rising Fill percentage echoes are now bright green with green glow; falling Undo echoes are red with red glow, like market gain/loss feedback. Preserved signed amounts, five echoes, direction, duration, scale/fade animations, actual liquid colors and digital display effects.
+- CSS v80, scoped shell v21. Reviewed selector changes and whitespace; color-only update, no gameplay changes or new browser verification.
+
+## 26 October 2026: speech bubble clears winning astronaut
+- Anchored the journey speech bubble bottom above the astronaut's full image height plus 16px clearance (bottom:calc(36% + 28cqw + 16px)), replacing the fixed top:47% placement. This reserves room for either pose's raised hand and existing entrance/idle movement without changing those animations or card layering.
+- CSS v81, scoped shell v22. Whitespace check passed; browser verification pending.
+
+## 26 October 2026: restore journey celebration wording
+- Restored 'Yay! Journey complete!' per user request. Speech bubble placement, astronaut and animations unchanged. JS v73; scoped shell v23.
+
+## 26 October 2026: combined success artwork after every launch
+- Copied supplied journey-success-1.webp into page-6 and added it to preload manifest (95 assets). Replaced separate winning-astronaut image and speech-bubble markup with this combined image, as explicitly requested.
+- Show image when route arrival reveals stats on every successful launch, including partial mission progress. Existing entrance/idle animations, route travel, destination ring and stat counting preserved. Image spans the card width above its top edge.
+- CSS v82, JS v74, scoped shell v24. All 44 tests passed, including success image visibility during intermediate and destination journeys.
+- Chromium near-completion fixture visually verified the combined artwork above the stats card at 390px.
+
+## 26 October 2026: release preparation
+- Updated current-state snapshots in details/progress and documented the established GitHub Pages production URL, validation and publishing steps in README.
+- Release checks: 44 Rocketier tests, 2 root service-worker tests, JavaScript syntax and whitespace checks passed. WebKit migration/offline smoke passed: root redirect, dedicated worker control, offline reload, artwork, moving conveyor and video byte ranges. Git fetch confirmed main matched origin/main before release.
+- Release scope includes the complete accumulated Rocketier folder migration, five-recipe/video configuration, artwork/UI/animation updates, pace tracking and strict agent instructions.

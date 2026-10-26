@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-26",
+  "environment": "Windows browser-engine automation; no physical Apple device tested",
+  "reported_issue": "Unspecified iPhone/Mac asset loading and conveyor freezing; OS/browser/context unknown",
+  "checks": [
+    {
+      "engine": "Chromium",
+      "viewport": "393x851",
+      "result": "passed"
+    },
+    {
+      "engine": "WebKit",
+      "viewport": "390x844",
+      "result": "passed"
+    },
+    {
+      "engine": "WebKit",
+      "viewport": "320x568",
+      "legacy_fallbacks": true,
+      "result": "passed"
+    }
+  ],
+  "verified": [
+    "conveyor transform changes",
+    "docking moves",
+    "portrait/landscape fitting",
+    "touch fill/undo",
+    "correct launch and cinematic",
+    "route movement",
+    "wrong-answer smoke and retry",
+    "inline MP4 readyState 4",
+    "no page errors"
+  ],
+  "shell_assets": 199,
+  "missing_local_shell_assets": [],
+  "conclusion": "Reported freeze was not reproduced. Existing local worker claim fix requires publication; physical-device/version evidence is still needed for exact diagnosis."
+}

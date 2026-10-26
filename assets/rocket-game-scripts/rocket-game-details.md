@@ -1,4 +1,30 @@
+## Mandatory preservation rule for all future AI agents and contributors
+
+This is an explicit, continuing user instruction. It applies across future sessions, context resets, refactors, fixes, and migrations.
+
+- Do not remove existing features, content, assets, or effects, or disable, shorten, tone down, replace, or reduce an approved animation without explicit user permission for that specific change.
+- A general request to improve smoothness, clean up code, optimize performance, improve accessibility, or fix another feature is NOT permission to remove or suppress existing effects. Explain any necessary collateral change and obtain permission before applying it. Continue independent authorized work meanwhile.
+- Preserve approved timing, sequencing, intensity, movement, and continuity. In particular, preserve the question entrance/sweep/pulses, launch camera shake, launch smoke, docking, transitions, liquid flow, and directional percentage trails.
+- Do not reintroduce global near-zero animation/transition durations (such as 0.01ms), hidden effects, stationary substitutions, or reduced-motion/browser/device branches that suppress approved motion. Any such behavioral change requires explicit permission first.
+- Before editing Rocket'ier, read this rule and the current game details/progress. Older historical notes proposing reduced-motion suppression are superseded by this rule. A later explicit user request may authorize a specific exception; record it clearly.
+- Review the diff for collateral animation changes and verify affected sequences before declaring completion. Use the existing browser checks, including ROCKET_REDUCED_MOTION=1 when motion handling changes. Report anything not visually verified; passing logic tests alone does not prove animation quality.
+- Update rocket-game-progress.md after every feature/fix, recording exactly what changed and how it was checked. Never silently remove this rule or weaken it.
+
 # Rocket'ier game details
+
+## Current release snapshot - 26 October 2026
+
+This snapshot supersedes conflicting historical entries below; mandatory preservation instructions remain in force.
+
+- Runtime: assets/rocket-game-scripts/rocket-game.html; root rocket-game.html redirects here. Dedicated scoped worker; sibling rocket-game-assets holds media. Five recipes, including D Column Wash (Water 10%, ACN 45%, MeOH 45%), with matching WebM lessons.
+- Fuel controls: enlarged tank displays, centered solvent labels, one Fill per tank and a shared last-fill Undo attached beside the chamber. Animated digit counting/highlights; five green rising Fill echoes and red falling Undo echoes. Preserve all approved attention, docking, shake, smoke and transition effects.
+- Failure: randomly choose any of three sad astronauts for incorrect-answer, timeout or mission-failed popups, animated above/behind the banner.
+- Journey results: supplied page-6/journey-success-1.webp above the stats card after EVERY successful launch once route travel finishes. It replaces the separate win astronaut and speech bubble. Preserve route motion, destination ring and stat counting.
+- Completion: new page-8 artwork with current average response time and best average across all completed missions. Include resolved correct/wrong/timeout attempts; exclude animation/video time and incomplete attempts. Store run.pace and player bestMissionPaceSeconds, deriving legacy results from history.
+- Current pace finishes counting, holds for 1.5 seconds, then best pace appears/counts. Bottom distance/time removed from this screen by explicit request; history preserved.
+- Runtime versions: CSS 82, presentation JS 74, core 5, loader 4, cache helper 1, scoped shell 24. Asset manifest rebuilt for 95 runtime assets (~25 MB).
+- Release validation: 44 Rocketier tests plus 2 root worker tests and syntax/whitespace checks pass. Browser checks and deployment evidence are recorded in progress notes; Windows WebKit is not a physical iPhone test.
+
 
 Question readability revision: remove text shadows and the entrance's text drop-shadow. Increase text about 5%, keeping it centred within slightly wider variant-specific label bounds so all recipe names fit phone screens. Preserve the other entrance animation effects.
 
@@ -180,3 +206,56 @@ After the rocket exits the hangar, smoothly black out the game. On an empty blac
 ### Results route progression
 
 Draw a dotted curved route between origin and destination. Animate each successful launch from its previous cumulative-distance position to its new position, with a highlighted travelled segment. Reach the destination at 100% mission distance. Show readable live statistics beside the route; enable Continue after the movement finishes.
+
+
+### Five-question configuration ? 26 October 2026 (supersedes original four-question list)
+
+| Question | Water | ACN | MeOH | Video |
+|---|---:|---:|---:|---|
+| C Column Wash (formerly Column Cleaning) | 90% | 5% | 5% | c-column-wash.webm |
+| Strong Wash Solvent | 20% | 80% | 0% | strong-wash.webm |
+| Needle Wash Solvent | 50% | 0% | 50% | needle-wash.webm |
+| Column Storage (C18) | 30% | 70% | 0% | column-storage.webm |
+| D Column Wash | 10% | 45% | 45% | d-column-wash.webm |
+
+Videos are in assets/rocket-game-assets/cleaning-solution-videos/. All five appear once per shuffled bag, without immediate boundary repeats. D Column Wash fill/undo increments are 5/15/15 using the existing algorithm.
+
+
+### File organisation ? 26 October 2026
+
+All game runtime files, builders and notes now live in `assets/rocket-game-scripts/`, next to `assets/rocket-game-assets/`. The entry page and dedicated service worker are inside the scripts folder. Use `README.md` in that folder for build and hosting instructions. Existing root game links redirect to the new entry point.
+
+
+### Updated fuel controls (26 October 2026)
+Each solvent tank has one hold-to-fill button and a large digital display of its dispensed percentage (initially 0%). Physical reservoirs begin full and drain as dispensed. A single common Undo beside the mixing chamber returns the most recent dispensed portion to its source tank, in reverse fill order, with reverse pipe-flow animation. Undo is unavailable when no fills remain or input is closed. The original individual solvent Undo controls are superseded.
+
+### Percentage trail refinement (26 October 2026)
+Each transfer shows its actual signed amount with one leading number and four softer echoes. Fill travels from the bottom to the top of the tank glass; Undo travels downward. Both shrink smoothly, fade at the endpoint and use transform/opacity animation without changing layout. Keep the trail coordinated and restrained during held filling; preserve reduced-motion fades and immediate input response.
+
+Percentage trail motion correction: preserve the gentle directional percentage travel even with reduced motion enabled, consistent with essential docking motion. This supersedes the stationary reduced-motion fade for percentage echoes only.
+
+Digital readout feedback: animate dispensed percentage values up/down over 288ms, retaining the existing bounce. Highlight Fill in the solvent color and Undo in warm gold for the transfer window. Rapid input continues from the visible number while gameplay and floating-trail amounts use exact model/event values. Preserve all other approved effects.
+
+Sad astronaut feedback: show astronaut-hero-lose-1 above the timeout popup and astronaut-hero-lose-2 above mission failed. Animate their entrance with slide/scale/tilt settling and gentle idle movement. Preserve existing artwork/actions and hide the hero on lessons/retry. Both win images are stored/preloaded for future placement.
+
+Astronaut visibility correction: show lose-1 for ALL engine-failure popups (incorrect mixtures and timeouts), not timeouts alone. Mission failure uses lose-2. Preserve the animated entrance and idle motion.
+
+Sad astronaut randomization: all engine-failure, timeout and mission-failed popups randomly choose lose-1, lose-2 or lose-3 with equal probability on each appearance. This supersedes the earlier fixed per-page mapping. Keep the existing entrance and idle animations.
+
+Astronaut placement: position the character above the banner with its lower body overlapping behind the artwork, so the banner hides the cropped image base. Keep the action above both layers and preserve entrance/idle movement.
+
+Shared Undo placement: use the metallic yellow housing artwork at 24% fuel assembly width, left 75%, bottom 7%, aligned beside the chamber body as an attached control. Preserve its behavior and existing animations.
+
+### Mission pace results (26 October 2026)
+Completion uses the new page-8 background/reference, with animated cyan current pace and gold all-time best pace (seconds per answer, one decimal). Current pace averages all resolved attempts in that mission run, including wrong answers and timeouts; only active answer-input time counts. All-time best is the lowest average among completed runs across ALL missions, as explicitly confirmed by the user. Failed/interrupted runs do not qualify for the best.
+Store each run's pace attempt count, total response seconds and average, plus the player's bestMissionPaceSeconds. Derive averages from preserved attempts for older saves. Animate entrance, count-up and final sheen; retain counting sound and all other existing effects. Keep distance/time as a compact lower summary and existing Next Mission behavior.
+
+Completion results timing update: finish counting this mission's pace, hold the final value for 1.5 seconds, then reveal and count the all-time best pace. Preserve both animated entrances and highlights. Remove bottom distance/time from this screen as explicitly requested; keep those values in history and other existing statistics.
+
+Journey destination celebration: randomly show either winning astronaut above/behind the stats card when the destination is reached. Present the existing completion announcement as a speech bubble saying This journey completed! Preserve its attention animation, route motion, destination ring and stats counting. Animate the astronaut entrance and gentle idle motion, with its cropped base masked behind the card.
+
+Percentage trail color: Fill's rising signed amount echoes use green text/glow; Undo's falling echoes use red text/glow. Preserve all existing motion, five-echo sequencing, chemical liquid colors and digital readout feedback.
+
+Journey speech bubble wording: use 'Yay! Journey complete!' (supersedes 'This journey completed!').
+
+Journey success artwork revision: replace the separate winning astronaut and speech-bubble text with page-6/journey-success-1.webp. Show the supplied combined image above the stats card after EVERY successful launch, once route travel finishes (not only at destination). Retain entrance/idle animation, route progression, destination ring and stats counting.

@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
 const root = __dirname;
-const directory = 'assets/rocket-game-assets';
+const directory = '../rocket-game-assets';
 function scan(folder) {
   return fs.readdirSync(path.join(root, folder), { withFileTypes: true }).flatMap(entry => {
     const file = `${folder}/${entry.name}`;

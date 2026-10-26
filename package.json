@@ -10,13 +10,14 @@
     "check": "node --check app.js && node --check account.js && node --check hero-carousel.js && node --check tile-match.js && node --check pill-perfect.js && node --check symptom-match.js && node --check cleaning-solution.js && node --check liquid-sort.js && node --check chromatogram.js && node --check wrong-sample.js && node --check sw.js && node --check server.mjs && node --check working-standard-data.js && node --check working-standard.js && node --check good-bad-ugly.js",
     "test": "node --test tests/*.test.cjs",
     "check:lane-rush": "node --check lane-rush.js",
-    "check:rocket": "node --check rocket-game-core.js && node --check rocket-game.js && node --check rocket-game-loader.js && node --check rocket-asset-cache.js",
+    "check:rocket": "node --check assets/rocket-game-scripts/rocket-game-core.js && node --check assets/rocket-game-scripts/rocket-game.js && node --check assets/rocket-game-scripts/rocket-game-loader.js && node --check assets/rocket-game-scripts/rocket-asset-cache.js && node --check assets/rocket-game-scripts/sw.js",
     "test:rocket": "node --test --test-isolation=none tests/rocket-game.test.cjs tests/rocket-game-ui.test.cjs tests/rocket-game-loader.test.cjs",
-    "assets:rocket": "node build-rocket-assets.cjs",
+    "assets:rocket": "node assets/rocket-game-scripts/build-rocket-assets.cjs",
     "predev": "npm run assets:rocket",
     "prestart": "npm run assets:rocket",
-    "sounds:rocket": "node build-rocket-sounds.cjs",
+    "sounds:rocket": "node assets/rocket-game-scripts/build-rocket-sounds.cjs",
     "test:rocket:browser": "node tests/rocket-mobile.browser.cjs",
-    "test:rocket:first-load": "node tests/rocket-first-load.browser.cjs"
+    "test:rocket:first-load": "node tests/rocket-first-load.browser.cjs",
+    "test:rocket:folders": "node tests/rocket-folders.browser.cjs"
   }
 }

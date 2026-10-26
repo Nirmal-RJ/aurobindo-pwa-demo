@@ -1,6 +1,5 @@
-importScripts('./rocket-game-assets.js?v=31d10e50960e69bf', './rocket-asset-cache.js?v=1');
 ﻿const CACHE_PREFIX = 'aurobindo-shell-';
-const CACHE = `${CACHE_PREFIX}v452`;
+const CACHE = `${CACHE_PREFIX}v456`;
 const ASSETS = ['./', './index.html', './styles.css?v=30', './app.js?v=18', './tile-match.js?v=23', './symptom-match.html', './symptom-match.css?v=18', './symptom-match.js?v=20', './chromatogram.html', './chromatogram.css?v=23', './chromatogram.js?v=22', './assets/toggle%20button.png', './assets/4%20arrow%20toggle%20outline.png', './assets/hpcl-logo-new.png', './assets/game-1-card.png', './assets/game-2-card.png', './assets/game-3-card.png', './assets/game-4-card.png', './logo.png', './icon.svg', './icons/icon-192.png', './icons/icon-512.png', './manifest.webmanifest'];
 ASSETS.push('./cleaning-solution.html', './cleaning-solution.css?v=7', './cleaning-solution.js?v=6');
 ASSETS.splice(ASSETS.indexOf('./styles.css?v=30'), 1, './styles.css?v=46');
@@ -58,13 +57,11 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith(CACHE_PREFIX) && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim()));
 });
+self.addEventListener('message', event => {
+  if (event.data?.type === 'ROCKET_CLAIM_CLIENTS') event.waitUntil(self.clients.claim());
+});
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET' || new URL(event.request.url).origin !== self.location.origin) return;
-  if (new URL(event.request.url).pathname.includes('/assets/rocket-game-assets/')) {
-    event.respondWith(caches.open(RocketAssetCache.cacheName).then(async cache =>
-      (await RocketAssetCache.cachedResponse(event.request, cache, ROCKET_ASSETS, self.registration.scope)) || fetch(event.request)));
-    return;
-  }
   if (/\.(?:mp4|webm)(?:\?|$)/i.test(event.request.url)) {
     event.respondWith(fetch(event.request));
     return;
@@ -90,4 +87,4 @@ ASSETS.push('./audio/gbu-countdown-audio.wav');
 
 ASSETS.push('./assets/good-bad-ugly-assets/confetti.gif');
 
-ASSETS.push('./rocket-game.html','./rocket-game.css?v=62','./rocket-game-core.js?v=2','./rocket-game.js?v=58','./rocket-game-assets.js?v=31d10e50960e69bf','./rocket-asset-cache.js?v=1','./rocket-game-loader.js?v=3');
+ASSETS.push('./rocket-game.html');

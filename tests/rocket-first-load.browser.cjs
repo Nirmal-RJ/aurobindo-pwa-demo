@@ -17,7 +17,7 @@ async function run(type, options, label) {
       };
     });
     const page = await context.newPage();
-    await page.goto(process.env.ROCKET_URL || 'http://localhost:4173/rocket-game.html');
+    await page.goto(process.env.ROCKET_URL || 'http://localhost:4173/assets/rocket-game-scripts/rocket-game.html');
     await page.waitForFunction(() => window.__briefDecodeWaiting, {}, { timeout: 90000 });
     assert.ok(interrupted > 0, 'Initial brief request must fail to reproduce the first-visit bug');
     assert.equal(await page.evaluate(() => RocketPreload.ready), false);

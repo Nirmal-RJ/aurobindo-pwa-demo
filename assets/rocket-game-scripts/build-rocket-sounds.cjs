@@ -2,7 +2,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const rate = 24000, tau = Math.PI * 2;
-const directory = path.join(__dirname, 'assets/rocket-game-assets/rocketier-audio/generated');
+const directory = path.join(__dirname, '../rocket-game-assets/rocketier-audio/generated');
 fs.mkdirSync(directory, { recursive: true });
 const sine = (frequency, t) => Math.sin(tau * frequency * t);
 function bell(t, frequency, length = .23) {
