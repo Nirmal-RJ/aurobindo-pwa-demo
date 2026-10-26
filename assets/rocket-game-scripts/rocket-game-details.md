@@ -302,3 +302,5 @@ Mission brief centering correction: center the proportional floating frame verti
 Demo start gate: disable the demo popup Start Mission button until all three slides have been visited during that opening. Once unlocked it stays enabled while navigating back. Closing/reopening resets visits. Track slide visits, not GIF playback duration. The separate mission-brief Start Mission action is unchanged.
 
 Demo controls revision: remove the demo popup Start Mission button and its slide-visit unlock gate. Keep mission start on the brief page. Make Previous and Next large prominent controls with a centered counter; preserve Close, slide transitions and responsive contained GIF. This supersedes earlier requirements for a Start Mission action inside the demo.
+
+Demo final-slide action: show enabled Finish instead of disabled Next on slide 3/3. Finish closes the viewer and returns to mission brief without starting a mission; restore focus to Demo. Previous remains available.

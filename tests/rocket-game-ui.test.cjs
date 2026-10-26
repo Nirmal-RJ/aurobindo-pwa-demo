@@ -588,8 +588,14 @@ test('demo navigates three slides, respects boundaries and resets on reopen', ()
  assert.equal(ui.elements.get('demo-previous').disabled,true);
  ui.elements.get('demo-next').click();assert.equal(ui.elements.get('demo-slide-status').textContent,'2 / 3');
  ui.elements.get('demo-next').click();assert.equal(ui.elements.get('demo-slide-status').textContent,'3 / 3');
- assert.equal(ui.elements.get('demo-next').disabled,true);
+ assert.equal(ui.elements.get('demo-next').disabled,false);
+ assert.equal(ui.elements.get('demo-next').textContent,'Finish');
  ui.elements.get('demo-previous').click();assert.equal(ui.elements.get('demo-slide-status').textContent,'2 / 3');
- ui.elements.get('close-demo').click();ui.elements.get('open-demo').click();
+ assert.equal(ui.elements.get('demo-next').textContent,'Next \u2192');
+ ui.elements.get('demo-next').click();ui.elements.get('demo-next').click();
+ assert.equal(ui.elements.get('demo-popup').open,false);
+ assert.equal(ui.elements.get('brief').hidden,false);
+ assert.equal(ui.context.localStorage.getItem('aurobindo.rocketier.v1'),null);
+ ui.elements.get('open-demo').click();
  assert.equal(ui.elements.get('demo-slide-status').textContent,'1 / 3');
 });

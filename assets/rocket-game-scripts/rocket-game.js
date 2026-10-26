@@ -736,7 +736,8 @@
     if (available) $('demo-gif').src = source;
     $('demo-slide-status').textContent = `${demoSlide + 1} / ${demoGifs.length}`;
     $('demo-previous').disabled = demoSlide === 0;
-    $('demo-next').disabled = demoSlide === demoGifs.length - 1;
+    $('demo-next').disabled = false;
+    $('demo-next').textContent = demoSlide === demoGifs.length - 1 ? 'Finish' : 'Next \u2192';
     const media = $('demo-gif').parentElement;
     media.slideAnimation?.cancel();
     media.slideAnimation = media.animate?.([
@@ -757,7 +758,12 @@
     $('demo-next').focus();
   });
   $('demo-previous').addEventListener('click', () => moveDemoSlide(-1));
-  $('demo-next').addEventListener('click', () => moveDemoSlide(1));
+  $('demo-next').addEventListener('click', () => {
+    if (demoSlide === demoGifs.length - 1) {
+      $('demo-popup').close();
+      $('open-demo').focus();
+    } else moveDemoSlide(1);
+  });
   $('demo-popup').addEventListener('keydown', event => {
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
       event.preventDefault(); moveDemoSlide(event.key === 'ArrowLeft' ? -1 : 1);

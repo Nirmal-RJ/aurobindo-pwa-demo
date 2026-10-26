@@ -1043,3 +1043,11 @@ The user reported excessively stretched tank-tubes and requested larger solvent 
 ## 26 October 2026: demo release preparation
 - Regenerated manifest including all three supplied demo GIFs, red Demo button and updated mission brief artwork. Current demo has prominent Previous/Next navigation and no Start Mission action; original brief button starts the game.
 - Release validation: Rocketier syntax checks, all 48 tests and whitespace checks passed. Remote main matched local HEAD before committing.
+
+## 26 October 2026: Finish on last demo slide
+- On slide 3/3 the right navigation button is enabled and reads Finish. Clicking closes the demo, returns to the existing mission brief and restores focus to Demo without starting a mission. Earlier slides show Next; Previous still navigates normally.
+- JS v82, scoped shell v45. All 48 tests pass, including Finish state, return to brief without new history and reset to slide one when reopened.
+
+## 26 October 2026: demo Next arrow encoding fix
+- The dynamic Next label had a literal question mark from shell text encoding. Replaced it with a JavaScript Unicode escape (U+2192) and corrected the regression assertion, so the right arrow renders consistently. Finish behavior unchanged.
+- JS v83, scoped shell v46. All 48 tests passed.
