@@ -76,9 +76,29 @@ self.ROCKET_ASSETS = [
     "revision": "3d3ff130861f22da"
   },
   {
+    "url": "../rocket-game-assets/page-2/demo-2.gif",
+    "bytes": 776899,
+    "revision": "5f8b695a9b5da11e"
+  },
+  {
+    "url": "../rocket-game-assets/page-2/demo-3.gif",
+    "bytes": 796535,
+    "revision": "ee06dcc9baa708e3"
+  },
+  {
+    "url": "../rocket-game-assets/page-2/demo-button.webp",
+    "bytes": 4890,
+    "revision": "d4456974c51a7f9d"
+  },
+  {
+    "url": "../rocket-game-assets/page-2/demo.gif",
+    "bytes": 665591,
+    "revision": "02042481256988b2"
+  },
+  {
     "url": "../rocket-game-assets/page-2/mission=brief.webp",
-    "bytes": 138260,
-    "revision": "4b5294327b09ae19"
+    "bytes": 149970,
+    "revision": "83f44fd6e10bc9ce"
   },
   {
     "url": "../rocket-game-assets/page-2/page-2-bg.webp",

@@ -723,6 +723,48 @@
     $('mission-distance').textContent = fmt(game.mission.distance);
     $('mission-destination').textContent = game.mission.destination;
   }
+  // The first path is retained from the original single-slide demo.
+  const demoGifs = ['page-2/demo.gif', 'page-2/demo-2.gif', 'page-2/demo-3.gif'];
+  let demoSlide = 0;
+  function renderDemoSlide(direction = 0) {
+    const source = base + demoGifs[demoSlide];
+    const available = window.ROCKET_ASSETS?.some(asset => asset.url === source);
+    $('demo-gif').hidden = !available;
+    $('demo-placeholder').hidden = Boolean(available);
+    $('demo-placeholder').textContent = `Demo ${demoSlide + 1} coming soon`;
+    $('demo-gif').alt = `Rocketier gameplay demonstration, slide ${demoSlide + 1} of ${demoGifs.length}`;
+    if (available) $('demo-gif').src = source;
+    $('demo-slide-status').textContent = `${demoSlide + 1} / ${demoGifs.length}`;
+    $('demo-previous').disabled = demoSlide === 0;
+    $('demo-next').disabled = demoSlide === demoGifs.length - 1;
+    const media = $('demo-gif').parentElement;
+    media.slideAnimation?.cancel();
+    media.slideAnimation = media.animate?.([
+      {opacity:0, transform:`translateX(${direction * 24}px)`},
+      {opacity:1, transform:'translateX(0)'}
+    ], {duration:300, easing:'cubic-bezier(.16,1,.3,1)'});
+  }
+  function moveDemoSlide(direction) {
+    const next = Math.max(0, Math.min(demoGifs.length - 1, demoSlide + direction));
+    if (next === demoSlide) return;
+    demoSlide = next;
+    renderDemoSlide(direction);
+  }
+  $('open-demo').addEventListener('click', () => {
+    demoSlide = 0;
+    renderDemoSlide();
+    $('demo-popup').showModal();
+    $('demo-next').focus();
+  });
+  $('demo-previous').addEventListener('click', () => moveDemoSlide(-1));
+  $('demo-next').addEventListener('click', () => moveDemoSlide(1));
+  $('demo-popup').addEventListener('keydown', event => {
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+      event.preventDefault(); moveDemoSlide(event.key === 'ArrowLeft' ? -1 : 1);
+    }
+  });
+  $('demo-gif').addEventListener('error', () => { $('demo-gif').hidden = true; $('demo-placeholder').hidden = false; });
+  $('close-demo').addEventListener('click', () => $('demo-popup').close());
   $('start-mission').addEventListener('click', missionPopup);
   $('play').addEventListener('click', hangar);
   $('launch').addEventListener('click', () => { if (transferPending) return; stopHold(); game.submit(); processOutcome(); });

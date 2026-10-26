@@ -986,3 +986,60 @@ The user reported excessively stretched tank-tubes and requested larger solvent 
 ## 26 October 2026: selection artwork release checks
 - Included the current user-renamed pick-your-rocket1-black.png and pick-your-rocket2-black.png files and regenerated the asset manifest to replace stale original PNG paths. Included the supplied blinker.gif in the generated asset set.
 - Preserved user-set 0.4s alternation, downward pointing motion and first-pickup-only spotlight. Rocketier syntax checks and all 46 tests pass after manifest refresh. Removed trailing whitespace in the selection markup.
+
+## 26 October 2026: mission brief Demo popup
+- Added Demo below Start Mission, with a full-screen animated dialog, close control and overlaid Start Mission action. Starting from the demo enters the same mission popup as the original button; opening/closing a demo never starts a run.
+- User requested a fixed pending asset path: assets/rocket-game-assets/page-2/demo.gif. Until supplied and included by npm run assets:rocket, display Demo coming soon. GIF errors also use that fallback. No substitute GIF created or unrelated animation used.
+- CSS v91, JS v78, scoped shell v34; rebuilt asset manifest for current on-disk art. All 47 tests passed. Chromium checked Demo placement, full-screen popup and Start Mission navigation; existing Start Mission containment passed phone/tablet/desktop/landscape sizes. Actual GIF playback awaits the supplied media.
+
+## 26 October 2026: taller brief artwork fits screen with both buttons inside
+- Adapted to replaced 1076x1888 mission brief artwork. Raised shared floating frame to 22px and constrained width by both game width and available viewport height, keeping the complete art visible. Brief has a viewport-height layout independent of gameplay minimum scene height.
+- Start Mission is at 76% of art height; Demo at 86%, height 6.5%, inside the frame with spacing. Preserved frame float, Demo pulse, button interactions and navigation. CSS v92, scoped shell v35; regenerated the manifest for the replaced artwork.
+- Chromium geometry checks passed at 320x568, 390x844, 768x1024, 1440x900 and 844x390: complete image stays inside viewport and both buttons stay inside artwork bounds. 390px screenshot inspected.
+
+## 26 October 2026: supplied red Demo button
+- Copied supplied Downloads/demo-button.webp into page-2 and replaced the gold text Demo button with the red image. Kept its internal frame position, pulse, hover/press behavior and full-screen demo action. Image uses contain to preserve proportions.
+- CSS v93, scoped shell v36; regenerated preload manifest (99 assets). Chromium geometry checks passed at phone/tablet/desktop/landscape sizes with both controls inside the brief artwork.
+
+## 26 October 2026: demo Start Mission artwork
+- Replaced the demo/GIF popup text Start Mission control with the supplied existing page-2/start-mission-button.webp image, using its relative production path and existing asset-cache versioning. Preserved bottom-centered placement, hover/press feedback and mission navigation.
+- CSS v94, scoped shell v37. Markup and button action reviewed; no gameplay logic changes.
+
+## 26 October 2026: three-slide GIF demo navigation
+- Converted the demo into three slides with Previous/Next buttons, live 1 / 3 indicator and keyboard Left/Right navigation. Boundary buttons disable on first/last slides; reopening resets to slide one. Slide media enters with a 300ms directional fade/slide.
+- Preserved fixed first path page-2/demo.gif; additional paths are page-2/demo-2.gif and page-2/demo-3.gif. Missing files show slide-specific coming-soon text. Add media and run npm run assets:rocket when supplied.
+- Start Mission image and Close remain available throughout. Footer groups navigation and mission action, reserving media space above so controls are visible in landscape too.
+- CSS v95, JS v79, scoped shell v38. All 48 tests passed. Chromium checked Previous/Next, visible footer at 390x844, 320x568 and 844x390, and Start Mission navigation. Actual GIF playback pending supplied files.
+
+## 26 October 2026: responsive GIF demo alignment
+- Fixed intrinsic GIF overflow by constraining the media to a minmax(0,1fr) grid row, with navigation and Start Mission in a separate automatic-height footer. Full GIF uses contain and cannot extend under controls. Footer centers the counter between equal-width Previous/Next buttons.
+- Preserved full-screen entrance, slide transitions, controls and Start Mission image. Reserved top safe space for Close; compact footer button in short landscape views. Added supplied demo.gif to regenerated preload manifest (100 assets).
+- CSS v96, scoped shell v39. Chromium actual-GIF geometry checks passed at 320x568, 390x844, 768x1024, 1440x900 and 844x390, with media/footer separation, visible controls, Close clearance and working mission navigation.
+
+## 26 October 2026: larger demo GIF, compact controls
+- Reduced demo padding and combined Previous, counter, Next and Start Mission into one compact footer row. Reduced Close size and positioned it in the corner over the viewing area, freeing the previously reserved header space.
+- GIF now uses nearly the full screen height above the footer with contain, preserving complete content and proportions. All controls remain visible and functional; entrance/slide animations preserved.
+- CSS v97, scoped shell v40. Chromium actual-GIF checks passed at 320x568, 390x844, 768x1024, 1440x900 and 844x390 with no media/footer overlap or clipped controls.
+
+## 26 October 2026: refined demo footer layout
+- Replaced the rejected cramped single-line footer with a centered navigation capsule (Previous / counter / Next) and a separate centered Start Mission image beneath. Compact 32px navigation buttons, balanced spacing, subdued cyan styling and a 230px mission action improve hierarchy without returning to oversized controls.
+- Retained minimal viewer padding, complete contained GIF, all navigation behavior and animations. Short landscape uses tighter spacing and a smaller mission button.
+- CSS v98, scoped shell v41. Chromium actual-GIF geometry checks pass at phone/tablet/desktop/landscape sizes; 390px screenshot reviewed.
+
+## 26 October 2026: consistent mission brief centering
+- Replaced the fixed 22px frame anchor with grid centering in the visible brief screen. Kept width/height containment, proportional internal buttons and the approved frame float. Taller screens now distribute spare room above and below instead of leaving it below only.
+- CSS v99, scoped shell v42. Chromium checks passed for reported iPhone SE 375x667, iPhone 16 393x852 and Pixel 9 412x924, plus 320x568, tablet, desktop and landscape. Frame center remains within 10px of screen center while floating; artwork/buttons fully contained.
+
+## 26 October 2026: demo Start Mission unlocks after all slides
+- Demo Start Mission is disabled until all three slides have been visited in the current demo opening. A visited-slide set handles Previous/Next and keyboard navigation; returning to earlier slides keeps it unlocked after completion. Reopening resets the requirement.
+- Added handler guard as well as disabled state; initial focus moves to Next. Original mission-brief Start Mission remains available. GIF completion/dwell time is not measured; this requirement tracks slide visits, including pending-media slides.
+- JS v80, scoped shell v43. All 48 tests pass, including prevention of early start, unlock after slide three and reset on reopen. Existing animations preserved.
+
+## 26 October 2026: demo navigation prominence
+- Removed Start Mission from the demo popup at the user's explicit request, including its obsolete visited-slide gate. Mission starts from the existing brief-page button after closing the viewer.
+- Enlarged Previous/Next to 54px-high blue controls with bold 15-19px labels, cyan borders and clear hover/press feedback. Centered slide count remains between them; full-width footer gives navigation prominence and more viewing height.
+- CSS v100, JS v81, scoped shell v44. All 48 tests pass, including slide navigation, no demo mission action and starting from the brief after closing. Existing demo slide/entrance animations retained.
+
+## 26 October 2026: demo release preparation
+- Regenerated manifest including all three supplied demo GIFs, red Demo button and updated mission brief artwork. Current demo has prominent Previous/Next navigation and no Start Mission action; original brief button starts the game.
+- Release validation: Rocketier syntax checks, all 48 tests and whitespace checks passed. Remote main matched local HEAD before committing.

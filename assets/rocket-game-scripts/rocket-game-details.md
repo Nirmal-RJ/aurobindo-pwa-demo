@@ -280,3 +280,25 @@ Pick Your Rocket placement/speed: anchor the sign near the bottom directly above
 Selection sign pointing motion: smoothly dip downward and return, travelling from -6px to +10px over 1.8 seconds. Preserve the independently adjustable artwork-alternation speed (currently user-set 0.4s full cycle).
 
 Selection artwork filenames updated: current supplied frames are page-4/pick-your-rocket1-black.png and pick-your-rocket2-black.png. Regenerate the asset manifest after renaming/replacing files.
+
+Mission brief Demo: show a second Demo button below Start Mission. Open an animated full-screen dialog with the gameplay GIF and an overlaid Start Mission button plus close control. Fixed GIF location: assets/rocket-game-assets/page-2/demo.gif. After adding the file run npm run assets:rocket so it is cached/preloaded. Until then show Demo coming soon; Start Mission remains usable. Starting via Demo follows the original mission-start flow without changing history/timing rules.
+
+Updated taller brief artwork: use viewport-constrained proportional sizing so the full 1076x1888 art is visible, raised near the screen top. Keep both buttons INSIDE the shared floating frame: Start Mission at 76%, Demo at 86% with proportional height. Width must fit both screen width and height, including desktop body margins. This supersedes earlier 15%-top positioning and Demo below/outside the frame.
+
+Demo button artwork: use page-2/demo-button.webp (supplied red button) inside the mission brief. Preserve its proportions, pulse and existing demo popup action.
+
+Demo/GIF popup Start Mission button: use page-2/start-mission-button.webp, matching the mission brief button, with proportional sizing and existing navigation.
+
+Three-slide demo: fixed media paths are assets/rocket-game-assets/page-2/demo.gif, demo-2.gif and demo-3.gif. Show Previous/Next, slide index and existing Start Mission image/Close; disable boundary navigation, support keyboard arrows and reset to slide one when reopened. Animate slide entry, retain placeholder for missing media, and rebuild asset manifest after adding files.
+
+Demo responsive layout: full-screen dialog uses a constrained media row above an independent controls footer. Contain the complete GIF without cropping or allowing intrinsic dimensions to overflow. Previous/Next use equal-width columns around the centered slide indicator. Keep Start Mission below navigation, safe-area spacing for Close/footer, and compact sizing on short landscape screens. Preserve all existing slide and entrance animations.
+
+Demo size refinement: maximize GIF viewing height with minimal safe-area padding. Put Previous, slide counter, Next and the Start Mission image in one compact footer row; use a small corner Close overlay. Keep full GIF proportions/content and all actions inside the viewport. Preserve entry/slide animation.
+
+Demo footer refinement: use a centered compact navigation capsule with Previous, counter and Next, then the Start Mission image centered below. This supersedes the cramped single-row footer. Keep viewer padding small, full GIF visible, and compact landscape spacing.
+
+Mission brief centering correction: center the proportional floating frame vertically and horizontally within the visible brief screen using grid layout, rather than anchoring at 22px from the top. Retain width/height fit constraints and both internal buttons. This supersedes the earlier raised fixed-top placement.
+
+Demo start gate: disable the demo popup Start Mission button until all three slides have been visited during that opening. Once unlocked it stays enabled while navigating back. Closing/reopening resets visits. Track slide visits, not GIF playback duration. The separate mission-brief Start Mission action is unchanged.
+
+Demo controls revision: remove the demo popup Start Mission button and its slide-visit unlock gate. Keep mission start on the brief page. Make Previous and Next large prominent controls with a centered counter; preserve Close, slide transitions and responsive contained GIF. This supersedes earlier requirements for a Start Mission action inside the demo.

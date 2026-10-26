@@ -564,3 +564,32 @@ test('tank surface fills on hold, stops on release and ignores bubbled Fill pres
  tank.events.pointerdown({button:0,target:{closest:()=>({})},preventDefault(){}});
  assert.equal(ui.elements.get('chamber-total').textContent,`${step*2}% filled`);
 });
+
+test('demo opens full screen and can close or start a mission without starting early', () => {
+ const ui=mount();ui.elements.get('start').click();ui.advance(800);
+ ui.elements.get('open-demo').click();
+ assert.equal(ui.elements.get('demo-popup').open,true);
+ assert.equal(ui.context.localStorage.getItem('aurobindo.rocketier.v1'),null);
+ assert.equal(ui.elements.get('demo-placeholder').hidden,false);
+ ui.elements.get('close-demo').click();assert.equal(ui.elements.get('demo-popup').open,false);
+ ui.elements.get('open-demo').click();
+ ui.elements.get('demo-next').click();ui.elements.get('demo-next').click();
+ assert.equal(ui.elements.has('demo-start-mission'),false);
+ assert.equal(ui.context.localStorage.getItem('aurobindo.rocketier.v1'),null);
+ ui.elements.get('close-demo').click();ui.elements.get('start-mission').click();
+ assert.equal(ui.elements.get('demo-popup').open,false);assert.equal(ui.state().runs.length,1);
+ ui.advance(800);assert.equal(ui.elements.get('mission').hidden,false);
+});
+
+test('demo navigates three slides, respects boundaries and resets on reopen', () => {
+ const ui=mount();ui.elements.get('start').click();ui.advance(800);
+ ui.elements.get('open-demo').click();
+ assert.equal(ui.elements.get('demo-slide-status').textContent,'1 / 3');
+ assert.equal(ui.elements.get('demo-previous').disabled,true);
+ ui.elements.get('demo-next').click();assert.equal(ui.elements.get('demo-slide-status').textContent,'2 / 3');
+ ui.elements.get('demo-next').click();assert.equal(ui.elements.get('demo-slide-status').textContent,'3 / 3');
+ assert.equal(ui.elements.get('demo-next').disabled,true);
+ ui.elements.get('demo-previous').click();assert.equal(ui.elements.get('demo-slide-status').textContent,'2 / 3');
+ ui.elements.get('close-demo').click();ui.elements.get('open-demo').click();
+ assert.equal(ui.elements.get('demo-slide-status').textContent,'1 / 3');
+});

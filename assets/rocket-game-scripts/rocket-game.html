@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#031336"><title>Rocket'ier &mdash; Aurobindo Games</title>
-  <link rel="stylesheet" href="rocket-game.css?v=90">
-  <script defer src="rocket-game-assets.js?v=2c4dd6497c4be3f1"></script><script defer src="rocket-asset-cache.js?v=1"></script><script defer src="rocket-game-loader.js?v=4"></script>
-  <script defer src="rocket-game-core.js?v=6"></script><script defer src="rocket-game.js?v=77"></script>
+  <link rel="stylesheet" href="rocket-game.css?v=100">
+  <script defer src="rocket-game-assets.js?v=e3c440a7c70c592b"></script><script defer src="rocket-asset-cache.js?v=1"></script><script defer src="rocket-game-loader.js?v=4"></script>
+  <script defer src="rocket-game-core.js?v=6"></script><script defer src="rocket-game.js?v=81"></script>
 </head>
 <body>
   <main id="game" class="game" data-screen="intro">
@@ -19,6 +19,7 @@
       <div class="brief-frame">
       <img class="brief-art" src="../rocket-game-assets/page-2/mission=brief.webp" alt="Mission brief. Mix everyday solvents in the right ratios to fuel your rocket.">
       <button id="start-mission" class="image-button wide"><img src="../rocket-game-assets/page-2/start-mission-button.webp" alt="Start mission"></button>
+      <button id="open-demo" class="image-button demo-button" type="button" aria-label="Demo"><img src="../rocket-game-assets/page-2/demo-button.webp" alt="Demo"></button>
       </div>
     </section>
     <section id="mission" class="screen overlay-screen" hidden aria-labelledby="mission-title">
@@ -48,6 +49,7 @@
     <section id="cinematic" class="screen cinematic" hidden aria-label="Rocket flight"><div class="cinematic-path"><div id="cinematic-rocket" class="pad-rocket"></div></div><div class="flight-rewards" aria-live="polite"><div id="flight-penalty" class="flight-badge penalty" hidden><span id="flight-engines"></span><strong id="flight-speed"></strong></div><div id="flight-bonus" class="flight-badge bonus" hidden><span id="flight-saved"></span><strong id="flight-distance"></strong></div></div></section>
     <section id="journey" class="screen journey" hidden aria-label="Successful launch results"><div id="planet-route" class="planet-route"></div><svg class="journey-path" viewBox="0 0 100 177.778" preserveAspectRatio="none" aria-hidden="true"><path class="route-dots" d="M20 147.556 C12 101 44 64 81 41.778"/><path id="route-covered" pathLength="1" d="M20 147.556 C12 101 44 64 81 41.778"/></svg><div id="journey-rocket" class="flight"><img src="../rocket-game-assets/page-6/rocket.webp" alt="Rocket travelling between planets"></div><div class="journey-content"><p class="eyebrow" id="journey-route"></p><img id="journey-hero" class="journey-hero" src="../rocket-game-assets/page-6/journey-success-1.webp" alt="Journey success!" hidden><progress id="distance-progress" max="100" value="0" aria-label="Mission distance travelled"></progress><dl id="journey-stats" class="glass stats"></dl><button id="continue" class="gold-button">Next question &rarr;</button></div></section>
     <section id="complete" class="screen completion-art" hidden aria-label="Mission complete"><h1 id="complete-title" class="completion-message sr-only"></h1><div class="pace-stat pace-current"><strong id="complete-pace">0.0</strong><span>sec <small>per answer</small></span></div><div id="best-pace-row" class="pace-stat pace-best" hidden><strong id="complete-best-pace">0.0</strong><span>sec <small>per answer</small></span></div><button id="next-mission" class="image-button completion-next" aria-label="Next mission"><img src="../rocket-game-assets/page-8/next-mission-button.webp" alt="Next mission"></button></section>
+    <dialog id="demo-popup" aria-label="Rocketier gameplay demo"><button id="close-demo" class="demo-close" type="button" aria-label="Close demo">&times;</button><div class="demo-media"><img id="demo-gif" alt="Rocketier gameplay demonstration" hidden><p id="demo-placeholder">Demo coming soon</p></div><div class="demo-controls"><nav class="demo-navigation" aria-label="Demo slides"><button id="demo-previous" class="demo-nav-button" type="button">&#8592; Previous</button><output id="demo-slide-status" aria-live="polite">1 / 3</output><button id="demo-next" class="demo-nav-button" type="button">Next &#8594;</button></nav></div></dialog>
     <dialog id="popup"><div class="popup-body"><img id="popup-hero" class="popup-hero" alt="" hidden><img id="popup-art" alt=""><h2 id="popup-title"></h2><p id="popup-text"></p><video id="lesson" controls playsinline webkit-playsinline preload="metadata" hidden></video><button id="popup-action" class="gold-button"></button></div></dialog>
     <p id="announcement" class="sr-only" aria-live="polite"></p>
   </main>
