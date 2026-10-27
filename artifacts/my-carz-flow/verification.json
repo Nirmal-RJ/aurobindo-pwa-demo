@@ -1,0 +1,16 @@
+{
+  "errors": [],
+  "http": [],
+  "checks": [
+    "cold 84-file preload",
+    "interrupted demo replay",
+    "home/collection",
+    "wrong-answer recovery",
+    "five correct/unlock/scratch/reveal",
+    "new car entry",
+    "partial-progress rollback",
+    "save-exit to home",
+    "offline reload",
+    "five viewport bounds"
+  ]
+}

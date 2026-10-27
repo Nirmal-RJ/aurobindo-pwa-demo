@@ -1,0 +1,10 @@
+/* Shared primitives and preserved impact effects for the approved My Carz flow. */
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;overscroll-behavior:none}
+body{display:grid;place-items:center;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#f5fcff}
+button,a{-webkit-tap-highlight-color:transparent}button{font:inherit}button:focus-visible,a:focus-visible{outline:3px solid #ffe275;outline-offset:3px}
+[hidden]{display:none!important}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@font-face{font-family:Race;src:url('../my-carz-game-assets/fonts/BMW Helvetica 97 Black Condense Regular.otf') format('opentype');font-display:swap}
+@keyframes race-impact{0%,100%{transform:translate3d(0,0,0)}15%{transform:translate3d(-7px,2px,0) rotate(-.5deg)}30%{transform:translate3d(7px,-2px,0) rotate(.5deg)}45%{transform:translate3d(-5px,1px,0)}60%{transform:translate3d(4px,-1px,0)}80%{transform:translate3d(-2px,0,0)}}
+@keyframes wrong-answer-flash{0%,18%,36%,54%,72%,90%{opacity:1}27%,63%,100%{opacity:0}}

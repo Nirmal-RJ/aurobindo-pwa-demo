@@ -26,3 +26,11 @@ Run `npm test` for Game 4 behavior checks (answer key, timeout, duplicate input,
 - `manifest.webmanifest`, `sw.js`, `icons/`: PWA configuration and offline support
 
 English opens by default. Theme and language choices persist locally. Telugu and Hindi copy is supplied for prototype review. Section URLs are `#/fun-corner`, `#/premier-league`, `#/games`, `#/score-board`, `#/about`, and `#/photos`. Hash routes support browser history, direct links, refreshes, subdirectory hosting, and offline navigation without server rewrites. Back to Home restores focus to the originating card. The actual activities, league data, scores and photo content are still coming soon.
+
+## My Carz
+
+My Carz opens from the Games gallery or `assets/my-carz-game-scripts/my-carz.html`. It has its own scripts/assets folders, versioned offline loading, two Good/Bad lanes, nine-car progression and local completed-level checkpoints.
+
+See [My Carz setup and handoff](assets/my-carz-game-scripts/README.md), [approved game details](assets/my-carz-game-scripts/my-carz-game-details.md) and [progress](assets/my-carz-game-scripts/my-carz-game-progress.md). The original agreed Word flow is included under the scripts folder's docs directory. Read AGENTS.md before editing and preserve the user's approval/animation requirements.
+
+To continue on another PC, pull main and run `npm start` with Node.js 24; runtime dependencies do not need installing. Local player saves/caches stay on their original browser. Run `npm run check:my-carz` and `npm run test:my-carz` for targeted validation.
