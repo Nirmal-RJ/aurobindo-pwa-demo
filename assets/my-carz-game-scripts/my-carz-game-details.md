@@ -18,7 +18,7 @@ This continuing user instruction applies across future sessions and contributors
 - Authorization: user reported live loading pauses with Incomplete download and supplied the GitHub Pages URL. Audited live assets: icon.svg is served as 288 bytes while deployed manifest expects 289. Git normalizes this SVG's CRLF to LF, creating a one-byte mismatch and correctly blocking readiness.
 - Canonicalized My Carz SVG line endings to LF and added a scoped .gitattributes rule to keep their bytes stable across Windows/GitHub deployment. Rebuilt the manifest. Download-size verification and the Next gate remain strict. Added asset filename and received/expected byte counts to mismatch errors; no artwork, animation or gameplay changes.
 - Files: .gitattributes, SVG line endings where needed, preload, manifest, HTML/worker, regression test and tracking documents. Preload v2, scoped shell v83; URLs synchronized.
-- Validation: source checks and existing 27 tests pass; added mismatch retry/no-cache regression. Live deployment verification follows publication. Evidence: artifacts/my-carz-live-loading/asset-audit.json.
+- Validation: syntax checks, all 28 tests and git diff --check pass. All 113 staged asset sizes and SHA256 revisions match manifest after Git normalization. Fix published as 7908372; fresh Edge on live GitHub Pages reaches ready with Next visible and no page errors. Evidence: artifacts/my-carz-live-loading/asset-audit.json, live-verification.json and live-ready.png.
 
 
 ## 28 October 2026 - Git handoff for continued development
