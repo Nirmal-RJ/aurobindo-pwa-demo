@@ -1,0 +1,1264 @@
+{
+  "samples": [
+    {
+      "exhaust": {
+        "visible": false,
+        "tailY": 989.5600000000001,
+        "alpha": 0
+      },
+      "carTop": 852,
+      "carBottom": 1005.359375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": false,
+        "tailY": 989.5600000000001,
+        "alpha": 0
+      },
+      "carTop": 852,
+      "carBottom": 1005.359375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": false,
+        "tailY": 924.5600000000001,
+        "alpha": 0.239274
+      },
+      "carTop": 786.75,
+      "carBottom": 940.109375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": false,
+        "tailY": 872.5600000000001,
+        "alpha": 0.430376
+      },
+      "carTop": 734.65625,
+      "carBottom": 888.015625,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 832.5600000000001,
+        "alpha": 0.57718
+      },
+      "carTop": 694.640625,
+      "carBottom": 848,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 802.5600000000001,
+        "alpha": 0.685654
+      },
+      "carTop": 665.078125,
+      "carBottom": 818.4375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 780.5600000000001,
+        "alpha": 0.766561
+      },
+      "carTop": 643.015625,
+      "carBottom": 796.375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 764.5600000000001,
+        "alpha": 0.825622
+      },
+      "carTop": 626.90625,
+      "carBottom": 780.265625,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 752.5600000000001,
+        "alpha": 0.869855
+      },
+      "carTop": 614.84375,
+      "carBottom": 768.203125,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 743.5600000000001,
+        "alpha": 0.902985
+      },
+      "carTop": 605.8125,
+      "carBottom": 759.171875,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 736.5600000000001,
+        "alpha": 0.927812
+      },
+      "carTop": 599.046875,
+      "carBottom": 752.40625,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 731.5600000000001,
+        "alpha": 0.946713
+      },
+      "carTop": 593.890625,
+      "carBottom": 747.25,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 727.5600000000001,
+        "alpha": 0.960946
+      },
+      "carTop": 590.015625,
+      "carBottom": 743.375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 724.5600000000001,
+        "alpha": 0.971779
+      },
+      "carTop": 587.0625,
+      "carBottom": 740.421875,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 722.5600000000001,
+        "alpha": 0.979932
+      },
+      "carTop": 584.84375,
+      "carBottom": 738.203125,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 720.5600000000001,
+        "alpha": 0.985989
+      },
+      "carTop": 583.1875,
+      "carBottom": 736.546875,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 719.5600000000001,
+        "alpha": 0.990492
+      },
+      "carTop": 581.953125,
+      "carBottom": 735.3125,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 718.5600000000001,
+        "alpha": 0.993763
+      },
+      "carTop": 581.0625,
+      "carBottom": 734.421875,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 717.5600000000001,
+        "alpha": 0.996086
+      },
+      "carTop": 580.4375,
+      "carBottom": 733.796875,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 717.5600000000001,
+        "alpha": 0.997677
+      },
+      "carTop": 580,
+      "carBottom": 733.359375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 717.5600000000001,
+        "alpha": 0.998734
+      },
+      "carTop": 579.71875,
+      "carBottom": 733.078125,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 717.5600000000001,
+        "alpha": 0.999385
+      },
+      "carTop": 579.53125,
+      "carBottom": 732.890625,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 0.999756
+      },
+      "carTop": 579.4375,
+      "carBottom": 732.796875,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 0.999931
+      },
+      "carTop": 579.390625,
+      "carBottom": 732.75,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 0.999992
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    },
+    {
+      "exhaust": {
+        "visible": true,
+        "tailY": 716.5600000000001,
+        "alpha": 1
+      },
+      "carTop": 579.375,
+      "carBottom": 732.734375,
+      "height": 852,
+      "visibility": "visible"
+    }
+  ],
+  "errors": [],
+  "checks": [
+    "no exhaust in hidden countdown stage",
+    "exhaust follows entering car rear and opacity",
+    "exhaust retained after entry"
+  ]
+}

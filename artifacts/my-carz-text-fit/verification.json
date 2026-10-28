@@ -1,0 +1,365 @@
+{
+  "dim": {
+    "background": "rgba(0, 0, 0, 0.79)",
+    "image": "none",
+    "width": 393,
+    "height": 852,
+    "stageWidth": 393,
+    "stageHeight": 852
+  },
+  "checks": [
+    {
+      "size": {
+        "width": 320,
+        "height": 568
+      },
+      "result": [
+        {
+          "prompt": "Reusage of butter paper",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "16.64px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Ignore the flask labeling",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "16.64px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Not wearing the required PPE",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "16.64px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Vial can be filled as preferred",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "16.64px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Pre-assumption of sample reading",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "16.64px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Usage of dried flask when adding samples",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "16.64px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Check expiry dates of the standards/solvents",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "16.64px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Excess sample from gross weight can be discarded",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "16.64px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Place the vials in the tray in any order you prefer",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "16.64px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Usage of solvent from the same batch/lot throughout the analysis",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "16.64px",
+          "fit": true,
+          "safe": true
+        }
+      ]
+    },
+    {
+      "size": {
+        "width": 393,
+        "height": 852
+      },
+      "result": [
+        {
+          "prompt": "Reusage of butter paper",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "20.436px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Ignore the flask labeling",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "20.436px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Not wearing the required PPE",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "20.436px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Vial can be filled as preferred",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "20.436px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Pre-assumption of sample reading",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "20.436px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Usage of dried flask when adding samples",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "20.436px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Check expiry dates of the standards/solvents",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "20.436px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Excess sample from gross weight can be discarded",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "20.436px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Place the vials in the tray in any order you prefer",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "20.436px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Usage of solvent from the same batch/lot throughout the analysis",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "20.436px",
+          "fit": true,
+          "safe": true
+        }
+      ]
+    },
+    {
+      "size": {
+        "width": 768,
+        "height": 1024
+      },
+      "result": [
+        {
+          "prompt": "Reusage of butter paper",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "29.952px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Ignore the flask labeling",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "29.952px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Not wearing the required PPE",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "29.952px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Vial can be filled as preferred",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "29.952px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Pre-assumption of sample reading",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "29.952px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Usage of dried flask when adding samples",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "29.952px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Check expiry dates of the standards/solvents",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "29.952px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Excess sample from gross weight can be discarded",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "29.952px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Place the vials in the tray in any order you prefer",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "29.952px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Usage of solvent from the same batch/lot throughout the analysis",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "28.952px",
+          "fit": true,
+          "safe": true
+        }
+      ]
+    },
+    {
+      "size": {
+        "width": 1280,
+        "height": 900
+      },
+      "result": [
+        {
+          "prompt": "Reusage of butter paper",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "26.325px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Ignore the flask labeling",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "26.325px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Not wearing the required PPE",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "26.325px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Vial can be filled as preferred",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "26.325px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Pre-assumption of sample reading",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "26.325px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Usage of dried flask when adding samples",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "26.325px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Check expiry dates of the standards/solvents",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "26.325px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Excess sample from gross weight can be discarded",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "26.325px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Place the vials in the tray in any order you prefer",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "26.325px",
+          "fit": true,
+          "safe": true
+        },
+        {
+          "prompt": "Usage of solvent from the same batch/lot throughout the analysis",
+          "color": "rgb(255, 255, 255)",
+          "alignment": "center",
+          "font": "25.825px",
+          "fit": true,
+          "safe": true
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

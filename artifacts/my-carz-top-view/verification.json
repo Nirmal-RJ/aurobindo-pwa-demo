@@ -1,0 +1,131 @@
+{
+  "cars": [
+    {
+      "name": "Mini",
+      "color": "original",
+      "width": 524,
+      "height": 768,
+      "data": true
+    },
+    {
+      "name": "Mini",
+      "color": "red",
+      "width": 524,
+      "height": 768,
+      "data": true
+    },
+    {
+      "name": "Hatchback",
+      "color": "original",
+      "width": 381,
+      "height": 768,
+      "data": true
+    },
+    {
+      "name": "Hatchback",
+      "color": "red",
+      "width": 381,
+      "height": 768,
+      "data": true
+    },
+    {
+      "name": "Sedan",
+      "color": "original",
+      "width": 391,
+      "height": 768,
+      "data": true
+    },
+    {
+      "name": "Sedan",
+      "color": "red",
+      "width": 391,
+      "height": 768,
+      "data": true
+    },
+    {
+      "name": "SUV",
+      "color": "original",
+      "width": 351,
+      "height": 768,
+      "data": true
+    },
+    {
+      "name": "SUV",
+      "color": "red",
+      "width": 351,
+      "height": 768,
+      "data": true
+    },
+    {
+      "name": "Luxury",
+      "color": "original",
+      "width": 377,
+      "height": 768,
+      "data": true
+    },
+    {
+      "name": "Luxury",
+      "color": "red",
+      "width": 377,
+      "height": 768,
+      "data": true
+    },
+    {
+      "name": "Limousine",
+      "color": "original",
+      "width": 260,
+      "height": 768,
+      "data": true
+    },
+    {
+      "name": "Limousine",
+      "color": "red",
+      "width": 260,
+      "height": 768,
+      "data": true
+    },
+    {
+      "name": "Sports",
+      "color": "original",
+      "width": 301,
+      "height": 768,
+      "data": true
+    },
+    {
+      "name": "Sports",
+      "color": "red",
+      "width": 301,
+      "height": 768,
+      "data": true
+    },
+    {
+      "name": "F2",
+      "color": "original",
+      "width": 308,
+      "height": 768,
+      "data": true
+    },
+    {
+      "name": "F2",
+      "color": "red",
+      "width": 308,
+      "height": 768,
+      "data": true
+    },
+    {
+      "name": "F1",
+      "color": "original",
+      "width": 315,
+      "height": 768,
+      "data": true
+    },
+    {
+      "name": "F1",
+      "color": "red",
+      "width": 315,
+      "height": 768,
+      "data": true
+    }
+  ],
+  "errors": []
+}

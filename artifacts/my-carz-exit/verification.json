@@ -1,0 +1,10 @@
+{
+  "errors": [],
+  "checks": [
+    "supplied page-11 frame and both buttons",
+    "reference text and unframed composition",
+    "phone/tablet non-overlap",
+    "Keep Playing resumes",
+    "Save & Exit returns home"
+  ]
+}

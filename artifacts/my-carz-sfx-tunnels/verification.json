@@ -1,0 +1,117 @@
+{
+  "calls": [
+    {
+      "src": "http://localhost:4187/assets/my-carz-game-assets/audio/gbu-button-click-sfx.mp3",
+      "label": "3",
+      "phase": "idle",
+      "t": 499.5
+    },
+    {
+      "src": "http://localhost:4187/assets/my-carz-game-assets/audio/lanerush-bgm.mp3",
+      "label": "3",
+      "phase": "idle",
+      "t": 499.59999999403954
+    },
+    {
+      "src": "http://localhost:4187/assets/my-carz-game-assets/audio/gbu-button-click-sfx.mp3",
+      "label": "3",
+      "phase": "idle",
+      "t": 1180
+    },
+    {
+      "src": "http://localhost:4187/assets/my-carz-game-assets/audio/lanerush-bgm.mp3",
+      "label": "3",
+      "phase": "countdown",
+      "carY": 0,
+      "t": 1878.4000000059605
+    },
+    {
+      "src": "http://localhost:4187/assets/my-carz-game-assets/audio/gbu-countdown-audio.wav",
+      "label": "3",
+      "phase": "countdown",
+      "carY": 0,
+      "t": 1878.4000000059605
+    },
+    {
+      "src": "http://localhost:4187/assets/my-carz-game-assets/audio/my-carz-go.wav",
+      "label": "GO!",
+      "phase": "countdown",
+      "carY": 0,
+      "t": 4877.20000000298
+    },
+    {
+      "src": "http://localhost:4187/assets/my-carz-game-assets/audio/my-carz-question-whoosh.wav",
+      "label": "GO!",
+      "phase": "question",
+      "carY": 0,
+      "t": 8912.79999999702
+    },
+    {
+      "src": "http://localhost:4187/assets/my-carz-game-assets/audio/lanerush-wrong.mp3",
+      "label": "GO!",
+      "phase": "feedback",
+      "carY": -0.06,
+      "t": 16195.40000000596
+    },
+    {
+      "src": "http://localhost:4187/assets/my-carz-game-assets/audio/my-carz-explode.mp3",
+      "label": "GO!",
+      "phase": "feedback",
+      "carY": -0.06,
+      "t": 16196.59999999404
+    },
+    {
+      "src": "http://localhost:4187/assets/my-carz-game-assets/audio/gbu-button-click-sfx.mp3",
+      "label": "GO!",
+      "phase": "feedback",
+      "carY": -0.06,
+      "t": 18949.79999999702
+    },
+    {
+      "src": "http://localhost:4187/assets/my-carz-game-assets/audio/my-carz-question-whoosh.wav",
+      "label": "GO!",
+      "phase": "question",
+      "carY": 0,
+      "t": 20329.40000000596
+    },
+    {
+      "src": "http://localhost:4187/assets/my-carz-game-assets/audio/lanerush-correct.mp3",
+      "label": "GO!",
+      "phase": "feedback",
+      "carY": 0,
+      "t": 27962.5
+    },
+    {
+      "src": "http://localhost:4187/assets/my-carz-game-assets/audio/my-carz-question-whoosh.wav",
+      "label": "GO!",
+      "phase": "question",
+      "carY": 0,
+      "t": 32812.70000000298
+    }
+  ],
+  "decoded": [
+    {
+      "key": "go",
+      "seconds": 0.72,
+      "channels": 2
+    },
+    {
+      "key": "question",
+      "seconds": 0.38,
+      "channels": 2
+    },
+    {
+      "key": "explosion",
+      "seconds": 1.28,
+      "channels": 1
+    }
+  ],
+  "errors": [],
+  "checks": [
+    "GO once at GO text",
+    "question whoosh at entry",
+    "explosion only after tunnel entry",
+    "updated tunnels cover car",
+    "wrong retry and correct next question"
+  ]
+}

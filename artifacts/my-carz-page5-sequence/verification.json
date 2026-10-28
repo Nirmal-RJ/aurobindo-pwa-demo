@@ -1,0 +1,26 @@
+{
+  "sequence": [
+    "countdown",
+    "car",
+    "question",
+    "diamonds",
+    "drive",
+    "countdown",
+    "car",
+    "question",
+    "diamonds",
+    "drive",
+    "drive"
+  ],
+  "readingSeconds": 2.0007000000029804,
+  "errors": [],
+  "checks": [
+    "countdown hides upcoming elements",
+    "ordered car/question/diamond reveals",
+    "intro pauses without advancing",
+    "full reading window",
+    "tunnel cue precedes late guidance",
+    "five correct and upgrade entry after countdown",
+    "level 2 and Save & Exit"
+  ]
+}

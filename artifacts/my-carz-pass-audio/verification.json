@@ -1,0 +1,94 @@
+{
+  "duration": 2.04,
+  "pass": {
+    "name": "pass",
+    "at": 17360.79999999702,
+    "state": "running",
+    "offset": 0
+  },
+  "diamond": {
+    "name": "correct",
+    "at": 17911,
+    "state": "running",
+    "offset": 0
+  },
+  "audio": {
+    "context": "running",
+    "prepared": [
+      "click",
+      "explosion",
+      "question",
+      "go",
+      "correct",
+      "pass",
+      "unlock",
+      "streak",
+      "wrong",
+      "countdown"
+    ],
+    "durations": {
+      "click": 0.6008125,
+      "explosion": 1.28,
+      "question": 0.38,
+      "go": 0.72,
+      "correct": 0.8239166666666666,
+      "pass": 2.04,
+      "unlock": 2.0636666666666668,
+      "streak": 3.2914166666666667,
+      "wrong": 4.048979166666666,
+      "countdown": 6.5
+    },
+    "events": [
+      {
+        "name": "click",
+        "at": 1349.0999999940395,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "click",
+        "at": 2028.7999999970198,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "countdown",
+        "at": 2727.7999999970198,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "go",
+        "at": 5726.699999988079,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "question",
+        "at": 9762.29999999702,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "pass",
+        "at": 17360.79999999702,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "correct",
+        "at": 17911,
+        "state": "running",
+        "offset": 0
+      }
+    ],
+    "errors": []
+  },
+  "errors": [],
+  "checks": [
+    "supplied pass audio at normal-speed emergence",
+    "nonzero audio output",
+    "diamond/notification start on exit while pass sound finishes",
+    "existing diamond sound then confetti and next question"
+  ]
+}

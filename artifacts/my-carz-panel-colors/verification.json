@@ -1,0 +1,33 @@
+{
+  "sequence": [
+    "countdown",
+    "car",
+    "diamonds",
+    "question",
+    "drive"
+  ],
+  "colors": [
+    {
+      "tone": "blue",
+      "filter": "drop-shadow(rgb(0, 170, 255) 0px 0px 2px) drop-shadow(rgb(0, 170, 255) 0px 0px 6px)",
+      "source": "http://localhost:4187/assets/my-carz-game-assets/page-5/question-panel-white.webp?carzAsset=5559e7c1f76cacb8"
+    },
+    {
+      "tone": "green",
+      "filter": "drop-shadow(rgb(54, 239, 106) 0px 0px 2px) drop-shadow(rgb(54, 239, 106) 0px 0px 6px)",
+      "source": "http://localhost:4187/assets/my-carz-game-assets/page-5/question-panel-white.webp?carzAsset=5559e7c1f76cacb8"
+    },
+    {
+      "tone": "orange",
+      "filter": "drop-shadow(rgb(255, 155, 38) 0px 0px 2px) drop-shadow(rgb(255, 155, 38) 0px 0px 6px)",
+      "source": "http://localhost:4187/assets/my-carz-game-assets/page-5/question-panel-white.webp?carzAsset=5559e7c1f76cacb8"
+    }
+  ],
+  "errors": [],
+  "checks": [
+    "HUD before question with dimming",
+    "three consecutive distinct panel colors",
+    "supplied white panel",
+    "three correct answers and next-question flow"
+  ]
+}

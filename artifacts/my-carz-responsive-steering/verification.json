@@ -1,0 +1,15 @@
+{
+  "overlap": {
+    "covered": 525,
+    "total": 692,
+    "fraction": 0.7586705202312138
+  },
+  "errors": [],
+  "checks": [
+    "steering during question slide and reading wait",
+    "constant car opacity/visibility in both outcomes",
+    "tunnel art covers over 45 percent of opaque car",
+    "25 percent larger explosion",
+    "steering on retry return"
+  ]
+}

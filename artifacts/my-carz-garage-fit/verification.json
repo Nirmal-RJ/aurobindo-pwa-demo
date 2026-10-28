@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Mini",
+    "width": 921,
+    "bottom": 703
+  },
+  {
+    "name": "Hatchback",
+    "width": 921,
+    "bottom": 703
+  },
+  {
+    "name": "Sedan",
+    "width": 921,
+    "bottom": 703
+  },
+  {
+    "name": "SUV",
+    "width": 922,
+    "bottom": 703
+  },
+  {
+    "name": "Luxury",
+    "width": 922,
+    "bottom": 703
+  },
+  {
+    "name": "Limousine",
+    "width": 921,
+    "bottom": 703
+  },
+  {
+    "name": "Sports",
+    "width": 922,
+    "bottom": 703
+  },
+  {
+    "name": "F2",
+    "width": 922,
+    "bottom": 703
+  },
+  {
+    "name": "F1",
+    "width": 922,
+    "bottom": 703
+  }
+]

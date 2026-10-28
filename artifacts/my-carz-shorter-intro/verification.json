@@ -1,0 +1,27 @@
+{
+  "hudMilliseconds": 818.2999999970198,
+  "questionMilliseconds": 881.7000000029802,
+  "readingMilliseconds": 1998.5,
+  "stages": [
+    {
+      "stage": "countdown",
+      "t": 1250.3999999910593
+    },
+    {
+      "stage": "car",
+      "t": 5896.29999999702
+    },
+    {
+      "stage": "diamonds",
+      "t": 7796.29999999702
+    },
+    {
+      "stage": "question",
+      "t": 8614.59999999404
+    },
+    {
+      "stage": "drive",
+      "t": 9496.29999999702
+    }
+  ]
+}

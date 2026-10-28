@@ -1,0 +1,84 @@
+{
+  "goPeak": 0.3384990394115448,
+  "questionPeak": 0.005517859943211079,
+  "explosionPeak": 0.08401110768318176,
+  "audio": {
+    "context": "running",
+    "prepared": [
+      "click",
+      "question",
+      "explosion",
+      "correct",
+      "go",
+      "unlock",
+      "streak",
+      "wrong",
+      "countdown"
+    ],
+    "events": [
+      {
+        "name": "click",
+        "at": 634.5,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "click",
+        "at": 1315.2000000029802,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "countdown",
+        "at": 2014,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "go",
+        "at": 5011.9000000059605,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "question",
+        "at": 9031,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "click",
+        "at": 9965,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "click",
+        "at": 10881.40000000596,
+        "state": "suspended",
+        "offset": 0
+      },
+      {
+        "name": "wrong",
+        "at": 17262.60000000894,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "explosion",
+        "at": 17263.30000001192,
+        "state": "running",
+        "offset": 0
+      }
+    ],
+    "errors": []
+  },
+  "errors": [],
+  "checks": [
+    "strict gesture autoplay policy",
+    "all nine SFX decoded before Next",
+    "running audio context",
+    "nonzero rendered GO/question/explosion signal",
+    "pause/resume and delayed blast"
+  ]
+}

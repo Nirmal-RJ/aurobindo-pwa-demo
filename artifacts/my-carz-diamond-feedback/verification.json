@@ -1,0 +1,171 @@
+{
+  "anchors": [
+    {
+      "x": 66.0902,
+      "y": 77.0017,
+      "expectedX": 66.0901717557252,
+      "expectedY": 77.00172388497653
+    },
+    {
+      "x": 34.0291,
+      "y": 77.0017,
+      "expectedX": 34.029103053435115,
+      "expectedY": 77.00172388497653
+    }
+  ],
+  "losses": [
+    {
+      "name": "diamondLost",
+      "at": 42543.79999999702,
+      "state": "running",
+      "offset": 0
+    },
+    {
+      "name": "diamondLost",
+      "at": 42993.39999999106,
+      "state": "running",
+      "offset": 0
+    }
+  ],
+  "audio": {
+    "context": "running",
+    "prepared": [
+      "diamondLost",
+      "question",
+      "explosion",
+      "click",
+      "go",
+      "correct",
+      "pass",
+      "unlock",
+      "streak",
+      "wrong",
+      "countdown"
+    ],
+    "durations": {
+      "diamondLost": 0.36,
+      "question": 0.38,
+      "explosion": 1.28,
+      "click": 0.6008125,
+      "go": 0.72,
+      "correct": 0.8239166666666666,
+      "pass": 2.04,
+      "unlock": 2.0636666666666668,
+      "streak": 3.2914166666666667,
+      "wrong": 4.048979166666666,
+      "countdown": 6.5
+    },
+    "events": [
+      {
+        "name": "click",
+        "at": 632.7000000029802,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "click",
+        "at": 1313.7999999970198,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "countdown",
+        "at": 2009,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "go",
+        "at": 5007.70000000298,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "question",
+        "at": 9031.09999999404,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "pass",
+        "at": 16608.59999999404,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "correct",
+        "at": 17158.79999999702,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "unlock",
+        "at": 18292.5,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "question",
+        "at": 21525.79999999702,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "pass",
+        "at": 28609.09999999404,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "correct",
+        "at": 29176,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "unlock",
+        "at": 30292.79999999702,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "question",
+        "at": 33526.79999999702,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "wrong",
+        "at": 40326.29999999702,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "explosion",
+        "at": 40326.79999999702,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "diamondLost",
+        "at": 42543.79999999702,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "diamondLost",
+        "at": 42993.39999999106,
+        "state": "running",
+        "offset": 0
+      }
+    ],
+    "errors": []
+  },
+  "errors": [],
+  "checks": [
+    "earned gem originates at actual car center",
+    "two diamonds visibly lost with two separate sad cues",
+    "HUD and core reset zero",
+    "retry remains functional"
+  ]
+}

@@ -19,7 +19,7 @@
     "test:rocket:browser": "node tests/rocket-mobile.browser.cjs",
     "test:rocket:first-load": "node tests/rocket-first-load.browser.cjs",
     "test:rocket:folders": "node tests/rocket-folders.browser.cjs",
-    "check:my-carz": "node --check assets/my-carz-game-scripts/my-carz-config.js && node --check assets/my-carz-game-scripts/my-carz-core.js && node --check assets/my-carz-game-scripts/my-carz-store.js && node --check assets/my-carz-game-scripts/my-carz-preload.js && node --check assets/my-carz-game-scripts/my-carz-asset-cache.js && node --check assets/my-carz-game-scripts/my-carz-paint.js && node --check assets/my-carz-game-scripts/my-carz.js && node --check assets/my-carz-game-scripts/sw.js",
+    "check:my-carz": "node --check assets/my-carz-game-scripts/my-carz-config.js && node --check assets/my-carz-game-scripts/my-carz-core.js && node --check assets/my-carz-game-scripts/my-carz-store.js && node --check assets/my-carz-game-scripts/my-carz-preload.js && node --check assets/my-carz-game-scripts/my-carz-asset-cache.js && node --check assets/my-carz-game-scripts/my-carz-paint.js && node --check assets/my-carz-game-scripts/my-carz.js && node --check assets/my-carz-game-scripts/sw.js && node --check assets/my-carz-game-scripts/my-carz-attention.js && node --check assets/my-carz-game-scripts/my-carz-reward-view.js && node --check assets/my-carz-game-scripts/my-carz-audio.js",
     "test:my-carz": "node --test --test-isolation=none tests/my-carz.test.cjs",
     "assets:my-carz": "node assets/my-carz-game-scripts/build-my-carz-assets.cjs",
     "test:my-carz:browser": "node tests/my-carz.browser.cjs && node tests/my-carz-extra.browser.cjs"

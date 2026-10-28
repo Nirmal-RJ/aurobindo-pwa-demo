@@ -1,0 +1,212 @@
+{
+  "frames": [
+    {
+      "image": "none",
+      "row": "none",
+      "opacity": "1"
+    },
+    {
+      "image": "none",
+      "row": "none",
+      "opacity": "1"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, -18.7548, 0)",
+      "row": "matrix(1, 0, 0, 1, -11.5982, 0)",
+      "opacity": "0.738358"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, -35.6143, 0)",
+      "row": "matrix(1, 0, 0, 1, -22.0244, 0)",
+      "opacity": "0.503157"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, -47.9581, 0)",
+      "row": "matrix(1, 0, 0, 1, -29.658, 0)",
+      "opacity": "0.330953"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, -56.1681, 0)",
+      "row": "matrix(1, 0, 0, 1, -34.7352, 0)",
+      "opacity": "0.216419"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, -61.4774, 0)",
+      "row": "matrix(1, 0, 0, 1, -38.0186, 0)",
+      "opacity": "0.14235"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, -64.9781, 0)",
+      "row": "matrix(1, 0, 0, 1, -40.1834, 0)",
+      "opacity": "0.0935141"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, -67.3681, 0)",
+      "row": "matrix(1, 0, 0, 1, -41.6615, 0)",
+      "opacity": "0.0601707"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, -69.0059, 0)",
+      "row": "matrix(1, 0, 0, 1, -42.6742, 0)",
+      "opacity": "0.0373235"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, -70.1228, 0)",
+      "row": "matrix(1, 0, 0, 1, -43.365, 0)",
+      "opacity": "0.0217412"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, -70.8621, 0)",
+      "row": "matrix(1, 0, 0, 1, -43.8222, 0)",
+      "opacity": "0.0114275"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, -71.3293, 0)",
+      "row": "matrix(1, 0, 0, 1, -44.1111, 0)",
+      "opacity": "0.00490995"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, -71.5858, 0)",
+      "row": "matrix(1, 0, 0, 1, -44.2697, 0)",
+      "opacity": "0.00133215"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, -71.6788, 0)",
+      "row": "matrix(1, 0, 0, 1, -44.3273, 0)",
+      "opacity": "3.38412e-05"
+    },
+    {
+      "image": "none",
+      "row": "none",
+      "opacity": "0"
+    },
+    {
+      "image": "none",
+      "row": "none",
+      "opacity": "0"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, 60.8558, 0)",
+      "row": "matrix(1, 0, 0, 1, 37.6342, 0)",
+      "opacity": "0.151022"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, 50.1678, 0)",
+      "row": "matrix(1, 0, 0, 1, 31.0245, 0)",
+      "opacity": "0.300127"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, 40.2976, 0)",
+      "row": "matrix(1, 0, 0, 1, 24.9207, 0)",
+      "opacity": "0.437822"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, 31.6836, 0)",
+      "row": "matrix(1, 0, 0, 1, 19.5936, 0)",
+      "opacity": "0.557993"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, 24.8265, 0)",
+      "row": "matrix(1, 0, 0, 1, 15.3531, 0)",
+      "opacity": "0.653655"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, 19.3892, 0)",
+      "row": "matrix(1, 0, 0, 1, 11.9906, 0)",
+      "opacity": "0.729508"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, 15.1794, 0)",
+      "row": "matrix(1, 0, 0, 1, 9.38717, 0)",
+      "opacity": "0.788237"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, 11.9088, 0)",
+      "row": "matrix(1, 0, 0, 1, 7.36455, 0)",
+      "opacity": "0.833865"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, 9.3457, 0)",
+      "row": "matrix(1, 0, 0, 1, 5.77952, 0)",
+      "opacity": "0.869621"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, 7.31852, 0)",
+      "row": "matrix(1, 0, 0, 1, 4.52588, 0)",
+      "opacity": "0.897902"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, 5.71128, 0)",
+      "row": "matrix(1, 0, 0, 1, 3.53194, 0)",
+      "opacity": "0.920324"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, 4.41444, 0)",
+      "row": "matrix(1, 0, 0, 1, 2.72995, 0)",
+      "opacity": "0.938416"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, 3.37766, 0)",
+      "row": "matrix(1, 0, 0, 1, 2.0888, 0)",
+      "opacity": "0.952879"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, 2.53434, 0)",
+      "row": "matrix(1, 0, 0, 1, 1.56727, 0)",
+      "opacity": "0.964644"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, 1.86339, 0)",
+      "row": "matrix(1, 0, 0, 1, 1.15235, 0)",
+      "opacity": "0.974004"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, 1.33003, 0)",
+      "row": "matrix(1, 0, 0, 1, 0.822513, 0)",
+      "opacity": "0.981445"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, 0.91581, 0)",
+      "row": "matrix(1, 0, 0, 1, 0.566351, 0)",
+      "opacity": "0.987224"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, 0.592693, 0)",
+      "row": "matrix(1, 0, 0, 1, 0.36653, 0)",
+      "opacity": "0.991732"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, 0.350509, 0)",
+      "row": "matrix(1, 0, 0, 1, 0.21676, 0)",
+      "opacity": "0.99511"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, 0.181033, 0)",
+      "row": "matrix(1, 0, 0, 1, 0.111954, 0)",
+      "opacity": "0.997474"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, 0.0708449, 0)",
+      "row": "matrix(1, 0, 0, 1, 0.0438116, 0)",
+      "opacity": "0.999012"
+    },
+    {
+      "image": "matrix(1, 0, 0, 1, 0.0132747, 0)",
+      "row": "matrix(1, 0, 0, 1, 0.00820929, 0)",
+      "opacity": "0.999815"
+    },
+    {
+      "image": "none",
+      "row": "none",
+      "opacity": "1"
+    }
+  ],
+  "errors": [],
+  "checks": [
+    "mobile arrow fully in bounds",
+    "arrow scrolls later models without selecting locked cars",
+    "hero and card row animate out/in",
+    "name arrow and card-click select/save unlocked cars",
+    "upper unlocked limit retained"
+  ]
+}

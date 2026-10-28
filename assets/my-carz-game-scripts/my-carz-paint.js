@@ -1,8 +1,11 @@
 (function(root){
-const C=root.CarzConfig;const asset=file=>'../my-carz-game-assets/'+file;
+const C=root.CarzConfig;const asset=file=>new URL('../my-carz-game-assets/'+file,document.baseURI).href;
   const paintedCars = new Map();
   function paintedCar(index, colorId, source = asset(C.cars[index].driving)) {
-    if (colorId === 'original') return Promise.resolve(source);
+    source = new URL(source, document.baseURI).href;
+    const garage = source === asset(C.cars[index].garagePreview) ? C.cars[index].garageLayout : null;
+    const layout = source === asset(C.cars[index].driving) ? C.cars[index].drivingLayout : null;
+    if (colorId === 'original' && !layout && !garage) return Promise.resolve(source);
     const key = `${source}:${colorId}`;
     if (!paintedCars.has(key)) paintedCars.set(key, new Promise(resolve => {
       const image = new Image();
@@ -10,10 +13,25 @@ const C=root.CarzConfig;const asset=file=>'../my-carz-game-assets/'+file;
       image.onload = () => {
         try {
           const surface = document.createElement('canvas');
-          const scale = Math.min(1, 768 / image.naturalHeight);
-          surface.width = Math.round(image.naturalWidth * scale); surface.height = Math.round(image.naturalHeight * scale);
+          const [x,y,w,h] = (garage || layout)?.crop || [0,0,image.naturalWidth,image.naturalHeight];
+          const rotated = layout && Math.abs(layout.rotation) === 90;
+          const width = garage?.width || layout?.width || (rotated ? h : w), height = garage?.height || layout?.height || (rotated ? w : h);
+          const scale = Math.min(1, 768 / height);
+          surface.width = Math.round(width * scale); surface.height = Math.round(height * scale);
           const paint = surface.getContext('2d');
-          paint.drawImage(image, 0, 0, surface.width, surface.height);
+          if(garage){
+            const fit=garage.carWidth/w,drawW=w*fit*scale,drawH=h*fit*scale;
+            paint.drawImage(image,x,y,w,h,(surface.width-drawW)/2,garage.groundY*scale-drawH,drawW,drawH);
+          }else if(layout?.carHeight){
+            const fit=layout.carHeight/h,drawW=w*fit*scale,drawH=h*fit*scale;
+            paint.drawImage(image,x,y,w,h,(surface.width-drawW)/2,(surface.height-drawH)/2,drawW,drawH);
+          }else{
+            paint.translate(surface.width/2,surface.height/2);
+            paint.rotate((layout?.rotation || 0)*Math.PI/180);
+            paint.drawImage(image,x,y,w,h,-w*scale/2,-h*scale/2,w*scale,h*scale);
+            paint.setTransform(1,0,0,1,0,0);
+          }
+          if(colorId==='original'){resolve(surface.toDataURL('image/png'));return;}
           const pixels = paint.getImageData(0, 0, surface.width, surface.height);
           const hex = C.colors.find(color => color[0] === colorId)[2];
           const rgb = [1, 3, 5].map(offset => parseInt(hex.slice(offset, offset + 2), 16));

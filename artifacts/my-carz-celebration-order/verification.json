@@ -1,0 +1,32 @@
+{
+  "events": [
+    {
+      "type": "correct-award",
+      "event": "add",
+      "t": 17118.60000000894
+    },
+    {
+      "type": "correct-award",
+      "event": "remove",
+      "t": 18451.79999999702
+    },
+    {
+      "type": "celebration-confetti golden-confetti",
+      "event": "add",
+      "t": 18752.70000000298
+    },
+    {
+      "type": "celebration-confetti golden-confetti",
+      "event": "remove",
+      "t": 21752
+    }
+  ],
+  "errors": [],
+  "checks": [
+    "diamond first, no simultaneous confetti",
+    "HUD count collected before confetti",
+    "question unchanged throughout confetti",
+    "full three-second celebration",
+    "dim then next question slide and clear"
+  ]
+}

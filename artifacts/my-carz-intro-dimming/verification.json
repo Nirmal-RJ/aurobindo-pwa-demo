@@ -1,0 +1,27 @@
+{
+  "stages": [
+    {
+      "focus": "question",
+      "shade": "0.65",
+      "question": "none",
+      "hud": "brightness(0.35)",
+      "distance": 2003.1497914473678
+    },
+    {
+      "focus": "diamonds",
+      "shade": "0.65",
+      "question": "brightness(0.35)",
+      "hud": "none",
+      "distance": 2711.339506381577
+    }
+  ],
+  "errors": [],
+  "checks": [
+    "countdown contains numbers/GO only",
+    "question and HUD individually highlighted above dim surroundings",
+    "road keeps moving while dimmed",
+    "dimming clears for reading",
+    "subsequent question entrance also dims",
+    "correct answer and Exit flow preserved"
+  ]
+}

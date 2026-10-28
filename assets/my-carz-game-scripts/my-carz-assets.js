@@ -26,6 +26,141 @@ const CARZ_ASSETS = [
     "revision": "674197c4fd3c8d5c"
   },
   {
+    "url": "../my-carz-game-assets/audio/menu-bgm.aac",
+    "bytes": 489016,
+    "revision": "b87f5f52ba90ed69"
+  },
+  {
+    "url": "../my-carz-game-assets/audio/my-carz-car-unlock.mp3",
+    "bytes": 66037,
+    "revision": "714c8edaf2feb6b9"
+  },
+  {
+    "url": "../my-carz-game-assets/audio/my-carz-correct-pass.mp3",
+    "bytes": 65280,
+    "revision": "bcef75d5ffaa0a47"
+  },
+  {
+    "url": "../my-carz-game-assets/audio/my-carz-diamond-lost.wav",
+    "bytes": 63548,
+    "revision": "ba6e6c67d49d4a21"
+  },
+  {
+    "url": "../my-carz-game-assets/audio/my-carz-explode.mp3",
+    "bytes": 25600,
+    "revision": "68adde941396a528"
+  },
+  {
+    "url": "../my-carz-game-assets/audio/my-carz-explosion.wav",
+    "bytes": 282284,
+    "revision": "878656aca8d31417"
+  },
+  {
+    "url": "../my-carz-game-assets/audio/my-carz-five-diamonds.mp3",
+    "bytes": 105325,
+    "revision": "dbc791784f00695b"
+  },
+  {
+    "url": "../my-carz-game-assets/audio/my-carz-go.wav",
+    "bytes": 127052,
+    "revision": "98a2f38bf2d3a6ac"
+  },
+  {
+    "url": "../my-carz-game-assets/audio/my-carz-question-whoosh.wav",
+    "bytes": 67076,
+    "revision": "285e53a782cd5f92"
+  },
+  {
+    "url": "../my-carz-game-assets/car-iso-view/F1.webp",
+    "bytes": 345902,
+    "revision": "72ceb2609d4e93cb"
+  },
+  {
+    "url": "../my-carz-game-assets/car-iso-view/F2.webp",
+    "bytes": 283354,
+    "revision": "a6a329adb462d407"
+  },
+  {
+    "url": "../my-carz-game-assets/car-iso-view/Hatch.webp",
+    "bytes": 296716,
+    "revision": "54e19341151d12c4"
+  },
+  {
+    "url": "../my-carz-game-assets/car-iso-view/Limo.webp",
+    "bytes": 202080,
+    "revision": "f0f74d897aa7e56c"
+  },
+  {
+    "url": "../my-carz-game-assets/car-iso-view/Luxury.webp",
+    "bytes": 295406,
+    "revision": "1021a79d18a37500"
+  },
+  {
+    "url": "../my-carz-game-assets/car-iso-view/Mini.webp",
+    "bytes": 149714,
+    "revision": "6a1193a90a70ed56"
+  },
+  {
+    "url": "../my-carz-game-assets/car-iso-view/SUV.webp",
+    "bytes": 309602,
+    "revision": "22ac68acfdc2b852"
+  },
+  {
+    "url": "../my-carz-game-assets/car-iso-view/Sedan.webp",
+    "bytes": 303966,
+    "revision": "2f931f313500defa"
+  },
+  {
+    "url": "../my-carz-game-assets/car-iso-view/Sports.webp",
+    "bytes": 310414,
+    "revision": "9b17c31604d5d615"
+  },
+  {
+    "url": "../my-carz-game-assets/cars-top-view/1-mini.webp",
+    "bytes": 94674,
+    "revision": "5e0f44ea143e0064"
+  },
+  {
+    "url": "../my-carz-game-assets/cars-top-view/2-hatch.webp",
+    "bytes": 178150,
+    "revision": "eb30221dce0dbaa5"
+  },
+  {
+    "url": "../my-carz-game-assets/cars-top-view/3-sedan.webp",
+    "bytes": 170764,
+    "revision": "4f513385c1a81eab"
+  },
+  {
+    "url": "../my-carz-game-assets/cars-top-view/4-suv.webp",
+    "bytes": 159236,
+    "revision": "1262a2305319edf1"
+  },
+  {
+    "url": "../my-carz-game-assets/cars-top-view/5-luxury.webp",
+    "bytes": 170842,
+    "revision": "5a2763107990f29f"
+  },
+  {
+    "url": "../my-carz-game-assets/cars-top-view/6-limo.webp",
+    "bytes": 101114,
+    "revision": "1e59618755fdc752"
+  },
+  {
+    "url": "../my-carz-game-assets/cars-top-view/7-sports.webp",
+    "bytes": 182220,
+    "revision": "78e7c9784ad0a757"
+  },
+  {
+    "url": "../my-carz-game-assets/cars-top-view/8-f2.webp",
+    "bytes": 191308,
+    "revision": "c2a3ea7c386d6476"
+  },
+  {
+    "url": "../my-carz-game-assets/cars-top-view/9-f1.webp",
+    "bytes": 200530,
+    "revision": "3adcdcdd6c407a94"
+  },
+  {
     "url": "../my-carz-game-assets/fonts/BMW Helvetica 97 Black Condense Regular.otf",
     "bytes": 25484,
     "revision": "05d0df10e26b8d2c"
@@ -44,16 +179,6 @@ const CARZ_ASSETS = [
     "url": "../my-carz-game-assets/inherited/1-bg-right.webp",
     "bytes": 19374,
     "revision": "30bf2b478d68b4c2"
-  },
-  {
-    "url": "../my-carz-game-assets/inherited/1-fiat-default.webp",
-    "bytes": 85252,
-    "revision": "1c4f9212eee7519b"
-  },
-  {
-    "url": "../my-carz-game-assets/inherited/2-ambassador-white.webp",
-    "bytes": 87730,
-    "revision": "a1f302f3daef2a31"
   },
   {
     "url": "../my-carz-game-assets/inherited/2-bg-left.webp",
@@ -76,11 +201,6 @@ const CARZ_ASSETS = [
     "revision": "8de4a6d0d4010afe"
   },
   {
-    "url": "../my-carz-game-assets/inherited/3-maruti-white.webp",
-    "bytes": 70448,
-    "revision": "1c8ab6e84060f4b0"
-  },
-  {
     "url": "../my-carz-game-assets/inherited/4-bg-left.webp",
     "bytes": 35632,
     "revision": "323c5f98b9f1fffc"
@@ -89,16 +209,6 @@ const CARZ_ASSETS = [
     "url": "../my-carz-game-assets/inherited/4-bg-right.webp",
     "bytes": 36218,
     "revision": "8c46b1bbcb4eab61"
-  },
-  {
-    "url": "../my-carz-game-assets/inherited/4-honda-white.webp",
-    "bytes": 73236,
-    "revision": "963239d61208d3a6"
-  },
-  {
-    "url": "../my-carz-game-assets/inherited/5-benz-white.webp",
-    "bytes": 103126,
-    "revision": "b70e9299d80f34da"
   },
   {
     "url": "../my-carz-game-assets/inherited/5-bg-left.webp",
@@ -119,41 +229,6 @@ const CARZ_ASSETS = [
     "url": "../my-carz-game-assets/inherited/6-bg-right.webp",
     "bytes": 43748,
     "revision": "2c461979e19d627e"
-  },
-  {
-    "url": "../my-carz-game-assets/inherited/6-ferrari-white.webp",
-    "bytes": 107676,
-    "revision": "a3bf24eafa907c35"
-  },
-  {
-    "url": "../my-carz-game-assets/inherited/cars-iso-view/1-fiat-default-front-view.webp",
-    "bytes": 863208,
-    "revision": "012787734b83789a"
-  },
-  {
-    "url": "../my-carz-game-assets/inherited/cars-iso-view/2-ambassador-white-front-view.webp",
-    "bytes": 931940,
-    "revision": "f7dc5b6aade07320"
-  },
-  {
-    "url": "../my-carz-game-assets/inherited/cars-iso-view/3-maruti-white-front-view.webp",
-    "bytes": 914834,
-    "revision": "c5cfbcdeb2943457"
-  },
-  {
-    "url": "../my-carz-game-assets/inherited/cars-iso-view/4-honda-white-front-view.webp",
-    "bytes": 767722,
-    "revision": "9be20f4c4eaa2f66"
-  },
-  {
-    "url": "../my-carz-game-assets/inherited/cars-iso-view/5-benz-white-front-view.webp",
-    "bytes": 721760,
-    "revision": "c0eb3df1bebca61d"
-  },
-  {
-    "url": "../my-carz-game-assets/inherited/cars-iso-view/6-ferrari-white-front-view.webp",
-    "bytes": 809876,
-    "revision": "9926a143c20723ae"
   },
   {
     "url": "../my-carz-game-assets/inherited/confetti.gif",
@@ -391,9 +466,74 @@ const CARZ_ASSETS = [
     "revision": "5559e7c1f76cacb8"
   },
   {
+    "url": "../my-carz-game-assets/page-5/question-panel.svg",
+    "bytes": 2088,
+    "revision": "2d6c10253d3080da"
+  },
+  {
+    "url": "../my-carz-game-assets/page-5/tunnel-bad-updated.webp",
+    "bytes": 24158,
+    "revision": "e1ad2082d0ce3d0d"
+  },
+  {
+    "url": "../my-carz-game-assets/page-5/tunnel-good-updated.webp",
+    "bytes": 26380,
+    "revision": "25cf5397b7b0216a"
+  },
+  {
+    "url": "../my-carz-game-assets/page-7/crash-mask.svg",
+    "bytes": 823,
+    "revision": "4ab89fa90539e884"
+  },
+  {
     "url": "../my-carz-game-assets/page-7/crash-panel.webp",
     "bytes": 128738,
     "revision": "dfe706a8f7f21737"
+  },
+  {
+    "url": "../my-carz-game-assets/page-7/explosion/frame-0.png",
+    "bytes": 5403,
+    "revision": "5f9ba7c3a2ef6248"
+  },
+  {
+    "url": "../my-carz-game-assets/page-7/explosion/frame-1.png",
+    "bytes": 19024,
+    "revision": "8fda9a13cffff5f0"
+  },
+  {
+    "url": "../my-carz-game-assets/page-7/explosion/frame-2.png",
+    "bytes": 30157,
+    "revision": "ad4b256d1b391662"
+  },
+  {
+    "url": "../my-carz-game-assets/page-7/explosion/frame-3.png",
+    "bytes": 24011,
+    "revision": "49204f43063d2641"
+  },
+  {
+    "url": "../my-carz-game-assets/page-7/explosion/frame-4.png",
+    "bytes": 39644,
+    "revision": "6991eff6255ac29c"
+  },
+  {
+    "url": "../my-carz-game-assets/page-7/explosion/frame-5.png",
+    "bytes": 58765,
+    "revision": "aaf031e0020d677d"
+  },
+  {
+    "url": "../my-carz-game-assets/page-7/explosion/frame-6.png",
+    "bytes": 43236,
+    "revision": "4e94b9d676b8dafa"
+  },
+  {
+    "url": "../my-carz-game-assets/page-7/explosion/frame-7.png",
+    "bytes": 22277,
+    "revision": "f538fb1e5a4e0034"
+  },
+  {
+    "url": "../my-carz-game-assets/page-7/explosion/my-carz-explosion.gif",
+    "bytes": 116435,
+    "revision": "c36ad4fc34197323"
   },
   {
     "url": "../my-carz-game-assets/page-7/keep-driving-button.webp",

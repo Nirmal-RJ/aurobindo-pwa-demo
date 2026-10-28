@@ -1,0 +1,80 @@
+{
+  "beats": [
+    {
+      "background": "radial-gradient(at 50% 49%, rgba(2, 10, 18, 0.48) 0%, rgba(2, 10, 18, 0.72) 56%, rgba(2, 10, 18, 0.86) 100%)",
+      "centerError": 0.0078125,
+      "label": "READY",
+      "time": 1837.7000000029802
+    },
+    {
+      "background": "radial-gradient(at 50% 49%, rgba(2, 10, 18, 0.48) 0%, rgba(2, 10, 18, 0.72) 56%, rgba(2, 10, 18, 0.86) 100%)",
+      "centerError": 0.0078125,
+      "label": "3",
+      "time": 2829.5999999940395
+    },
+    {
+      "background": "radial-gradient(at 50% 49%, rgba(2, 10, 18, 0.48) 0%, rgba(2, 10, 18, 0.72) 56%, rgba(2, 10, 18, 0.86) 100%)",
+      "centerError": 0.0078125,
+      "label": "2",
+      "time": 3812.2999999970198
+    },
+    {
+      "background": "radial-gradient(at 50% 49%, rgba(2, 10, 18, 0.48) 0%, rgba(2, 10, 18, 0.72) 56%, rgba(2, 10, 18, 0.86) 100%)",
+      "centerError": 0.0078125,
+      "label": "1",
+      "time": 4813.0999999940395
+    }
+  ],
+  "bounds": [
+    {
+      "width": 320,
+      "height": 568,
+      "metric": {
+        "x": 64,
+        "y": 188,
+        "width": 192,
+        "height": 192
+      }
+    },
+    {
+      "width": 375,
+      "height": 667,
+      "metric": {
+        "x": 75,
+        "y": 221,
+        "width": 225,
+        "height": 225
+      }
+    },
+    {
+      "width": 768,
+      "height": 1024,
+      "metric": {
+        "x": 211.203125,
+        "y": 339.203125,
+        "width": 345.59375,
+        "height": 345.59375
+      }
+    },
+    {
+      "width": 1440,
+      "height": 900,
+      "metric": {
+        "x": 568.125,
+        "y": 298.125,
+        "width": 303.75,
+        "height": 303.75
+      }
+    }
+  ],
+  "errors": [],
+  "checks": [
+    "background dims across READY/3/2/1",
+    "centered focus",
+    "question begins after countdown",
+    "complete uncropped confetti, three-second lifetime",
+    "responsive bounds",
+    "paused countdown freeze",
+    "Save & Exit retains flow"
+  ]
+}

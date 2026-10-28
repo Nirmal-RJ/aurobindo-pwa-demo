@@ -1,0 +1,9 @@
+{
+  "errors": [],
+  "checks": [
+    "free-play fifth correct shows page 10",
+    "nine configured cars and selected highlight",
+    "unframed layout with supplied page-10 assets",
+    "responsive buttons and My cars navigation"
+  ]
+}

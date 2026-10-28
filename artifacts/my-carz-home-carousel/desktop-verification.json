@@ -1,0 +1,10 @@
+{
+  "errors": [],
+  "checks": [
+    "between-card forward and backward buttons",
+    "desktop vertical wheel scrolling",
+    "mouse drag without accidental car selection",
+    "animated name-arrow selection preserved",
+    "phone arrow visibility"
+  ]
+}

@@ -1,0 +1,256 @@
+{
+  "size": {
+    "width": 320,
+    "height": 568
+  },
+  "result": [
+    {
+      "prompt": "Use a new paper boat for each sample weighing.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "Count sonication time only after the sonicator starts.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "A short sonicator cycle can run with a low water level.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "Keep different-sized flasks 2cm apart in the sonicator.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "Clean the analytical balance pan with a brush before use.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "After pressing Start, check that the sonicator is working.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "If weighing the same chemical, a boat paper can be reused.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "Label the glassware with the sample details before weighing.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "Flasks can touch inside the sonicator if held firmly in place.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "Stopping the sonicator once the sample dissoves will save time",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "Check the calibration register before using analytical balance.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "Check the sonicator water level after placing the flasks inside.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "Replace contaminated sonicator bath water even if it looks clean.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "Place the paper boat at the centre of the analytical balance pan.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "A gap between sonicator flasks is needed only for different samples.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "The paper boat need not be centred if the balance reading is stable.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "Use a STP specified flask size in the sonicator to avoid overfilling.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "Adding fresh water makes contaminated sonicator water suitable for reuse",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "If only one sample is weighed, glassware can be labelled after weighing.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "Extra sonicator time can make up for missed intermittent shaking of flask.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.14px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "Check the analytical balance for any residue, even if the pan looks clean.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "Check that the analytical balance’s levelling bubble is centred before use.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "Zero (tare) the analytical balance with a new, empty paper boat on the pan.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "Hand shake the flask as required, even when the sonicator runs continuously.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "If the balance reading is stable, the leveling bubble need not be in centre.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "To save time, a sonicator temperature slightly above the STP limit is acceptable.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "16.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "Check sonicator bath temperature, even if the previous batch used the same setting.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "13.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "Samples can be shaken by hand for the same duration if the sonicator is unavailable.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "15.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "If the solution looks clear, required intermittent shaking in sonicator can be skipped.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "15.64px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "If the reading in analytical balance is zero, checking its calibration status can be skipped.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "14.14px",
+      "fit": true,
+      "safe": true
+    },
+    {
+      "prompt": "For sonication, the smaller flask can be filled above the allowed level to fit a larger sample.",
+      "color": "rgb(255, 255, 255)",
+      "alignment": "center",
+      "font": "14.64px",
+      "fit": true,
+      "safe": true
+    }
+  ]
+}

@@ -1,0 +1,197 @@
+[
+  {
+    "level": 2,
+    "stages": [
+      {
+        "name": "countdown",
+        "time": 1137.5999999940395
+      },
+      {
+        "name": "car",
+        "time": 5784.79999999702
+      },
+      {
+        "name": "question",
+        "time": 7719.4000000059605
+      },
+      {
+        "name": "diamonds",
+        "time": 9901.59999999404
+      },
+      {
+        "name": "drive",
+        "time": 11551.59999999404
+      }
+    ],
+    "images": [
+      {
+        "size": "562.874% auto",
+        "width": 71,
+        "url": "url(\"http://localhost:4187/assets/my-carz-game-assets/page-5/2-bg-left-v2.webp\")"
+      },
+      {
+        "size": "546.512% auto",
+        "width": 71,
+        "url": "url(\"http://localhost:4187/assets/my-carz-game-assets/page-5/2-bg-right-v2.webp\")"
+      }
+    ],
+    "roadGateRatio": 1.0000000000000018,
+    "errors": []
+  },
+  {
+    "level": 3,
+    "stages": [
+      {
+        "name": "countdown",
+        "time": 1031.4000000059605
+      },
+      {
+        "name": "car",
+        "time": 5678.4000000059605
+      },
+      {
+        "name": "question",
+        "time": 7579.800000011921
+      },
+      {
+        "name": "diamonds",
+        "time": 9761.90000000596
+      },
+      {
+        "name": "drive",
+        "time": 11428.300000011921
+      }
+    ],
+    "images": [
+      {
+        "size": "100% auto",
+        "width": 71,
+        "url": "url(\"http://localhost:4187/assets/my-carz-game-assets/page-5/3-bg-left.webp\")"
+      },
+      {
+        "size": "100% auto",
+        "width": 71,
+        "url": "url(\"http://localhost:4187/assets/my-carz-game-assets/page-5/3-bg-right.webp\")"
+      }
+    ],
+    "roadGateRatio": 1.000000000000009,
+    "errors": []
+  },
+  {
+    "level": 4,
+    "stages": [
+      {
+        "name": "countdown",
+        "time": 1041.5
+      },
+      {
+        "name": "car",
+        "time": 5688.79999999702
+      },
+      {
+        "name": "question",
+        "time": 7607.20000000298
+      },
+      {
+        "name": "diamonds",
+        "time": 9789.09999999404
+      },
+      {
+        "name": "drive",
+        "time": 11455.70000000298
+      }
+    ],
+    "images": [
+      {
+        "size": "100% auto",
+        "width": 71,
+        "url": "url(\"http://localhost:4187/assets/my-carz-game-assets/page-5/4-bg-left.webp\")"
+      },
+      {
+        "size": "100% auto",
+        "width": 71,
+        "url": "url(\"http://localhost:4187/assets/my-carz-game-assets/page-5/4-bg-right.webp\")"
+      }
+    ],
+    "roadGateRatio": 0.9999999999999919,
+    "errors": []
+  },
+  {
+    "level": 5,
+    "stages": [
+      {
+        "name": "countdown",
+        "time": 1038
+      },
+      {
+        "name": "car",
+        "time": 5685.0999999940395
+      },
+      {
+        "name": "question",
+        "time": 7586.70000000298
+      },
+      {
+        "name": "diamonds",
+        "time": 9768.5
+      },
+      {
+        "name": "drive",
+        "time": 11418.59999999404
+      }
+    ],
+    "images": [
+      {
+        "size": "100% auto",
+        "width": 71,
+        "url": "url(\"http://localhost:4187/assets/my-carz-game-assets/page-5/5-bg-left.webp\")"
+      },
+      {
+        "size": "100% auto",
+        "width": 71,
+        "url": "url(\"http://localhost:4187/assets/my-carz-game-assets/page-5/5-bg-right.webp\")"
+      }
+    ],
+    "roadGateRatio": 0.9999999999999958,
+    "errors": []
+  },
+  {
+    "level": 6,
+    "stages": [
+      {
+        "name": "countdown",
+        "time": 1024.5
+      },
+      {
+        "name": "car",
+        "time": 5668.4000000059605
+      },
+      {
+        "name": "question",
+        "time": 7570.20000000298
+      },
+      {
+        "name": "diamonds",
+        "time": 9768.60000000894
+      },
+      {
+        "name": "drive",
+        "time": 11418.70000000298
+      }
+    ],
+    "images": [
+      {
+        "size": "100% auto",
+        "width": 71,
+        "url": "url(\"http://localhost:4187/assets/my-carz-game-assets/page-5/6-bg-left.webp\")"
+      },
+      {
+        "size": "100% auto",
+        "width": 71,
+        "url": "url(\"http://localhost:4187/assets/my-carz-game-assets/page-5/6-bg-right.webp\")"
+      }
+    ],
+    "roadGateRatio": 0.9999999999999886,
+    "errors": []
+  }
+]

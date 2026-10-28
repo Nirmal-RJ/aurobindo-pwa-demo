@@ -1,0 +1,781 @@
+{
+  "profile": {
+    "version": 2,
+    "device": {
+      "demoDone": true,
+      "opened": true
+    },
+    "day": {
+      "date": "2026-10-28",
+      "unlocked": 3,
+      "selected": 0,
+      "level": 3,
+      "colors": [
+        "pink",
+        "red",
+        "original",
+        "original",
+        "original",
+        "original",
+        "original",
+        "original",
+        "original"
+      ],
+      "lanes": [
+        "Good",
+        "Bad"
+      ],
+      "exposure": {
+        "vial-order": 1,
+        "flask-label": 1,
+        "solvent-batch": 1,
+        "vial-fill": 1,
+        "pre-assumption": 1,
+        "excess-sample": 1,
+        "butter-paper": 1,
+        "ppe": 1,
+        "dry-flask": 1,
+        "expiry": 1
+      },
+      "recent": [
+        "excess-sample",
+        "butter-paper",
+        "ppe",
+        "dry-flask",
+        "expiry"
+      ],
+      "stats": {
+        "answered": 10,
+        "correct": 10,
+        "wrong": 0,
+        "levels": 2,
+        "bestStreak": 5,
+        "plays": 2,
+        "history": [
+          {
+            "id": "vial-order",
+            "answer": "Bad",
+            "correct": true,
+            "level": 1,
+            "at": 1793189369033
+          },
+          {
+            "id": "flask-label",
+            "answer": "Bad",
+            "correct": true,
+            "level": 1,
+            "at": 1793189369033
+          },
+          {
+            "id": "solvent-batch",
+            "answer": "Good",
+            "correct": true,
+            "level": 1,
+            "at": 1793189369033
+          },
+          {
+            "id": "vial-fill",
+            "answer": "Bad",
+            "correct": true,
+            "level": 1,
+            "at": 1793189369033
+          },
+          {
+            "id": "pre-assumption",
+            "answer": "Bad",
+            "correct": true,
+            "level": 1,
+            "at": 1793189369033
+          },
+          {
+            "id": "excess-sample",
+            "answer": "Good",
+            "correct": true,
+            "level": 2,
+            "at": 1793189385128
+          },
+          {
+            "id": "butter-paper",
+            "answer": "Bad",
+            "correct": true,
+            "level": 2,
+            "at": 1793189397129
+          },
+          {
+            "id": "ppe",
+            "answer": "Bad",
+            "correct": true,
+            "level": 2,
+            "at": 1793189409162
+          },
+          {
+            "id": "dry-flask",
+            "answer": "Good",
+            "correct": true,
+            "level": 2,
+            "at": 1793189421147
+          },
+          {
+            "id": "expiry",
+            "answer": "Good",
+            "correct": true,
+            "level": 2,
+            "at": 1793189433147
+          }
+        ]
+      }
+    },
+    "preferences": {
+      "carColors": {
+        "car-1": "pink",
+        "car-2": "red",
+        "car-3": "original",
+        "car-4": "original",
+        "car-5": "original",
+        "car-6": "original",
+        "car-7": "original",
+        "car-8": "original",
+        "car-9": "original"
+      }
+    },
+    "lifetime": {
+      "plays": 2,
+      "daysPlayed": [
+        "2026-10-28"
+      ],
+      "archives": []
+    }
+  },
+  "suppliedSounds": [
+    {
+      "name": "click",
+      "at": 823.2999999970198,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/gbu-button-click-sfx.mp3"
+    },
+    {
+      "name": "click",
+      "at": 1503.2000000029802,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/gbu-button-click-sfx.mp3"
+    },
+    {
+      "name": "countdown",
+      "at": 2234.8999999910593,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/gbu-countdown-audio.wav"
+    },
+    {
+      "name": "go",
+      "at": 5234.0999999940395,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/my-carz-go.wav"
+    },
+    {
+      "name": "question",
+      "at": 9254.09999999404,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/my-carz-question-whoosh.wav"
+    },
+    {
+      "name": "pass",
+      "at": 16852,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/my-carz-correct-pass.mp3"
+    },
+    {
+      "name": "correct",
+      "at": 17418.70000000298,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/lanerush-correct.mp3"
+    },
+    {
+      "name": "unlock",
+      "at": 18535.79999999702,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/my-carz-car-unlock.mp3"
+    },
+    {
+      "name": "question",
+      "at": 21768.79999999702,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/my-carz-question-whoosh.wav"
+    },
+    {
+      "name": "pass",
+      "at": 28869.09999999404,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/my-carz-correct-pass.mp3"
+    },
+    {
+      "name": "correct",
+      "at": 29435.89999999106,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/lanerush-correct.mp3"
+    },
+    {
+      "name": "unlock",
+      "at": 30553.70000000298,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/my-carz-car-unlock.mp3"
+    },
+    {
+      "name": "question",
+      "at": 33802.70000000298,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/my-carz-question-whoosh.wav"
+    },
+    {
+      "name": "pass",
+      "at": 40886.39999999106,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/my-carz-correct-pass.mp3"
+    },
+    {
+      "name": "correct",
+      "at": 41436.59999999404,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/lanerush-correct.mp3"
+    },
+    {
+      "name": "unlock",
+      "at": 42537,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/my-carz-car-unlock.mp3"
+    },
+    {
+      "name": "question",
+      "at": 45770,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/my-carz-question-whoosh.wav"
+    },
+    {
+      "name": "pass",
+      "at": 52870.09999999404,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/my-carz-correct-pass.mp3"
+    },
+    {
+      "name": "correct",
+      "at": 53437.09999999404,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/lanerush-correct.mp3"
+    },
+    {
+      "name": "unlock",
+      "at": 54554.20000000298,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/my-carz-car-unlock.mp3"
+    },
+    {
+      "name": "question",
+      "at": 57787,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/my-carz-question-whoosh.wav"
+    },
+    {
+      "name": "pass",
+      "at": 64887.29999999702,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/my-carz-correct-pass.mp3"
+    },
+    {
+      "name": "correct",
+      "at": 65437.79999999702,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/lanerush-correct.mp3"
+    },
+    {
+      "name": "streak",
+      "at": 68371.29999999702,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/my-carz-five-diamonds.mp3"
+    },
+    {
+      "name": "unlock",
+      "at": 75556.79999999702,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/my-carz-car-unlock.mp3"
+    },
+    {
+      "name": "click",
+      "at": 76325.29999999702,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/gbu-button-click-sfx.mp3"
+    },
+    {
+      "name": "click",
+      "at": 77607.20000000298,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/gbu-button-click-sfx.mp3"
+    },
+    {
+      "name": "click",
+      "at": 77640.70000000298,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/gbu-button-click-sfx.mp3"
+    },
+    {
+      "name": "click",
+      "at": 77755.20000000298,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/gbu-button-click-sfx.mp3"
+    },
+    {
+      "name": "click",
+      "at": 77790.70000000298,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/gbu-button-click-sfx.mp3"
+    },
+    {
+      "name": "click",
+      "at": 77900.39999999106,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/gbu-button-click-sfx.mp3"
+    },
+    {
+      "name": "click",
+      "at": 79657.70000000298,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/gbu-button-click-sfx.mp3"
+    },
+    {
+      "name": "countdown",
+      "at": 80372.20000000298,
+      "state": "running",
+      "offset": 0,
+      "src": "http://localhost:4188/assets/my-carz-game-assets/audio/gbu-countdown-audio.wav"
+    }
+  ],
+  "landingEvents": [
+    {
+      "kind": "land",
+      "count": "1/5",
+      "t": 18536.70000000298
+    },
+    {
+      "kind": "confetti",
+      "t": 18536.70000000298
+    },
+    {
+      "kind": "land",
+      "count": "2/5",
+      "t": 30554.39999999106
+    },
+    {
+      "kind": "confetti",
+      "t": 30554.39999999106
+    },
+    {
+      "kind": "land",
+      "count": "3/5",
+      "t": 42537.59999999404
+    },
+    {
+      "kind": "confetti",
+      "t": 42537.70000000298
+    },
+    {
+      "kind": "land",
+      "count": "4/5",
+      "t": 54554.89999999106
+    },
+    {
+      "kind": "confetti",
+      "t": 54554.89999999106
+    },
+    {
+      "kind": "land",
+      "count": "5/5",
+      "t": 66555.20000000298
+    },
+    {
+      "kind": "confetti",
+      "t": 66555.29999999702
+    },
+    {
+      "kind": "confetti",
+      "t": 69556
+    },
+    {
+      "kind": "confetti",
+      "t": 75559.29999999702
+    }
+  ],
+  "focus": {
+    "background": "rgba(2, 8, 18, 0.82)",
+    "filter": "blur(10px) brightness(0.55)"
+  },
+  "flySamples": [
+    {
+      "x": 270.31646728515625,
+      "y": 347.5845031738281,
+      "opacity": "0.237621",
+      "transform": "matrix(0.570052, 0.170306, -0.170306, 0.570052, 150.172, -211.113)"
+    },
+    {
+      "x": 261.6639099121094,
+      "y": 355.10955810546875,
+      "opacity": "0.269104",
+      "transform": "matrix(0.591363, 0.165754, -0.165754, 0.591363, 143.357, -202.088)"
+    },
+    {
+      "x": 252.6158447265625,
+      "y": 363.1148681640625,
+      "opacity": "0.302273",
+      "transform": "matrix(0.613819, 0.160226, -0.160226, 0.613819, 136.177, -192.579)"
+    },
+    {
+      "x": 243.12411499023438,
+      "y": 371.6703796386719,
+      "opacity": "0.337354",
+      "transform": "matrix(0.637554, 0.153558, -0.153558, 0.637554, 128.583, -182.521)"
+    },
+    {
+      "x": 233.49037170410156,
+      "y": 380.52801513671875,
+      "opacity": "0.373278",
+      "transform": "matrix(0.661818, 0.145854, -0.145854, 0.661818, 120.807, -172.223)"
+    },
+    {
+      "x": 223.6249237060547,
+      "y": 389.7908935546875,
+      "opacity": "0.410417",
+      "transform": "matrix(0.686833, 0.136957, -0.136957, 0.686833, 112.768, -161.576)"
+    },
+    {
+      "x": 213.67030334472656,
+      "y": 399.34600830078125,
+      "opacity": "0.448275",
+      "transform": "matrix(0.712229, 0.126912, -0.126912, 0.712229, 104.573, -150.723)"
+    },
+    {
+      "x": 203.77049255371094,
+      "y": 409.0686340332031,
+      "opacity": "0.48633",
+      "transform": "matrix(0.737623, 0.115822, -0.115822, 0.737623, 96.3354, -139.813)"
+    },
+    {
+      "x": 193.88619995117188,
+      "y": 419.0079650878906,
+      "opacity": "0.524753",
+      "transform": "matrix(0.763097, 0.103618, -0.103618, 0.763097, 88.0181, -128.798)"
+    },
+    {
+      "x": 184.15061950683594,
+      "y": 429.0379943847656,
+      "opacity": "0.563044",
+      "transform": "matrix(0.788285, 0.0904497, -0.0904497, 0.788285, 79.7295, -117.821)"
+    },
+    {
+      "x": 174.6280975341797,
+      "y": 439.09295654296875,
+      "opacity": "0.600951",
+      "transform": "matrix(0.812996, 0.0764286, -0.0764286, 0.812996, 71.524, -106.953)"
+    },
+    {
+      "x": 165.4272003173828,
+      "y": 449.0516052246094,
+      "opacity": "0.638032",
+      "transform": "matrix(0.836923, 0.0617685, -0.0617685, 0.836923, 63.4975, -96.3231)"
+    },
+    {
+      "x": 156.53256225585938,
+      "y": 458.91943359375,
+      "opacity": "0.674327",
+      "transform": "matrix(0.860083, 0.046518, -0.046518, 0.860083, 55.6408, -85.9178)"
+    },
+    {
+      "x": 147.92584228515625,
+      "y": 468.7060546875,
+      "opacity": "0.709894",
+      "transform": "matrix(0.882501, 0.030714, -0.030714, 0.882501, 47.9419, -75.7215)"
+    },
+    {
+      "x": 139.684326171875,
+      "y": 478.30938720703125,
+      "opacity": "0.744387",
+      "transform": "matrix(0.903959, 0.0145792, -0.0145792, 0.903959, 40.4754, -65.833)"
+    },
+    {
+      "x": 131.5587158203125,
+      "y": 487.2857666015625,
+      "opacity": "0.777516",
+      "transform": "matrix(0.924284, -0.00166175, 0.00166175, 0.924284, 33.3042, -56.3355)"
+    },
+    {
+      "x": 121.0224380493164,
+      "y": 492.938232421875,
+      "opacity": "0.809614",
+      "transform": "matrix(0.943691, -0.0180877, 0.0180877, 0.943691, 26.3561, -47.1336)"
+    },
+    {
+      "x": 110.8763198852539,
+      "y": 498.3243103027344,
+      "opacity": "0.840434",
+      "transform": "matrix(0.962047, -0.0344942, 0.0344942, 0.962047, 19.6848, -38.2981)"
+    },
+    {
+      "x": 101.1338882446289,
+      "y": 503.44671630859375,
+      "opacity": "0.869952",
+      "transform": "matrix(0.979355, -0.0507861, 0.0507861, 0.979355, 13.2953, -29.836)"
+    },
+    {
+      "x": 91.85739135742188,
+      "y": 508.28204345703125,
+      "opacity": "0.897994",
+      "transform": "matrix(0.995539, -0.0667838, 0.0667838, 0.995539, 7.22515, -21.7968)"
+    },
+    {
+      "x": 82.93778991699219,
+      "y": 512.8950805664062,
+      "opacity": "0.924905",
+      "transform": "matrix(1.01082, -0.0826081, 0.0826081, 1.01082, 1.40009, -14.0822)"
+    },
+    {
+      "x": 74.48072814941406,
+      "y": 517.2381591796875,
+      "opacity": "0.950375",
+      "transform": "matrix(1.02505, -0.0980086, 0.0980086, 1.02505, -4.11335, -6.78025)"
+    },
+    {
+      "x": 66.38006591796875,
+      "y": 521.3719482421875,
+      "opacity": "0.974736",
+      "transform": "matrix(1.03845, -0.11312, 0.11312, 1.03845, -9.38652, 0.203463)"
+    },
+    {
+      "x": 58.681304931640625,
+      "y": 525.2784423828125,
+      "opacity": "0.997858",
+      "transform": "matrix(1.05095, -0.127804, 0.127804, 1.05095, -14.3916, 6.83208)"
+    },
+    {
+      "x": 60.22273635864258,
+      "y": 526.4144897460938,
+      "opacity": "1",
+      "transform": "matrix(1.04899, -0.119689, 0.119689, 1.04899, -13.8139, 6.92422)"
+    },
+    {
+      "x": 62.578372955322266,
+      "y": 527.2239990234375,
+      "opacity": "1",
+      "transform": "matrix(1.04565, -0.109854, 0.109854, 1.04565, -12.7276, 6.37971)"
+    },
+    {
+      "x": 64.82221221923828,
+      "y": 527.9951782226562,
+      "opacity": "1",
+      "transform": "matrix(1.04239, -0.100563, 0.100563, 1.04239, -11.6943, 5.86176)"
+    },
+    {
+      "x": 66.94336700439453,
+      "y": 528.7241821289062,
+      "opacity": "1",
+      "transform": "matrix(1.03924, -0.0918493, 0.0918493, 1.03924, -10.7186, 5.37273)"
+    },
+    {
+      "x": 68.93402099609375,
+      "y": 529.408203125,
+      "opacity": "1",
+      "transform": "matrix(1.03622, -0.0837321, 0.0837321, 1.03622, -9.80401, 4.91428)"
+    },
+    {
+      "x": 70.82205200195312,
+      "y": 530.0567626953125,
+      "opacity": "1",
+      "transform": "matrix(1.0333, -0.0760877, 0.0760877, 1.0333, -8.9374, 4.47989)"
+    },
+    {
+      "x": 72.59896850585938,
+      "y": 530.6669311523438,
+      "opacity": "1",
+      "transform": "matrix(1.0305, -0.0689411, 0.0689411, 1.0305, -8.12248, 4.07141)"
+    },
+    {
+      "x": 74.25899505615234,
+      "y": 531.23681640625,
+      "opacity": "1",
+      "transform": "matrix(1.02785, -0.0623067, 0.0623067, 1.02785, -7.36176, 3.6901)"
+    },
+    {
+      "x": 75.82589721679688,
+      "y": 531.7744750976562,
+      "opacity": "1",
+      "transform": "matrix(1.0253, -0.0560818, 0.0560818, 1.0253, -6.64422, 3.33042)"
+    },
+    {
+      "x": 77.28456115722656,
+      "y": 532.2747192382812,
+      "opacity": "1",
+      "transform": "matrix(1.0229, -0.0503193, 0.0503193, 1.0229, -5.97664, 2.9958)"
+    },
+    {
+      "x": 78.65613555908203,
+      "y": 532.7449340820312,
+      "opacity": "1",
+      "transform": "matrix(1.02062, -0.0449294, 0.0449294, 1.02062, -5.34926, 2.68132)"
+    },
+    {
+      "x": 79.92768096923828,
+      "y": 533.1806030273438,
+      "opacity": "1",
+      "transform": "matrix(1.01847, -0.0399572, 0.0399572, 1.01847, -4.76792, 2.38993)"
+    },
+    {
+      "x": 81.1178207397461,
+      "y": 533.588134765625,
+      "opacity": "1",
+      "transform": "matrix(1.01645, -0.0353248, 0.0353248, 1.01645, -4.22403, 2.1173)"
+    },
+    {
+      "x": 82.22186279296875,
+      "y": 533.966064453125,
+      "opacity": "1",
+      "transform": "matrix(1.01455, -0.0310461, 0.0310461, 1.01455, -3.71967, 1.86449)"
+    },
+    {
+      "x": 83.24883270263672,
+      "y": 534.3173828125,
+      "opacity": "1",
+      "transform": "matrix(1.01277, -0.0270821, 0.0270821, 1.01277, -3.25069, 1.62941)"
+    },
+    {
+      "x": 84.18405151367188,
+      "y": 534.63720703125,
+      "opacity": "1",
+      "transform": "matrix(1.01113, -0.0234856, 0.0234856, 1.01113, -2.82372, 1.4154)"
+    },
+    {
+      "x": 85.04801940917969,
+      "y": 534.9324951171875,
+      "opacity": "1",
+      "transform": "matrix(1.00961, -0.0201745, 0.0201745, 1.00961, -2.42939, 1.21774)"
+    },
+    {
+      "x": 85.83308410644531,
+      "y": 535.20068359375,
+      "opacity": "1",
+      "transform": "matrix(1.00822, -0.0171753, 0.0171753, 1.00822, -2.07116, 1.03817)"
+    },
+    {
+      "x": 86.55128479003906,
+      "y": 535.4459838867188,
+      "opacity": "1",
+      "transform": "matrix(1.00694, -0.0144394, 0.0144394, 1.00694, -1.7435, 0.873931)"
+    },
+    {
+      "x": 87.19650268554688,
+      "y": 535.666259765625,
+      "opacity": "1",
+      "transform": "matrix(1.00578, -0.0119879, 0.0119879, 1.00578, -1.44919, 0.726408)"
+    },
+    {
+      "x": 87.77888488769531,
+      "y": 535.8649291992188,
+      "opacity": "1",
+      "transform": "matrix(1.00473, -0.00978038, 0.00978038, 1.00473, -1.18358, 0.593272)"
+    },
+    {
+      "x": 88.2966079711914,
+      "y": 536.0415649414062,
+      "opacity": "1",
+      "transform": "matrix(1.0038, -0.00782212, 0.00782212, 1.0038, -0.947493, 0.474933)"
+    },
+    {
+      "x": 88.7518539428711,
+      "y": 536.1968383789062,
+      "opacity": "1",
+      "transform": "matrix(1.00297, -0.00610341, 0.00610341, 1.00297, -0.739922, 0.370887)"
+    },
+    {
+      "x": 89.14669036865234,
+      "y": 536.3314208984375,
+      "opacity": "1",
+      "transform": "matrix(1.00225, -0.0046152, 0.0046152, 1.00225, -0.559909, 0.280655)"
+    },
+    {
+      "x": 89.47940826416016,
+      "y": 536.4448852539062,
+      "opacity": "1",
+      "transform": "matrix(1.00164, -0.00336288, 0.00336288, 1.00164, -0.408228, 0.204625)"
+    },
+    {
+      "x": 89.75995635986328,
+      "y": 536.5404663085938,
+      "opacity": "1",
+      "transform": "matrix(1.00113, -0.00230818, 0.00230818, 1.00113, -0.28034, 0.140521)"
+    },
+    {
+      "x": 89.98576354980469,
+      "y": 536.6173706054688,
+      "opacity": "1",
+      "transform": "matrix(1.00072, -0.00146011, 0.00146011, 1.00072, -0.177411, 0.0889278)"
+    },
+    {
+      "x": 90.15856170654297,
+      "y": 536.67626953125,
+      "opacity": "1",
+      "transform": "matrix(1.0004, -0.000811657, 0.000811657, 1.0004, -0.098652, 0.0494495)"
+    },
+    {
+      "x": 90.27940368652344,
+      "y": 536.7174072265625,
+      "opacity": "1",
+      "transform": "matrix(1.00018, -0.000358384, 0.000358384, 1.00018, -0.0435691, 0.0218391)"
+    },
+    {
+      "x": 90.35163116455078,
+      "y": 536.7420654296875,
+      "opacity": "1",
+      "transform": "matrix(1.00004, -8.76067e-05, 8.76067e-05, 1.00004, -0.0106518, 0.00533925)"
+    },
+    {
+      "x": 90.375,
+      "y": 536.75,
+      "opacity": "1",
+      "transform": "matrix(1, 0, 0, 1, 0, 0)"
+    }
+  ],
+  "errors": [],
+  "checks": [
+    "unlock routes through My Cars without autostart",
+    "choose any unlocked car and independent paints",
+    "explicit start with chosen car",
+    "colors persist across reload",
+    "responsive page-4 layout"
+  ]
+}

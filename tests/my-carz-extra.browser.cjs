@@ -1,4 +1,4 @@
-﻿const {chromium}=require(process.env.CARZ_PLAYWRIGHT||'playwright');
+const {chromium}=require(process.env.CARZ_PLAYWRIGHT||'playwright');
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const {Game}=require('../assets/my-carz-game-scripts/my-carz-core.js');
@@ -38,6 +38,6 @@ const url=process.env.CARZ_URL||'http://localhost:4187/assets/my-carz-game-scrip
   await p.evaluate(()=>{window.__testNow=Date.now()+86400000;});await p.waitForTimeout(1200);assert.match(await p.locator('#reset-notice').textContent(),/finish this level/);assert.equal((await p.evaluate(()=>CarzGame.state)).unlocked,9);
   await p.locator('#exit-race').click();await p.getByRole('button',{name:'Save & Exit',exact:true}).click();await p.waitForFunction(()=>CarzGame.state.view==='home'&&!CarzGame.state.busy);assert.equal((await p.evaluate(()=>CarzGame.state)).unlocked,1);
   const stored=await p.evaluate(()=>JSON.parse(localStorage.getItem('my-carz-progress-v2')));assert.equal(stored.lifetime.archives.at(-1).unlocked,9);assert.deepEqual(errors,[]);
-  fs.writeFileSync('artifacts/my-carz-flow/extra-verification.json',JSON.stringify({checks:['loader blocks Next on 3 failed downloads','Retry resumes completed cache','first-session returning actions hidden','touch-landscape guidance','final Car-9 unlock','real 60% scratch gestures','all-cars celebration','free play','midnight deferral','exit applies reset and archives prior collection'],errors},null,2));await context.close();console.log('My Carz extra browser checks passed');
+  fs.writeFileSync('artifacts/my-carz-flow/extra-verification.json',JSON.stringify({checks:['loader blocks Next on 3 failed downloads','Retry resumes completed cache','first-session returning actions hidden','touch-landscape guidance','final F2 unlock','real 60% scratch gestures','all-cars celebration','free play','midnight deferral','exit applies reset and archives prior collection'],errors},null,2));await context.close();console.log('My Carz extra browser checks passed');
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1;});

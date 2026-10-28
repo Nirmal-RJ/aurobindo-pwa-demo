@@ -9,6 +9,8 @@ Open assets/my-carz-game-scripts/my-carz.html through HTTPS or localhost. Root m
 
 Read my-carz-game-details.md and my-carz-game-progress.md before changes. Storage key my-carz-progress-v2 keeps schema-versioned local checkpoints and archives. Legacy my-carz-colors-v1 is read for paint migration without deleting its data. My Carz owns media copies; original Good Bad Ugly assets are untouched.
 
+All car displays use the supplied cars-top-view/ driving art or car-iso-view/ previews, mapped in my-carz-config.js. Keep every future car display on these mappings; inherited car images are retained on disk but excluded from production preload. Final unlock order is F2 then F1.
+
 Edit my-carz-config.js for questions, nine car records, colors, timing, help GIFs, rotation frames and audio volumes. The async repository adapter in my-carz-store.js is the integration boundary for a future backend.
 
 Commands from repository root:
@@ -34,3 +36,7 @@ The agreed source flow is retained in [docs/Carz Game Flow.docx](docs/Carz%20Gam
 Game saves and media caches are local to the browser/device and are not transferred by Git. Source, media, configuration, documentation and QA evidence are included in the repository. A home PC starts with its own local player progress.
 
 Handoff test status (27 October 2026): targeted My Carz/Good Bad Ugly/root-worker checks pass (48 tests). Full repository suite has two existing Snake failures (beginTutorial/slitheringBody undefined); see progress notes.
+
+Per-model paint now lives in profile.preferences.carColors, keyed by stable car IDs, and persists across daily gameplay resets. Storage remains local; the Repository adapter remains the future backend boundary. See docs/paint-persistence.md for migration and checkpoint details. New unlocks route through My Cars and require explicit Start Driving after customization.
+
+Music paths are in config.musicTracks: menu AAC plus the original looping Good Bad Ugly gameplay MP3. The media manifest builder includes .aac; the local server serves audio/aac. Restart a running node server after MIME-map changes. Focused BGM checks accept CARZ_URL; they validate menu continuity, the shared gameplay track across all nine levels and offline cached playback.

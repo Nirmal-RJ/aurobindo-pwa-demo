@@ -1,0 +1,96 @@
+{
+  "goPeak": 0.3384990394115448,
+  "questionPeak": 0.005517859943211079,
+  "explosionPeak": 0.08401110768318176,
+  "audio": {
+    "context": "running",
+    "prepared": [
+      "click",
+      "question",
+      "explosion",
+      "go",
+      "correct",
+      "unlock",
+      "streak",
+      "countdown",
+      "wrong"
+    ],
+    "events": [
+      {
+        "name": "click",
+        "at": 663.3999999910593,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "click",
+        "at": 1348.5999999940395,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "countdown",
+        "at": 2042.3999999910593,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "go",
+        "at": 5040.399999991059,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "question",
+        "at": 9059.699999988079,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "click",
+        "at": 9978.5,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "click",
+        "at": 10394.59999999404,
+        "state": "suspended",
+        "offset": 0
+      },
+      {
+        "name": "wrong",
+        "at": 16774.89999999106,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "explosion",
+        "at": 16775.79999999702,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "click",
+        "at": 19995.09999999404,
+        "state": "running",
+        "offset": 0
+      },
+      {
+        "name": "question",
+        "at": 21376.29999999702,
+        "state": "running",
+        "offset": 0
+      }
+    ],
+    "errors": []
+  },
+  "errors": [],
+  "checks": [
+    "strict gesture autoplay policy",
+    "all nine SFX decoded before Next",
+    "running audio context",
+    "nonzero rendered GO/question/explosion signal",
+    "pause/resume and delayed blast"
+  ]
+}

@@ -1,4 +1,4 @@
-﻿const { chromium } = require(process.env.CARZ_PLAYWRIGHT || 'playwright');
+const { chromium } = require(process.env.CARZ_PLAYWRIGHT || 'playwright');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const output = 'artifacts/my-carz-flow';
@@ -41,9 +41,10 @@ const url = process.env.CARZ_URL || 'http://localhost:4187/assets/my-carz-game-s
     }
     await page.locator('#scratch-area:not([hidden])').waitFor();
     assert.equal((await page.evaluate(() => CarzGame.state)).unlocked, 2);
-    await page.screenshot({ path: `${output}/scratch.png` }); await click('reveal-car');
+    await page.screenshot({ path: `${output}/scratch.png` }); await page.waitForFunction(()=>!document.querySelector('#scratch-area').inert); await page.locator('#scratch').focus(); for(let row=0;row<8;row++) { if(await page.locator('#scratch-area').isHidden()) break; await page.keyboard.press('Space'); }
     await page.locator('#reward-car:not([hidden])').waitFor(); await page.screenshot({ path: `${output}/upgrade.png` });
     await page.getByRole('button', { name: 'Keep driving', exact: true }).click();
+    await page.waitForFunction(()=>CarzGame.state.view==='collection'&&!CarzGame.state.busy);await page.locator('#collection-drive').click();
     await page.waitForFunction(() => CarzGame.state.phase === 'reading');
     assert.equal((await page.evaluate(() => CarzGame.state)).level, 2);
     await page.screenshot({ path: `${output}/race.png` });

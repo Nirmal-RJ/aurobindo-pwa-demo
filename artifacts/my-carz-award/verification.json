@@ -1,0 +1,25 @@
+{
+  "beats": [
+    "3",
+    "2",
+    "1",
+    "GO!"
+  ],
+  "samples": [
+    {
+      "visualSpeedRatio": 0.9999999999999982
+    }
+  ],
+  "errors": [],
+  "checks": [
+    "no visible pause control",
+    "fast sliding car entry",
+    "road and gates share one distance with unchanged answer timing",
+    "large diamond and count/correct/+1 popup",
+    "five HUD awards",
+    "upgrade entry",
+    "question changes and wrong recovery",
+    "Exit saves level 2",
+    "offline reward module"
+  ]
+}

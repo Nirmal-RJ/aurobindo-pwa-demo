@@ -16,6 +16,7 @@
   }
   function freshProfile(time, random) {
     return { version: 2, device: { demoDone: false, opened: false }, day: freshDay(time, random),
+      preferences: {carColors:Object.fromEntries(config.cars.map(car=>[car.id,'original']))},
       lifetime: { plays: 0, daysPlayed: [], archives: [] } };
   }
   function normalize(input, time, random) {
@@ -27,6 +28,11 @@
     d.level = d.unlocked;
     d.selected = Math.max(0, Math.min(d.unlocked - 1, Math.trunc(Number(d.selected)) || 0));
     d.colors = config.cars.map((_, i) => config.colors.some(c => c[0] === d.colors[i]) ? d.colors[i] : 'original');
+    const stored=profile.preferences?.carColors||{};
+    const carColors=Object.fromEntries(config.cars.map((car,i)=>[car.id,
+      config.colors.some(c=>c[0]===stored[car.id])?stored[car.id]:d.colors[i]]));
+    profile.preferences={...profile.preferences,carColors};
+    d.colors=config.cars.map(car=>carColors[car.id]);
     if (!Array.isArray(d.lanes) || [...d.lanes].sort().join() !== 'Bad,Good') d.lanes = lanes(random);
     d.exposure = d.exposure && typeof d.exposure === 'object' ? d.exposure : {};
     d.recent = Array.isArray(d.recent) ? d.recent : [];
@@ -105,6 +111,7 @@
       return { unlocked, allCars: unlocked === config.cars.length - 1 };
     }
     checkpoint() {
+      this.rememberPaint();
       const snapshot = copy(this.profile);
       // Never persist partial attempts, even when saving preferences/device metadata.
       snapshot.day = copy(this.committed);
@@ -122,7 +129,10 @@
     }
     paint(color) {
       if (!config.colors.some(c => c[0] === color)) return false;
-      this.day.colors[this.day.selected] = color; return true;
+      this.day.colors[this.day.selected] = color; this.rememberPaint(); return true;
+    }
+    rememberPaint() {
+      this.profile.preferences={...this.profile.preferences,carColors:Object.fromEntries(config.cars.map((car,i)=>[car.id,this.day.colors[i]]))};
     }
     checkDay() {
       if (dayKey(this.now()) === this.day.date) return false;
@@ -130,7 +140,10 @@
       const archived = copy(this.committed);
       archived.selected = this.day.selected; archived.colors = [...this.day.colors];
       this.profile.lifetime.archives.push(archived);
-      this.profile.day = freshDay(this.now(), this.random); this.committed = copy(this.day);
+      this.rememberPaint();
+      this.profile.day = freshDay(this.now(), this.random);
+      this.day.colors=config.cars.map(car=>this.profile.preferences.carColors[car.id]||'original');
+      this.committed = copy(this.day);
       this.pendingReset = false; this.resetAttempt(); this.resetPicker(); return true;
     }
   }

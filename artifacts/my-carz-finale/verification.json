@@ -1,0 +1,32 @@
+{
+  "positions": [
+    {
+      "bottom": -153.359,
+      "duration": "0.7s"
+    },
+    {
+      "bottom": -53.4844,
+      "duration": "0.7s"
+    },
+    {
+      "bottom": 34.6562,
+      "duration": "0.7s"
+    },
+    {
+      "bottom": 82.2188,
+      "duration": "0.7s"
+    },
+    {
+      "bottom": 103.141,
+      "duration": "0.7s"
+    }
+  ],
+  "errors": [],
+  "checks": [
+    "first car progressively slides over 700ms",
+    "five correct answers",
+    "five HUD diamonds converge",
+    "merged hero remains visible during celebration",
+    "upgrade scratch/reveal remains functional"
+  ]
+}

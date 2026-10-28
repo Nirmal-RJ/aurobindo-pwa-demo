@@ -9,8 +9,9 @@ function walk(folder) {
     return entry.isDirectory() ? walk(file) : [file];
   });
 }
-const entries = walk(media).filter(file => /\.(webp|png|gif|svg|otf|ttf|mp3|wav|mp4|webm)$/i.test(file) &&
-  !/reference|referene|[/\\]old-/i.test(file)).sort().map(file => {
+const entries = walk(media).filter(file => /\.(webp|png|gif|svg|otf|ttf|mp3|wav|aac|mp4|webm)$/i.test(file) &&
+  !/reference|referene|[/\\]old-/i.test(file) &&
+  !/[/\\]inherited[/\\](?:cars-iso-view[/\\]|[1-6]-(?:fiat|ambassador|maruti|honda|benz|ferrari)[^/\\]*\.webp$)/i.test(file)).sort().map(file => {
   const bytes = fs.readFileSync(file);
   return { url: '../my-carz-game-assets/' + path.relative(media, file).split(path.sep).join('/'), bytes: bytes.length, revision: hash(bytes) };
 });

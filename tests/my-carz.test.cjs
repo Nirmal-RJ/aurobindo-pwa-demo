@@ -9,6 +9,7 @@ const { Game, QuestionPicker, freshProfile, dayKey, nextMidnight } = require(bas
 const { LocalAdapter, Repository, key } = require(base + 'my-carz-store.js');
 const { preload } = require(base + 'my-carz-preload.js');
 const { assetKey, cachedResponse } = require(base + 'my-carz-asset-cache.js');
+const raceView = require(base + 'my-carz-race-view.js');
 const today = Date.parse('2026-10-27T09:00:00Z');
 const make = (saved, options = {}) => new Game(saved, { now: () => today, random: () => .2, ...options });
 function answer(game, correct = true) {
@@ -73,9 +74,15 @@ test('Random lanes assigned once per level; failures do not reroll', () => {
   const before = [...g.day.lanes]; g.begin(); answer(g, false); assert.deepEqual(g.day.lanes, before);
   for (let i = 0; i < 5; i++) answer(g); g.complete(); assert.ok(['Good,Bad', 'Bad,Good'].includes(g.day.lanes.join()));
 });
-test('Speed increases with upgrades regardless of selected older car', () => {
-  const g = make(), initial = g.travelSeconds; complete(g); const upgraded = g.travelSeconds;
-  assert.ok(upgraded < initial); g.select(0); assert.equal(g.travelSeconds, upgraded);
+test('Every upgrade and free play retain the level-one answer window', () => {
+  const g = make();
+  for (let level = 1; level <= 9; level++) {
+    assert.equal(g.travelSeconds, 3.8);
+    assert.equal(g.select(0), true); assert.equal(g.travelSeconds, 3.8);
+    complete(g);
+  }
+  assert.equal(g.freePlay, true); assert.equal(g.travelSeconds, 3.8);
+  assert.equal(C.readingSeconds, 2);
 });
 test('Midnight is fixed IST and active levels defer reset through retries', () => {
   assert.equal(dayKey(Date.parse('2026-10-27T18:29:59Z')), '2026-10-27');
@@ -144,4 +151,54 @@ test('Cached media supports ranges for future supplied audio/video', async () =>
   const result = await cachedResponse(new Request('https://game.test/media/a.wav', { headers: { Range: 'bytes=1-2' } }),
     { match: async () => new Response('test') }, entries, 'https://game.test/scripts/');
   assert.equal(result.status, 206); assert.equal(await result.text(), 'es');
+});
+test('Faster moving tunnels still cross the measured car nose at the original deadline', () => {
+  for (const nose of [.55, .7, .8]) {
+    assert.ok(raceView.gatePosition(0, nose) + .225 < 0, 'gate begins outside the viewport');
+    assert.ok(Math.abs(raceView.gatePosition(1, nose) + .225 / 2 - nose) < 1e-10);
+    let previous = raceView.gatePosition(0, nose);
+    for (let i = 1; i <= 100; i++) {
+      const y = raceView.gatePosition(i / 100, nose);
+      assert.ok(y > previous); previous = y;
+    }
+  }
+});
+test('Lane guidance remains tied to physical nearness after the motion synchronization', () => {
+  assert.equal(raceView.geometry('reading', 1).arrow, false);
+  assert.equal(raceView.geometry('intro', 1).arrow, false);
+  assert.equal(raceView.geometry('travel', .6).arrow, false);
+  assert.equal(raceView.geometry('travel', .9).arrow, true);
+  const nose = .7, late = 1 - (1 - raceView.motion.arrowAt) / raceView.motion.visualSpeed;
+  const gap = nose - (raceView.gatePosition(late, nose) + .225 / 2);
+  assert.ok(gap > 0 && gap < .3, 'guidance begins only near the car');
+});
+
+test('Per-model paint preferences survive reload, midnight and re-unlocking', () => {
+  const g=make();g.paint('gold');complete(g);g.paint('blue');complete(g);g.paint('red');
+  const saved=g.checkpoint();assert.deepEqual(saved.preferences.carColors, Object.fromEntries(C.cars.map((car,i)=>[car.id,['gold','blue','red'][i]||'original'])));
+  const reopened=make(saved);assert.deepEqual(reopened.day.colors.slice(0,3),['gold','blue','red']);
+  const tomorrow=make(saved,{now:()=>today+86400000});assert.equal(tomorrow.day.unlocked,1);assert.equal(tomorrow.day.selected,0);
+  assert.deepEqual(tomorrow.day.colors.slice(0,3),['gold','blue','red']);complete(tomorrow);assert.equal(tomorrow.day.colors[1],'blue');
+});
+test('Legacy daily paint migrates to stable model IDs and invalid preference values are ignored', () => {
+  const saved=make().checkpoint();delete saved.preferences;saved.day.colors[0]='purple';
+  const migrated=make(saved);assert.equal(migrated.checkpoint().preferences.carColors['car-1'],'purple');
+  const profile=migrated.checkpoint();profile.preferences.carColors['car-1']='not-a-color';
+  assert.equal(make(profile).day.colors[0],'purple');
+});
+test('Repository sends per-model preferences with the same checkpoint contract to any adapter', async () => {
+  let row;const repo=new Repository({save:async value=>{row=value;},load:async()=>row});
+  const g=make();g.paint('pink');g.begin();answer(g);await repo.save(g.checkpoint());
+  const recovered=make(await repo.load());assert.equal(recovered.day.colors[0],'pink');assert.equal(recovered.streak,0);assert.equal(recovered.day.stats.answered,0);
+  assert.equal(row.preferences.carColors['car-1'],'pink');
+});
+
+
+test('All car display paths use supplied models in the approved order', () => {
+  assert.deepEqual(C.cars.map(car=>car.name), ['Mini','Hatchback','Sedan','SUV','Luxury','Limousine','Sports','F2','F1']);
+  for(const car of C.cars){
+    assert.match(car.driving, /^cars-top-view\//);
+    assert.match(car.preview, /^car-iso-view\//);
+    assert.equal(car.preview,car.garagePreview);
+  }
 });
