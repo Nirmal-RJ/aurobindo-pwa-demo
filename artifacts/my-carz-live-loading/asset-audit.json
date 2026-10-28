@@ -1,0 +1,15 @@
+{
+  "count": 113,
+  "mismatches": [
+    {
+      "url": "../my-carz-game-assets/fonts/BMW Helvetica 97 Black Condense Regular.otf",
+      "error": "URL can't contain control characters. '/aurobindo-pwa-demo/assets/my-carz-game-assets/fonts/BMW Helvetica 97 Black Condense Regular.otf?carzAsset=05d0df10e26b8d2c' (found at least ' ')"
+    },
+    {
+      "url": "../my-carz-game-assets/icon.svg",
+      "expected": 289,
+      "received": 288,
+      "type": "image/svg+xml"
+    }
+  ]
+}

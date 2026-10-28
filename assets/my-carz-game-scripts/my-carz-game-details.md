@@ -13,6 +13,14 @@ This continuing user instruction applies across future sessions and contributors
 
 # My Carz game details
 
+## 28 October 2026 - GitHub Pages preload byte mismatch
+
+- Authorization: user reported live loading pauses with Incomplete download and supplied the GitHub Pages URL. Audited live assets: icon.svg is served as 288 bytes while deployed manifest expects 289. Git normalizes this SVG's CRLF to LF, creating a one-byte mismatch and correctly blocking readiness.
+- Canonicalized My Carz SVG line endings to LF and added a scoped .gitattributes rule to keep their bytes stable across Windows/GitHub deployment. Rebuilt the manifest. Download-size verification and the Next gate remain strict. Added asset filename and received/expected byte counts to mismatch errors; no artwork, animation or gameplay changes.
+- Files: .gitattributes, SVG line endings where needed, preload, manifest, HTML/worker, regression test and tracking documents. Preload v2, scoped shell v83; URLs synchronized.
+- Validation: source checks and existing 27 tests pass; added mismatch retry/no-cache regression. Live deployment verification follows publication. Evidence: artifacts/my-carz-live-loading/asset-audit.json.
+
+
 ## 28 October 2026 - Git handoff for continued development
 
 - Authorization: user requested pushing the accumulated approved My Carz work to Git. Handoff includes runtime modules, supplied/generated media, current car mappings/fitting, audio, loading/animation flows, config question bank, local paint persistence, scoped cache, tests and verification artifacts. Includes shared AAC MIME support and syntax-check command updates required by this game.

@@ -167,8 +167,8 @@ const CARZ_ASSETS = [
   },
   {
     "url": "../my-carz-game-assets/icon.svg",
-    "bytes": 289,
-    "revision": "30e5ad177411ff65"
+    "bytes": 288,
+    "revision": "933783b4c5bc98db"
   },
   {
     "url": "../my-carz-game-assets/inherited/1-bg-left.webp",

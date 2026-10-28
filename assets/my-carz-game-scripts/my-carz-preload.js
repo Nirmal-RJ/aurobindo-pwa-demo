@@ -75,7 +75,7 @@
                 clearTimeout(watchdog); watchdog = setTimeout(() => controller.abort(), 30000);
               }
             } else { const buffer = await response.arrayBuffer(); chunks.push(buffer); received = buffer.byteLength; }
-            if (received !== entry.bytes) throw new Error('Incomplete download.');
+            if (received !== entry.bytes) throw new Error(`Incomplete download: ${entry.url.split('/').pop()} (${received}/${entry.bytes} bytes).`);
             const headers = new Headers(response.headers);
             headers.delete('Content-Encoding'); headers.set('Content-Length', String(received));
             await cache.put(key, new Response(new Blob(chunks), { status: 200, headers }));

@@ -202,3 +202,12 @@ test('All car display paths use supplied models in the approved order', () => {
     assert.equal(car.preview,car.garagePreview);
   }
 });
+
+
+test('Incomplete downloads report the affected asset and never enter cache', async () => {
+  let attempts=0;
+  await assert.rejects(preload({entries:[{url:'../media/icon.svg',bytes:4,revision:'test'}],
+    base:'https://game.test/scripts/',assetKey,cache:{match:async()=>null,put:async()=>assert.fail('partial data cached')},
+    fetcher:async()=>{attempts++;return new Response('abc');}}),/icon\.svg \(3\/4 bytes\)/);
+  assert.equal(attempts,3);
+});
