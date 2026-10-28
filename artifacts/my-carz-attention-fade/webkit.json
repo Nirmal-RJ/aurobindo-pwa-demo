@@ -1,0 +1,169 @@
+{
+  "samples": {
+    "enter": [
+      {
+        "opacity": 0,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.055385,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.117885,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.20897,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.255912,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.299291,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.319689,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.338264,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.348366,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.35,
+        "states": []
+      },
+      {
+        "opacity": 0.35,
+        "states": []
+      },
+      {
+        "opacity": 0.35,
+        "states": []
+      },
+      {
+        "opacity": 0.35,
+        "states": []
+      },
+      {
+        "opacity": 0.35,
+        "states": []
+      },
+      {
+        "opacity": 0.35,
+        "states": []
+      }
+    ],
+    "exit": [
+      {
+        "opacity": 0.303529,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.228485,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.146567,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.096097,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.05461,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.031216,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.012762,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.004061,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.000098,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0,
+        "states": []
+      },
+      {
+        "opacity": 0,
+        "states": []
+      },
+      {
+        "opacity": 0,
+        "states": []
+      },
+      {
+        "opacity": 0,
+        "states": []
+      },
+      {
+        "opacity": 0,
+        "states": []
+      },
+      {
+        "opacity": 0,
+        "states": []
+      },
+      {
+        "opacity": 0,
+        "states": []
+      }
+    ]
+  },
+  "errors": []
+}

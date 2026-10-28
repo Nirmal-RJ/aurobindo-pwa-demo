@@ -79,6 +79,9 @@
               {opacity:0,transform:`translate(-50%,calc(-50% - ${bounds.height*config.exitLift}px)) scale(.25) rotate(${config.exitTurnDegrees}deg)`}
             ],config.exitMs);
             hero.style.visibility='hidden';
+            // Continue the existing fade behind the incoming modal: its backdrop
+            // must never sample/filter the banner that is entering above it.
+            layer.style.zIndex='19';
             await reveal();
             const scratch=app.querySelector('#scratch-area'), flying=!scratch.hidden;
             let flyover=null;

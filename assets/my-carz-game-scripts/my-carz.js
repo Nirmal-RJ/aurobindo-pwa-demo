@@ -490,7 +490,15 @@
     activeTime += dt * 1000; uiTime += document.hidden ? 0 : Math.min(raw, .25) * 1000;
     for (const animation of app.getAnimations?.({ subtree: true }) || []) {
       if (!animation.animationName && !animation.transitionProperty) continue;
-      const clock = animation.effect?.target?.closest?.('#modal') ? uiTime : activeTime;
+      const target=animation.effect?.target;
+      // Attention fades keep one native timeline; do not rewind a running CSS
+      // transition when the frame loop first discovers it. Pause still freezes it.
+      if(animation.transitionProperty && target?.matches?.('.intro-dimmer,.carz-hud,.carz-question,#exit-race')){
+        if(frozen){if(animation.playState==='running')animation.pause();}
+        else if(animation.playState==='paused')animation.play();
+        continue;
+      }
+      const clock = target?.closest?.('#modal') ? uiTime : activeTime;
       if (!cssClocks.has(animation)) { cssClocks.set(animation, clock); animation.pause(); }
       animation.currentTime = clock - cssClocks.get(animation);
     }

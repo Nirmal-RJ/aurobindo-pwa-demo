@@ -1,0 +1,239 @@
+{
+  "samples": {
+    "enter": [
+      {
+        "opacity": 0,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.0214405,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.0659218,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.125168,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.181872,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.228094,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.263648,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.290873,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.311227,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.326335,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.337031,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.344241,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.348367,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.349958,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.35,
+        "states": []
+      },
+      {
+        "opacity": 0.35,
+        "states": []
+      },
+      {
+        "opacity": 0.35,
+        "states": []
+      },
+      {
+        "opacity": 0.35,
+        "states": []
+      },
+      {
+        "opacity": 0.35,
+        "states": []
+      },
+      {
+        "opacity": 0.35,
+        "states": []
+      },
+      {
+        "opacity": 0.35,
+        "states": []
+      }
+    ],
+    "exit": [
+      {
+        "opacity": 0.35,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.328674,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.28394,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.225042,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.168309,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.122292,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.0864602,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.0592088,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.0387291,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.0237097,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.0128933,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.00581159,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.00164239,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0.000043662,
+        "states": [
+          "running"
+        ]
+      },
+      {
+        "opacity": 0,
+        "states": []
+      },
+      {
+        "opacity": 0,
+        "states": []
+      },
+      {
+        "opacity": 0,
+        "states": []
+      },
+      {
+        "opacity": 0,
+        "states": []
+      },
+      {
+        "opacity": 0,
+        "states": []
+      },
+      {
+        "opacity": 0,
+        "states": []
+      },
+      {
+        "opacity": 0,
+        "states": []
+      }
+    ]
+  },
+  "errors": []
+}

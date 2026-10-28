@@ -3,362 +3,471 @@
     {
       "visibility": "hidden",
       "opacity": 1,
-      "entrances": 0
-    },
-    {
-      "visibility": "hidden",
-      "opacity": 1,
-      "entrances": 0
+      "entrances": 0,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 0.0881191,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
-      "opacity": 0.176069,
-      "entrances": 1
-    },
-    {
-      "visibility": "visible",
-      "opacity": 0.263523,
-      "entrances": 1
-    },
-    {
-      "visibility": "visible",
-      "opacity": 0.347676,
-      "entrances": 1
-    },
-    {
-      "visibility": "visible",
-      "opacity": 0.428079,
-      "entrances": 1
+      "opacity": 0.427619,
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 0.501136,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 0.566761,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
-      "opacity": 0.625255,
-      "entrances": 1
+      "opacity": 0.62493,
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 0.675505,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 0.719163,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
-      "opacity": 0.756536,
-      "entrances": 1
+      "opacity": 0.756327,
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 0.788925,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 0.816714,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
-      "opacity": 0.84105,
-      "entrances": 1
+      "opacity": 0.840915,
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
-      "opacity": 0.861924,
-      "entrances": 1
+      "opacity": 0.861806,
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
-      "opacity": 0.880322,
-      "entrances": 1
+      "opacity": 0.88022,
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
-      "opacity": 0.896201,
-      "entrances": 1
+      "opacity": 0.896112,
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 0.910118,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
-      "opacity": 0.922478,
-      "entrances": 1
+      "opacity": 0.92234,
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 0.933212,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
-      "opacity": 0.942718,
-      "entrances": 1
+      "opacity": 0.942612,
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
-      "opacity": 0.95104,
-      "entrances": 1
+      "opacity": 0.950993,
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 0.958371,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 0.96486,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
-      "opacity": 0.97056,
-      "entrances": 1
+      "opacity": 0.970528,
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
-      "opacity": 0.975527,
-      "entrances": 1
+      "opacity": 0.975555,
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 0.979893,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
-      "opacity": 0.983692,
-      "entrances": 1
+      "opacity": 0.98367,
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 0.986959,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 0.989782,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
-      "opacity": 0.992171,
-      "entrances": 1
+      "opacity": 0.992184,
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
-      "opacity": 0.994192,
-      "entrances": 1
+      "opacity": 0.994203,
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 0.995862,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 0.997212,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 0.998263,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 0.999051,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
-      "opacity": 0.999593,
-      "entrances": 1
+      "opacity": 0.99959,
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
-      "opacity": 0.999901,
-      "entrances": 1
-    },
-    {
-      "visibility": "visible",
-      "opacity": 1,
-      "entrances": 1
-    },
-    {
-      "visibility": "visible",
-      "opacity": 1,
-      "entrances": 1
+      "opacity": 0.9999,
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     },
     {
       "visibility": "visible",
       "opacity": 1,
-      "entrances": 1
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
+    },
+    {
+      "visibility": "visible",
+      "opacity": 1,
+      "entrances": 1,
+      "finaleZ": 19,
+      "modalZ": 20
     }
   ],
   "entrances": 1

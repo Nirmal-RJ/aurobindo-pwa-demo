@@ -13,6 +13,15 @@ This continuing user instruction applies across future sessions and contributors
 
 # My Carz context and progress
 
+## 28 October 2026 - Cautious attention-fade and scratch handoff correction
+
+- Authorization: after requesting analysis of iPhone dim flicker and repeat-looking scratch banner, user approved proceeding cautiously with the proposed two fixes.
+- Attention CSS opacity/filter transitions now remain on their native browser timeline instead of being paused and reset to zero when first found by the custom frame clock. Explicit game/background pause still pauses/resumes these transitions. Other CSS animations and the manual game clock are unchanged. Dim strengths (.65/.35), 220ms fades and question/HUD sequencing are preserved.
+- After the big diamond exits, its existing finale overlay moves behind the incoming modal before that modal is revealed. Its blur/darkening/fade continue on the race background instead of sampling the arriving banner. Existing 650ms modal handoff, 1150ms scratch flyover, preparation visibility guard, audio and celebration timings are preserved.
+- Files: controller, reward-view, HTML/worker, attention-fade/finale browser regressions and tracking documents. Controller v54, reward-view v13, scoped shell v85; URLs synchronized. No asset or CSS intensity/timing changes.
+- Validation: syntax checks and 28 unit tests pass. WebKit and Edge frame samples verify monotonic native dim fades with unchanged .35 target and no paused/rewound transition. Full five-answer finale/scratch/upgrade checks pass in both Edge and WebKit: exactly one banner entrance and every sampled frame keeps the fading finale below the modal. Corrected the test observer to stop inspecting a removed finale node. Actual iPhone compositor behavior remains unverified. Tests using Windows WebKit do not establish iOS device smoothness.
+
+
 ## 28 October 2026 - Loading panel in lower button area
 
 - Authorization: user requested moving loading progress off the landing car and into the button area, without leaving the screen. Anchored the panel 3% above the bottom, compacted internal padding/spacing and bar height, and limited it to 21% stage height with internal overflow for long error/retry content. Next remains hidden until readiness and replaces the loader as before.
