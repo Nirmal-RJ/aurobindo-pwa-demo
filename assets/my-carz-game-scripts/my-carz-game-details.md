@@ -13,6 +13,13 @@ This continuing user instruction applies across future sessions and contributors
 
 # My Carz game details
 
+## 28 October 2026 - Loading panel in lower button area
+
+- Authorization: user requested moving loading progress off the landing car and into the button area, without leaving the screen. Anchored the panel 3% above the bottom, compacted internal padding/spacing and bar height, and limited it to 21% stage height with internal overflow for long error/retry content. Next remains hidden until readiness and replaces the loader as before.
+- Presentation only; download checks, retries, loading gate, artwork and game animations preserved. Flow CSS v57, scoped shell v84; HTML/worker URLs synchronized.
+- Validation: Edge loading regression passes at phone/tablet sizes; reviewed 320px screenshot with car unobscured and panel inside screen. Loading/Next gate and subsequent reward remain functional. Physical-device review remains pending. Evidence: artifacts/my-carz-loading/themed-*.png.
+
+
 ## 28 October 2026 - GitHub Pages preload byte mismatch
 
 - Authorization: user reported live loading pauses with Incomplete download and supplied the GitHub Pages URL. Audited live assets: icon.svg is served as 288 bytes while deployed manifest expects 289. Git normalizes this SVG's CRLF to LF, creating a one-byte mismatch and correctly blocking readiness.

@@ -1,6 +1,6 @@
 importScripts('./my-carz-assets.js?v=251ddc3a5ac9455c', './my-carz-asset-cache.js?v=1');
-const PREFIX = 'my-carz-shell-', SHELL = PREFIX + 'v83';
-const FILES = ['./my-carz.html', './my-carz.css?v=4', './my-carz-flow.css?v=56', './my-carz-config.js?v=26',
+const PREFIX = 'my-carz-shell-', SHELL = PREFIX + 'v84';
+const FILES = ['./my-carz.html', './my-carz.css?v=4', './my-carz-flow.css?v=57', './my-carz-config.js?v=26',
   './my-carz-core.js?v=2', './my-carz-store.js?v=1', './my-carz-assets.js?v=251ddc3a5ac9455c', './my-carz-asset-cache.js?v=1',
   './my-carz-preload.js?v=2', './my-carz-paint.js?v=4', './my-carz-race-view.js?v=13', './my-carz-attention.js?v=12', './my-carz-reward-view.js?v=12', './my-carz-audio.js?v=2', './my-carz.js?v=53'];
 self.addEventListener('install', event => event.waitUntil((async () => {
