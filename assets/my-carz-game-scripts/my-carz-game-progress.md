@@ -13,6 +13,20 @@ This continuing user instruction applies across future sessions and contributors
 
 # My Carz context and progress
 
+## 29 October 2026 - Crash guidance containment
+
+- User requested correction of answer text extending past the red frame. Raised and inset the answer area, prevented flex shrinking from masking text overflow, and fit the combined label/answer height to the available space. Full guidance remains visible. Animation, audio and retry behavior are unchanged.
+- Controller v56, flow CSS v59 and scoped shell v87 synchronized. Browser regression now checks actual child bounds for all 31 answers at 320, 393 and 768 pixel viewport widths. Syntax and diff checks pass. Edge browser regression passes all 31 answers at all three viewport sizes, including retry and diamond-loss/audio checks. Reviewed the 320px screenshot for the reported STP guidance; text stays inside the red frame. Physical iPhone verification remains pending.
+
+## 29 October 2026 - Page 7 reference composition and Streak Broken artwork
+
+- Authorization: user requested the wrong-answer screen match Downloads/page-7-reference.webp and use Downloads/streak-broken.webp. Copied the supplied Streak Broken asset byte-for-byte into page-7 media and added it between the crash guidance and Keep Driving button. Original Downloads files remain unchanged.
+- Matched the full-stage composition: crash frame in the upper area, separate white Right answer label and yellow guidance, Streak Broken panel below, button at the reference lower position. Text fits responsively inside the crash frame without truncation; longer guidance shrinks only as needed. A render-only crop hides the supplied banner's transparent margins.
+- Existing crash/explosion, diamond-loss sequence and sounds, modal entrance/retry exit animations and game reset rules are preserved. Other modal layouts remain unchanged.
+- Files: supplied asset, controller, flow CSS, HTML/worker, regenerated manifest, crash browser regression and tracking documents. Controller v55, flow CSS v58, scoped shell v86; preload manifest 114 files/16.3 MB and URLs synchronized.
+- Validation: syntax checks and 28 unit tests pass; responsive crash/retry browser regression passes. Physical-device visual review pending.
+
+
 ## 28 October 2026 - Cautious attention-fade and scratch handoff correction
 
 - Authorization: after requesting analysis of iPhone dim flicker and repeat-looking scratch banner, user approved proceeding cautiously with the proposed two fixes.

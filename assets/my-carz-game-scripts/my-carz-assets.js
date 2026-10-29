@@ -541,6 +541,11 @@ const CARZ_ASSETS = [
     "revision": "7c95c3d781a2765a"
   },
   {
+    "url": "../my-carz-game-assets/page-7/streak-broken.webp",
+    "bytes": 82780,
+    "revision": "c4830ee777481907"
+  },
+  {
     "url": "../my-carz-game-assets/page-8/5-correct-in-a-row-pop-up.webp",
     "bytes": 158212,
     "revision": "1c3e944914659f50"

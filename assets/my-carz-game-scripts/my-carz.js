@@ -92,12 +92,28 @@
     $('modal').classList.toggle('crash-modal', artwork === 'page-7/crash-panel.webp');
     lastFocus = document.activeElement;
     $('modal-title').textContent = title; $('modal-copy').textContent = copy;
+    const crash=artwork==='page-7/crash-panel.webp';
+    $('streak-broken').hidden=!crash;
+    if(crash){
+      const label=document.createElement('span');label.className='crash-answer-label';label.textContent='Right answer:';
+      const answer=document.createElement('span');answer.className='crash-answer-text';answer.textContent=copy.replace(/^Correct answer:\s*/, '');
+      $('modal-copy').replaceChildren(label,document.createTextNode(' '),answer);
+    }
     $('modal-art').hidden = !artwork; if (artwork) image('modal-art', artwork);
     for (const id of ['scratch-area', 'reward-car', 'next-car-info']) $(id).hidden = true;
     $('reward-car').classList.remove('rotating'); $('modal-actions').replaceChildren(...actions);
     $('modal').hidden = false; app.dataset.modal = 'true';
     $(view).inert = true;
+    fitCrashCopy();
     $('modal-actions').querySelector('button')?.focus();
+  }
+  function fitCrashCopy(){
+    if($('modal').hidden || !$('modal').classList.contains('crash-modal'))return;
+    const text=$('modal-copy').querySelector('.crash-answer-text');if(!text)return;
+    text.style.fontSize='';let size=parseFloat(getComputedStyle(text).fontSize);
+    const box=$('modal-copy'),label=box.querySelector('.crash-answer-label');
+    const fits=()=>label.offsetHeight+text.offsetHeight+parseFloat(getComputedStyle(box).rowGap)<=box.clientHeight && text.scrollWidth<=box.clientWidth;
+    while(!fits() && size>11){size-=.5;text.style.fontSize=`${size}px`;}
   }
   function closeModal() { $('modal').hidden = true; delete app.dataset.modal; $(view).inert = false; lastFocus?.focus?.({ preventScroll: true }); }
   function diamonds() {
@@ -478,6 +494,7 @@
     } finally { dayChecking = false; }
   }
   function fit() {
+    fitCrashCopy();
     raceView.resize(); width = raceView.width;
     const landscape = matchMedia('(pointer:coarse)').matches && innerWidth > innerHeight;
     $('portrait').hidden = !landscape;

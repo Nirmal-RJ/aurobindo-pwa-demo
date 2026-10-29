@@ -1,28 +1,28 @@
 {
   "anchors": [
     {
-      "x": 66.0902,
-      "y": 77.0017,
-      "expectedX": 66.0901717557252,
-      "expectedY": 77.00172388497653
-    },
-    {
       "x": 34.0291,
       "y": 77.0017,
       "expectedX": 34.029103053435115,
+      "expectedY": 77.00172388497653
+    },
+    {
+      "x": 66.0902,
+      "y": 77.0017,
+      "expectedX": 66.0901717557252,
       "expectedY": 77.00172388497653
     }
   ],
   "losses": [
     {
       "name": "diamondLost",
-      "at": 42543.79999999702,
+      "at": 43387.79999999888,
       "state": "running",
       "offset": 0
     },
     {
       "name": "diamondLost",
-      "at": 42993.39999999106,
+      "at": 43836.39999999851,
       "state": "running",
       "offset": 0
     }
@@ -30,131 +30,131 @@
   "audio": {
     "context": "running",
     "prepared": [
-      "diamondLost",
-      "question",
-      "explosion",
       "click",
       "go",
+      "explosion",
+      "question",
+      "diamondLost",
       "correct",
       "pass",
       "unlock",
       "streak",
-      "wrong",
-      "countdown"
+      "countdown",
+      "wrong"
     ],
     "durations": {
-      "diamondLost": 0.36,
-      "question": 0.38,
-      "explosion": 1.28,
       "click": 0.6008125,
       "go": 0.72,
+      "explosion": 1.28,
+      "question": 0.38,
+      "diamondLost": 0.36,
       "correct": 0.8239166666666666,
       "pass": 2.04,
       "unlock": 2.0636666666666668,
       "streak": 3.2914166666666667,
-      "wrong": 4.048979166666666,
-      "countdown": 6.5
+      "countdown": 6.5,
+      "wrong": 4.048979166666666
     },
     "events": [
       {
         "name": "click",
-        "at": 632.7000000029802,
+        "at": 1407.2999999988824,
         "state": "running",
         "offset": 0
       },
       {
         "name": "click",
-        "at": 1313.7999999970198,
+        "at": 2087.5,
         "state": "running",
         "offset": 0
       },
       {
         "name": "countdown",
-        "at": 2009,
+        "at": 2802.0999999996275,
         "state": "running",
         "offset": 0
       },
       {
         "name": "go",
-        "at": 5007.70000000298,
+        "at": 5801,
         "state": "running",
         "offset": 0
       },
       {
         "name": "question",
-        "at": 9031.09999999404,
+        "at": 9828.5,
         "state": "running",
         "offset": 0
       },
       {
         "name": "pass",
-        "at": 16608.59999999404,
+        "at": 17419.199999999255,
         "state": "running",
         "offset": 0
       },
       {
         "name": "correct",
-        "at": 17158.79999999702,
+        "at": 17985.5,
         "state": "running",
         "offset": 0
       },
       {
         "name": "unlock",
-        "at": 18292.5,
+        "at": 19119.199999999255,
         "state": "running",
         "offset": 0
       },
       {
         "name": "question",
-        "at": 21525.79999999702,
+        "at": 22369.599999999627,
         "state": "running",
         "offset": 0
       },
       {
         "name": "pass",
-        "at": 28609.09999999404,
+        "at": 29452.5,
         "state": "running",
         "offset": 0
       },
       {
         "name": "correct",
-        "at": 29176,
+        "at": 30019.39999999851,
         "state": "running",
         "offset": 0
       },
       {
         "name": "unlock",
-        "at": 30292.79999999702,
+        "at": 31152.89999999851,
         "state": "running",
         "offset": 0
       },
       {
         "name": "question",
-        "at": 33526.79999999702,
+        "at": 34386.29999999888,
         "state": "running",
         "offset": 0
       },
       {
         "name": "wrong",
-        "at": 40326.29999999702,
+        "at": 41169.59999999963,
         "state": "running",
         "offset": 0
       },
       {
         "name": "explosion",
-        "at": 40326.79999999702,
+        "at": 41169.89999999851,
         "state": "running",
         "offset": 0
       },
       {
         "name": "diamondLost",
-        "at": 42543.79999999702,
+        "at": 43387.79999999888,
         "state": "running",
         "offset": 0
       },
       {
         "name": "diamondLost",
-        "at": 42993.39999999106,
+        "at": 43836.39999999851,
         "state": "running",
         "offset": 0
       }
