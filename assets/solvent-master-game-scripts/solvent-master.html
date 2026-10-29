@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#163a68">
+  <title>Solvent Master</title>
+  <link rel="stylesheet" href="solvent-master.css?v=30">
+  <script defer src="solvent-master-config.js?v=9"></script>
+  <script defer src="solvent-master-assets.js?v=8"></script>
+  <script defer src="solvent-master-loader.js?v=1"></script>
+  <script defer src="solvent-master-core.js?v=2"></script>
+  <script defer src="solvent-master-store.js?v=1"></script>
+  <script defer src="solvent-master-audio.js?v=4"></script>
+  <script defer src="solvent-master.js?v=2"></script>
+  <script defer src="solvent-master-play.js?v=23"></script>
+</head>
+<body>
+  <main id="game" aria-label="Solvent Master landing page" aria-busy="true">
+    <section id="landing" class="screen" aria-label="Landing">
+    <img id="landing-art" class="landing-art" src="../solvent-master-game-assets/page-1/page-1-bg.webp" alt="Solvent Master laboratory with ACN, water and methanol beakers">
+    <div class="action-area">
+      <section id="loader" aria-label="Loading game assets">
+        <div class="loading-heading"><span>Loading</span><output id="load-percent">0%</output></div>
+        <progress id="load-progress" max="100" value="0" aria-label="Asset loading progress"></progress>
+        <p id="load-status" role="status">Preparing assets…</p>
+        <button id="load-retry" type="button" hidden>Retry loading</button>
+      </section>
+      <button id="next" type="button" aria-label="Next" hidden disabled><img id="next-art" src="../solvent-master-game-assets/ui-common-buttons/next-button.webp" alt="" draggable="false"></button>
+    </div>
+    </section>
+    <section id="demo" class="screen" aria-label="How to play" hidden>
+      <div class="demo-frame"><img id="demo-slide" alt=""></div>
+      <nav class="demo-controls" aria-label="Demo navigation">
+        <button id="demo-previous" type="button">Previous</button>
+        <output id="demo-counter" aria-live="polite">1 / 4</output>
+        <button id="demo-next" type="button">Next &#8594;</button>
+      </nav>
+    </section>
+    <section id="mixing" class="screen" aria-label="Let's start mixing" hidden>
+      <img id="mixing-art" class="landing-art" src="../solvent-master-game-assets/page-3-a/page-3-a-bg.webp" alt="Practice mode. Let's start mixing! Empty beaker on the laboratory table.">
+      <img class="mixing-beaker-face" src="../solvent-master-game-assets/beaker-faces/neutral.gif" alt="" draggable="false">
+      <button id="mixing-demo" class="art-button" type="button" aria-label="Demo"><img src="../solvent-master-game-assets/page-3-a/demo-button.webp" alt="" draggable="false"></button>
+      <button id="mixing-play" class="art-button" type="button" aria-label="Play"><img src="../solvent-master-game-assets/ui-common-buttons/play-button.webp" alt="" draggable="false"></button>
+    </section>
+    <p id="flow-status" role="status" hidden></p>
+  </main>
+</body>
+</html>
