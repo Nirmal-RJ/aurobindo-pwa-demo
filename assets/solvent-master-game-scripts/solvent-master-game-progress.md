@@ -316,3 +316,9 @@ The approved full practice/challenge flow is implemented, including lesson video
 - Authorization: investigate missing mobile portrait prompt against Working Standard. Added its legacy MediaQueryList listener fallback and resize/orientationchange handling, plus visualViewport resize/pageshow checks. Extended mobile detection to UA client hints and primary coarse/no-hover touch devices using desktop-style user agents; desktop narrow windows with mouse input remain unaffected.
 - Orientation v3 and shell v40 synchronized. Pause/motion/audio behavior unchanged.
 - Validation: syntax/whitespace checks and orientation browser regression including desktop-UA touch emulation. Physical user device reproduction remains pending; these address concrete detection/event gaps rather than establish the exact cause on that device.
+
+## 29 October 2026 - Lower happy beaker voice
+
+- Authorization: reduce the happy beaker audio because it is louder than the other game sounds. Reduced mixHappy gain from 0.60 to 0.35 (about -4.7 dB). Other audio levels and timing unchanged.
+- Config v10 and shell v41 synchronized.
+- Validation: config/worker syntax and whitespace checks pass. Audible balance awaits user/device review.
