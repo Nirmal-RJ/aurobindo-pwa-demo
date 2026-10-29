@@ -310,3 +310,9 @@ The approved full practice/challenge flow is implemented, including lesson video
 - Help participates in the existing orientation/background pause mechanisms for timer, liquid, native motion, video and audio. Game input is inert until dismissal; Escape/Continue closes the dialog. No gameplay animation timings changed.
 - Fullscreen v1, orientation v2, CSS v32, play v25, audio v6 and shell v39 synchronized. Media unchanged.
 - Validation: Chromium browser test passes actual fullscreen entry on first tap, manual exit, simulated unavailable API fallback and inert/pause flag restoration. Runtime syntax/whitespace checks pass. Physical iPhone/Android standalone behavior remains unverified.
+
+## 29 October 2026 - Mobile orientation detection and event fallbacks
+
+- Authorization: investigate missing mobile portrait prompt against Working Standard. Added its legacy MediaQueryList listener fallback and resize/orientationchange handling, plus visualViewport resize/pageshow checks. Extended mobile detection to UA client hints and primary coarse/no-hover touch devices using desktop-style user agents; desktop narrow windows with mouse input remain unaffected.
+- Orientation v3 and shell v40 synchronized. Pause/motion/audio behavior unchanged.
+- Validation: syntax/whitespace checks and orientation browser regression including desktop-UA touch emulation. Physical user device reproduction remains pending; these address concrete detection/event gaps rather than establish the exact cause on that device.
