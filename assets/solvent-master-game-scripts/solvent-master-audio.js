@@ -21,7 +21,7 @@
       if(!context){context=new (window.AudioContext||window.webkitAudioContext)();
         for(const name of Object.keys(settings.files)){const gain=context.createGain();gain.gain.value=['menu','game','celebration'].includes(name)?0:settings[name];gain.connect(context.destination);tracks[name]={gain};}
       }
-      context.resume().catch(()=>{});
+      if(!SolventMaster.orientationBlocked&&!SolventMaster.fullscreenHelpOpen&&!document.hidden)context.resume().catch(()=>{});
       if(!loading)loading=Promise.all(Object.entries(settings.files).map(async([name,path])=>{
         const response=await fetch(SolventFlow.source('../solvent-master-game-assets/'+path));if(!response.ok)throw Error('Audio download failed');
         buffers[name]=await context.decodeAudioData(await response.arrayBuffer());
@@ -68,6 +68,7 @@
   }
   document.addEventListener('pointerdown',unlock,{passive:true});document.addEventListener('keydown',unlock);
   document.addEventListener('click',event=>{if(event.target.closest('button')){const menu=!['round','lesson'].includes(SolventMaster.view);if(menu){if(buffers.menuClick)cue('menuClick');else loading?.then(()=>cue('menuClick'));}else cue('click');}});
-  document.addEventListener('visibilitychange',()=>{if(!context)return;if(document.hidden)context.suspend().catch(()=>{});else context.resume().catch(()=>{});});
+  function syncPause(){if(!context)return;if(document.hidden||SolventMaster.orientationBlocked||SolventMaster.fullscreenHelpOpen)context.suspend().catch(()=>{});else context.resume().catch(()=>{});}
+  document.addEventListener('visibilitychange',syncPause);document.addEventListener('solvent-master:orientation',syncPause);
   globalThis.SolventAudio={cue,liquid,frame,status:()=>({mode,loaded:Object.keys(buffers),warning:!!warningNode,liquid:!!liquidNode,context:context?.state,lastCue,celebrationGain:tracks.celebration?.gain.gain.value,menuGain:tracks.menu?.gain.gain.value,gameGain:tracks.game?.gain.gain.value})};
 })();

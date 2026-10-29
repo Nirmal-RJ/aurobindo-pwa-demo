@@ -5,15 +5,17 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#163a68">
   <title>Solvent Master</title>
-  <link rel="stylesheet" href="solvent-master.css?v=30">
+  <link rel="stylesheet" href="solvent-master.css?v=32">
   <script defer src="solvent-master-config.js?v=9"></script>
   <script defer src="solvent-master-assets.js?v=8"></script>
   <script defer src="solvent-master-loader.js?v=1"></script>
   <script defer src="solvent-master-core.js?v=2"></script>
   <script defer src="solvent-master-store.js?v=1"></script>
-  <script defer src="solvent-master-audio.js?v=4"></script>
+  <script defer src="solvent-master-audio.js?v=6"></script>
   <script defer src="solvent-master.js?v=2"></script>
-  <script defer src="solvent-master-play.js?v=23"></script>
+  <script defer src="solvent-master-play.js?v=25"></script>
+  <script defer src="solvent-master-orientation.js?v=2"></script>
+  <script defer src="solvent-master-fullscreen.js?v=1"></script>
 </head>
 <body>
   <main id="game" aria-label="Solvent Master landing page" aria-busy="true">
@@ -45,5 +47,8 @@
     </section>
     <p id="flow-status" role="status" hidden></p>
   </main>
+  <aside id="rotate-prompt" role="alert" aria-live="polite" hidden><div class="rotate-phone" aria-hidden="true">&#8635;</div><h1>Rotate to landscape</h1><p>Turn your device sideways to play Solvent Master.</p></aside>
+  <button id="fullscreen-toggle" type="button" aria-label="Enter full screen" title="Full screen" aria-pressed="false">&#9974;</button>
+  <aside id="fullscreen-help" role="dialog" aria-modal="true" aria-labelledby="fullscreen-help-title" hidden><div><h2 id="fullscreen-help-title">Play edge to edge</h2><p>Your browser cannot put the whole game into native full screen. The game still fills the available screen.</p><p>On iPhone, open Safari's Share menu, choose <strong>Add to Home Screen</strong>, then launch the saved app in landscape.</p><button id="fullscreen-help-close" type="button">Continue playing</button></div></aside>
 </body>
 </html>

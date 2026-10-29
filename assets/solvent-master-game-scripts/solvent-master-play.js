@@ -131,7 +131,7 @@
     lastFrame=performance.now();
   }
   async function animate(element,frames,duration){
-    if(element.animate){const animation=element.animate(frames,{duration,easing:'cubic-bezier(.4,0,.2,1)',fill:'forwards'});if(document.hidden){paused.add(animation);animation.pause();}await animation.finished;paused.delete(animation);animation.cancel();}
+    if(element.animate){const animation=element.animate(frames,{duration,easing:'cubic-bezier(.4,0,.2,1)',fill:'forwards'});if(document.hidden||state.orientationBlocked||state.fullscreenHelpOpen){paused.add(animation);animation.pause();}await animation.finished;paused.delete(animation);animation.cancel();}
     else{Object.assign(element.style,frames[0]);void element.offsetWidth;element.style.transition=`all ${duration}ms ease`;Object.assign(element.style,frames.at(-1));await new Promise(resolve=>setTimeout(resolve,duration));element.style.transition='';}
   }
   async function fluidFrames(duration,update){
@@ -139,7 +139,7 @@
     await new Promise((resolve,reject)=>{
       function step(now){
         const delta=now-previous;previous=now;
-        if(!document.hidden)elapsed=Math.min(duration,elapsed+delta);
+        if(!document.hidden&&!state.orientationBlocked&&!state.fullscreenHelpOpen)elapsed=Math.min(duration,elapsed+delta);
         try{update(elapsed/duration);}catch(error){reject(error);return;}
         if(elapsed>=duration)resolve();else requestAnimationFrame(step);
       }
@@ -313,10 +313,14 @@
   // Trap feedback focus; backgrounding freezes native animations and video as well as the clock.
   $('feedback').addEventListener('keydown',event=>{if(event.key==='Tab'){event.preventDefault();$('feedback-next').focus();}});
   const paused=new Set();
-  document.addEventListener('visibilitychange',()=>{
-    const video=$('lesson-video');if(document.hidden){priorVideoPlaying=!video.paused;video.pause();for(const a of $('game').getAnimations({subtree:true}))if(a.playState==='running'){paused.add(a);a.pause();}}
+  let presentationPaused=false;
+  function syncPresentationPause(){
+    const shouldPause=document.hidden||state.orientationBlocked||state.fullscreenHelpOpen;if(shouldPause===presentationPaused)return;presentationPaused=shouldPause;
+    const video=$('lesson-video');if(shouldPause){priorVideoPlaying=!video.paused;video.pause();for(const a of $('game').getAnimations({subtree:true}))if(a.playState==='running'){paused.add(a);a.pause();}}
     else{for(const a of paused)if(a.playState==='paused')a.play();paused.clear();if(priorVideoPlaying&&state.view==='lesson')video.play().catch(()=>{});lastFrame=performance.now();}
-  });
+  }
+  document.addEventListener('visibilitychange',syncPresentationPause);
+  document.addEventListener('solvent-master:orientation',syncPresentationPause);
   function updateTimer(){
     const seconds=Math.max(0,Math.ceil(game.remaining));
     $('timer-value').textContent=`${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`;
@@ -326,7 +330,7 @@
   let lastFrame=performance.now(),lastTick=-1;
   function frame(now){const delta=Math.max(0,(now-lastFrame)/1000);lastFrame=now;
     SolventAudio.frame(state.view);
-    if(game&&state.view==='round'&&!state.busy&&!document.hidden){
+    if(game&&state.view==='round'&&!state.busy&&!document.hidden&&!state.orientationBlocked&&!state.fullscreenHelpOpen){
       if(game.tick(delta))flow.guarded(async()=>{await save();await results();});
       updateTimer();
       if(game.mode==='challenge'&&game.phase==='mix'&&game.remaining<=10&&lastTick!==Math.ceil(game.remaining)){lastTick=Math.ceil(game.remaining);SolventAudio.cue('timer');}

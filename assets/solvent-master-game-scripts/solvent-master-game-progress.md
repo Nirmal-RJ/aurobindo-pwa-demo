@@ -296,3 +296,17 @@ The approved full practice/challenge flow is implemented, including lesson video
 - Authorization: replace sad-audio-1 with the supplied sad-audio.aac. Replaced the owned audio/mix-sad.aac bytes; existing volume, trigger, pause and stop behavior retained.
 - Regenerated revisioned media manifest; manifest v8 and shell v37 synchronized.
 - Validation: source/copy SHA-256 equality, manifest generation and whitespace checks. Audible/device review pending.
+
+## 29 October 2026 - Mobile portrait landscape prompt
+
+- Authorization: ask mobile portrait players to switch to landscape while leaving laptop/desktop behavior unaffected. Added isolated orientation controller and full-screen prompt, with iPhone/iPad/Android detection including iPadOS desktop-style user agents.
+- Blocks input and pauses answer time, liquid interpolation, native animation, video and shared audio context. Resumes on landscape; handles hidden-tab overlap. Native GIFs remain browser-owned behind prompt.
+- Orientation v1, CSS v31, play v24, audio v5 and shell v38 synchronized. Media unchanged.
+- Validation: Chromium mobile user-agent test verifies portrait prompt/inert game, landscape dismissal, frozen challenge timer and resume. Desktop narrow portrait window has no prompt. Runtime syntax/whitespace checks pass. Physical-device rotation/safe-area behavior remains unverified.
+
+## 29 October 2026 - Fullscreen entry and toggle
+
+- Authorization: add fullscreen control/automatic entry following Working Standard. Reviewed its request/exit, landscape lock and iPhone help behavior; implemented an isolated controller with first-game-button auto request and persistent bottom-right toggle. Native unsupported/rejected manual entry shows usable fallback guidance.
+- Help participates in the existing orientation/background pause mechanisms for timer, liquid, native motion, video and audio. Game input is inert until dismissal; Escape/Continue closes the dialog. No gameplay animation timings changed.
+- Fullscreen v1, orientation v2, CSS v32, play v25, audio v6 and shell v39 synchronized. Media unchanged.
+- Validation: Chromium browser test passes actual fullscreen entry on first tap, manual exit, simulated unavailable API fallback and inert/pause flag restoration. Runtime syntax/whitespace checks pass. Physical iPhone/Android standalone behavior remains unverified.
