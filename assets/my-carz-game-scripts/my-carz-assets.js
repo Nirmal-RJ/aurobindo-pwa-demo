@@ -301,24 +301,54 @@ const CARZ_ASSETS = [
     "revision": "79b5b25817297475"
   },
   {
-    "url": "../my-carz-game-assets/page-2-1/demo-page-2-1.webp",
+    "url": "../my-carz-game-assets/page-2-1/Hand.webp",
+    "bytes": 18434,
+    "revision": "003ae132cc95d409"
+  },
+  {
+    "url": "../my-carz-game-assets/page-2-1/demo-page-2-1-old.webp",
     "bytes": 108696,
     "revision": "e2a1d5ea90c0e0e2"
   },
   {
-    "url": "../my-carz-game-assets/page-2-2/demo-page-2-2.webp",
+    "url": "../my-carz-game-assets/page-2-1/demo-page-2-1.webp",
+    "bytes": 42436,
+    "revision": "381eff7d27f7e4ba"
+  },
+  {
+    "url": "../my-carz-game-assets/page-2-1/swipe-guide.gif",
+    "bytes": 252063,
+    "revision": "52f4de9848a4855d"
+  },
+  {
+    "url": "../my-carz-game-assets/page-2-2/demo-page-2-2-old.webp",
     "bytes": 106752,
     "revision": "ec6310d2dc299d15"
   },
   {
-    "url": "../my-carz-game-assets/page-2-3/demo-page-2-3.webp",
+    "url": "../my-carz-game-assets/page-2-2/demo-page-2-2.webp",
+    "bytes": 47826,
+    "revision": "9a5198657e089cb5"
+  },
+  {
+    "url": "../my-carz-game-assets/page-2-3/demo-page-2-3-old.webp",
     "bytes": 103242,
     "revision": "3c292733c2e8ee6b"
   },
   {
-    "url": "../my-carz-game-assets/page-2-4/demo-page-2-4.webp",
+    "url": "../my-carz-game-assets/page-2-3/demo-page-2-3.webp",
+    "bytes": 47554,
+    "revision": "4f1c66865fcbcec6"
+  },
+  {
+    "url": "../my-carz-game-assets/page-2-4/demo-page-2-4-old.webp",
     "bytes": 131792,
     "revision": "14cc1e6767ccbd9a"
+  },
+  {
+    "url": "../my-carz-game-assets/page-2-4/demo-page-2-4.webp",
+    "bytes": 461716,
+    "revision": "628608459e6d8e25"
   },
   {
     "url": "../my-carz-game-assets/page-3/arrow.webp",

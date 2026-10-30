@@ -136,8 +136,8 @@
     $('unlocked-today').textContent = `${d.unlocked}/9`;
     $('collection-previous').disabled=d.selected===0;
     $('collection-next').disabled=d.selected+1>=d.unlocked;
-    $('collection-drive').hidden=!collectionUpgradePending;
-    $('collection').classList.toggle('choose-before-drive',collectionUpgradePending);
+    $('collection-drive').hidden=false;
+    $('collection').classList.add('choose-before-drive');
     $('returning-actions').hidden = !returning;
     $('home-previous').disabled = d.selected === 0;
     $('home-next').disabled = d.selected + 1 >= d.unlocked;
@@ -201,16 +201,11 @@
     if (revision !== paintRevision) return;
     updateHomeCarouselArrow();
   }
-  const demoCopy = [
-    ['Choose a tunnel', 'Read the action. Swipe left or right to choose Good or Bad.'],
-    ['Earn your upgrade', 'Five correct answers in a row earn five diamonds and unlock the next car.'],
-    ['Keep driving', 'A wrong answer resets your diamonds. See the correct answer and try fresh questions.'],
-    ['Read, then steer', 'You have two seconds to read before the tunnels approach. Your current lane is your answer.']
-  ];
+  const demoTitles = ['Choose a tunnel', 'Earn your upgrade', 'Keep driving', 'Read, then steer'];
   function renderDemo() {
     const slides = help && C.helpSlides.length ? C.helpSlides : C.demos;
-    image('demo-image', slides[demoIndex]); $('demo-image').alt = demoCopy[demoIndex % 4][0];
-    $('demo-title').textContent = demoCopy[demoIndex % 4][0]; $('demo-text').textContent = demoCopy[demoIndex % 4][1];
+    $('demo-swipe-guide').hidden = demoIndex !== 0;
+    image('demo-image', slides[demoIndex]); $('demo-image').alt = demoTitles[demoIndex % demoTitles.length];
     $('demo-counter').textContent = `${demoIndex + 1} / ${slides.length}`; $('demo-prev').disabled = demoIndex === 0;
     $('demo-next').textContent = demoIndex === slides.length - 1 ? 'Finish' : 'Next →';
   }
@@ -608,7 +603,7 @@
   }
   on('open-cars', async () => { collectionUpgradePending=false;await renderGarage(); await show('collection'); });
   on('collection-back', () => {collectionUpgradePending=false;return show('home', true);});
-  on('collection-drive',async()=>{collectionUpgradePending=false;await startDrive(true,true);});
+  on('collection-drive',async()=>{const continuing=collectionUpgradePending;collectionUpgradePending=false;await startDrive(continuing,continuing);});
   let choosingCollectionCar=false;
   async function chooseCollectionCar(index){
     if(busy||choosingCollectionCar||index===game.day.selected||index<0||index>=game.day.unlocked)return;

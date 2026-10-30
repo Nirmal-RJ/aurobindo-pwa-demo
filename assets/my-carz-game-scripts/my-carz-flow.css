@@ -3,7 +3,7 @@ body{background:#030b14}.carz-app{position:relative;width:min(100%,56.25vh);widt
 .opening{background:url('../my-carz-game-assets/page-1/page-1-bg.webp') center/100% 100%}.opening-next{position:absolute;left:19%;top:79.3%;width:65%}.carz-loader{position:absolute;bottom:22%;left:12%;width:76%;padding:10px;border-radius:12px;background:#03101cea;font-size:clamp(10px,2.4cqw,14px)}.carz-loader label{display:flex;justify-content:space-between}.carz-loader progress{display:block;width:100%;height:14px;accent-color:#ffd024}.carz-loader p{margin:5px 0;line-height:1.3}.carz-loader button,.slide-nav button{border:1px solid #ffd024;border-radius:7px;padding:8px;background:#10293e}
 .garage-view{padding:3% 6% max(3%,env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center;gap:1.1%;background:linear-gradient(#0002,#0002),url('../my-carz-game-assets/page-4/page-4-bg.webp') center/100% 100%}.garage-view h1{font-family:Race,Impact,sans-serif;font-size:clamp(22px,9cqw,50px);font-style:italic;margin:1% 0;color:#ffe37e;letter-spacing:2px}.level-label,.garage-view>p{font-size:clamp(11px,2.8cqw,16px);margin:0;text-shadow:0 2px 4px #000}.showcase-car{width:87%;height:33%;object-fit:contain;filter:drop-shadow(0 14px 10px #0009);animation:carz-car-in .55s cubic-bezier(.16,1,.3,1)}.car-name{font-size:clamp(20px,6cqw,36px);margin:0;text-shadow:0 3px 5px #000}
 .carz-carousel{display:flex;gap:8px;width:100%;height:17%;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:thin;padding:7px 2px;flex-shrink:0}.carz-card{flex:0 0 31%;scroll-snap-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:1px solid #617481;border-radius:12px;background:#07121cce;padding:5px;font-size:clamp(10px,2.6cqw,15px)}.carz-card img{width:100%;height:58%;object-fit:contain;min-height:0}.carz-card small{font-size:9px;color:#a9c3cd}.carz-card:disabled{opacity:.5;cursor:default}.carz-card[aria-pressed=true]{border:2px solid #65ffce;box-shadow:0 0 12px #3fffc66b}.carz-card:disabled img{filter:grayscale(1)}
-.carz-paints{width:100%;padding:5px 0;border:0;margin:0}.carz-paints legend{font-size:10px;color:#d5e4e9;text-align:center}.carz-paints>div{display:flex;justify-content:center;gap:3%;flex-wrap:wrap}.carz-paints button{width:6%;aspect-ratio:1;border-radius:50%;padding:0;border:1px solid #ffffff80;background:var(--paint);min-height:0}.carz-paints button[aria-pressed=true]{outline:2px solid #6affd2;outline-offset:2px}.garage-view>.art-button{width:82%;margin-top:auto}.garage-view>a{margin-top:1%}.returning-actions{display:flex;gap:6px;width:85%;max-height:7%}.returning-actions .art-button{width:50%}.returning-actions img{height:100%;object-fit:contain}.demo-view{background:#07121e}.demo-view>img{width:100%;height:100%;object-fit:contain}.demo-copy{position:absolute;left:5%;right:5%;top:3%;background:#03111eed;padding:8px 12px;border-radius:12px;text-align:center;border:1px solid #4bc9eb}.demo-copy h2{margin:0;font-size:clamp(15px,4cqw,24px);color:#ffd765}.demo-copy p{margin:5px 0;font-size:clamp(11px,3cqw,17px)}.slide-nav{position:absolute;left:4%;right:4%;bottom:max(3%,env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:space-between;background:#03111ef2;border-radius:12px;padding:9px;gap:8px}.slide-nav button{font-size:clamp(11px,3cqw,16px)}.slide-nav span{font-size:12px;white-space:nowrap}
+.carz-paints{width:100%;padding:5px 0;border:0;margin:0}.carz-paints legend{font-size:10px;color:#d5e4e9;text-align:center}.carz-paints>div{display:flex;justify-content:center;gap:3%;flex-wrap:wrap}.carz-paints button{width:6%;aspect-ratio:1;border-radius:50%;padding:0;border:1px solid #ffffff80;background:var(--paint);min-height:0}.carz-paints button[aria-pressed=true]{outline:2px solid #6affd2;outline-offset:2px}.garage-view>.art-button{width:82%;margin-top:auto}.garage-view>a{margin-top:1%}.returning-actions{display:flex;gap:6px;width:85%;max-height:7%}.returning-actions .art-button{width:50%}.returning-actions img{height:100%;object-fit:contain}.demo-view{background:#07121e}.demo-view>img{width:100%;height:100%;object-fit:contain}.slide-nav{position:absolute;left:4%;right:4%;bottom:max(3%,env(safe-area-inset-bottom));display:flex;align-items:center;justify-content:space-between;background:#03111ef2;border-radius:12px;padding:9px;gap:8px}.slide-nav button{font-size:clamp(11px,3cqw,16px)}.slide-nav span{font-size:12px;white-space:nowrap}
 .race-view{background:#233644}.race-world{position:absolute;inset:0;display:flex}.carz-track{position:relative;width:76%;height:100%;overflow:hidden;touch-action:none}.carz-scenery{width:12%;height:100%;background-size:100% auto;background-repeat:repeat-y;background-position:center var(--scenery-offset,0px)}.carz-scenery.left{background-image:var(--left-art,url('../my-carz-game-assets/page-5/1-vintage-bg-left.webp'))}.carz-scenery.right{background-image:var(--right-art,url('../my-carz-game-assets/page-5/1-vintage-bg-right.webp'))}
 .carz-hud{position:absolute;z-index:5;top:max(1%,env(safe-area-inset-top));left:2%;right:2%;display:flex;align-items:center;gap:5px;padding:0;background:none;border:0}.carz-hud button{width:9%;min-height:30px;background:#061a2f;border:1px solid #4ec9fa;border-radius:5px;font-size:22px;padding:0}.carz-hud>span{font-size:clamp(9px,2.5cqw,14px);color:#ffe27b;white-space:nowrap}.carz-hud #diamonds{margin-left:auto;display:flex;align-items:center;gap:3px;padding:6px;background:#031528;border:1px solid #4ec9fa;border-radius:8px;font-size:clamp(10px,2.8cqw,16px)}#diamonds img{width:clamp(12px,4cqw,24px);height:22px;object-fit:contain;opacity:.22;filter:grayscale(1)}#diamonds img.earned{opacity:1;filter:none;animation:carz-diamond .5s ease-out}
 .carz-question{position:absolute;left:2%;right:2%;top:8%;z-index:4;min-height:12%;padding:4% 5%;display:flex;flex-direction:column;justify-content:center;border:2px solid #3fceff;border-radius:14px;background:linear-gradient(130deg,#061c30f5,#03101ff5);box-shadow:0 4px 10px #0006}.carz-question h2{font-size:clamp(15px,4.2cqw,25px);margin:0;text-align:center;line-height:1.25}.time-bar{height:3px;background:#fff2;margin-top:8px}.time-bar i{display:block;width:100%;height:100%;background:#ffe575;transform-origin:left}
@@ -435,3 +435,44 @@ body{background:#030b14}.carz-app{position:relative;width:min(100%,56.25vh);widt
 .lost-diamond{position:absolute;object-fit:contain;filter:drop-shadow(0 0 6px #ff435b);transform-origin:center;will-change:transform,opacity}
 
 .reward-modal #next-car-info.all-unlocked{background:none;font-size:clamp(20px,5.6cqw,32px);line-height:1.2;padding:3%;text-align:center}
+
+.demo-view>.demo-swipe-guide{position:absolute;left:50%;top:79%;width:30%;height:auto;object-fit:contain;transform:translate(-38.75%,-50%);pointer-events:none;animation:demo-hand-swipe 2.8s ease-in-out infinite}
+
+@keyframes demo-hand-swipe{0%,50%,100%{transform:translate(-38.75%,-50%)}25%{transform:translate(-93.75%,-50%)}75%{transform:translate(16.25%,-50%)}}
+
+/* Paint choices follow the front edge of the home platform ellipse. */
+#home .carz-paints{left:12%;top:42.3%;width:76%;height:5%}
+#home-paints{position:relative;display:block}
+#home-paints button{position:absolute;transform:translate(-50%,-50%);max-height:none}
+#home-paints button:nth-child(1){left:0%;top:53.56%}
+#home-paints button:nth-child(2){left:10%;top:73.73%}
+#home-paints button:nth-child(3){left:20%;top:86.21%}
+#home-paints button:nth-child(4){left:30%;top:94.12%}
+#home-paints button:nth-child(5){left:40%;top:98.56%}
+#home-paints button:nth-child(6){left:50%;top:100.00%}
+#home-paints button:nth-child(7){left:60%;top:98.56%}
+#home-paints button:nth-child(8){left:70%;top:94.12%}
+#home-paints button:nth-child(9){left:80%;top:86.21%}
+#home-paints button:nth-child(10){left:90%;top:73.73%}
+#home-paints button:nth-child(11){left:100%;top:53.56%}
+
+/* Paint choices follow the front edge of the My Cars platform ellipse. */
+#collection .carz-paints{left:12%;top:45.3%;width:76%;height:5%}
+#collection-paints{position:relative;display:block;width:100%;height:100%}
+#collection-paints button{position:absolute;transform:translate(-50%,-50%);width:7.2%;height:auto;max-height:none;aspect-ratio:1}
+#collection-paints button:nth-child(1){left:0%;top:53.56%}
+#collection-paints button:nth-child(2){left:10%;top:73.73%}
+#collection-paints button:nth-child(3){left:20%;top:86.21%}
+#collection-paints button:nth-child(4){left:30%;top:94.12%}
+#collection-paints button:nth-child(5){left:40%;top:98.56%}
+#collection-paints button:nth-child(6){left:50%;top:100.00%}
+#collection-paints button:nth-child(7){left:60%;top:98.56%}
+#collection-paints button:nth-child(8){left:70%;top:94.12%}
+#collection-paints button:nth-child(9){left:80%;top:86.21%}
+#collection-paints button:nth-child(10){left:90%;top:73.73%}
+#collection-paints button:nth-child(11){left:100%;top:53.56%}
+
+/* Emphasize driving over the secondary collection return action. */
+#collection #collection-back,#collection.choose-before-drive #collection-back{left:28%;width:44%;height:4%;min-height:0}
+#collection.choose-before-drive #collection-drive{left:10%;top:83%;width:80%;height:7.2%;min-height:44px}
+#collection.choose-before-drive #collection-back{top:93%}

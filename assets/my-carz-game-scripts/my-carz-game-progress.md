@@ -13,6 +13,89 @@ This continuing user instruction applies across future sessions and contributors
 
 # My Carz context and progress
 
+## 30 October 2026 - Git publication handoff
+
+- Authorization: user requested pushing the completed My Carz work to Git.
+- Scope: updated four supplied demo images, retained demo backups/swipe GIF, animated Hand.webp cue, removed demo copy, curved home/collection paint palettes, collection button sizing and always-available Start Driving. Unrelated Solvent Master changes and local QA/document-lock artifacts excluded.
+- Regenerated media manifest for current supplied assets. Controller v59, flow CSS v68 and scoped shell v98 synchronized.
+- Validation: runtime syntax checks, all 28 My Carz tests and whitespace checks pass. User screenshots informed corrections; latest browser/device animation and layout verification remains pending.
+
+## 30 October 2026 - Show Start Driving on every My Cars visit
+
+- Authorization: user reported the Start Driving button missing on My Cars.
+- Found the existing upgrade-only visibility gate. Start Driving now appears on every collection visit with the large primary/small Back layout. Normal collection starts count as new plays; upgrade continuations retain their existing no-extra-play behavior. Existing race sequencing and audio preserved.
+- Controller v59 and scoped shell v98 synchronized; no media changes.
+- Validation: runtime syntax and all 28 My Carz tests pass; git diff --check passes. Browser/device verification remains pending.
+
+## 30 October 2026 - Correct collapsed collection paint arc
+
+- Authorization: user reported My Cars swatches still formed a straight line.
+- Root cause: collection-paints had no explicit height after its buttons became absolutely positioned. Set its width/height to 100% of the existing arc fieldset so each percentage top offset resolves along the intended ellipse. Preserved swatch size/order, selection, other layouts, animations and audio.
+- Flow CSS v68 and scoped shell v97 synchronized; no media changes.
+- Validation: CSS containing-block sizing reviewed; git diff --check passes. Live browser/device visual verification remains pending.
+
+## 30 October 2026 - My Cars button emphasis
+
+- Authorization: user requested a smaller Back button and larger Start Driving button on My Cars.
+- Centered Back at 44% stage width and 4% height; enlarged the choose-before-drive Start Driving action to 80% width and 7.2% height. Driving starts at 83% stage height and Back at 93%, with separation between artwork. Existing button assets, handlers, navigation, animations and audio preserved.
+- Flow CSS v67 and scoped shell v96 synchronized; no media changes.
+- Validation: git diff --check passes. Browser responsive visual and physical-device verification remain pending.
+
+## 30 October 2026 - Curved My Cars paint palette
+
+- Authorization: user requested the same curved paint arrangement on My Cars.
+- Positioned collection paint swatches along its platform front ellipse, using the home palette arc with the collection artwork's lower anchor (45.3% plus 5% arc height). Preserved color order, selection outlines, handlers, persistence, car navigation and existing animations/audio.
+- Flow CSS v66 and scoped shell v95 synchronized; no media changes.
+- Validation: inspected collection background and matched ellipse geometry; git diff --check passes. Browser responsive visual and physical-device verification remain pending.
+
+## 30 October 2026 - Curved home paint palette
+
+- Authorization: user requested carz-paints follow the circular platform line shown beneath the car.
+- Moved home paint choices from the lower straight row onto the front platform ellipse. Eleven circular swatches follow the arc symmetrically using proportional positions; selected outlines, color order, click handlers and paint persistence are preserved. Collection layout is unchanged.
+- No animation timing, sequencing or audio changes. Flow CSS v65 and scoped shell v94 synchronized; no media changes.
+- Validation: positions calculated from the supplied home background ellipse; git diff --check passes. Browser responsive appearance and physical-device verification remain pending.
+
+## 30 October 2026 - Align visible hand with lane divider
+
+- Authorization: user requested the hand be centered on the white divider.
+- Measured Hand.webp opaque bounds (58..438 within 640px width); compensated for asymmetric transparent padding by shifting all swipe keyframes 11.25% of image width right. The visible cue now centers on the divider at its center pose. Lower placement, size, 2.8-second timing and travel distance remain unchanged.
+- Flow CSS v64 and scoped shell v93 synchronized. No media/gameplay/audio changes.
+- Validation: asset bounds measured and git diff --check passes. Live browser and device verification remain pending.
+
+## 30 October 2026 - Lower demo hand into dark area
+
+- Authorization: user requested moving the hand cue down into the dark area shown in their screenshot.
+- Moved the first-slide cue anchor from 52% to 79% stage height, centered across the lanes in the lower dark panel above the diamond. Size and existing 2.8-second swipe motion are unchanged; no navigation, gameplay or audio changes.
+- Flow CSS v63 and scoped shell v92 synchronized. No media changes.
+- Validation: inspected current demo artwork to locate the dark panel; git diff --check passes. Live browser placement/motion and physical-device verification remain pending.
+
+## 30 October 2026 - Animated hand swipe cue
+
+- Authorization: user requested replacing swipe-guide.gif with supplied Hand.webp and smooth motion to both sides from the center.
+- First-slide cue uses Hand.webp at the existing centered anchor and proportional size. A continuous 2.8-second ease-in-out cycle moves center, left, center, right, center; horizontal travel is 55% of the cue width in either direction. Other slides remain unaffected.
+- Existing gameplay animations, navigation and audio unchanged. Flow CSS v62 and scoped shell v91 synchronized; media manifest regenerated. Original GIF retained on disk.
+- Validation: syntax checks, all 28 My Carz tests and whitespace checks pass. Supplied artwork inspected; live browser smoothness and physical-device verification remain pending.
+
+## 30 October 2026 - Use updated first demo artwork
+
+- Authorization: user reported replacement demo-page-2-1.webp not reflecting. Corrected the first demo reference from the previously renamed -old artwork back to the current supplied filename.
+- Swipe GIF, placement, navigation, animation timing and audio are unchanged. Config v28 and scoped shell v90 synchronized; rebuilt media revisions for the replacement asset.
+- Validation: syntax checks, 28 My Carz tests and whitespace checks pass. Live browser/device appearance remains unverified.
+
+## 30 October 2026 - First demo swipe guide
+
+- Authorization: user requested the supplied page-2-1/swipe-guide.gif centered between both lanes on demo page 1.
+- Added a centered, proportional GIF overlay only on the first demo/help slide. Existing first-slide artwork is now referenced by its current demo-page-2-1-old.webp filename. Navigation and other slides are preserved.
+- Native GIF animation is unchanged; no game timing, sequencing, input or audio changes. Flow CSS v61, controller v58, config v27 and scoped shell v89 synchronized; media manifest rebuilt to include the supplied GIF.
+- Validation: syntax checks, all 28 My Carz tests and whitespace checks pass. Image assets inspected; live browser animation and physical-device verification remain pending.
+
+## 30 October 2026 - Remove demo copy overlay
+
+- Authorization: user explicitly requested complete removal of demo-copy from My Carz demo pages.
+- Removed the overlay markup, its CSS and its text-population code. Retained slide image alt titles, images and Previous/Next/Finish navigation for introduction and help slides.
+- No animation timing, sequencing, input gating or audio changes. Controller v57, flow CSS v60 and scoped shell v88 synchronized; media manifest unchanged because media files are unchanged.
+- Validation: runtime syntax checks and all 28 My Carz tests pass; git diff --check passes. Browser visual and physical-device verification were not performed.
+
 ## 29 October 2026 - Crash guidance containment
 
 - User requested correction of answer text extending past the red frame. Raised and inset the answer area, prevented flex shrinking from masking text overflow, and fit the combined label/answer height to the available space. Full guidance remains visible. Animation, audio and retry behavior are unchanged.
