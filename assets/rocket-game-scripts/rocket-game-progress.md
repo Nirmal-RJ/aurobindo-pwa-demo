@@ -12,6 +12,52 @@ This is an explicit, continuing user instruction. It applies across future sessi
 
 # Rocket'ier context and progress
 
+## 30 October 2026 - Unlisted internal Games gallery
+
+- Authorization: user requested a link-only rc-games copy with every game available for the internal team and no visible navigation link to it.
+- Added #/rc-games and a separate full gallery (17 links including Sample Preparation). Public #/games retains My Carz and Rocketier only; its other cards remain commented out. Internal poster label IDs are unique. No game runtime/media/animation/audio changes. This is unlisted navigation, not authentication.
+- Hub app v27 and root shell v466 synchronized.
+- Validation: parsed active galleries (public 2/internal 17), checked unique IDs and absence of navigation links to rc-games. JS syntax, two worker tests and whitespace checks pass. Live browser verification pending.
+
+
+## 30 October 2026 - Re-enable Games gallery card
+
+- Authorization: user requested enabling Rocketier in the Games page.
+- Uncommented only the Rocketier gallery card. My Carz remains available; other cards remain commented out. Runtime, media, effects and audio unchanged. Root shell v465 refreshes hub markup.
+- Validation: active gallery links are exactly My Carz and Rocketier; root worker syntax, both worker tests and whitespace checks pass. Browser visual verification pending.
+
+
+## 30 October 2026 - Journey completed button artwork
+
+- Authorization: user requested page-6 Next Mission artwork once the mission completes, retaining Continue Mission during ongoing missions; follow-up reported the switch had not been applied.
+- Journey render now sets a completed-state attribute and matching text. A scoped CSS rule switches only the completed journey button background to page-6/next-mission-button.webp; ongoing journeys keep the existing artwork. Click routing, result screen, travel/stat timing and audio unchanged.
+- JS v86, CSS v105 and scoped shell v52 synchronized; media manifest rebuilt.
+- Validation: syntax, Rocketier tests and whitespace checks pass. Browser visual verification pending.
+
+
+## 30 October 2026 - Distinct gold center highlight
+
+- Authorization: user requested a more prominent glow in a different highlight color.
+- Changed center emphasis to a warm gold/yellow halo with pale yellow core and orange outer glow. Peak brightness 1.8; core 8px, gold 28px and orange 16px. Existing center proximity, scale/hop, belt speed, other spotlight effects, boarding timing and audio preserved.
+- CSS v104 and scoped shell v51 synchronized. Validation: whitespace check passes; browser/device appearance remains unverified.
+
+
+## 30 October 2026 - Stronger center rocket glow
+
+- Authorization: user requested a stronger glow on the centered conveyor rocket.
+- Raised peak brightness from 1.4 to 1.65, white inner glow from 3px to 7px and cyan outer glow from 14px to 24px. Existing proximity envelope, scale, hop, conveyor speed, boarding sequence and audio unchanged.
+- CSS v103 and scoped shell v50 synchronized. Validation: git diff --check passes; browser/device visual verification pending.
+
+
+## 30 October 2026 - Center conveyor rocket emphasis
+
+- Authorization: user requested a brighter glow, small scale increase and gentle hop for each rocket as it crosses screen center, one by one.
+- During selection, measure each moving choice against the hangar center. A cosine eased proximity envelope over 9.5% stage width either side gives one rocket at a time up to 12% scaling and an 8px hop with stronger cyan glow. Uses actual positions rather than independent timers, so stays aligned with belt recovery and viewport changes.
+- Runs only during visible selection; returning restarts the emphasis sampler. Boarding freezes the current model pose for existing source bounds measurement; pad travel, conveyor speed, existing fades, spotlight, launch and audio remain unchanged. No new assets.
+- JS v85, CSS v102 and scoped shell v49 synchronized.
+- Validation: syntax, all 50 existing Rocketier tests and whitespace checks pass. Tests cover previous gameplay/docking/recovery behavior; new visual emphasis and actual iPhone smoothness remain browser/device unverified.
+
+
 ## 30 October 2026 - Guard conveyor animation re-entry and recovery
 
 - Authorization: after analysis of reported iPhone rocket/belt freezes, user approved the narrowly scoped restart/recovery proposal without removing or changing existing effects.

@@ -56,6 +56,7 @@ const pages = {
   fun: { route: 'fun-corner', color: 'coral', icon: 'masks' },
   league: { route: 'premier-league', color: 'gold', icon: 'trophy' },
   games: { route: 'games', color: 'lavender', icon: 'game' },
+  rcGames: { route: 'rc-games', color: 'lavender', icon: 'game', title: 'Internal Games', description: 'All games for internal team review.' },
   samplePreparation: { route: 'games/sample-preparation', color: 'lavender', icon: 'game', title: 'SAMPLE PREPARATION', description: 'Choose a game to explore.', parent: 'games' },
   wrongSampleSelected: { route: 'games/sample-preparation/wrong-sample-selected', color: 'lavender', icon: 'game', title: 'Wrong sample selected', description: 'This game is coming soon.', parent: 'samplePreparation' },
   wrongSampleWeight: { route: 'games/sample-preparation/wrong-sample-weight', color: 'lavender', icon: 'game', title: 'Wrong sample weight', description: 'This game is coming soon.', parent: 'samplePreparation' },
@@ -301,8 +302,9 @@ function renderRoute(focus = true) {
     return;
   }
   if (next) {
-    section.className = `section-page ${pages[next].color}${next === 'games' || next === 'samplePreparation' ? ' is-games' : ''}`;
+    section.className = `section-page ${pages[next].color}${next === 'games' || next === 'rcGames' || next === 'samplePreparation' ? ' is-games' : ''}`;
     document.querySelector('.game-gallery').hidden = next !== 'games';
+    document.querySelector('#rc-game-gallery').hidden = next !== 'rcGames';
     document.querySelector('#sample-preparation-gallery').hidden = next !== 'samplePreparation';
     document.querySelector('#page-icon').setAttribute('href', `#i-${pages[next].icon}`);
     updatePageContent();

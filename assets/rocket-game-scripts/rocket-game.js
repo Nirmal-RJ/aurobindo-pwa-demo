@@ -88,7 +88,32 @@
     if (heldButton) heldButton.classList.remove('held');
     heldButton = null;
   }
-  let conveyorCheck = 0;
+  let conveyorCheck = 0, conveyorEmphasis = 0;
+  function emphasizeCenterRocket(version) {
+    const token = ++conveyorEmphasis;
+    const track = $('rocket-track'), stage = $('hangar');
+    if (!stage.getBoundingClientRect) return;
+    const choices = [...track.querySelectorAll('button')];
+    function frame() {
+      if (token !== conveyorEmphasis || !conveyorSelecting(version)) return;
+      const bounds = stage.getBoundingClientRect();
+      const center = bounds.left + bounds.width / 2;
+      for (const choice of choices) {
+        const model = choice.querySelector('.rocket-model');
+        if (!model) continue;
+        const box = choice.getBoundingClientRect();
+        const distance = Math.abs(box.left + box.width / 2 - center);
+        const proximity = Math.max(0, 1 - distance / (bounds.width * .095));
+        const strength = (1 - Math.cos(Math.PI * proximity)) / 2;
+        model.style.setProperty('--center-emphasis', String(strength));
+        model.style.translate = `0 ${-8 * strength}px`;
+        model.style.scale = String(1 + .12 * strength);
+        model.classList.toggle('center-emphasis', strength > 0);
+      }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
   function conveyorSelecting(version) {
     const stage = $('hangar');
     return version === screenVersion && !document.hidden && game.phase === 'select' &&
@@ -106,10 +131,12 @@
       if (previous[i][0]) el.style.setProperty('animation-name', previous[i][0], previous[i][1]);
       else el.style.removeProperty('animation-name');
     });
+    emphasizeCenterRocket(version);
   }
   function checkConveyorOnReturn() {
     const version = screenVersion, check = ++conveyorCheck;
     if (!conveyorSelecting(version)) return;
+    emphasizeCenterRocket(version);
     requestAnimationFrame(() => {
       if (check !== conveyorCheck || !conveyorSelecting(version)) return;
       const layers = [$('rocket-track'), $('conveyor').querySelector('.belt')];
@@ -714,7 +741,8 @@
     $('distance-progress').value = game.run.distance / m.distance * 100;
     renderJourneyStats(0);
     animateJourneyRoute();
-    $('continue').textContent = 'Continue mission';
+    $('continue').textContent = game.run.status === 'completed' ? 'Next mission' : 'Continue mission';
+    $('continue').dataset.missionCompleted = String(game.run.status === 'completed');
     $('continue').setAttribute('aria-label', game.run.status === 'completed' ? 'Continue to mission results' : 'Continue mission to the next question');
   }
   function complete() {

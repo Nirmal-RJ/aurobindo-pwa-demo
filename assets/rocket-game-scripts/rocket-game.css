@@ -634,3 +634,9 @@ img{-webkit-user-drag:none}
 #popup.video-popup .popup-body{grid-template-rows:auto auto minmax(0,1fr) auto}
 #popup.video-popup #lesson-pro-tip{display:block;padding:9px 12px;border:1px solid #ffd65a;border-radius:10px;background:#493607;color:#fff3bd;font-size:clamp(12px,3.3cqw,16px);line-height:1.35;text-align:center;box-shadow:0 0 12px #ffc83d33}
 #lesson-pro-tip strong{color:#ffdc59}
+
+/* Center emphasis follows actual conveyor position; boarding freezes its pose. */
+.rocket-choice .rocket-model{transform-origin:50% 100%}
+.selecting:not(.boarding) .rocket-choice .rocket-model.center-emphasis{filter:brightness(calc(1.18 + .62 * var(--center-emphasis))) drop-shadow(0 0 calc(3px + 5px * var(--center-emphasis)) #fff4b0) drop-shadow(0 0 calc(7px + 21px * var(--center-emphasis)) #ffd23f) drop-shadow(0 0 calc(16px * var(--center-emphasis)) #ff8c00)}
+
+#journey #continue[data-mission-completed="true"]{background-image:url('../rocket-game-assets/page-6/next-mission-button.webp')}

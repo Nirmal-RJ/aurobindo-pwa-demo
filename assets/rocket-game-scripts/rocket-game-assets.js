@@ -356,6 +356,11 @@ self.ROCKET_ASSETS = [
     "revision": "f8837db11b2019ee"
   },
   {
+    "url": "../rocket-game-assets/page-6/next-mission-button.webp",
+    "bytes": 7218,
+    "revision": "8371ac8b89f6fa9c"
+  },
+  {
     "url": "../rocket-game-assets/page-6/page-6-bg-1.webp",
     "bytes": 72272,
     "revision": "5407f6fbc0171ebb"

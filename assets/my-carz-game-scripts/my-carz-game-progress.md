@@ -13,6 +13,14 @@ This continuing user instruction applies across future sessions and contributors
 
 # My Carz context and progress
 
+## 30 October 2026 - Unlisted internal Games gallery
+
+- Authorization: user requested a link-only rc-games copy with every game available for the internal team and no visible navigation link to it.
+- Added #/rc-games and a separate full gallery (17 links including Sample Preparation). Public #/games retains My Carz and Rocketier only; its other cards remain commented out. Internal poster label IDs are unique. No game runtime/media/animation/audio changes. This is unlisted navigation, not authentication.
+- Hub app v27 and root shell v466 synchronized.
+- Validation: parsed active galleries (public 2/internal 17), checked unique IDs and absence of navigation links to rc-games. JS syntax, two worker tests and whitespace checks pass. Live browser verification pending.
+
+
 ## 30 October 2026 - My Carz only Games gallery
 
 - Authorization: user requested only My Carz on the Games page and commenting out all other game cards temporarily.
