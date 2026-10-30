@@ -13,6 +13,13 @@ This continuing user instruction applies across future sessions and contributors
 
 # My Carz game details
 
+## 30 October 2026 - Supplied four-step demo artwork
+
+- Authorization: user requested replacing current demo GIF/images with the four supplied images. Matching Downloads step1.webp through step4.webp were inspected and copied byte-for-byte into owned demo-step-N.webp files.
+- Numbered sequence: read question, swipe Good/Bad, right answers/upgrade, wrong answer resets diamonds. Removed the separate demo hand element/population because the replacement swipe slide includes its own cue; previous media retained. Updated alt titles. Previous/Next/Finish, completion storage, transition timing, gameplay and audio unchanged.
+- Config v29, controller v60 and scoped shell v99 synchronized; media manifest regenerated.
+- Validation: copied files match sources; runtime syntax, all 28 My Carz tests and whitespace checks pass. Asset artwork inspected; browser/device layout verification pending.
+
 ## 30 October 2026 - Git publication handoff
 
 - Authorization: user requested pushing the completed My Carz work to Git.

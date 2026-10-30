@@ -201,10 +201,9 @@
     if (revision !== paintRevision) return;
     updateHomeCarouselArrow();
   }
-  const demoTitles = ['Choose a tunnel', 'Earn your upgrade', 'Keep driving', 'Read, then steer'];
+  const demoTitles = ['Read the question', 'Swipe towards the Good or Bad tunnel', 'Earn diamonds and upgrade your car', 'Wrong answers reset diamonds'];
   function renderDemo() {
     const slides = help && C.helpSlides.length ? C.helpSlides : C.demos;
-    $('demo-swipe-guide').hidden = demoIndex !== 0;
     image('demo-image', slides[demoIndex]); $('demo-image').alt = demoTitles[demoIndex % demoTitles.length];
     $('demo-counter').textContent = `${demoIndex + 1} / ${slides.length}`; $('demo-prev').disabled = demoIndex === 0;
     $('demo-next').textContent = demoIndex === slides.length - 1 ? 'Finish' : 'Next →';

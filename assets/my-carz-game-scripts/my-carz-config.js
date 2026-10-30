@@ -255,7 +255,7 @@
         "rightAction": "Zero the balance with the empty paper boat before adding the sample."
       }
     ],
-    demos: [1, 2, 3, 4].map(i => `page-2-${i}/demo-page-2-${i}.webp`),
+    demos: [1, 2, 3, 4].map(i => `page-2-${i}/demo-step-${i}.webp`),
     // Populate with supplied GIF URLs. The four demo images are temporary help slides.
     helpSlides: [],
     sounds: { click: ['audio/gbu-button-click-sfx.mp3', .25], countdown: ['audio/gbu-countdown-audio.wav', .5],

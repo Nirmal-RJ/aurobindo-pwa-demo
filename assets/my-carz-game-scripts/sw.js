@@ -1,8 +1,8 @@
-importScripts('./my-carz-assets.js?v=031e0f3e29d576ee', './my-carz-asset-cache.js?v=1');
-const PREFIX = 'my-carz-shell-', SHELL = PREFIX + 'v98';
-const FILES = ['./my-carz.html', './my-carz.css?v=4', './my-carz-flow.css?v=68', './my-carz-config.js?v=28',
-  './my-carz-core.js?v=2', './my-carz-store.js?v=1', './my-carz-assets.js?v=031e0f3e29d576ee', './my-carz-asset-cache.js?v=1',
-  './my-carz-preload.js?v=2', './my-carz-paint.js?v=4', './my-carz-race-view.js?v=13', './my-carz-attention.js?v=12', './my-carz-reward-view.js?v=13', './my-carz-audio.js?v=2', './my-carz.js?v=59'];
+importScripts('./my-carz-assets.js?v=a1d79e25e0643f10', './my-carz-asset-cache.js?v=1');
+const PREFIX = 'my-carz-shell-', SHELL = PREFIX + 'v99';
+const FILES = ['./my-carz.html', './my-carz.css?v=4', './my-carz-flow.css?v=68', './my-carz-config.js?v=29',
+  './my-carz-core.js?v=2', './my-carz-store.js?v=1', './my-carz-assets.js?v=a1d79e25e0643f10', './my-carz-asset-cache.js?v=1',
+  './my-carz-preload.js?v=2', './my-carz-paint.js?v=4', './my-carz-race-view.js?v=13', './my-carz-attention.js?v=12', './my-carz-reward-view.js?v=13', './my-carz-audio.js?v=2', './my-carz.js?v=60'];
 self.addEventListener('install', event => event.waitUntil((async () => {
   const cache = await caches.open(SHELL); await cache.addAll(FILES); await self.skipWaiting();
 })()));
