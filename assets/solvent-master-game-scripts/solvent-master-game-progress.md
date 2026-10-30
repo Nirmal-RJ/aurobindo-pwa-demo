@@ -1,5 +1,12 @@
 # Solvent Master — progress
 
+## 30 October 2026 - Enable public Games card
+
+- Authorization: user requested Solvent Master as the third game on the public Games page.
+- Uncommented its gallery card after My Carz and Rocketier; internal gallery and all game runtime/media remain unchanged. Root shell v470 refreshes the hub.
+- Validation: public gallery links verified in the requested order; worker syntax, two worker tests and whitespace checks pass. Browser visual verification pending.
+
+
 ## 30 October 2026 - Supplied happy audio replacement
 
 - User supplied a replacement mix-happy.aac and requested publishing pending work. Refreshed the media manifest and bumped manifest v10/scoped shell v44. Existing audio mapping, volume and timing unchanged; backup retained locally.
