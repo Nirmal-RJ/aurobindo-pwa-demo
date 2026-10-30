@@ -13,6 +13,12 @@ This continuing user instruction applies across future sessions and contributors
 
 # My Carz context and progress
 
+## 30 October 2026 - My Carz only Games gallery
+
+- Authorization: user requested only My Carz on the Games page and commenting out all other game cards temporarily.
+- Commented out the other 16 gallery links, including Sample Preparation, in index.html. My Carz card and runtime remain unchanged; game files retained. Root shell v464 refreshes the hub markup.
+- Validation: parsed active gallery links and confirmed exactly one, pointing to My Carz; root worker syntax, both worker tests and whitespace checks pass. Browser visual verification pending.
+
 ## 30 October 2026 - Git publication handoff
 
 - Authorization: user requested pushing the completed My Carz work to Git.
