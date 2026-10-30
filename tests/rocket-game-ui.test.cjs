@@ -13,7 +13,7 @@ function mount() {
   class Element {
     constructor() {
       this.events = {}; this.dataset = {}; this.children = []; this.hidden = false; this.disabled = false;
-      this.style = { setProperty(k, v) { this[k] = v; } }; this.parentElement = { appendChild() {}, classList: { toggle() {}, remove() {} } };
+      this.style = { writes: 0, setProperty(k, v) { this[k] = v; this.writes++; }, getPropertyValue(k) { return this[k] || ''; }, getPropertyPriority() { return ''; }, removeProperty(k) { delete this[k]; } }; this.parentElement = { appendChild() {}, classList: { toggle() {}, remove() {} } };
       this.attributes = {}; const classes = new Set();
       this.classList = { add: (...items) => items.forEach(i => classes.add(i)), remove: (...items) => items.forEach(i => classes.delete(i)), toggle: (i, on) => on ? classes.add(i) : classes.delete(i), contains: i => classes.has(i) };
     }
@@ -21,6 +21,7 @@ function mount() {
     click() { if (!this.disabled) this.events.click?.({ detail: 0 }); }
     setAttribute(k, v) { this.attributes[k] = v; } focus() {} pause() {} close() { this.open = false; }
     showModal() { this.open = true; } play() { return Promise.resolve(); }
+    querySelector(selector) { if (selector === '.belt') return this.belt ||= new Element(); return null; }
     querySelectorAll(selector) {
       if (selector === 'button') return [1,2,3,4,5].map(n => { const b = new Element(); b.dataset.rocket = n; return b; });
       return chemicalNames.map(c => elements.get(`${selector === '[data-fill]' ? 'fill' : 'undo'}-${c}`));
@@ -49,6 +50,8 @@ function mount() {
       addEventListener(name, fn) { (documentEvents[name] ||= []).push(fn); }, createElement: () => Object.assign(new Element(), { remove() {} })
     },
     setTimeout: (fn, delay) => { const id = ++serial; tasks.set(id, { fn, at: time + delay }); return id; },
+    requestAnimationFrame: fn => { const id = ++serial; tasks.set(id, { fn, at: time + 16 }); return id; },
+    getComputedStyle: el => ({ transform: el.transform || 'matrix(1,0,0,1,0,0)' }),
     clearTimeout: id => tasks.delete(id),
     setInterval: (fn, delay) => { const id = ++serial; tasks.set(id, { fn, at: time + delay, delay }); return id; },
     clearInterval: id => tasks.delete(id)
@@ -598,4 +601,33 @@ test('demo navigates three slides, respects boundaries and resets on reopen', ()
  assert.equal(ui.context.localStorage.getItem('aurobindo.rocketier.v1'),null);
  ui.elements.get('open-demo').click();
  assert.equal(ui.elements.get('demo-slide-status').textContent,'1 / 3');
+});
+
+test('conveyor restarts both layers on selection and recovers only while selecting', () => {
+  const ui = mount();
+  ui.elements.get('start').click(); ui.elements.get('start-mission').click(); ui.elements.get('play').click();
+  const track = ui.elements.get('rocket-track'), belt = ui.elements.get('conveyor').querySelector('.belt');
+  assert.ok(track.style.writes > 0);
+  assert.equal(track.style.writes, belt.style.writes);
+  const first = track.style.writes;
+  ui.windowEvents.pageshow.forEach(fn => fn()); ui.advance(200);
+  assert.equal(track.style.writes, first + 1);
+  assert.equal(belt.style.writes, track.style.writes);
+  ui.windowEvents.focus.forEach(fn => fn());
+  ui.choices[0].click(); ui.advance(200);
+  assert.equal(track.style.writes, first + 1, 'pending recovery must not restart during boarding');
+  ui.windowEvents.pageshow.forEach(fn => fn()); ui.advance(200);
+  assert.equal(track.style.writes, first + 1);
+});
+
+test('conveyor return check leaves advancing layers alone', () => {
+  const ui = mount();
+  ui.elements.get('start').click(); ui.elements.get('start-mission').click(); ui.elements.get('play').click();
+  const track = ui.elements.get('rocket-track'), belt = ui.elements.get('conveyor').querySelector('.belt');
+  const first = track.style.writes;
+  ui.windowEvents.focus.forEach(fn => fn()); ui.advance(20);
+  track.transform = belt.transform = 'matrix(1,0,0,1,12,0)';
+  ui.advance(200);
+  assert.equal(track.style.writes, first);
+  assert.equal(belt.style.writes, first);
 });

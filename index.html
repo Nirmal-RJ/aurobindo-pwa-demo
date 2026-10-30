@@ -21,58 +21,12 @@
   </script>
   <link rel="stylesheet" href="./styles.css?v=48">
   <script src="./tile-match.js?v=23" defer></script>
-  <link rel="stylesheet" href="./account.css?v=6">
-  <script src="./account.js?v=16" defer></script>
-  <script src="./app.js?v=25" defer></script>
+  <script src="./app.js?v=26" defer></script>
   <link rel="stylesheet" href="./leaderboard.css?v=5">
   <script src="./hero-carousel.js?v=2" defer></script>
 </head>
 
-<body class="account-pending">
-  <main id="welcome-view" class="account-shell" hidden lang="en">
-    <div class="account-brand"><img src="./logo.png" alt="Aurobindo" width="150"></div>
-    <p class="account-intro">Register or log in to continue.</p>
-    <div class="account-mode" role="group" aria-label="Account mode">
-      <button id="login-mode" type="button" aria-pressed="true" aria-controls="login-panel">Log in</button>
-      <button id="registration-mode" type="button" aria-pressed="false"
-        aria-controls="registration-panel">Register</button>
-    </div>
-    <div class="welcome-layout">
-      <section id="registration-panel" class="account-copy" aria-labelledby="registration-title" hidden>
-        <h2 id="registration-title">Register</h2>
-        <p class="account-description">New here? Create your profile.</p>
-        <form id="registration-form" class="account-form">
-          <label for="registration-username">Name <span>*</span></label>
-          <input id="registration-username" name="name" autocomplete="name" placeholder="Enter your name" required>
-          <label class="disabled-label" for="registration-mobile">Mobile number</label>
-          <input id="registration-mobile" name="mobile" type="tel" autocomplete="tel" placeholder="" disabled>
-          <label class="disabled-label" for="registration-department">Department</label>
-          <input id="registration-department" name="department" placeholder="" disabled>
-          <label class="disabled-label" for="registration-plant">Plant</label>
-          <input id="registration-plant" name="plant" placeholder="" disabled>
-          <label class="disabled-label" for="registration-city">City</label>
-          <input id="registration-city" name="city" placeholder="" disabled>
-          <p class="account-fine">Only your name is required for this demo.</p>
-          <p id="registration-error" class="account-error" role="alert" hidden></p>
-          <button class="account-primary" type="submit">Register</button>
-        </form>
-      </section>
-      <section id="login-panel" class="account-copy" aria-labelledby="login-title">
-        <h2 id="login-title" tabindex="-1">Log in</h2>
-        <p class="account-description">Welcome back. Enter your details.</p>
-        <form id="login-form" class="account-form">
-          <label for="account-username">Name <span>*</span></label>
-          <input id="account-username" name="name" autocomplete="name" placeholder="Enter your name" required>
-          <label class="disabled-label" for="account-mobile">Mobile number</label>
-          <input id="account-mobile" name="mobile" type="tel" autocomplete="tel" placeholder="" disabled>
-          <p class="account-fine">Only your name is required for this demo.</p>
-          <p id="account-error" class="account-error" role="alert" hidden></p>
-          <button class="account-primary" type="submit">Log in</button>
-        </form>
-      </section>
-    </div>
-    <p class="account-demo-note">Demo: use any details to try either option.</p>
-  </main>
+<body>
   <a class="skip-link" href="#main-content" data-i18n="skip">Skip to content</a>
   <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <symbol id="i-spark" viewBox="0 0 24 24">
@@ -131,8 +85,6 @@
             Our stage.</span></div>
       </div>
       <div class="header-controls">
-        <a class="profile-link" href="#/profile" aria-label="My profile"><span id="header-avatar"
-            aria-hidden="true">U</span><span>Profile</span></a>
         <div class="language-control">
           <button class="language-trigger" id="language" type="button" aria-haspopup="menu" aria-expanded="false"
             aria-controls="language-menu" aria-labelledby="language-label language-current">
@@ -163,43 +115,6 @@
     </div>
   </header>
   <main class="page-shell" id="main-content" tabindex="-1">
-    <section id="profile-view" class="profile-view" aria-labelledby="profile-title" hidden lang="en">
-      <a class="back-link" href="#/">← Back to Home</a>
-      <div class="profile-card">
-        <div class="profile-cover"><span>ONE AUROBINDO FAMILY</span><span aria-hidden="true">✦</span></div>
-        <div class="profile-content">
-          <div id="profile-avatar" class="profile-avatar" aria-hidden="true"></div>
-          <p class="account-eyebrow">YOUR LITTLE CORNER</p>
-          <h1 id="profile-title" tabindex="-1">My profile</h1>
-          <p class="profile-welcome">Great to have you in the celebration.</p>
-          <dl class="profile-details">
-            <div>
-              <dt>Name</dt>
-              <dd id="profile-username"></dd>
-            </div>
-            <div>
-              <dt>Mobile number</dt>
-              <dd id="profile-mobile"></dd>
-            </div>
-            <div>
-              <dt>Department</dt>
-              <dd id="profile-department"></dd>
-            </div>
-            <div>
-              <dt>Plant</dt>
-              <dd id="profile-plant"></dd>
-            </div>
-            <div>
-              <dt>City</dt>
-              <dd id="profile-city"></dd>
-            </div>
-          </dl>
-          <p id="logout-error" class="account-error" role="alert" hidden></p>
-          <button id="account-logout" class="logout-button" type="button">Log out <span
-              aria-hidden="true">↗</span></button>
-        </div>
-      </div>
-    </section>
     <section id="leaderboard-view" class="leaderboard-view" aria-labelledby="leaderboard-title" hidden lang="en">
       <a class="back-link" href="#/">&larr; Back to Home</a>
       <h1 id="leaderboard-title" class="sr-only" tabindex="-1">Leaderboard</h1>
@@ -515,7 +430,6 @@
           </svg>
           <strong data-i18n="scoresTitle">Score Board</strong>
           <span data-i18n="scoresDescription">Big efforts. Proud moments. Every point counts.</span>
-          <a href="#/score-board" class="hero-scores-link">View leaderboard <span aria-hidden="true">&rarr;</span></a>
         </div>
         <div class="hero-carousel-controls" role="group" aria-label="Featured slides" hidden>
           <button type="button" class="hero-dot" aria-label="Show league slide" aria-controls="hero-copy-slide"
@@ -557,45 +471,6 @@
               data-i18n="gamesTitle">Games</span><span class="card-description" data-i18n="gamesDescription">Bring your
               A-game. Let the good times roll.</span><span class="card-bottom"><span class="card-tag"
                 data-i18n="gamesTag">CHALLENGE ACCEPTED</span><span class="card-spark"
-                aria-hidden="true">✦</span></span></a>
-          <a class="activity-card mint" href="#/score-board" data-activity="scores"><span class="card-top"><span
-                class="card-icon"><svg>
-                  <use href="#i-chart" />
-                </svg></span><span class="card-number">02</span></span><span class="card-title"
-              data-i18n="scoresTitle">Score Board</span><span class="card-description" data-i18n="scoresDescription">Big
-              efforts. Proud moments. Every point counts.</span><span class="card-bottom"><span class="card-tag"
-                data-i18n="scoresTag">FOLLOW THE ACTION</span><span class="card-spark"
-                aria-hidden="true">✦</span></span></a>
-          <a class="activity-card gold" href="#/premier-league" data-activity="league"><span class="card-top"><span
-                class="card-icon"><svg>
-                  <use href="#i-trophy" />
-                </svg></span><span class="card-number">03</span></span><span class="card-title"
-              data-i18n="leagueTitle">Premier League</span><span class="card-description"
-              data-i18n="leagueDescription">One team. One dream. All the glory.</span><span class="card-bottom"><span
-                class="card-tag" data-i18n="leagueTag">WHERE CHAMPIONS RISE</span><span class="card-spark"
-                aria-hidden="true">✦</span></span></a>
-          <a class="activity-card coral" href="#/fun-corner" data-activity="fun"><span class="card-top"><span
-                class="card-icon"><svg>
-                  <use href="#i-masks" />
-                </svg></span><span class="card-number">04</span></span><span class="card-title" data-i18n="funTitle">Fun
-              Corner</span><span class="card-description" data-i18n="funDescription">Small breaks. Big smiles. Good
-              vibes only.</span><span class="card-bottom"><span class="card-tag" data-i18n="funTag">THE HAPPY
-                PLACE</span><span class="card-spark" aria-hidden="true">✦</span></span></a>
-          <a class="activity-card blue" href="#/about" data-activity="about"><span class="card-top"><span
-                class="card-icon"><svg>
-                  <use href="#i-people" />
-                </svg></span><span class="card-number">05</span></span><span class="card-title"
-              data-i18n="aboutTitle">About</span><span class="card-description" data-i18n="aboutDescription">The people
-              and the spirit behind our story.</span><span class="card-bottom"><span class="card-tag"
-                data-i18n="aboutTag">ONE AUROBINDO FAMILY</span><span class="card-spark"
-                aria-hidden="true">✦</span></span></a>
-          <a class="activity-card rose" href="#/photos" data-activity="photos"><span class="card-top"><span
-                class="card-icon"><svg>
-                  <use href="#i-camera" />
-                </svg></span><span class="card-number">06</span></span><span class="card-title"
-              data-i18n="photosTitle">Photos</span><span class="card-description" data-i18n="photosDescription">Our
-              moments. Our memories. Picture perfect.</span><span class="card-bottom"><span class="card-tag"
-                data-i18n="photosTag">THE HIGHLIGHT REEL</span><span class="card-spark"
                 aria-hidden="true">✦</span></span></a>
         </div>
       </section>

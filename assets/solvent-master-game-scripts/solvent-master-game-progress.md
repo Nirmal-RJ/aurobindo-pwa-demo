@@ -1,5 +1,21 @@
 # Solvent Master — progress
 
+## 30 October 2026 - Lesson phone-frame pro tip
+
+- Authorization: user requested the same Rocketier pro tip in the marked upper dark area of the lesson phone frame.
+- Added a gold bordered dark gold box reading PRO TIP: Always look at the label, not the colour of the solvent. Positioned within the upper phone area; video geometry, native controls, lesson navigation and all animation/audio behavior unchanged.
+- CSS v33, play JS v26 and scoped shell v43 synchronized; no media changes.
+- Validation: syntax checks, all six Solvent Master tests and whitespace checks pass. Browser responsive visual and physical-device verification remain pending.
+
+
+## 30 October 2026 - Supplied animated demo slides
+
+- Authorization: user supplied four GIFs and explicitly mapped Step 1 & 2 to 1/4, Step 3 to 2/4, Step 4 to 3/4 and Video to 4/4.
+- Copied each GIF byte-for-byte into owned page-2-demo-page media as demo-1.gif through demo-4.gif and updated demoSlides in the requested order. Existing navigation, completion storage, slide transitions and gameplay unchanged; previous reference images retained.
+- Config v11, asset manifest v9 and scoped shell v42 synchronized. Manifest rebuilt to include GIFs.
+- Validation: copied bytes match all four sources; syntax, Solvent Master tests and whitespace checks pass. Browser animation/layout and physical-device verification remain pending.
+
+
 ## Current status
 
 The approved full practice/challenge flow is implemented, including lesson videos, mixing, results, three-round streaks, saved completed checkpoints and replay. Supplied neutral/happy/sad GIF faces are integrated, temporary demo slides remain approved and Rocketier unlocking is deferred. Read [rules](solvent-master-game-rules.md) and [current details](solvent-master-game-details.md) before work.

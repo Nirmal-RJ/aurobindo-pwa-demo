@@ -1,10 +1,10 @@
 importScripts('./rocket-game-assets.js?v=e3c440a7c70c592b', './rocket-asset-cache.js?v=1');
 
 const SHELL_PREFIX = 'rocketier-shell-';
-const SHELL = `${SHELL_PREFIX}v46`;
+const SHELL = `${SHELL_PREFIX}v48`;
 const SHELL_FILES = [
-  './rocket-game.html', './rocket-game.css?v=100', './rocket-game-core.js?v=6',
-  './rocket-game.js?v=83', './rocket-game-loader.js?v=4',
+  './rocket-game.html', './rocket-game.css?v=101', './rocket-game-core.js?v=6',
+  './rocket-game.js?v=84', './rocket-game-loader.js?v=4',
   './rocket-game-assets.js?v=e3c440a7c70c592b', './rocket-asset-cache.js?v=1'
 ];
 

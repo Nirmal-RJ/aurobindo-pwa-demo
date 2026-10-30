@@ -12,6 +12,23 @@ This is an explicit, continuing user instruction. It applies across future sessi
 
 # Rocket'ier context and progress
 
+## 30 October 2026 - Guard conveyor animation re-entry and recovery
+
+- Authorization: after analysis of reported iPhone rocket/belt freezes, user approved the narrowly scoped restart/recovery proposal without removing or changing existing effects.
+- Recreate only the two conveyor CSS animations together when the selection stage is revealed. Handle immediate and animated screen entry; preserve stylesheet 14-second duration, linear easing, direction and existing boarding pause/fades.
+- On pageshow, focus or return to visibility, sample both transforms once over 180ms. Leave moving layers alone; recreate both together if either remains unchanged. Screen version, selection phase, visibility and boarding guards prevent recovery during other stages. New screens/boarding invalidate pending checks. No continuous polling or global animation reset.
+- Docking source measurement, travel/settle/formula/nose/tank sequencing, launch, spotlight, other effects, video and audio unchanged. Presentation JS v84 and scoped shell v48 synchronized; no media changes.
+- Validation: runtime syntax checks, all 50 Rocketier tests (including paired recovery, boarding cancellation and moving-layer preservation) and git diff --check pass. Existing UI tests retain docking/reduced-motion/audio sequence coverage. Live browser and actual iPhone compositor/visual verification remain pending; reported device freeze is not yet confirmed resolved.
+
+
+## 30 October 2026 - Video lesson pro tip
+
+- Authorization: user requested only a boxed pro tip above the lesson video and a slightly smaller video to accommodate it.
+- Added ?PRO TIP: Always look at the label, not the colour of the solvent.? in a gold bordered dark gold box at the top of video popups. Existing title, video and Continue button stay in their order; the flexible video row yields the required vertical space. Tip remains absent from all other popup types.
+- Preserved lesson playback/controls, retry behavior and all existing gameplay/audio/animation timings. CSS v101 and scoped shell v47 synchronized; no JS or media changes.
+- Validation: Rocketier syntax checks, unit tests and whitespace checks pass. Browser/device visual verification remains pending.
+
+
 ## Current release snapshot - 26 October 2026
 
 This snapshot supersedes conflicting historical entries below; mandatory preservation instructions remain in force.

@@ -17,6 +17,7 @@
     ${image('page-3-b/page-3-b-bg.webp','landing-art')}${image(cfg.faces.neutral,'lesson-beaker-face')}
     <h2 id="lesson-name" class="lesson-name"></h2>
     <video id="lesson-video" controls playsinline preload="metadata"></video>
+    <aside id="lesson-pro-tip"><strong>PRO TIP:</strong> Always look at the label, not the colour of the solvent.</aside>
     ${art('page-3-b/start-mixing-button.webp','lesson-next','Start Mixing','start','lesson-next')}
     <button id="lesson-back" class="text-button lesson-next" hidden>Back to results</button>
   </section>

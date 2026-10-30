@@ -91,6 +91,26 @@ globalThis.SOLVENT_MASTER_ASSETS = [
     "revision": "b25bea3502916d744ef92330755b4595f115bb032aae7b3531230f188daae1fd"
   },
   {
+    "url": "../solvent-master-game-assets/page-2-demo-page/demo-1.gif",
+    "bytes": 585933,
+    "revision": "5350639a90dcb26c5edfb7542f5217b532d6b81c0dfd8dc7880ed6aad3e35dab"
+  },
+  {
+    "url": "../solvent-master-game-assets/page-2-demo-page/demo-2.gif",
+    "bytes": 572295,
+    "revision": "28cb3a1bc25bbc90b384fa5ba6e25c2bb8fedf0d06154e41fbd670fb39e71fcf"
+  },
+  {
+    "url": "../solvent-master-game-assets/page-2-demo-page/demo-3.gif",
+    "bytes": 545895,
+    "revision": "67edb481c8fbb821601bf071e73e7cc91be438529219b5e65f9b7ecd1b26c6a6"
+  },
+  {
+    "url": "../solvent-master-game-assets/page-2-demo-page/demo-4.gif",
+    "bytes": 708447,
+    "revision": "693fd4981cb8091851f2c5d5d9f09bdf22b323cf4fbd2d37e77b3d96f254f3b2"
+  },
+  {
     "url": "../solvent-master-game-assets/page-2-demo-page/demo-page-2-a-reference.webp",
     "bytes": 104448,
     "revision": "93bc9bc53c65e6f58c49ef403cb5b0653d6bb7971318292815fbb95d5a09fa2f"

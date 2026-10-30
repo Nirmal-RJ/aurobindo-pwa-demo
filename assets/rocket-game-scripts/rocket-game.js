@@ -88,8 +88,41 @@
     if (heldButton) heldButton.classList.remove('held');
     heldButton = null;
   }
+  let conveyorCheck = 0;
+  function conveyorSelecting(version) {
+    const stage = $('hangar');
+    return version === screenVersion && !document.hidden && game.phase === 'select' &&
+      !stage.hidden && !stage.classList.contains('boarding') && !$('conveyor').hidden;
+  }
+  function restartConveyor(version) {
+    if (!conveyorSelecting(version)) return;
+    const layers = [$('rocket-track'), $('conveyor').querySelector('.belt')];
+    // Recreate only these two CSS animations in the same style update.
+    // Leave their stylesheet duration, easing, direction and boarding pause intact.
+    const previous = layers.map(el => [el.style.getPropertyValue('animation-name'), el.style.getPropertyPriority('animation-name')]);
+    layers.forEach(el => el.style.setProperty('animation-name', 'none', 'important'));
+    void $('conveyor').offsetWidth;
+    layers.forEach((el, i) => {
+      if (previous[i][0]) el.style.setProperty('animation-name', previous[i][0], previous[i][1]);
+      else el.style.removeProperty('animation-name');
+    });
+  }
+  function checkConveyorOnReturn() {
+    const version = screenVersion, check = ++conveyorCheck;
+    if (!conveyorSelecting(version)) return;
+    requestAnimationFrame(() => {
+      if (check !== conveyorCheck || !conveyorSelecting(version)) return;
+      const layers = [$('rocket-track'), $('conveyor').querySelector('.belt')];
+      const before = layers.map(el => getComputedStyle(el).transform);
+      setTimeout(() => {
+        if (check !== conveyorCheck || !conveyorSelecting(version)) return;
+        if (layers.some((el, i) => getComputedStyle(el).transform === before[i])) restartConveyor(version);
+      }, 180);
+    });
+  }
   function show(screen, immediate = false) {
     ['question', 'noseOpen', 'noseClose', 'numbers', 'route', 'zoom'].forEach(stopSound);
+    conveyorCheck++;
     screenVersion++; stopHold(); clearInterval(tick); tick = null;
     $('popup').close(); $('lesson').pause();
     const frame = $('game');
@@ -99,6 +132,7 @@
     const reveal = () => {
       if (version !== screenVersion) return;
       screens.forEach(id => { $(id).hidden = id !== screen; });
+      if (screen === 'hangar') restartConveyor(version);
       window.scrollTo(0, 0);
     };
     if (!immediate && outgoing && previous !== screen && outgoing.animate) {
@@ -308,6 +342,7 @@
       if (!game.selectRocket(Number(button.dataset.rocket))) return;
       haptic(); engines(); persist(); prepare(button);
     }));
+    restartConveyor(screenVersion);
     engines(); announce(`Prepare ${game.recipe.name}. Choose your rocket.`);
   }
   function prepare(button) {
@@ -315,6 +350,7 @@
     // This is essential gameplay motion. Keep the sequence visible even when
     // the OS disables decorative effects; never collapse it into image swaps.
     const travelMs = 1900, settleMs = 200, openMs = 650, tanksMs = 900;
+    conveyorCheck++;
     stage.classList.add('boarding');
     playSound('zoom');
     $('instruction').textContent = 'Moving your rocket to the launch pad?';
@@ -797,6 +833,9 @@
   window.visualViewport?.addEventListener('resize', () => { positionGamePopup(); alignFuelSystem(); });
   document.addEventListener('click', event => { if (event.detail === 0) buttonSound(event); }, true);
   function silenceSounds() { for (const name of sounds.keys()) stopSound(name); }
+  window.addEventListener('pageshow', checkConveyorOnReturn);
+  window.addEventListener('focus', checkConveyorOnReturn);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) checkConveyorOnReturn(); });
   window.addEventListener('blur', () => { stopHold(); silenceSounds(); });
   document.addEventListener('visibilitychange', () => { stopHold(); if (document.hidden) { silenceSounds(); $('lesson').pause(); persist(); } });
   window.addEventListener('pagehide', () => {

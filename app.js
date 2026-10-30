@@ -246,12 +246,6 @@ function updatePageContent() {
   document.title = `${copy.title} · ${dictionary.footerBrand}`;
 }
 function renderRoute(focus = true) {
-  if (window.Account.render(focus)) {
-    setScoreboardTheme(false);
-    if (window.TileMatch && window.TileMatch.leave) window.TileMatch.leave();
-    activePage = null;
-    return;
-  }
   // Hash routes work on static hosting, in subdirectories, and offline.
   if (location.hash && !location.hash.startsWith('#/')) return;
   const route = location.hash.slice(2).replace(/\/$/, '');

@@ -1,5 +1,5 @@
 ﻿const CACHE_PREFIX = 'aurobindo-shell-';
-const CACHE = `${CACHE_PREFIX}v462`;
+const CACHE = `${CACHE_PREFIX}v463`;
 const ASSETS = ['./', './index.html', './styles.css?v=30', './app.js?v=18', './tile-match.js?v=23', './symptom-match.html', './symptom-match.css?v=18', './symptom-match.js?v=20', './chromatogram.html', './chromatogram.css?v=23', './chromatogram.js?v=22', './assets/toggle%20button.png', './assets/4%20arrow%20toggle%20outline.png', './assets/hpcl-logo-new.png', './assets/game-1-card.png', './assets/game-2-card.png', './assets/game-3-card.png', './assets/game-4-card.png', './logo.png', './icon.svg', './icons/icon-192.png', './icons/icon-512.png', './manifest.webmanifest'];
 ASSETS.push('./cleaning-solution.html', './cleaning-solution.css?v=7', './cleaning-solution.js?v=6');
 ASSETS.splice(ASSETS.indexOf('./styles.css?v=30'), 1, './styles.css?v=48');
@@ -11,8 +11,8 @@ ASSETS.push('./assets/test-tube-game-assets/images/5-correct-answer-pop-up/popup
 ASSETS.push('./assets/test-tube-game-assets/images/4-slow-game-page/beaker.webp');
 ASSETS.push('./assets/test-tube-game-assets/images/3-4-video-screen-and-game-screen-bg.webp', './assets/test-tube-game-assets/images/3-video-page/replay-video-button.webp', './assets/test-tube-game-assets/images/3-video-page/start-mixing-button.webp');
 ASSETS.push('./assets/test-tube-game-assets/images/exit-button.webp', './assets/test-tube-game-assets/images/2-solution-name-page/watch-video-button.webp', ...['column-cleaning', 'strong-wash', 'needle-wash', 'column-storage'].map(name => `./assets/test-tube-game-assets/images/2-solution-name-page/${name}-intro-page.webp`));
-ASSETS.splice(ASSETS.indexOf('./app.js?v=18'), 1, './app.js?v=25');
-ASSETS.push('./account.js?v=16', './account.css?v=6', './hero-carousel.js?v=2', './leaderboard.css?v=5');
+ASSETS.splice(ASSETS.indexOf('./app.js?v=18'), 1, './app.js?v=26');
+ASSETS.push('./hero-carousel.js?v=2', './leaderboard.css?v=5');
 ASSETS.push('./wrong-sample.html', './wrong-sample.css?v=16', './wrong-sample.js?v=15');
 ASSETS.push('./pill-perfect.html', './pill-perfect.css?v=25', './pill-perfect.js?v=24');
 ASSETS.push('./assets/tile-match-game-assets/card-front.png', './assets/tile-match-game-assets/card-back.png');
