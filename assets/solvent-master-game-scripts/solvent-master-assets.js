@@ -32,8 +32,8 @@ globalThis.SOLVENT_MASTER_ASSETS = [
   },
   {
     "url": "../solvent-master-game-assets/audio/mix-happy.aac",
-    "bytes": 11109,
-    "revision": "5afc5ee87c8b6a90934f6f4bf1dc881ac1eaa485328e2b325471ac9d3760e506"
+    "bytes": 25188,
+    "revision": "c68eff37891c5a56e7da1d1efe7544d2ca291421f6ae7a1f2d0623c0e8277acc"
   },
   {
     "url": "../solvent-master-game-assets/audio/mix-sad.aac",

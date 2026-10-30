@@ -1,7 +1,7 @@
-const SHELL = 'solvent-master-shell-v43';
+const SHELL = 'solvent-master-shell-v44';
 const MEDIA = 'solvent-master-media-v1';
 // All soundtrack and effect assets are owned locally by Solvent Master.
-const FILES = ['./solvent-master-fullscreen.js?v=1','./solvent-master-orientation.js?v=3','./solvent-master.html','./solvent-master.css?v=33','./solvent-master-config.js?v=11','./solvent-master-assets.js?v=9','./solvent-master-loader.js?v=1','./solvent-master.js?v=2','./solvent-master-core.js?v=2','./solvent-master-store.js?v=1','./solvent-master-audio.js?v=6','./solvent-master-play.js?v=26'];
+const FILES = ['./solvent-master-fullscreen.js?v=1','./solvent-master-orientation.js?v=3','./solvent-master.html','./solvent-master.css?v=33','./solvent-master-config.js?v=11','./solvent-master-assets.js?v=10','./solvent-master-loader.js?v=1','./solvent-master.js?v=2','./solvent-master-core.js?v=2','./solvent-master-store.js?v=1','./solvent-master-audio.js?v=6','./solvent-master-play.js?v=26'];
 self.addEventListener('install', event => event.waitUntil(caches.open(SHELL).then(cache => cache.addAll(FILES)).then(() => self.skipWaiting())));
 self.addEventListener('activate', event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k.startsWith('solvent-master-shell-') && k !== SHELL).map(k => caches.delete(k)))).then(() => self.clients.claim())));
 self.addEventListener('message', event => { if (event.data?.type === 'SOLVENT_MASTER_CLAIM') event.waitUntil(self.clients.claim()); });

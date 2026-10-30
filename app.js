@@ -64,6 +64,8 @@ const pages = {
   about: { route: 'about', color: 'blue', icon: 'people' },
   photos: { route: 'photos', color: 'rose', icon: 'camera' }
 };
+let internalPreviewUnlocked = false;
+try { internalPreviewUnlocked = sessionStorage.getItem('rc-games-unlocked') === '1'; } catch (_) {}
 let activePage = null;
 let homeScroll = 0;
 let themeBeforeScoreboard = null;
@@ -250,6 +252,16 @@ function renderRoute(focus = true) {
   // Hash routes work on static hosting, in subdirectories, and offline.
   if (location.hash && !location.hash.startsWith('#/')) return;
   const route = location.hash.slice(2).replace(/\/$/, '');
+  if (route === 'rc-games' && !internalPreviewUnlocked) {
+    document.getElementById('home-view').hidden = false;
+    document.getElementById('section-view').hidden = true;
+    document.getElementById('tile-match-view').hidden = true;
+    document.getElementById('leaderboard-view').hidden = true;
+    if (window.TileMatch?.leave) window.TileMatch.leave();
+    activePage = null;
+    openInternalPreview();
+    return;
+  }
   if (route === 'games/sample-preparation/wrong-sample-selected') {
     location.replace('wrong-sample.html');
     return;
@@ -400,3 +412,35 @@ if ('serviceWorker' in navigator && window.isSecureContext) {
   });
   window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(error => console.warn('Offline setup unavailable:', error)));
 }
+
+// Internal preview requires the password for both navigation and direct route entry.
+const previewDialog = document.getElementById('coming-soon-dialog');
+const previewPassword = document.getElementById('coming-soon-password');
+const previewError = document.getElementById('coming-soon-error');
+function openInternalPreview() {
+  if (internalPreviewUnlocked) { location.hash = '#/rc-games'; return; }
+  const dialog = document.getElementById('coming-soon-dialog');
+  const password = document.getElementById('coming-soon-password');
+  password.value = ''; document.getElementById('coming-soon-error').hidden = true;
+  if (!dialog.open) dialog.showModal();
+  password.focus();
+}
+document.getElementById('open-coming-soon').addEventListener('click', openInternalPreview);
+function cancelInternalPreview() {
+  previewDialog.close();
+  if (location.hash.replace(/\/$/, '') === '#/rc-games' && !internalPreviewUnlocked) location.hash = '#/';
+}
+document.getElementById('coming-soon-cancel').addEventListener('click', cancelInternalPreview);
+previewDialog.addEventListener('cancel', event => { event.preventDefault(); cancelInternalPreview(); });
+previewPassword.addEventListener('input', () => { previewError.hidden = true; });
+document.getElementById('coming-soon-form').addEventListener('submit', event => {
+  event.preventDefault();
+  if (previewPassword.value !== 'redchariots') {
+    previewError.hidden = false; previewPassword.select(); return;
+  }
+  internalPreviewUnlocked = true;
+  try { sessionStorage.setItem('rc-games-unlocked', '1'); } catch (_) {}
+  previewDialog.close(); previewPassword.value = '';
+  if (location.hash.replace(/\/$/, '') === '#/rc-games') renderRoute();
+  else location.hash = '#/rc-games';
+});

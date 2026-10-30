@@ -19,14 +19,23 @@
       if (l === 'te' || l === 'hi' || l === 'en') document.documentElement.lang = l;
     } catch (_) { }
   </script>
-  <link rel="stylesheet" href="./styles.css?v=48">
+  <link rel="stylesheet" href="./styles.css?v=49">
   <script src="./tile-match.js?v=23" defer></script>
-  <script src="./app.js?v=27" defer></script>
+  <script src="./app.js?v=30" defer></script>
   <link rel="stylesheet" href="./leaderboard.css?v=5">
   <script src="./hero-carousel.js?v=2" defer></script>
 </head>
 
 <body>
+  <dialog id="coming-soon-dialog" aria-labelledby="coming-soon-title">
+    <form id="coming-soon-form">
+      <h2 id="coming-soon-title">Coming Soon</h2>
+      <label for="coming-soon-password">Enter password</label>
+      <input id="coming-soon-password" type="password" autocomplete="off" required>
+      <p id="coming-soon-error" role="alert" hidden>Incorrect password. Please try again.</p>
+      <div class="coming-soon-actions"><button type="button" id="coming-soon-cancel">Cancel</button><button type="submit">Continue</button></div>
+    </form>
+  </dialog>
   <a class="skip-link" href="#main-content" data-i18n="skip">Skip to content</a>
   <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <symbol id="i-spark" viewBox="0 0 24 24">
@@ -472,6 +481,7 @@
               A-game. Let the good times roll.</span><span class="card-bottom"><span class="card-tag"
                 data-i18n="gamesTag">CHALLENGE ACCEPTED</span><span class="card-spark"
                 aria-hidden="true">✦</span></span></a>
+          <button type="button" id="open-coming-soon" class="activity-card gold" aria-haspopup="dialog"><span class="card-top"><span class="card-icon"><svg aria-hidden="true"><use href="#i-spark" /></svg></span><span class="card-number">02</span></span><span class="card-title">Coming Soon</span><span class="card-description">A preview of what's on the way.</span><span class="card-bottom"><span class="card-tag">INTERNAL PREVIEW</span><span class="card-spark" aria-hidden="true">?</span></span></button>
         </div>
       </section>
       <aside class="together-banner">

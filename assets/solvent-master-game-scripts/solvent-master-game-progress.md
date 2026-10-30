@@ -1,5 +1,11 @@
 # Solvent Master — progress
 
+## 30 October 2026 - Supplied happy audio replacement
+
+- User supplied a replacement mix-happy.aac and requested publishing pending work. Refreshed the media manifest and bumped manifest v10/scoped shell v44. Existing audio mapping, volume and timing unchanged; backup retained locally.
+- Validation: manifest rebuilt, syntax and six Solvent Master tests pass. Audible/device review pending.
+
+
 ## 30 October 2026 - Lesson phone-frame pro tip
 
 - Authorization: user requested the same Rocketier pro tip in the marked upper dark area of the lesson phone frame.
