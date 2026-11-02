@@ -34,6 +34,7 @@
     document.body.classList.toggle('needs-portrait', mobile && width > height);
     syncPause();
     fitComparisonCopy();
+    fitFooter();
   }
   function syncPause() {
     updateRoundClock();
@@ -116,9 +117,37 @@
     });
   }
   function img(path, cls, alt = '') { const e = new Image(); e.src = asset(path); e.alt = alt; e.draggable = false; e.className = cls; screen.append(e); return e; }
+  const footerCrops = {
+    'common-ui-buttons/next-button.webp':[558,168,0,0,558,168],
+    'common-ui-buttons/back-button.webp':[2098,749,45,9,2009,740],
+    'page-18/homw-button.webp':[2098,749,15,101,2056,525],
+    'page-8/start-practising-button.webp':[2188,718,31,120,2125,454],
+    'page-15/play-button.webp':[2170,725,30,83,2112,551],
+    'common-ui-buttons/play-again-button.webp':[2170,725,31,84,2113,552],
+    'page-9/start-the-train-button.webp':[2146,733,1,70,2142,540],
+    'page-16/check-right-order-button.webp':[2170,725,78,99,2013,467]
+  };
+  function fitFooter() {
+    for (const button of screen.querySelectorAll('.game-footer button')) {
+      const face = button.querySelector('.button-face'); if (!face) continue;
+      const ratio = Number(face.dataset.ratio), width = Math.min(button.clientWidth, button.clientHeight * ratio);
+      face.style.width = `${width}px`; face.style.height = `${width / ratio}px`;
+    }
+  }
+  function footerButton(button, path) {
+    let footer = screen.querySelector('.game-footer');
+    if (!footer) { footer = document.createElement('div'); footer.className = 'game-footer'; screen.append(footer); }
+    footer.classList.toggle('stacked', ['practiceIntro','challengeIntro','reward'].includes(screen.dataset.page));
+    button.style.order = button.classList.contains('bottom-back') ? 0 : button.classList.contains('nav-home') ? 1 : 2;
+    if (footer.classList.contains('stacked')) button.style.order = button.classList.contains('nav-home') ? 2 : 1;
+    const [w,h,x,y,cw,ch] = footerCrops[path], image = button.querySelector('img');
+    const face = document.createElement('span'); face.className = 'button-face'; face.dataset.ratio = String(cw/ch);
+    Object.assign(image.style,{position:'absolute',left:`${-x/cw*100}%`,top:`${-y/ch*100}%`,width:`${w/cw*100}%`,height:`${h/ch*100}%`,maxWidth:'none',objectFit:'fill'});
+    face.append(image); button.append(face); footer.append(button); fitFooter();
+  }
   function button(path, label, cls, action) {
     const b = document.createElement('button'); b.type = 'button'; b.className = `image-button ${cls}`; b.setAttribute('aria-label', label);
-    const i = new Image(); i.src = asset(path); i.alt = ''; b.append(i); b.addEventListener('click', () => { if (screen.contains(b) && !b.disabled && !storagePending) action(); }); screen.append(b); return b;
+    const i = new Image(); i.src = asset(path); i.alt = ''; b.append(i); b.addEventListener('click', () => { if (screen.contains(b) && !b.disabled && !storagePending) action(); }); screen.append(b); if (footerCrops[path] && /(?:primary|nav-home|bottom-next|bottom-back)/.test(cls)) footerButton(b, path); return b;
   }
   function homeControl() { return button('page-18/homw-button.webp', 'Home', 'nav-home', home); }
   function next(action) { return button('common-ui-buttons/next-button.webp', 'Next', 'bottom-next', action); }
@@ -175,10 +204,6 @@
   }
   function practiceIntro() {
     background('practiceIntro', 'page-8/page-8-bg.webp'); mode = 'practice'; bucket = 0;
-    const picker = document.createElement('div'); picker.className = 'bucket-picker'; picker.textContent = 'Choose a bucket';
-    const choices = document.createElement('div'); choices.className = 'buckets';
-    for (let i = 0; i < 5; i++) { const b = document.createElement('button'); b.textContent = String(i + 1); b.setAttribute('aria-label', `Bucket ${i + 1}`); b.setAttribute('aria-pressed', String(i === 0)); b.onclick = () => { bucket = i; for (const child of choices.children) child.setAttribute('aria-pressed', String(child === b)); }; choices.append(b); }
-    picker.append(choices); screen.append(picker);
     button('page-8/start-practising-button.webp', 'Start Practising', 'primary', arrange); homeControl();
   }
   function drawStreak(count, celebrate) {
@@ -219,7 +244,7 @@
     list.addEventListener('pointerdown', pointerDown); list.addEventListener('pointermove', pointerMove); list.addEventListener('pointerup', pointerUp); list.addEventListener('pointercancel', cancelDrag); list.addEventListener('lostpointercapture', cancelDrag);
     list.addEventListener('keydown', e => { const row = e.target.closest('.step'); if (!row) return; const from = order.indexOf(Number(row.dataset.id)); if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { e.preventDefault(); const to = Math.max(0, Math.min(7, from + (e.key === 'ArrowUp' ? -1 : 1))); move(from, to); renderSteps(); list.children[to].focus(); } else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectStep(from); } });
     button('page-9/start-the-train-button.webp', 'Start the Train', 'primary', submit);
-    if (mode === 'challenge') { const timer = document.createElement('div'); timer.className = 'timer'; timer.setAttribute('role', 'timer'); timer.setAttribute('aria-label', 'Challenge time remaining'); const caption = document.createElement('span'); caption.textContent = 'Time '; const digits = document.createElement('strong'); digits.textContent = timerText(C.challengeRoundSeconds * 1000).replace('Time ', ''); timer.append(caption, digits); screen.append(timer); }
+    if (mode === 'challenge') { const timer = document.createElement('div'); timer.className = 'timer'; timer.setAttribute('role', 'timer'); timer.setAttribute('aria-label', 'Challenge time remaining'); const caption = document.createElement('span'); caption.textContent = 'Time '; const digits = document.createElement('strong'); digits.textContent = timerText(C.challengeRoundSeconds * 1000).replace('Time ', ''); timer.append(caption, digits); screen.querySelector('.game-footer').prepend(timer); fitFooter(); }
   }
   let lastWhoosh = -Infinity;
   function renderSteps() {
@@ -299,7 +324,7 @@
       if (mode === 'challenge') { finishedStreak = progress.run.index + 1; await save(Core.pass(progress)); }
       await answer.decode().catch(() => {});
       if (!await tween(Math.max(C.timing.feedback, C.timing.answerReveal + C.timing.answerRead))) return;
-      next(mode === 'practice' ? home : () => finishedStreak === 5 ? reward() : challengeIntro(true));
+      next(mode === 'practice' ? () => { if (bucket < C.buckets.length - 1) { bucket++; arrange(); } else home(); } : () => finishedStreak === 5 ? reward() : challengeIntro(true));
     } else {
       page = 'failure'; ABAudio.wrong(); screen.classList.add('crashed'); screen.querySelector('.train-title')?.remove();
       if (mode === 'challenge') await save({ ...progress, run: Core.newRun(bucket) });

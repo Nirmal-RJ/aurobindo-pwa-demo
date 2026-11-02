@@ -22,7 +22,7 @@ const out='artifacts/ab-express-audit';fs.mkdirSync(out,{recursive:true});
     });
     report.screens.push({name,...result});
     const home=result.controls.find(button=>button.name==='Home');
-    if(home)assert(home.w >= (result.game.right-result.game.x)*.3,`${name}: Home must remain a readable full-size control`);
+    if(home)assert(home.w >= (result.game.right-result.game.x)*.25,`${name}: Home must remain a readable full-size control`);
     if(name==='practice'){
      const start=result.controls.find(button=>button.name==='Start Practising');
      assert(home.y>=start.bottom-1,'Practice Home belongs below Start Practising');
@@ -36,7 +36,7 @@ const out='artifacts/ab-express-audit';fs.mkdirSync(out,{recursive:true});
   for(let n=1;n<=5;n++){await audit(`demo-${n}`);await click('Next');}
   await audit('home');await click('Learn the Sequence');for(let n=1;n<=3;n++){await audit(`learn-${n}`);if(n<3)await click('Next');}await click('Home');
   for(let bucket=1;bucket<=5;bucket++){
-   await click('Practice Mode');if(bucket===1)await audit('practice');await click(`Bucket ${bucket}`);await click('Start Practising');await audit(`arrange-${bucket}`);
+   await click('Practice Mode');if(bucket===1)await audit('practice');await click('Start Practising');await require('./ab-express-practice-helper.cjs')(page,bucket);await audit(`arrange-${bucket}`);
    await page.evaluate(()=>{ABConfig.timing.intro=1;ABConfig.timing.compartment=1;ABConfig.timing.feedback=1;});
    // Arrangement starts shuffled and guaranteed not fully correct.
    await click('Start the Train');await page.getByRole('button',{name:'Next',exact:true}).waitFor();

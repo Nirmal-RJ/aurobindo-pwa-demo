@@ -26,7 +26,7 @@ const assert = require('node:assert/strict');
     await click('Start the Train');
     await page.waitForFunction(()=>document.querySelector('.train-title')?.src.includes('blob:')&&document.querySelectorAll('.carriage').length===8);
     await page.getByRole('button',{name:'Next',exact:true}).waitFor({timeout:25000});
-    assert.equal(await page.locator('.success-mark').count(),1);await click('Next');await page.getByRole('button',{name:'Practice Mode',exact:true}).waitFor();
+    assert.equal(await page.locator('.success-mark').count(),1);await click('Next');await page.locator('#screen[data-page="arrange"]').waitFor({state:'visible'});
     console.log('Bottom entry, continuous movement, delayed failure Next, and successful completion passed.');
   } finally {await browser.close();}
 })().catch(error=>{console.error(error);process.exit(1);});

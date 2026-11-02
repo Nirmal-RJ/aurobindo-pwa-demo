@@ -8,7 +8,7 @@ Landing preloads assets with progress replacing Next. First-time players see fiv
 
 24 unique steps appear across five ordered buckets of eight steps each; repeats across buckets are allowed. Drag/drop arranges steps; Start the Train submits. Compartments show step icons and pass through a tunnel with correct-order feedback and crash/smoke for wrong order.
 
-Practice has no timer/points. Success goes through congratulations to Home. Failure goes through comparison to same-bucket retry, with an option to exit Home.
+Practice has no timer/points. Success goes through congratulations; Next opens the following bucket, with Home after bucket 5. Failure goes through comparison to same-bucket retry, with an option to exit Home.
 
 Each challenge round has a 60-second countdown. Five correctly completed buckets build five streaks and award one star. Any wrong order resets streak, offers comparison, then retries with a different bucket. Learn shows all 24 steps across three pages.
 
@@ -17,7 +17,7 @@ Each challenge round has a 60-second countdown. Five correctly completed buckets
 - Isolated folders: assets/ab-express-assets/ and assets/ab-express-scripts/.
 - Latest confirmation supersedes the earlier elapsed-only timer: each challenge bucket has 60 seconds of active arranging time. At zero, lock the arrangement, show time-expired/crash feedback, reset the streak, offer comparison and retry with a different bucket. Even a correctly arranged sequence must be submitted before zero.
 - Start the countdown when the arrangement is visible and ready; stop it on submission. Pause during backgrounding and the orientation prompt. Each new/restarted bucket begins with 60 seconds; completed streak checkpoints remain as previously approved.
-- Practice offers all five buckets for selection. Challenge is available immediately.
+- Practice assigns buckets in order 1 through 5; there is no selector. Challenge is available immediately.
 - Challenge shuffles all five buckets without repeats. Failure resets the streak and restarts with a different first bucket.
 - Train checking stops at the first incorrect compartment.
 - Demo completion, completed streaks and stars persist. An interrupted attempt restarts the current bucket from its beginning, retaining completed streaks.
@@ -111,3 +111,13 @@ At 10 seconds remaining the badge turns red and pulses once per second with a sh
 ## Authoritative client-copy correction - 2 November 2026
 
 This supersedes all earlier concise-label decisions: all practice, challenge and comparison instructions must use config.steps verbatim. Removed shortened-label data and both render paths that used it. Full client wording is visibly rendered, not merely retained in accessibility attributes. Comparison uses bounded font fitting to preserve every word inside the fixed artwork; it may necessarily be smaller for long instructions. Challenge retains its timer/urgency and all-eight-visible layout. Never paraphrase client copy to improve presentation without approved replacement wording.
+
+## Sequential practice - 2 November 2026
+
+No player bucket selection. Start Practising begins bucket 1, then successful Next advances directly to buckets 2, 3, 4 and 5. Incorrect attempts go through the existing comparison flow and Play Again retries the same bucket until success. Successful Next after bucket 5 returns Home. Opening a new practice session starts at bucket 1. Challenge progression remains unchanged. This supersedes the previous five-choice selector clarification.
+
+## Shared footer alignment - 2 November 2026
+
+All bottom navigation uses a shared footer with consistent safe margins, gaps and vertical centres. Back/Home/Next use a horizontal row; practice/challenge/reward keep the larger primary action above Home. Comparison gives Play Again more width than Home. Challenge arrangement places the timer beside Start in the same footer. Single continuation buttons are centred.
+
+Button image transparency is cropped using recorded alpha bounds, then visible artwork is scaled proportionally into its hit area. Resize refits these faces without stretching the supplied artwork. Labels, client instructions, navigation destinations and feedback gates are unchanged.

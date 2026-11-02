@@ -48,7 +48,7 @@ const url = process.env.AB_URL || 'http://localhost:4173/assets/ab-express-scrip
     const frozenY=await trainY();await page.waitForTimeout(120);assert.equal(await trainY(),frozenY);
     await page.evaluate(()=>{delete document.hidden;document.dispatchEvent(new Event('visibilitychange'));});
     await shot('train');
-    await page.getByRole('button',{name:'Next',exact:true}).waitFor({timeout:20000});await shot('success');await click('Next');
+    await page.getByRole('button',{name:'Next',exact:true}).waitFor({timeout:20000});await shot('success');await click('Next');await page.locator('.sequence').waitFor();await page.reload();await click('Next');
     await click('Challenge Mode');await shot('challenge');await click('Play Challenge');
     const run=await saved();await page.reload();await click('Next');await click('Challenge Mode');await click('Play Challenge');assert.deepEqual((await saved()).run,run.run);
     await page.locator('#screen[data-page="arrange"]').waitFor({state:'visible'});await page.waitForTimeout(1100);assert.match(await page.locator('.timer').textContent(),/Time 0:5[0-9]/);

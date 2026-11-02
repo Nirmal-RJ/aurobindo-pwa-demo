@@ -18,3 +18,5 @@ The approved flow in [game details](ab-express-game-details.md) governs behavior
 These standards carry forward the user's Rocketier, My Carz and Solvent Master expectations; they do not copy those games' mechanics, orientation or sound policies.
 
 13. Client-supplied instruction text must be displayed verbatim in every mode, including comparison. Do not shorten, paraphrase or substitute labels to improve layout. Adjust presentation only unless the user explicitly supplies approved replacement wording.
+
+14. Practice assigns buckets 1, 2, 3, 4, 5 in order, without a selector. Failure retries the same bucket; successful Next starts the following bucket. After bucket 5, Next returns Home.

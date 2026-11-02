@@ -177,3 +177,15 @@
 - Restored config.steps verbatim in challenge and comparison; removed comparisonLabels entirely. Full content remains visible rather than replaced by abbreviations. Practice copy unchanged.
 - Added an explicit immutable-client-copy rule to AGENTS and game rules. This supersedes previous concise-label decisions. Comparison adjusts typography to contain full instructions; challenge retains timer, urgency and eight-row presentation. Scoped version v22.
 - Edge checks passed for comparison full-text fitting at four sizes and challenge content/timer/pause/submission behavior. Syntax and five core tests passed. Physical-device review remains pending.
+
+## 2 November 2026 - Sequential practice without bucket selection
+
+- Removed the practice picker and its unused CSS. Practice starts at bucket 1; successful Next opens the next bucket directly through bucket 5, then returns Home. Wrong attempts preserve the current bucket through comparison/retry. New practice starts at 1; challenge flow untouched.
+- Updated browser helpers/tests that previously clicked bucket choices. New regression exercises all five buckets, retries at buckets 1 and 3, completion and new-session restart. Test-only timings are accelerated; production feedback/animation holds are unchanged.
+- Edge and WebKit practice regressions and five core tests passed. Scoped runtime/cache v23. Physical-device review remains pending.
+
+## 2 November 2026 - Consistent bottom controls
+
+- Replaced per-page button placement with a shared footer: even horizontal spacing for navigation; stacked primary/Home on intro and reward pages; weighted Play Again/Home on comparison; aligned timer/Start on challenge arrangement. Single continuation controls are centred.
+- Normalized transparent asset margins using alpha crop bounds and proportionate visible-art sizing. Buttons refit on viewport changes; no artwork distortion or client-copy changes. Existing actions and feedback gates preserved.
+- Edge and WebKit each passed the 161-case page/viewport audit. Reviewed learning, practice and comparison phone screenshots; dedicated challenge timer/urgency regression passed. Syntax and five core tests passed. Physical-device touch/visual review remains pending. Scoped cache/version v24.
