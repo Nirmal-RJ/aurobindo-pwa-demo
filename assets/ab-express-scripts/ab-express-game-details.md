@@ -145,3 +145,7 @@ The approved revised 17-step list in config.steps replaces the fixed bucket defi
 15. Clean the entire pan and base with brush after weighing.
 16. Throw the used butter paper in the bin.
 17. Throw other waste and sample residue in the bin.
+
+## 4 November 2026 - Current timer and mobile presentation
+
+The challenge limit is now 90 seconds per round, superseding all earlier 60-second references. It starts after card entry and the two-second reading hold. Final-ten-second urgency and failure/retry rules are unchanged. Arrangement clouds use the three supplied Cloud WebP images copied into AB Express assets. Effects remain enabled on mobile and under reduced-motion settings, with interruption pause/resume. Audio unlock now confirms the running context, retries in touch-end/keyboard gestures, primes playback, and recovers after interruptions. Supported Safari versions request the playback audio session.

@@ -13,30 +13,32 @@ const assert = require('node:assert/strict');
     await page.locator('#screen[data-page="arrange"]').waitFor({state:'visible'});
     const failedSelection=await page.locator('#screen .step').evaluateAll(rows=>rows.map(row=>+row.dataset.id).sort((a,b)=>a-b));
     assert.equal(failedSelection.filter(id=>id<=3).length,1);
-    assert.equal(await page.evaluate(()=>ABConfig.challengeRoundSeconds),60);
-    assert.match(await page.locator('.timer').textContent(),/Time 1:00|Time 0:59/);
+    assert.equal(await page.evaluate(()=>ABConfig.challengeRoundSeconds),90);
+    assert.match(await page.locator('.timer').textContent(),/Time 1:30|Time 1:29/);
     // Correct but unsubmitted arrangements still fail when time expires.
     async function solve() {
       const ids=await page.locator('#screen .step').evaluateAll(rows=>rows.map(row=>+row.dataset.id).sort((a,b)=>a-b));
       for(let i=0;i<8;i++){const row=page.locator(`#screen .step[data-id="${ids[i]}"]`);await row.focus();const pos=await row.evaluate(el=>Array.from(el.parentNode.children).indexOf(el));for(let n=pos;n>i;n--)await page.keyboard.press('ArrowUp');}
     }
+    await page.clock.runFor(3800);
     await solve();
     // A background interruption pauses the round instead of consuming the limit.
     await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,get:()=>true});document.dispatchEvent(new Event('visibilitychange'));});
-    const frozen=await page.locator('.timer').textContent();await page.clock.fastForward(65000);assert.equal(await page.locator('.timer').textContent(),frozen);
+    const frozen=await page.locator('.timer').textContent();await page.clock.fastForward(95000);assert.equal(await page.locator('.timer').textContent(),frozen);
     await page.evaluate(()=>{delete document.hidden;document.dispatchEvent(new Event('visibilitychange'));});
     // Simulate a stalled foreground frame: do not cap timer accounting to animation dt.
-    await page.clock.fastForward(61000);
+    await page.clock.fastForward(91000);
     await page.getByText("Time's up! 0:00",{exact:true}).waitFor();
     await page.clock.runFor(1500);await click('Check Right Order');
     assert.equal((await saved()).run.index,0);assert.notDeepEqual((await saved()).run.order[0],failedSelection);assert.equal((await saved()).stars,2);
     await click('Play Again');await page.locator('#screen[data-page="arrange"]').waitFor({state:'visible'});
-    assert.match(await page.locator('.timer').textContent(),/Time 1:00|Time 0:59/);
-    await solve();await click('Start the Train');await page.clock.runFor(16000);await page.clock.fastForward(65000);
+    assert.match(await page.locator('.timer').textContent(),/Time 1:30|Time 1:29/);
+    await page.clock.runFor(3800);
+    await solve();await click('Start the Train');await page.clock.runFor(16000);await page.clock.fastForward(95000);
     await page.getByRole('button',{name:'Next',exact:true}).waitFor();assert.equal((await saved()).run.index,1);
     assert.equal(await page.locator('.timeout-note').count(),0);
     await click('Next');await click('Home');await click('Practice Mode');await click('Start Practising');await page.locator('#screen[data-page="arrange"]').waitFor({state:'visible'});
-    await page.clock.fastForward(65000);assert.equal(await page.locator('#screen .step').count(),8);assert.equal(await page.locator('.timer').count(),0);
-    console.log('60-second timer passed: expiry, streak reset, different retry, fresh limit, pause, stalled frame, submitted-result protection, untimed practice.');
+    await page.clock.fastForward(95000);assert.equal(await page.locator('#screen .step').count(),8);assert.equal(await page.locator('.timer').count(),0);
+    console.log('90-second timer passed: expiry, streak reset, different retry, fresh limit, pause, stalled frame, submitted-result protection, untimed practice.');
   } finally {await browser.close();}
 })().catch(error=>{console.error(error);process.exit(1);});

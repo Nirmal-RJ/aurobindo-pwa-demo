@@ -71,7 +71,7 @@ body.portrait-viewport{background-image:var(--scene-background);background-size:
 
 
 /* All eight compartments must remain visible, including compact portrait screens. */
-[data-page="arrange"] .sequence,#game.edge-to-edge [data-page="arrange"] .sequence{left:3%;width:94%;top:11.3%;height:79.6%;gap:2px;overflow:visible;touch-action:none}
+[data-page="arrange"] .sequence,#game.edge-to-edge [data-page="arrange"] .sequence{left:6%;width:88%;top:8.8%;height:82.1%;gap:2px;overflow:visible;touch-action:none}
 [data-page="arrange"] .step{flex:1;min-height:0;height:auto;padding:0 36px 9px 32px;gap:7px;touch-action:none}
 [data-page="arrange"] .step>img{width:clamp(28px,calc(var(--scene-height,640px)*.043),36px);height:clamp(28px,calc(var(--scene-height,640px)*.043),36px);flex:0 0 clamp(28px,calc(var(--scene-height,640px)*.043),36px);top:0;pointer-events:auto}
 [data-page="arrange"] .step span,#game.edge-to-edge [data-page="arrange"] .step span{font-size:clamp(12.5px,calc(var(--scene-height,640px)*.0175),14px);line-height:1.08;top:0;min-width:0}
@@ -133,3 +133,35 @@ body.portrait-viewport{background-image:var(--scene-background);background-size:
 #screen.challenge-arrange .game-footer .timer{position:relative;inset:auto;width:29%;height:88%;flex:0 0 29%;order:0}
 #screen.challenge-arrange .game-footer .primary{max-width:none;flex:1}
 #screen .game-footer .image-button{min-width:0}
+
+/* Arrangement motion: no idle carriage movement; copy stays still while reading. */
+.arrange-start[hidden]{display:none!important}
+[data-page="arrange"] .step.selected{outline:0;filter:drop-shadow(0 0 3px #ffe18a) drop-shadow(0 5px 3px #46200888);translate:0 -3px;z-index:3}
+[data-page="arrange"] .step{transition:filter .18s,translate .18s}
+.arrange-start:not([hidden]) .button-face:after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,#fff4b9a6 49%,transparent 63%);transform:translateX(-130%);animation:arrange-shimmer 4s ease-in-out infinite;pointer-events:none}
+@keyframes arrange-shimmer{0%,65%{transform:translateX(-130%)}90%,100%{transform:translateX(130%)}}
+.arrange-clouds{position:absolute;inset:12% 0 40%;overflow:hidden;pointer-events:none}
+.arrange-clouds img{position:absolute;left:-60%;top:7%;width:60%;height:auto;object-fit:contain;opacity:.38;pointer-events:none;animation:arrange-cloud 42s linear infinite;animation-delay:-10s;will-change:transform}
+.arrange-clouds img:nth-child(2){top:35%;width:75%;animation-duration:56s;animation-delay:-29s;opacity:.3}
+.arrange-clouds img:nth-child(3){top:66%;width:55%;animation-duration:48s;animation-delay:-39s;opacity:.34}
+@keyframes arrange-cloud{to{transform:translateX(340%)}}
+.departure-steam{position:absolute;inset:0;pointer-events:none;z-index:9}
+.departure-steam i{position:absolute;left:calc(5% + var(--puff)*3%);bottom:calc(12% + var(--puff)*9%);width:35px;height:30px;border-radius:50%;background:radial-gradient(ellipse,#fff9,#eee5 45%,transparent 72%);animation:departure-puff .95s ease-out both}
+@keyframes departure-puff{from{opacity:0;transform:scale(.3)}25%{opacity:.8}to{opacity:0;transform:translate(-14px,-35px) scale(2.2)}}
+.departure-wheels{position:absolute;left:22%;right:22%;bottom:2%;height:9px;display:flex;justify-content:space-between;pointer-events:none}
+.departure-wheels i{width:10px;height:10px;border:2px solid #25303a;border-radius:50%;background:repeating-conic-gradient(#657078 0 15deg,#20292b 15deg 90deg);animation:departure-wheel .22s linear infinite}
+@keyframes departure-wheel{to{transform:rotate(360deg)}}
+
+/* Scene-space steam stays attached to the moving chimney at emission. */
+.engine-steam{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:3;overflow:hidden}
+
+.victory-confetti{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:10}
+.victory-confetti i{position:absolute;width:6px;height:10px;opacity:0;animation:victory-burst 3s cubic-bezier(.18,.6,.45,1) both;will-change:transform,opacity}
+@keyframes victory-burst{0%{opacity:0;transform:translate(0,0) rotate(0)}8%{opacity:1}40%{opacity:1;transform:translate(calc(var(--dx)*.65),var(--rise)) rotate(calc(var(--turn)*.45))}80%{opacity:.9}100%{opacity:0;transform:translate(var(--dx),var(--drop)) rotate(var(--turn))}}
+
+.victory-confetti .confetti-star{clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 96%,50% 72%,21% 96%,32% 57%,2% 35%,39% 35%);filter:drop-shadow(0 0 2px #fff6)}
+.victory-confetti .ribbon{border-radius:2px;background-image:linear-gradient(90deg,#fff7,transparent 45%,#0002)}
+.victory-confetti .confetti-shower{animation-name:victory-shower;animation-timing-function:linear}
+@keyframes victory-shower{0%{opacity:0;transform:translate(0,0) rotate(0)}5%,85%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--drop)) rotate(var(--turn))}}
+.victory-glow{position:absolute;inset:0;z-index:8;pointer-events:none;background:radial-gradient(ellipse at 50% 33%,#ffe28455,transparent 55%),linear-gradient(#12203822,#12203855);animation:victory-light 5.5s ease-out both}
+@keyframes victory-light{0%{opacity:0}12%{opacity:1}30%{opacity:.65}50%{opacity:1}80%{opacity:.7}100%{opacity:0}}

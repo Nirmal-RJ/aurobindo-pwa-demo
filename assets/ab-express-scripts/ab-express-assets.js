@@ -36,6 +36,18 @@ window.ABAssets = [
     "bytes": 32782
   },
   {
+    "path": "clouds/cloud-1.webp",
+    "bytes": 29626
+  },
+  {
+    "path": "clouds/cloud-2.webp",
+    "bytes": 31428
+  },
+  {
+    "path": "clouds/cloud-3.webp",
+    "bytes": 34242
+  },
+  {
     "path": "common-ui-buttons/01.webp",
     "bytes": 71068
   },
@@ -321,7 +333,7 @@ window.ABAssets = [
   },
   {
     "path": "page-9/page-9-bg-with-text.webp",
-    "bytes": 63440
+    "bytes": 28686
   },
   {
     "path": "page-9/question panel.webp",

@@ -8,7 +8,7 @@
   try { progress = Core.clean(JSON.parse(localStorage.getItem(C.storageKey))); } catch { progress = Core.clean(null); }
   let page = '', mode = 'practice', bucket = 0, practiceRun = null, roundSteps = [], order = [], submitted = [], demoIndex = 0, learnIndex = 0;
   let generation = 0, elapsed = 0, lastFrame = performance.now(), paused = false, selected = -1, drag = null;
-  let roundTick = null, lastUrgentTick = -1;
+  let roundTick = null, lastUrgentTick = -1, arrangementReady = false;
   let result = null, finishedStreak = 0, storagePending = false;
   const animations = new Set(), pausedAnimations = new Set();
   const readyAssets = new Map();
@@ -65,6 +65,7 @@
   }
   function frame(now) {
     const dt = Math.min(now - lastFrame, 100); lastFrame = now;
+    if (paused) { for (const animation of game.getAnimations({ subtree: true })) if (animation.playState === 'running') { animation.pause(); pausedAnimations.add(animation); } }
     if (!paused && !screen.inert) {
       if (page === 'arrange' && mode === 'challenge' && !storagePending) {
         const remaining = updateRoundClock(now);
@@ -113,7 +114,7 @@
     queueMicrotask(async () => {
       const bg = new Image(); bg.src = asset(path);
       await Promise.allSettled([bg.decode(), ...Array.from(incoming.querySelectorAll('img'), image => image.decode())]);
-      requestAnimationFrame(() => { if (token !== generation) return; incoming.style.visibility = ''; incoming.inert = false; incoming.removeAttribute('aria-busy'); delete game.dataset.transitioning; outgoing.remove(); if (name === 'arrange' && mode === 'challenge') roundTick = performance.now(); });
+      requestAnimationFrame(() => { if (token !== generation) return; incoming.style.visibility = ''; incoming.inert = false; incoming.removeAttribute('aria-busy'); delete game.dataset.transitioning; outgoing.remove(); });
     });
   }
   function img(path, cls, alt = '') { const e = new Image(); e.src = asset(path); e.alt = alt; e.draggable = false; e.className = cls; screen.append(e); return e; }
@@ -167,6 +168,83 @@
   function confetti() {
     const layer = document.getElementById('particles');
     for (let i = 0; i < 26; i++) { const p = document.createElement('i'); p.className = 'confetti'; p.style.left = `${8 + Math.random() * 84}%`; p.style.top = '25%'; p.style.background = ['#ffcc29','#fa5b46','#26d1ce','#fff3ad'][i % 4]; p.style.animationDelay = `${Math.random() * .35}s`; p.onanimationend = () => p.remove(); layer.append(p); }
+  }
+  let steamTextures;
+  function createSteamTextures() {
+    // Small, reusable fractal-density textures: wispy edges instead of circular blobs.
+    return Array.from({length:3}, () => {
+      const texture=document.createElement('canvas'); texture.width=texture.height=96;
+      const ctx=texture.getContext('2d'), pixels=ctx.createImageData(96,96);
+      const grids=[5,9,17,33].map(size=>({size,values:Float32Array.from({length:size*size},()=>Math.random())}));
+      const noise=(grid,x,y)=>{const px=x*(grid.size-1),py=y*(grid.size-1),ix=Math.floor(px),iy=Math.floor(py),fx=px-ix,fy=py-iy,sx=fx*fx*(3-2*fx),sy=fy*fy*(3-2*fy),v=(a,b)=>grid.values[Math.min(grid.size-1,b)*grid.size+Math.min(grid.size-1,a)];return (v(ix,iy)*(1-sx)+v(ix+1,iy)*sx)*(1-sy)+(v(ix,iy+1)*(1-sx)+v(ix+1,iy+1)*sx)*sy;};
+      for(let y=0;y<96;y++)for(let x=0;x<96;x++){
+        const nx=x/95,ny=y/95,dx=(nx-.5)*2,dy=(ny-.5)*2;
+        const density=grids.reduce((sum,g,i)=>sum+noise(g,nx,ny)*[.52,.27,.14,.07][i],0);
+        const edge=Math.max(0,1-dx*dx-dy*dy+(density-.5)*.65);
+        const alpha=Math.pow(edge,1.7)*Math.max(0,(density-.15)*2.8);
+        const shade=205+density*48,index=(y*96+x)*4;
+        pixels.data[index]=shade;pixels.data[index+1]=shade+2;pixels.data[index+2]=shade+3;pixels.data[index+3]=Math.min(255,alpha*255);
+      }
+      ctx.putImageData(pixels,0,0);return texture;
+    });
+  }
+  function engineSteam(engine, trainWindow) {
+    steamTextures ||= createSteamTextures();
+    const layer=document.createElement('canvas');layer.className='engine-steam';layer.setAttribute('aria-hidden','true');trainWindow.append(layer);
+    const ctx=layer.getContext('2d'),ratio=Math.min(devicePixelRatio||1,1.5);
+    let height=0;const width=screen.clientWidth;
+    const puffs=Array.from({length:32},()=>({born:-5000}));
+    const duration=C.timing.trainEntry+8*(C.timing.compartment+400)+2000;
+    let last=-100,cursor=0,stopped=false,previousY=null;
+    tween(duration,t=>{
+      if(stopped)return;
+      if(height!==screen.clientHeight){height=screen.clientHeight;layer.width=Math.round(width*ratio);layer.height=Math.round(height*ratio);}
+      ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(0,0,width,height);
+      const time=t*duration,bounds=screen.getBoundingClientRect(),rect=engine.getBoundingClientRect(),scale=bounds.width/width;
+      const x=(rect.left+rect.width*.5-bounds.left)/scale,y=(rect.top+rect.height*.18-bounds.top)/scale;
+      const moving=previousY!==null&&Math.abs(y-previousY)>.04;previousY=y;
+      if(moving&&time-last>=55&&y>height*.33&&y<height+20){
+        const near=y<height*.5;
+        Object.assign(puffs[cursor++%puffs.length],{born:time,x:x+(Math.random()-.5)*5,y,life:near?950:1400,rise:near?85:48,drift:(Math.random()-.5)*30,phase:Math.random()*6.28,rotation:Math.random()*6.28,texture:cursor%3});last=time;
+      }
+      let active=0;
+      for(const puff of puffs){
+        const age=(time-puff.born)/(puff.life||1);if(age<0||age>=1)continue;
+        const px=puff.x+puff.drift*age+Math.sin(age*5+puff.phase)*12*age,py=puff.y-puff.rise*age;
+        const fade=Math.min(1,age*9)*Math.pow(1-age,1.25)*Math.max(0,Math.min(1,(py-height*.25)/30));
+        if(fade<=0)continue;active++;
+        const size=22+Math.pow(age,.7)*78;
+        ctx.save();ctx.translate(px,py);ctx.rotate(puff.rotation+age*.65);ctx.globalAlpha=fade*.95;
+        ctx.drawImage(steamTextures[puff.texture],-size/2,-size*.42,size,size*.84);
+        ctx.restore();
+      }
+      layer.dataset.active=String(active);layer.dataset.clock=String(time);
+    }).then(()=>layer.remove());
+    return()=>{stopped=true;layer.remove();};
+  }
+  function victoryConfetti(finale = true) {
+    const layer = document.createElement('div'); layer.className=`victory-confetti ${finale ? 'sequence-celebration' : 'compartment-celebration'}`; layer.setAttribute('aria-hidden','true'); screen.append(layer);
+    if(finale){screen.querySelectorAll('.compartment-celebration').forEach(e=>e.remove());const glow=document.createElement('div');glow.className='victory-glow';glow.setAttribute('aria-hidden','true');screen.append(glow);glow.onanimationend=()=>glow.remove();}
+    const colors=['#ffe461','#ff626a','#50e6d1','#8cb9ff','#fff1bd','#d29aff'];
+    for (let i=0;i<(finale ? 240 : 90);i++) {
+      const piece=document.createElement('i'); const side=i%2;
+      piece.style.left=`${side ? 96 : 4}%`; piece.style.top=`${42+(i%3)*18}%`;
+      piece.style.background=colors[i%colors.length];
+      piece.style.setProperty('--dx',`${(side?-1:1)*(25+Math.random()*310)}px`);
+      piece.style.setProperty('--rise',`${-100-Math.random()*300}px`);
+      piece.style.setProperty('--drop',`${screen.clientHeight*.9}px`);
+      piece.style.setProperty('--turn',`${(side?-1:1)*(360+Math.random()*720)}deg`);
+      piece.style.animationDelay=`${(finale ? Math.floor(i/60)*.65 : 0)+Math.random()*.2}s`;
+      piece.style.animationDuration=`${(finale ? 3.8 : 1.8)+Math.random()*.5}s`;
+      const size = (finale ? 8 : 7) + Math.random()*5;
+      piece.style.width=`${size}px`;piece.style.height=`${size*(i%5===0?2.8:1.35)}px`;
+      if(i%5===0)piece.classList.add('ribbon');
+      else if(i%4===0)piece.classList.add('confetti-star');
+      else if(i%4===1)piece.style.borderRadius='50%';
+      if(finale && i%3===0){piece.classList.add('confetti-shower');piece.style.left=`${Math.random()*100}%`;piece.style.top='-4%';piece.style.setProperty('--dx',`${(Math.random()-.5)*90}px`);piece.style.setProperty('--drop',`${screen.clientHeight*1.15}px`);}
+
+      piece.onanimationend=()=>{piece.remove();if(!layer.childElementCount)layer.remove();};layer.append(piece);
+    }
   }
   function home() {
     if (storagePending) return;
@@ -231,16 +309,58 @@
     if (celebrate) { play.disabled = true; confetti(); tween(C.timing.streak).then(active => { if (active) play.disabled = false; }); }
   }
   function arrange() {
+    arrangementReady = false;
     background('arrange', 'page-9/page-9-bg-with-text.webp'); elapsed = 0; selected = -1; lastUrgentTick = -1; screen.classList.toggle('challenge-arrange', mode === 'challenge');
     roundSteps = (mode === 'practice' ? practiceRun : progress.run).order[bucket];
     order = Core.shuffle(roundSteps);
     if (order.every((v, i) => v === roundSteps[i])) [order[0], order[1]] = [order[1], order[0]];
     const list = document.createElement('ol'); list.className = 'sequence'; list.setAttribute('aria-label', 'Arrange the eight steps. Drag, or select a step then another position. Arrow keys move the focused step.'); screen.append(list);
     renderSteps();
+    list.inert = true;
+    const clouds = document.createElement('div'); clouds.className = 'arrange-clouds'; clouds.setAttribute('aria-hidden', 'true'); for (let i = 1; i <= 3; i++) { const cloud = new Image(); cloud.src = asset(`clouds/cloud-${i}.webp`); cloud.alt = ''; clouds.append(cloud); } screen.prepend(clouds);
     list.addEventListener('pointerdown', pointerDown); list.addEventListener('pointermove', pointerMove); list.addEventListener('pointerup', pointerUp); list.addEventListener('pointercancel', cancelDrag); list.addEventListener('lostpointercapture', cancelDrag);
     list.addEventListener('keydown', e => { const row = e.target.closest('.step'); if (!row) return; const from = order.indexOf(Number(row.dataset.id)); if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { e.preventDefault(); const to = Math.max(0, Math.min(7, from + (e.key === 'ArrowUp' ? -1 : 1))); move(from, to); renderSteps(); list.children[to].focus(); } else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectStep(from); } });
-    button('page-9/start-the-train-button.webp', 'Start the Train', 'primary', submit);
+    const start = button('page-9/start-the-train-button.webp', 'Start the Train', 'primary arrange-start', () => submit());
+    start.hidden = true; start.disabled = true;
+    revealArrangement(list, start);
     if (mode === 'challenge') { const timer = document.createElement('div'); timer.className = 'timer'; timer.setAttribute('role', 'timer'); timer.setAttribute('aria-label', 'Challenge time remaining'); const caption = document.createElement('span'); caption.textContent = 'Time '; const digits = document.createElement('strong'); digits.textContent = timerText(C.challengeRoundSeconds * 1000).replace('Time ', ''); timer.append(caption, digits); screen.querySelector('.game-footer').prepend(timer); fitFooter(); }
+  }
+  async function revealArrangement(list, start) {
+    const rows = Array.from(list.children), stagger = C.timing.cardStagger, duration = C.timing.cardEntry;
+    rows.forEach(row => { row.style.opacity = '0'; });
+    if (!await tween(duration + stagger * (rows.length - 1), t => {
+      const time = t * (duration + stagger * (rows.length - 1));
+      rows.forEach((row, index) => {
+        const progress = Math.max(0, Math.min(1, (time - index * stagger) / duration));
+        const eased = 1 - Math.pow(1 - progress, 3);
+        row.style.opacity = String(Math.min(1, progress * 3));
+        row.style.transform = `translateX(${(index % 2 ? 1 : -1) * 380 * (1 - eased)}px)`;
+      });
+    })) return;
+    rows.forEach(row => { row.style.removeProperty('transform'); row.style.removeProperty('opacity'); });
+    if (!await tween(C.timing.startReadHold)) return;
+    start.hidden = false; start.disabled = false; list.inert = false; arrangementReady = true;
+    if (mode === 'challenge') roundTick = performance.now();
+    start.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'translateY(0)'}], {duration:400,easing:'ease-out'});
+  }
+  function settleRow(id) {
+    const row = screen.querySelector(`.sequence [data-id="${id}"]`);
+    if (row) row.animate([{transform:'translateY(-3px)'},{transform:'translateY(2px)',offset:.65},{transform:'translateY(0)'}], {duration:300,easing:'ease-out'});
+  }
+  async function departArrangement() {
+    const list = screen.querySelector('.sequence'); list.inert = true;
+    screen.querySelector('.arrange-start').disabled = true;
+    screen.classList.add('arrange-departing');
+    const steam = document.createElement('div'); steam.className = 'departure-steam'; steam.setAttribute('aria-hidden','true');
+    for (let i = 0; i < 7; i++) { const puff = document.createElement('i'); puff.style.setProperty('--puff',i); steam.append(puff); }
+    screen.append(steam);
+    const rows = Array.from(list.children);
+    rows.forEach(row => { const wheels = document.createElement('div'); wheels.className='departure-wheels'; wheels.innerHTML='<i></i><i></i>'; row.append(wheels); });
+    return tween(C.timing.departure, t => rows.forEach((row,index) => {
+      const p = Math.max(0, Math.min(1,(t-.12-index*.035)/.6));
+      row.style.transform = `translateX(${430*p*p}px)`;
+      row.style.opacity=String(1-p*.7);
+    }));
   }
   let lastWhoosh = -Infinity;
   function renderSteps() {
@@ -260,9 +380,9 @@
     }
   }
   function move(from, to) { if (from === to) return; order.splice(to, 0, order.splice(from, 1)[0]); if (performance.now() - lastWhoosh > 140) { ABAudio.cue('whoosh'); lastWhoosh = performance.now(); } }
-  function selectStep(index) { if (selected === -1) selected = index; else { move(selected, index); selected = -1; } renderSteps(); }
+  function selectStep(index) { if (!arrangementReady) return; const movedId = selected >= 0 ? order[selected] : null; if (selected === -1) selected = index; else { move(selected, index); selected = -1; } renderSteps(); if (movedId) settleRow(movedId); }
   function pointerDown(e) {
-    if (e.button !== 0 || drag) return;
+    if (!arrangementReady || e.button !== 0 || drag) return;
     const row = e.target.closest('.step'); if (!row) return;
     const list = row.parentElement; list.setPointerCapture(e.pointerId);
     drag = { id: Number(row.dataset.id), pointer: e.pointerId, x: e.clientX, y: e.clientY, before: order.slice(), moved: false, list };
@@ -280,14 +400,16 @@
     if (index < 0) index = rows.length - 1;
     move(order.indexOf(drag.id), index); renderSteps();
   }
-  function pointerUp(e) { if (!drag || drag.pointer !== e.pointerId) return; const current = drag; drag = null; current.ghost?.remove(); if (!current.moved) selectStep(order.indexOf(current.id)); else renderSteps(); }
+  function pointerUp(e) { if (!drag || drag.pointer !== e.pointerId) return; const current = drag; drag = null; current.ghost?.remove(); if (!current.moved) selectStep(order.indexOf(current.id)); else { renderSteps(); settleRow(current.id); } }
   function cancelDrag() { if (!drag) return; const current = drag; drag = null; current.ghost?.remove(); order = current.before; renderSteps(); }
   async function submit(expired = false) {
-    if (page !== 'arrange' || storagePending) return;
+    if (page !== 'arrange' || storagePending || !arrangementReady) return;
     if (mode === 'challenge' && updateRoundClock() === 0) expired = true;
     if (drag && !expired) return;
+    arrangementReady = false; roundTick = null;
     submitted = order.slice();
     result = expired ? { correct: false, firstWrong: -1, checked: 0 } : Core.evaluate(roundSteps, submitted);
+    if (!expired && !await departArrangement()) return;
     background('checking', 'page-10/page-10-bg.webp');
     img('page-10/lets-check-your-sequence-pop-up.webp', 'art train-title');
     const train = document.createElement('div'); train.className = 'train-track';
@@ -298,6 +420,7 @@
     if (!expired && !await tween(C.timing.intro)) return;
     // The engine starts below the viewport, pulling the same attached carriages
     // continuously into position before individual compartments are checked.
+    const stopSteam = engineSteam(engine, window);
     ABAudio.cue('trainEntry');
     if (!await tween(C.timing.trainEntry, t => {
       const smooth = t * t * (3 - 2 * t);
@@ -311,15 +434,16 @@
       screen.querySelector('.check-mark')?.remove();
       const correct = result.firstWrong !== i;
       img(`common-ui-buttons/${correct ? 'correct' : 'wrong'}.webp`, 'check-mark', correct ? 'Correct step' : 'Incorrect step');
-      if (correct) { ABAudio.cue('correct'); confetti(); }
+      if (correct) { ABAudio.cue('correct'); victoryConfetti(false); }
       if (correct && !await tween(400)) return;
     }
+    stopSteam();
     if (result.correct) {
-      page = 'success'; screen.querySelector('.train-title')?.remove(); const answer = img('page-13/congratulations-pop-up.webp', 'art train-title'); confetti();
+      page = 'success'; screen.querySelector('.train-title')?.remove(); const answer = img('page-13/congratulations-pop-up.webp', 'art train-title'); victoryConfetti();
       screen.querySelector('.check-mark')?.classList.add('success-mark');
       if (mode === 'challenge') { finishedStreak = progress.run.index + 1; await save(Core.pass(progress)); }
       await answer.decode().catch(() => {});
-      if (!await tween(Math.max(C.timing.feedback, C.timing.answerReveal + C.timing.answerRead))) return;
+      if (!await tween(Math.max(C.timing.celebrationRead, C.timing.feedback, C.timing.answerReveal + C.timing.answerRead))) return;
       next(mode === 'practice' ? () => { if (bucket < 4) { bucket++; arrange(); } else home(); } : () => finishedStreak === 5 ? reward() : challengeIntro(true));
     } else {
       page = 'failure'; ABAudio.wrong(); screen.classList.add('crashed'); screen.querySelector('.train-title')?.remove();
