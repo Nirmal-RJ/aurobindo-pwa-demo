@@ -215,3 +215,8 @@
 ## 4 November 2026 - Gallery title overlay removal
 
 - Removed duplicate Solvent Master and AB Express title overlays from both main and RC galleries, along with the unused shared overlay style. Banner images, accessible names and links retained. Local changes only; not pushed.
+
+## 4 November 2026 - Centre tunnel badge numbers
+
+- Anchored all five streak numbers to the actual circular badge centre in the tunnel artwork (50.2% across, 19% down), with a centred grid and explicit line height. Existing artwork and animations retained.
+- Scoped version/cache v28 and gallery links aligned. Syntax and five core tests passed; Edge checked label centres and screenshots at 320,390,768 widths. Physical-device review remains pending. Local change only; not pushed.
