@@ -1544,37 +1544,26 @@ button:focus-visible,a:focus-visible{outline-color:#a35cee}
 .coming-soon-actions button{padding:10px 16px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font:inherit}
 .coming-soon-actions button[type=submit]{background:#ffd23f;color:#181322}
 
-/* Report feature presented as a full-width carousel banner. */
-.report-panel{position:relative;isolation:isolate;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:30px;min-height:350px;padding:54px 7%;border:1px solid #b98eea88;border-radius:24px;background:radial-gradient(ellipse at 90% 5%,#c876c447,transparent 55%),linear-gradient(115deg,#321467,#6033ab 58%,#3c2b9e);box-shadow:0 16px 42px #16092930;overflow:hidden}
-.report-panel::before{content:"";position:absolute;z-index:-1;inset:12px;border:1px solid #ead6ff22;border-radius:15px;pointer-events:none}
-.report-panel::after{content:"";position:absolute;z-index:-1;right:-4%;top:-70%;width:65%;aspect-ratio:1;border:1px solid #f3deff16;border-radius:50%;box-shadow:0 0 0 65px #f2dfff06,0 0 0 130px #f2dfff05,0 0 0 195px #f2dfff04;pointer-events:none}
-.report-panel-heading{position:relative;z-index:1;min-width:0;width:100%}
-.report-panel-icon{position:absolute;right:9%;top:50%;transform:translateY(-23%) rotate(9deg);width:154px;height:184px;display:grid;place-items:center;border:1px solid #e3caff55;border-radius:26px;background:linear-gradient(140deg,#ead6ff26,#ead6ff06);box-shadow:0 22px 40px #1c0a4e30,inset 0 1px #ffffff30;color:#ffe8a3}
-.report-panel-icon svg{width:90px;height:90px;stroke:currentColor;stroke-width:1.15;stroke-linecap:round;stroke-linejoin:round}
-.report-panel-heading>div{max-width:62%}
-.report-panel-kicker{display:block;width:fit-content;margin-bottom:18px;padding:7px 11px;border:1px solid #ebd6ff40;border-radius:6px;background:#ffffff0c;color:#e5d1ff;font-size:10px;font-weight:750;letter-spacing:2.5px}
-.report-panel h1{margin:0;color:#fff8ed;font-size:clamp(38px,5vw,64px);font-weight:750;line-height:1.08;letter-spacing:-1.6px}
-.report-panel-button{position:relative;z-index:2;display:inline-flex;align-items:center;justify-content:center;gap:24px;min-height:52px;padding:15px 24px;border:1px solid #ffe9b1;border-radius:11px;background:linear-gradient(135deg,#ffedb7,#edc975);box-shadow:0 6px 18px #1e0c4029;color:#30203e;text-decoration:none;font-size:15px;font-weight:750;line-height:1.4;transition:transform .2s,box-shadow .2s}
-.report-panel-button:hover{transform:translateY(-2px);box-shadow:0 9px 24px #1e0c4050}
-.report-panel-button:focus-visible{outline:3px solid #fff;outline-offset:4px}
-.report-panel-button span{font-size:21px;line-height:1}
-@media(max-width:700px){.report-panel{min-height:270px;padding:32px;gap:25px;border-radius:20px}.report-panel-heading>div{max-width:75%}.report-panel h1{font-size:40px}.report-panel-icon{right:0;width:110px;height:140px;opacity:.32;transform:translateY(-8%) rotate(9deg)}.report-panel-icon svg{width:65px;height:65px}.report-panel-kicker{margin-bottom:16px}.report-panel-button{font-size:14px;padding:14px 20px;gap:18px}.report-panel::after{width:100%;right:-40%;top:-25%}}
-@media(max-width:380px){.report-panel{padding:30px 25px;min-height:260px}.report-panel h1{font-size:35px}.report-panel-heading>div{max-width:100%}.report-panel-icon{right:-42px;opacity:.16}}
-@media(prefers-reduced-motion:reduce){.report-panel-button{transition:none}}
+/* The embedded Wall of Fame fills its 16:9 feature area. */
+.home-carousel{overflow:hidden;border:1px solid #b98eea66;border-radius:24px;background:#050b16;box-shadow:0 16px 42px #16092930}
+.home-carousel-viewport{position:relative;aspect-ratio:16/9;overflow:hidden}
+.wall-of-fame-frame{position:absolute;inset:0;display:block;width:100%;height:100%;border:0;background:#050b16}
+/* Three compact home actions, stacked in the approved order. */
+#home-view .activity-grid.activity-list{grid-template-columns:minmax(0,1fr);gap:12px}
+#home-view .activity-list .activity-card{display:flex;flex-direction:row;align-items:center;gap:18px;width:100%;min-height:88px;padding:16px 24px;text-align:left}
+#home-view .activity-list .card-icon{width:44px;height:44px;flex-shrink:0;margin:0}
+#home-view .activity-list .card-icon svg{width:25px;height:25px;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.activity-labels{position:relative;display:flex;flex-direction:column;gap:5px;min-width:0;flex:1}
+#home-view .activity-list .card-title{margin:0;font-size:20px;line-height:1.25}
+#home-view .activity-list .card-description{margin:0;font-size:12px;line-height:1.45}
+.activity-arrow{position:relative;flex-shrink:0;font-size:23px;line-height:1}
+#home-view .activity-list .activity-card::before{width:120px;height:120px;top:-60px;right:30px;border-width:20px}
+#home-view .activity-list .activity-card::after{display:none}
+#home-view .activity-list .activity-card:hover{transform:translateY(-2px)}
+@media(max-width:700px){.home-carousel{border-radius:20px}#home-view .activity-list .activity-card{min-height:80px;padding:14px 16px;gap:14px}#home-view .activity-list .card-title{font-size:18px}#home-view .activity-list .card-description{font-size:11px}#home-view .activity-list .card-icon{width:40px;height:40px}}
 
-/* Manual carousel keeps the embedded leaderboard readable while interacting. */
-.home-carousel{overflow:hidden;border:1px solid #b98eea66;border-radius:24px;background:#151027;box-shadow:0 16px 42px #16092930}
-.home-carousel-viewport{position:relative;height:420px;overflow:hidden}
-.home-carousel[data-feature="wall"] .home-carousel-viewport{height:auto;aspect-ratio:16/9}
-.home-carousel-slide{position:absolute;inset:0;height:100%}
-.home-carousel-slide[hidden]{display:none}
-.wall-of-fame-frame{display:block;width:100%;height:100%;border:0;background:#050b16}
-.home-carousel .report-panel{height:100%;min-height:0;border:0;border-radius:0;box-shadow:none}
-.home-carousel-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 18px;border-top:1px solid #b98eea26;background:#211635}
-.home-carousel-controls button{font:inherit;cursor:pointer}
-.home-carousel-arrow{display:grid;place-items:center;width:38px;height:38px;flex-shrink:0;padding:0;border:1px solid #c7a0ed33;border-radius:50%;background:#ffffff07;color:#f8ecff;font-size:20px!important}
-.home-carousel-tabs{display:flex;gap:8px;justify-content:center}
-.home-carousel-tabs button{border:0;border-radius:8px;padding:9px 12px;background:transparent;color:#bca9d0;font-size:12px;font-weight:650}
-.home-carousel-tabs button[aria-pressed="true"]{background:#e6c779;color:#30203e}
-.home-carousel-controls button:focus-visible{outline:2px solid #fff;outline-offset:3px}
-@media(max-width:700px){.home-carousel{border-radius:20px}.home-carousel-viewport{height:clamp(240px,65vw,360px)}.home-carousel-controls{gap:6px;padding:10px}.home-carousel-tabs{gap:2px}.home-carousel-tabs button{padding:9px 8px;font-size:11px}.home-carousel-arrow{width:32px;height:32px}}
+#home-view .activities{padding-top:18px}
+.activities-divider{display:flex;align-items:center;justify-content:center;gap:12px;height:8px;margin-bottom:18px}
+.activities-divider::before,.activities-divider::after{content:"";height:1px;flex:1;background:linear-gradient(90deg,transparent,#b78ce45c)}
+.activities-divider::after{transform:scaleX(-1)}
+.activities-divider span{width:5px;height:5px;border:1px solid #c7a6ea99;transform:rotate(45deg)}
