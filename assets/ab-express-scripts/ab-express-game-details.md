@@ -121,3 +121,27 @@ No player bucket selection. Start Practising begins bucket 1, then successful Ne
 All bottom navigation uses a shared footer with consistent safe margins, gaps and vertical centres. Back/Home/Next use a horizontal row; practice/challenge/reward keep the larger primary action above Home. Comparison gives Play Again more width than Home. Challenge arrangement places the timer beside Start in the same footer. Single continuation buttons are centred.
 
 Button image transparency is cropped using recorded alpha bounds, then visible artwork is scaled proportionally into its hit area. Resize refits these faces without stretching the supplied artwork. Labels, client instructions, navigation destinations and feedback gates are unchanged.
+
+## Shared step pool - 4 November 2026 (supersedes fixed buckets)
+
+The approved revised 17-step list in config.steps replaces the fixed bucket definitions for gameplay. Each round selects eight unique steps, exactly one from the first three and seven from the remaining fourteen. Correct order follows the master list; presentation is shuffled. Five distinct selections form a practice/challenge run; individual steps may repeat between rounds. Practice retries the same selection until success, then Next advances, returning Home after five. Challenge retains 60 seconds, five consecutive successes, failure reset with a different selection, and saved streaks. Existing saved bucket-based runs migrate to fresh selections while retaining completed streaks, stars and demo status. Learning artwork remains unchanged by this runtime update.
+
+### Current approved master sequence
+
+1. Check the balance bubble is centred.
+2. Check calibration is within date.
+3. Label the preparation vessel.
+4. Match the sample container label to the worksheet.
+5. Open the balance door.
+6. Clean the pan and base
+7. Use a clean & dry butter paper boat.
+8. Centre the boat on the balance pan.
+9. Tare the empty paper boat to zero.
+10. Discard excess sample in the bin.
+11. Close the door for a stable reading.
+12. Wait for a stable reading before recording.
+13. Transfer the weighed sample to a dry preparation vessel.
+14. Weigh the used butter paper to check sample left.
+15. Clean the entire pan and base with brush after weighing.
+16. Throw the used butter paper in the bin.
+17. Throw other waste and sample residue in the bin.

@@ -11,6 +11,8 @@ const assert = require('node:assert/strict');
     const saved = () => page.evaluate(() => JSON.parse(localStorage.getItem(ABConfig.storageKey)));
     await click('Next');await click('Challenge Mode');await click('Play Challenge');
     await page.locator('#screen[data-page="arrange"]').waitFor({state:'visible'});
+    const failedSelection=await page.locator('#screen .step').evaluateAll(rows=>rows.map(row=>+row.dataset.id).sort((a,b)=>a-b));
+    assert.equal(failedSelection.filter(id=>id<=3).length,1);
     assert.equal(await page.evaluate(()=>ABConfig.challengeRoundSeconds),60);
     assert.match(await page.locator('.timer').textContent(),/Time 1:00|Time 0:59/);
     // Correct but unsubmitted arrangements still fail when time expires.
@@ -27,7 +29,7 @@ const assert = require('node:assert/strict');
     await page.clock.fastForward(61000);
     await page.getByText("Time's up! 0:00",{exact:true}).waitFor();
     await page.clock.runFor(1500);await click('Check Right Order');
-    assert.equal((await saved()).run.index,0);assert.notEqual((await saved()).run.order[0],2);assert.equal((await saved()).stars,2);
+    assert.equal((await saved()).run.index,0);assert.notDeepEqual((await saved()).run.order[0],failedSelection);assert.equal((await saved()).stars,2);
     await click('Play Again');await page.locator('#screen[data-page="arrange"]').waitFor({state:'visible'});
     assert.match(await page.locator('.timer').textContent(),/Time 1:00|Time 0:59/);
     await solve();await click('Start the Train');await page.clock.runFor(16000);await page.clock.fastForward(65000);

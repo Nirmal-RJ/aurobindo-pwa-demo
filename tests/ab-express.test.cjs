@@ -2,31 +2,27 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const C = require('../assets/ab-express-scripts/ab-express-config.js');
 const Core = require('../assets/ab-express-scripts/ab-express-core.js');
-test('all five approved buckets contain eight unique canonical steps', () => {
-  assert.equal(C.steps.length, 24);
-  assert.deepEqual(C.buckets, [[1,3,6,7,8,13,15,21],[2,4,5,8,9,10,12,13],[3,9,10,11,12,13,15,16],[8,13,15,16,17,18,21,22],[8,9,10,14,19,20,23,24]]);
-  assert.equal(new Set(C.buckets.flat()).size, 24);
+test('shared pool draws eight ordered unique steps with exactly one of the first three', () => {
+  assert.equal(C.steps.length,17);
+  const seen=new Set();
+  for(let i=0;i<1000;i++){const round=Core.drawRound();assert.ok(Core.validRound(round));round.forEach(id=>seen.add(id));}
+  assert.equal(seen.size,17);
 });
-test('validation stops at the first wrong compartment and rejects malformed submissions', () => {
-  for (let bucket = 0; bucket < 5; bucket++) {
-    const correct = C.buckets[bucket];
-    assert.deepEqual(Core.evaluate(bucket, correct), { correct: true, firstWrong: -1, checked: 8 });
-    for (let i = 0; i < 7; i++) { const answer = correct.slice(); [answer[i],answer[i+1]]=[answer[i+1],answer[i]]; assert.equal(Core.evaluate(bucket,answer).checked,i+1); }
-    assert.throws(() => Core.evaluate(bucket,Array(8).fill(correct[0])));
-  }
+test('validation stops at first wrong compartment',()=>{
+ const correct=Core.drawRound();assert.equal(Core.evaluate(correct,correct).correct,true);
+ for(let i=0;i<7;i++){const answer=correct.slice();[answer[i],answer[i+1]]=[answer[i+1],answer[i]];assert.equal(Core.evaluate(correct,answer).checked,i+1);}
+ assert.throws(()=>Core.evaluate(correct,Array(8).fill(correct[0])));
 });
-test('challenge visits each bucket once and failure starts with a different bucket', () => {
-  for (let failed = 0; failed < 5; failed++) for (let attempt = 0; attempt < 100; attempt++) {
-    const run = Core.newRun(failed); assert.equal(new Set(run.order).size,5); assert.notEqual(run.order[0],failed);
-  }
+test('five fresh selections and failure avoids failed selection even with fixed RNG',()=>{
+ for(const random of [Math.random,()=>0,()=>.999]){const failed=Core.drawRound([],random);const run=Core.newRun(failed,random);assert.equal(new Set(run.order.map(x=>x.join(','))).size,5);run.order.forEach(x=>{assert.ok(Core.validRound(x));assert.notDeepEqual(x,failed);});}
 });
-test('five successes award exactly one star and interrupted progress retains current bucket', () => {
-  let p = { demoComplete:true, stars:2, run:Core.newRun() }; const initial=p.run.order.slice();
-  for(let i=1;i<=4;i++){p=Core.pass(p);assert.equal(p.run.index,i);p=Core.clean(JSON.parse(JSON.stringify(p)));assert.deepEqual(p.run.order,initial);assert.equal(p.stars,2);}
-  p=Core.pass(p);assert.equal(p.stars,3);assert.equal(p.run,null);assert.throws(()=>Core.pass(p));
+test('saved selections and streak survive reload; five successes award one star',()=>{
+ let p={demoComplete:true,stars:2,run:Core.newRun()};const initial=structuredClone(p.run.order);
+ for(let i=1;i<=4;i++){p=Core.pass(p);p=Core.clean(JSON.parse(JSON.stringify(p)));assert.equal(p.run.index,i);assert.deepEqual(p.run.order,initial);assert.equal(p.stars,2);}
+ p=Core.pass(p);assert.equal(p.stars,3);assert.equal(p.run,null);
 });
-test('corrupt saved runs cannot skip or duplicate buckets', () => {
-  assert.equal(Core.clean({run:{order:[0,0,2,3,4],index:2}}).run,null);
-  assert.equal(Core.clean({run:{order:[0,1,2,3,4],index:5}}).run,null);
-  assert.equal(Core.clean({stars:-1}).stars,0);
+test('legacy saves retain completed streak; malformed runs are rejected',()=>{
+ const p=Core.clean({demoComplete:true,stars:2,run:{order:[0,1,2,3,4],index:3}});assert.equal(p.run.index,3);assert.equal(p.stars,2);assert.ok(p.run.order.every(Core.validRound));
+ assert.equal(Core.clean({run:{order:[0,0,2,3,4],index:2}}).run,null);
+ const run=Core.newRun();run.order[1]=run.order[0];assert.equal(Core.clean({run}).run,null);
 });

@@ -9,7 +9,7 @@ Portrait game; scripts and documents are isolated here. Media lives in assets/ab
 
 Open `ab-express.html`, or select the final card in the RC games gallery.
 
-- `ab-express-config.js`: canonical steps, bucket definitions, timing and asset paths.
+- `ab-express-config.js`: canonical shared step pool, icon mapping, timing and asset paths.
 - `ab-express-core.js`: independent sequence validation and challenge progress rules.
 - `ab-express.js`: screen flow, input, loading, persistence and train presentation.
 - `ab-express-audio.js`: decoded music mixer, crossfades, wrong-answer cue and synthesized button tones.

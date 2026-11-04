@@ -54,7 +54,7 @@ const url = process.env.AB_URL || 'http://localhost:4173/assets/ab-express-scrip
     await page.locator('#screen[data-page="arrange"]').waitFor({state:'visible'});await page.waitForTimeout(1100);assert.match(await page.locator('.timer').textContent(),/Time 0:5[0-9]/);
     await solve();await click('Start the Train');await page.getByRole('button',{name:'Next',exact:true}).waitFor({timeout:20000});assert.equal((await saved()).run.index,1);await click('Next');await shot('streak');await click('Play Challenge');
     await solve();await page.locator('.step').first().focus();await page.keyboard.press('ArrowDown');
-    const failed=(await saved()).run.order[1];await click('Start the Train');await page.getByRole('button',{name:'Check Right Order',exact:true}).waitFor({timeout:10000});await shot('failure');assert.equal((await saved()).run.index,0);assert.notEqual((await saved()).run.order[0],failed);
+    const failed=(await saved()).run.order[1];await click('Start the Train');await page.getByRole('button',{name:'Check Right Order',exact:true}).waitFor({timeout:10000});await shot('failure');assert.equal((await saved()).run.index,0);assert.notDeepEqual((await saved()).run.order[0],failed);
     await click('Check Right Order');await shot('comparison');await click('Play Again');
     // Speed only the QA run after visually checking the real train timing above.
     await page.evaluate(()=>{ABConfig.timing.intro=1;ABConfig.timing.compartment=1;ABConfig.timing.feedback=1;});

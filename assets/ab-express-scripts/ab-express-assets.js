@@ -261,19 +261,19 @@ window.ABAssets = [
   },
   {
     "path": "page-18/page-18-a.webp",
-    "bytes": 155324
+    "bytes": 108070
   },
   {
     "path": "page-18/page-18-b.webp",
-    "bytes": 177542
+    "bytes": 107882
   },
   {
     "path": "page-18/page-18-c.webp",
-    "bytes": 181554
+    "bytes": 107108
   },
   {
     "path": "page-2/page-2-bg.webp",
-    "bytes": 226798
+    "bytes": 189126
   },
   {
     "path": "page-3/page-3-bg.webp",

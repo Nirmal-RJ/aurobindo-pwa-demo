@@ -189,3 +189,10 @@
 - Replaced per-page button placement with a shared footer: even horizontal spacing for navigation; stacked primary/Home on intro and reward pages; weighted Play Again/Home on comparison; aligned timer/Start on challenge arrangement. Single continuation controls are centred.
 - Normalized transparent asset margins using alpha crop bounds and proportionate visible-art sizing. Buttons refit on viewport changes; no artwork distortion or client-copy changes. Existing actions and feedback gates preserved.
 - Edge and WebKit each passed the 161-case page/viewport audit. Reviewed learning, practice and comparison phone screenshots; dedicated challenge timer/urgency regression passed. Syntax and five core tests passed. Physical-device touch/visual review remains pending. Scoped cache/version v24.
+
+## 4 November 2026 - Shared pool replaces fixed buckets
+
+- Applied the user-approved 17-step wording. Every round draws eight unique steps: exactly one of the first three, plus seven of the remaining fourteen. Kept original matching icon assets via explicit icon mapping.
+- Practice retains five rounds, same-selection retries and Next advancement. Challenge retains timer, failure reset, five-success reward and saved streaks. Persist complete sampled selections; migrate old numbered-bucket saves without losing completed streaks/stars/demo completion. Distinct selections within each run; failed challenge selection excluded from its replacement run.
+- Updated regression tests and current rules/details. Scoped version v25. Regenerated asset byte manifest to match four already-modified user images; did not modify those images.
+- Syntax and five core tests passed, including 1,000 sample draws, selection invariants, fixed-RNG termination, validation and persistence. Edge and WebKit passed five-round practice/retry flow; Edge passed countdown, timeout, reset, pause and submission regression. Physical iPhone/Android testing remains pending. Learning artwork unchanged by this runtime update.

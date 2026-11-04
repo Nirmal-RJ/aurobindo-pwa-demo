@@ -20,3 +20,7 @@ These standards carry forward the user's Rocketier, My Carz and Solvent Master e
 13. Client-supplied instruction text must be displayed verbatim in every mode, including comparison. Do not shorten, paraphrase or substitute labels to improve layout. Adjust presentation only unless the user explicitly supplies approved replacement wording.
 
 14. Practice assigns buckets 1, 2, 3, 4, 5 in order, without a selector. Failure retries the same bucket; successful Next starts the following bucket. After bucket 5, Next returns Home.
+
+## Shared step pool - 4 November 2026 (supersedes fixed buckets)
+
+The approved revised 17-step list in config.steps replaces the fixed bucket definitions for gameplay. Each round selects eight unique steps, exactly one from the first three and seven from the remaining fourteen. Correct order follows the master list; presentation is shuffled. Five distinct selections form a practice/challenge run; individual steps may repeat between rounds. Practice retries the same selection until success, then Next advances, returning Home after five. Challenge retains 60 seconds, five consecutive successes, failure reset with a different selection, and saved streaks. Existing saved bucket-based runs migrate to fresh selections while retaining completed streaks, stars and demo status. Learning artwork remains unchanged by this runtime update.

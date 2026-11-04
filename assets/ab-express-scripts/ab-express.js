@@ -6,7 +6,7 @@
   let screen = document.getElementById('screen');
   let progress;
   try { progress = Core.clean(JSON.parse(localStorage.getItem(C.storageKey))); } catch { progress = Core.clean(null); }
-  let page = '', mode = 'practice', bucket = 0, order = [], submitted = [], demoIndex = 0, learnIndex = 0;
+  let page = '', mode = 'practice', bucket = 0, practiceRun = null, roundSteps = [], order = [], submitted = [], demoIndex = 0, learnIndex = 0;
   let generation = 0, elapsed = 0, lastFrame = performance.now(), paused = false, selected = -1, drag = null;
   let roundTick = null, lastUrgentTick = -1;
   let result = null, finishedStreak = 0, storagePending = false;
@@ -203,7 +203,7 @@
     homeControl();
   }
   function practiceIntro() {
-    background('practiceIntro', 'page-8/page-8-bg.webp'); mode = 'practice'; bucket = 0;
+    background('practiceIntro', 'page-8/page-8-bg.webp'); mode = 'practice'; bucket = 0; practiceRun = Core.newRun();
     button('page-8/start-practising-button.webp', 'Start Practising', 'primary', arrange); homeControl();
   }
   function drawStreak(count, celebrate) {
@@ -231,14 +231,15 @@
     const play = button('page-15/play-button.webp', 'Play Challenge', 'primary', async () => {
       if (storagePending) return;
       if (!progress.run) await save({ ...progress, run: Core.newRun() });
-      bucket = progress.run.order[progress.run.index]; arrange();
+      bucket = progress.run.index; arrange();
     }); homeControl();
     if (celebrate) { play.disabled = true; confetti(); tween(C.timing.streak).then(active => { if (active) play.disabled = false; }); }
   }
   function arrange() {
     background('arrange', 'page-9/page-9-bg-with-text.webp'); elapsed = 0; selected = -1; lastUrgentTick = -1; screen.classList.toggle('challenge-arrange', mode === 'challenge');
-    order = Core.shuffle(C.buckets[bucket]);
-    if (order.every((v, i) => v === C.buckets[bucket][i])) [order[0], order[1]] = [order[1], order[0]];
+    roundSteps = (mode === 'practice' ? practiceRun : progress.run).order[bucket];
+    order = Core.shuffle(roundSteps);
+    if (order.every((v, i) => v === roundSteps[i])) [order[0], order[1]] = [order[1], order[0]];
     const list = document.createElement('ol'); list.className = 'sequence'; list.setAttribute('aria-label', 'Arrange the eight steps. Drag, or select a step then another position. Arrow keys move the focused step.'); screen.append(list);
     renderSteps();
     list.addEventListener('pointerdown', pointerDown); list.addEventListener('pointermove', pointerMove); list.addEventListener('pointerup', pointerUp); list.addEventListener('pointercancel', cancelDrag); list.addEventListener('lostpointercapture', cancelDrag);
@@ -253,7 +254,7 @@
     const previous = new Map(Array.from(list.children, row => [Number(row.dataset.id), { row, top: row.getBoundingClientRect().top }]));
     const scroll = list.scrollTop;
     list.replaceChildren();
-    order.forEach((id, i) => { const li = document.createElement('li'); li.className = `step${selected === i ? ' selected' : ''}${drag?.moved && drag.id === id ? ' dragging' : ''}`; li.dataset.id = String(id); li.tabIndex = 0; li.setAttribute('aria-label', `Position ${i + 1}. ${C.steps[id - 1]}`); const frame = document.createElement('div'); frame.className = 'compartment-frame'; const art = new Image(); art.src = asset('page-9/question panel.webp'); art.alt = ''; frame.append(art); const icon = new Image(); icon.src = asset(`common-ui-buttons/${String(id).padStart(2,'0')}.webp`); icon.alt = ''; const text = document.createElement('span'); text.textContent = C.steps[id - 1]; li.title = C.steps[id - 1]; li.append(frame, icon, text); list.append(li); });
+    order.forEach((id, i) => { const li = document.createElement('li'); li.className = `step${selected === i ? ' selected' : ''}${drag?.moved && drag.id === id ? ' dragging' : ''}`; li.dataset.id = String(id); li.tabIndex = 0; li.setAttribute('aria-label', `Position ${i + 1}. ${C.steps[id - 1]}`); const frame = document.createElement('div'); frame.className = 'compartment-frame'; const art = new Image(); art.src = asset('page-9/question panel.webp'); art.alt = ''; frame.append(art); const icon = new Image(); icon.src = asset(`common-ui-buttons/${String(C.stepIcons[id - 1]).padStart(2,'0')}.webp`); icon.alt = ''; const text = document.createElement('span'); text.textContent = C.steps[id - 1]; li.title = C.steps[id - 1]; li.append(frame, icon, text); list.append(li); });
     list.scrollTop = scroll;
     for (const row of list.children) {
       const old = previous.get(Number(row.dataset.id)); if (!old) continue;
@@ -291,13 +292,13 @@
     if (mode === 'challenge' && updateRoundClock() === 0) expired = true;
     if (drag && !expired) return;
     submitted = order.slice();
-    result = expired ? { correct: false, firstWrong: -1, checked: 0 } : Core.evaluate(bucket, submitted);
+    result = expired ? { correct: false, firstWrong: -1, checked: 0 } : Core.evaluate(roundSteps, submitted);
     background('checking', 'page-10/page-10-bg.webp');
     img('page-10/lets-check-your-sequence-pop-up.webp', 'art train-title');
     const train = document.createElement('div'); train.className = 'train-track';
     train.style.transform = `translateY(${screen.clientHeight * .75 + 4}px)`;
     const engine = new Image(); engine.src = asset('page-10/train-engine.webp'); engine.className = 'engine'; engine.alt = 'Train engine'; train.append(engine);
-    for (const id of submitted) { const car = document.createElement('div'); car.className = 'carriage'; const body = new Image(); body.src = asset('page-10/icon-carrying-train-compartment.webp'); body.className = 'body'; body.alt = ''; const icon = new Image(); icon.src = asset(`common-ui-buttons/${String(id).padStart(2,'0')}.webp`); icon.className = 'icon'; icon.alt = C.steps[id - 1]; car.append(body, icon); train.append(car); }
+    for (const id of submitted) { const car = document.createElement('div'); car.className = 'carriage'; const body = new Image(); body.src = asset('page-10/icon-carrying-train-compartment.webp'); body.className = 'body'; body.alt = ''; const icon = new Image(); icon.src = asset(`common-ui-buttons/${String(C.stepIcons[id - 1]).padStart(2,'0')}.webp`); icon.className = 'icon'; icon.alt = C.steps[id - 1]; car.append(body, icon); train.append(car); }
     const window = document.createElement('div'); window.className = 'train-window'; window.append(train); screen.append(window); img('page-10/tunnel-cropped.webp', 'art tunnel');
     if (!expired && !await tween(C.timing.intro)) return;
     // The engine starts below the viewport, pulling the same attached carriages
@@ -324,10 +325,10 @@
       if (mode === 'challenge') { finishedStreak = progress.run.index + 1; await save(Core.pass(progress)); }
       await answer.decode().catch(() => {});
       if (!await tween(Math.max(C.timing.feedback, C.timing.answerReveal + C.timing.answerRead))) return;
-      next(mode === 'practice' ? () => { if (bucket < C.buckets.length - 1) { bucket++; arrange(); } else home(); } : () => finishedStreak === 5 ? reward() : challengeIntro(true));
+      next(mode === 'practice' ? () => { if (bucket < 4) { bucket++; arrange(); } else home(); } : () => finishedStreak === 5 ? reward() : challengeIntro(true));
     } else {
       page = 'failure'; ABAudio.wrong(); screen.classList.add('crashed'); screen.querySelector('.train-title')?.remove();
-      if (mode === 'challenge') await save({ ...progress, run: Core.newRun(bucket) });
+      if (mode === 'challenge') await save({ ...progress, run: Core.newRun(roundSteps) });
       const impact = ABEffects.crash({ screen, train, failedIndex: result.firstWrong, tween, asset, settings: C.crash });
       if (!await tween(C.crash.titleDelay)) return;
       img('page-12/train-crashed.webp', 'art train-title');
@@ -359,12 +360,12 @@
     const grid = document.createElement('div'); grid.className = 'comparison';
     grid.setAttribute('role', 'region'); grid.setAttribute('aria-label', 'Your sequence and correct sequence');
     for (let i = 0; i < 8; i++) {
-      [submitted[i], C.buckets[bucket][i]].forEach((id, column) => {
+      [submitted[i], roundSteps[i]].forEach((id, column) => {
         const cell = document.createElement('div'); cell.className = 'compare-cell';
-        if (!column && submitted[i] !== C.buckets[bucket][i]) cell.classList.add('misplaced');
+        if (!column && submitted[i] !== roundSteps[i]) cell.classList.add('misplaced');
         cell.style.left = `${column ? 52.7 : 5.9}%`;
         cell.style.top = `${23.1 + i * 8.14}%`;
-        const icon = new Image(); icon.src = asset(`common-ui-buttons/${String(id).padStart(2,'0')}.webp`); icon.alt = '';
+        const icon = new Image(); icon.src = asset(`common-ui-buttons/${String(C.stepIcons[id - 1]).padStart(2,'0')}.webp`); icon.alt = '';
         const text = document.createElement('span'); text.textContent = C.steps[id - 1];
         cell.title = C.steps[id - 1];
         cell.setAttribute('aria-label', `${column ? 'Correct' : 'Your'} sequence, step ${i + 1}: ${C.steps[id - 1]}`);
@@ -372,7 +373,7 @@
       });
     }
     screen.append(grid); fitComparisonCopy();
-    button('common-ui-buttons/play-again-button.webp', 'Play Again', 'primary', () => { if (mode === 'challenge') bucket = progress.run.order[0]; arrange(); }); homeControl();
+    button('common-ui-buttons/play-again-button.webp', 'Play Again', 'primary', () => { if (mode === 'challenge') bucket = 0; arrange(); }); homeControl();
   }
   function reward() {
     background('reward', 'page-17/page-17-bg.webp');
