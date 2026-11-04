@@ -211,3 +211,7 @@
 
 - Added AB Express as the last card on the main games page, matching the existing RC gallery banner and v27 game link. No runtime or artwork change. User explicitly requested local changes only until they say to push.
 - Verified in Edge at 390x844: main-gallery card visible and last, banner image loaded, link matches RC and successfully opens the game. No push performed.
+
+## 4 November 2026 - Gallery title overlay removal
+
+- Removed duplicate Solvent Master and AB Express title overlays from both main and RC galleries, along with the unused shared overlay style. Banner images, accessible names and links retained. Local changes only; not pushed.

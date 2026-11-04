@@ -121,7 +121,6 @@ function setLanguage(next) {
   if (activeToast) toast(dictionary.soon.replace('{name}', dictionary[`${activeToast}Title`]), activeToast);
   else { document.querySelector('#toast').classList.remove('visible'); clearTimeout(toastTimer); }
   savePreference('aurobindo-language', language);
-  updateLightsLabel();
   updatePageContent();
   if (window.TileMatch && window.TileMatch.translate) {
     window.TileMatch.translate(language);
@@ -339,52 +338,6 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 setLanguage(language);
 setTheme(document.documentElement.dataset.theme);
 renderRoute(false);
-
-// Sample a single rounded path, including its corners, at equal distances.
-const hero = document.querySelector('.hero');
-const ledFrame = document.querySelector('.hero-edge');
-const ledTrack = document.querySelector('.led-track');
-const ledBulbs = document.querySelector('.led-bulbs');
-let ledLayout = '';
-function arrangeBorderLights() {
-  const width = hero.clientWidth, height = hero.clientHeight;
-  if (!width || !height) return;
-  const layout = `${width}:${height}`;
-  if (layout === ledLayout) return;
-  ledLayout = layout;
-  ledFrame.setAttribute('viewBox', `0 0 ${width} ${height}`);
-  const inset = 14, radius = 9, right = width - inset, bottom = height - inset;
-  ledTrack.setAttribute('d', `M ${inset + radius} ${inset} H ${right - radius} A ${radius} ${radius} 0 0 1 ${right} ${inset + radius} V ${bottom - radius} A ${radius} ${radius} 0 0 1 ${right - radius} ${bottom} H ${inset + radius} A ${radius} ${radius} 0 0 1 ${inset} ${bottom - radius} V ${inset + radius} A ${radius} ${radius} 0 0 1 ${inset + radius} ${inset} Z`);
-  const length = ledTrack.getTotalLength();
-  const count = Math.max(24, Math.round(length / 24));
-  const waves = 3;
-  const bulbs = document.createDocumentFragment();
-  for (let index = 0; index < count; index++) {
-    const point = ledTrack.getPointAtLength(index * length / count);
-    const light = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    light.setAttribute('class', 'led-bulb');
-    light.setAttribute('cx', point.x);
-    light.setAttribute('cy', point.y);
-    light.setAttribute('r', '4');
-    light.style.setProperty('--led-phase', -1 + ((index * waves / count) % 1));
-    bulbs.append(light);
-  }
-  ledBulbs.replaceChildren(bulbs);
-}
-arrangeBorderLights();
-if ('ResizeObserver' in window) new ResizeObserver(arrangeBorderLights).observe(hero);
-else window.addEventListener('resize', arrangeBorderLights);
-function updateLightsLabel() {
-  const paused = document.querySelector('.hero').dataset.lightsPaused === 'true';
-  const labels = { en: ['Pause border lights', 'Play border lights'], te: ['అంచు లైట్లను ఆపండి', 'అంచు లైట్లను వెలిగించండి'], hi: ['किनारे की लाइटें रोकें', 'किनारे की लाइटें चलाएँ'] };
-  const button = document.querySelector('.lights-toggle');
-  button.setAttribute('aria-label', labels[language][Number(paused)]);
-  button.title = labels[language][Number(paused)];
-}
-document.querySelector('.lights-toggle').addEventListener('click', () => {
-  hero.dataset.lightsPaused = String(hero.dataset.lightsPaused !== 'true');
-  updateLightsLabel();
-});
 
 let installPrompt;
 const installButton = document.querySelector('#install');

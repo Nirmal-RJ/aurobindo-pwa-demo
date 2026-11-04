@@ -21,11 +21,11 @@
       if (l === 'te' || l === 'hi' || l === 'en') document.documentElement.lang = l;
     } catch (_) { }
   </script>
-  <link rel="stylesheet" href="./styles.css?v=49">
+  <link rel="stylesheet" href="./styles.css?v=52">
   <script src="./tile-match.js?v=23" defer></script>
-  <script src="./app.js?v=30" defer></script>
+  <script src="./app.js?v=31" defer></script>
+  <script src="./hero-carousel.js?v=3" defer></script>
   <link rel="stylesheet" href="./leaderboard.css?v=5">
-  <script src="./hero-carousel.js?v=2" defer></script>
 </head>
 
 <body>
@@ -310,160 +310,29 @@
       <p class="leaderboard-note">Sample names and scores for demonstration only.</p>
     </section>
     <div id="home-view">
-      <section class="hero" aria-labelledby="hero-title" data-carousel-seconds="5">
-        <div class="hero-grain"></div>
-        <div class="hero-beam beam-one"></div>
-        <div class="hero-beam beam-two"></div>
-        <div class="hero-confetti" aria-hidden="true">
-          <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-        </div>
-        <div class="hero-copy" id="hero-copy-slide">
-          <span class="hero-demo-label">DEMO APP</span>
-          <h1 id="hero-title" class="sr-only">HPLC Celebrity League</h1>
-          <div class="hero-logo-wrap">
-            <img src="./assets/hpcl-logo-new.png" alt="HPLC Celebrity League" class="hero-hpcl-logo" width="500"
-              height="500">
+      <section class="home-carousel" data-feature="wall" aria-label="Featured pages" aria-roledescription="carousel">
+        <div class="home-carousel-viewport">
+          <div class="home-carousel-slide" id="feature-wall-of-fame" role="group" aria-roledescription="slide" aria-label="1 of 2: Wall of Fame">
+            <iframe class="wall-of-fame-frame" src="https://apl.redchariotstechnologies.com/wall-of-fame/" title="Wall of Fame" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
           </div>
-          <div class="hero-bottom"><span class="hero-rule"></span><span data-i18n="heroBottom">Play together. Shine
-              together.</span><svg class="icon">
-              <use href="#i-spark" />
-            </svg></div>
+          <div class="home-carousel-slide" id="feature-app-report" role="group" aria-roledescription="slide" aria-label="2 of 2: App Report" hidden>
+      <section class="report-panel" aria-labelledby="report-title">
+        <div class="report-panel-heading">
+          <span class="report-panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M7 3h7l4 4v14H6V3h1Z"/><path d="M14 3v5h4M9 17v-3m3 3v-6m3 6v-4"/></svg></span>
+          <div><span class="report-panel-kicker">QC CORE</span><h1 id="report-title">App Report</h1></div>
         </div>
-        <div class="hero-art" id="hero-art-slide" aria-hidden="true">
-          <svg class="stage-art" viewBox="0 0 560 420" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="cup" x1="208" y1="70" x2="332" y2="230" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#FFF4BC" />
-                <stop offset=".28" stop-color="#F7D078" />
-                <stop offset=".57" stop-color="#C58A32" />
-                <stop offset=".78" stop-color="#FFE8A4" />
-                <stop offset="1" stop-color="#D79C47" />
-              </linearGradient>
-              <linearGradient id="stem" x1="254" y1="212" x2="300" y2="287">
-                <stop stop-color="#EEBD62" />
-                <stop offset=".48" stop-color="#FFF0B6" />
-                <stop offset="1" stop-color="#A66A29" />
-              </linearGradient>
-              <linearGradient id="podium" x1="184" y1="283" x2="346" y2="383">
-                <stop stop-color="#244948" />
-                <stop offset="1" stop-color="#0D232D" />
-              </linearGradient>
-              <linearGradient id="film" x1="348" y1="161" x2="432" y2="291">
-                <stop stop-color="#3C6861" />
-                <stop offset="1" stop-color="#142D34" />
-              </linearGradient>
-              <radialGradient id="aura">
-                <stop stop-color="#F4CE75" stop-opacity=".19" />
-                <stop offset="1" stop-color="#F4CE75" stop-opacity="0" />
-              </radialGradient>
-              <filter id="shadow">
-                <feDropShadow dx="0" dy="12" stdDeviation="10" flood-opacity=".35" />
-              </filter>
-            </defs>
-            <ellipse cx="285" cy="205" rx="222" ry="195" fill="url(#aura)" />
-            <g opacity=".35" stroke="#8CA499">
-              <ellipse cx="282" cy="218" rx="186" ry="133" stroke-dasharray="2 9" />
-              <path d="M77 286c80 39 277 36 386-21" />
-            </g>
-            <g fill="#F3CE81">
-              <path d="m168 94 4 10 10 4-10 4-4 10-4-10-10-4 10-4 4-10Z" />
-              <path d="m406 77 3 8 8 3-8 3-3 8-3-8-8-3 8-3 3-8Z" />
-              <path d="m452 239 3 7 7 3-7 3-3 7-3-7-7-3 7-3 3-7Z" />
-              <circle cx="219" cy="51" r="2" />
-              <circle cx="362" cy="46" r="2" />
-              <circle cx="116" cy="212" r="2" />
-              <circle cx="465" cy="170" r="2" />
-            </g>
-            <g stroke-width="4">
-              <path d="m124 136 8-12m292-7 9 6M387 311l10 5" stroke="#63BCA5" />
-              <path d="m352 73 3-10M144 252l-7 9m294-69 8-6" stroke="#D69B57" />
-              <path d="m191 53-5-8m276 157 6 8" stroke="#C77889" />
-            </g>
-            <ellipse cx="282" cy="359" rx="190" ry="28" fill="#07161E" opacity=".65" />
-            <path d="M145 321h88v40h-88z" fill="#19343C" />
-            <ellipse cx="189" cy="321" rx="44" ry="12" fill="#2C4C4C" />
-            <ellipse cx="189" cy="361" rx="44" ry="12" fill="#19343C" />
-            <path d="M339 318h78v42h-78z" fill="#19343C" />
-            <ellipse cx="378" cy="318" rx="39" ry="11" fill="#2C4C4C" />
-            <ellipse cx="378" cy="360" rx="39" ry="11" fill="#19343C" />
-            <g transform="rotate(17 387 222)" filter="url(#shadow)">
-              <circle cx="387" cy="216" r="59" fill="url(#film)" stroke="#669084" stroke-width="2" />
-              <circle cx="387" cy="216" r="9" fill="#A5B6A0" />
-              <g fill="#0D222C" stroke="#52776D">
-                <circle cx="386" cy="181" r="14" />
-                <circle cx="420" cy="205" r="14" />
-                <circle cx="407" cy="245" r="14" />
-                <circle cx="365" cy="244" r="14" />
-                <circle cx="353" cy="204" r="14" />
-              </g>
-              <path d="M439 242c32 47-11 54-20 42" stroke="#63877B" stroke-width="6" />
-            </g>
-            <g transform="rotate(-15 162 244)" filter="url(#shadow)">
-              <rect x="104" y="218" width="108" height="76" rx="7" fill="#23484C" stroke="#73978B" />
-              <path d="M104 239h108" stroke="#73978B" />
-              <path d="m105 210 101-20 5 26-106 20-1-26Z" fill="#E6D7B4" />
-              <path d="m113 208 18-3-11 29-14 3m43-35 19-4-11 30-20 4m49-36 18-3-10 29-18 3" fill="#274346" />
-              <path d="M120 251h51m-51 10h74m-74 10h39" stroke="#A7B9AA" stroke-width="3" stroke-linecap="round" />
-            </g>
-            <path d="M205 295h145v60c0 25-145 25-145 0v-60Z" fill="url(#podium)" stroke="#446157" />
-            <ellipse cx="277.5" cy="295" rx="72.5" ry="21" fill="#345A52" stroke="#648071" />
-            <ellipse cx="277.5" cy="295" rx="60" ry="15" fill="#2B4844" />
-            <g filter="url(#shadow)">
-              <path d="M226 107h-36v34c0 31 19 48 49 48m86-82h35v34c0 31-19 48-49 48" stroke="#BA8032"
-                stroke-width="13" />
-              <path d="M226 104h-36v34c0 31 19 48 49 48m86-82h35v34c0 31-19 48-49 48" stroke="#F3CE78"
-                stroke-width="7" />
-              <path d="M265 211h25v40c0 13 12 17 26 23h-77c14-6 26-10 26-23v-40Z" fill="url(#stem)" />
-              <path d="M217 90h121l-9 75c-4 32-24 57-52 57s-48-25-52-57l-8-75Z" fill="url(#cup)" />
-              <path d="M231 104c0 38 4 64 21 86" stroke="#FFF6CA" stroke-opacity=".55" stroke-width="5"
-                stroke-linecap="round" />
-              <ellipse cx="277.5" cy="91" rx="61" ry="11" fill="#FFF0B6" />
-              <ellipse cx="277.5" cy="91" rx="50" ry="6" fill="#B88337" />
-              <path d="m277 125 8 17 19 3-14 13 3 19-16-9-17 9 4-19-14-13 19-3 8-17Z" fill="#AC742B" opacity=".7" />
-              <path d="m277 124 7 15 17 3-12 12 3 17-15-8-15 8 3-17-12-12 17-3 7-15Z" fill="#FFF0B6" />
-              <rect x="235" y="273" width="84" height="18" rx="4" fill="#C79242" />
-              <path d="M240 274h73" stroke="#FFE6A0" stroke-width="3" />
-              <rect x="247" y="290" width="60" height="8" rx="2" fill="#173237" />
-            </g>
-            <g transform="rotate(10 367 125)">
-              <rect x="353" y="102" width="57" height="38" rx="6" fill="#D8A961" />
-              <path d="M364 109v24m-5-12h10m16-6 3 3m6 5 3 3" stroke="#433B32" stroke-width="3"
-                stroke-linecap="round" />
-            </g>
-            <path d="m279 326 2 5 5 2-5 2-2 5-2-5-5-2 5-2 2-5Z" fill="#D5B574" />
-          </svg>
-          <div class="art-caption"><span></span><span data-i18n="artCaption">EVERY TEAM HAS ITS
-              STARS</span><span></span></div>
+        <a class="report-panel-button" href="https://apl.redchariotstechnologies.com/app-report/" target="_blank" rel="noopener noreferrer">View App Report <span aria-hidden="true">&#8599;</span></a>
+      </section>
+          </div>
         </div>
-        <div class="hero-scores" id="hero-scores-slide" aria-hidden="true">
-          <svg class="hero-scores-icon" viewBox="0 0 32 32" aria-hidden="true">
-            <use href="#i-trophy" />
-          </svg>
-          <strong data-i18n="scoresTitle">Score Board</strong>
-          <span data-i18n="scoresDescription">Big efforts. Proud moments. Every point counts.</span>
+        <div class="home-carousel-controls">
+          <button type="button" class="home-carousel-arrow" data-feature-direction="-1" aria-label="Previous slide">&#8592;</button>
+          <div class="home-carousel-tabs" role="group" aria-label="Choose featured page">
+            <button type="button" data-feature-slide="0" aria-controls="feature-wall-of-fame" aria-pressed="true">Wall of Fame</button>
+            <button type="button" data-feature-slide="1" aria-controls="feature-app-report" aria-pressed="false">App Report</button>
+          </div>
+          <button type="button" class="home-carousel-arrow" data-feature-direction="1" aria-label="Next slide">&#8594;</button>
         </div>
-        <div class="hero-carousel-controls" role="group" aria-label="Featured slides" hidden>
-          <button type="button" class="hero-dot" aria-label="Show league slide" aria-controls="hero-copy-slide"
-            aria-pressed="true" data-hero-slide="0"><span></span></button>
-          <button type="button" class="hero-dot" aria-label="Show trophy slide" aria-controls="hero-art-slide"
-            aria-pressed="false" data-hero-slide="1"><span></span></button>
-          <button type="button" class="hero-dot" aria-label="Show leaderboard slide" aria-controls="hero-scores-slide"
-            aria-pressed="false" data-hero-slide="2"><span></span></button>
-          <button type="button" class="hero-carousel-pause" aria-label="Pause slideshow" aria-pressed="false"><svg
-              viewBox="0 0 16 16" aria-hidden="true">
-              <path class="carousel-pause-icon" d="M5 3v10M11 3v10" />
-              <path class="carousel-play-icon" d="m5 3 7 5-7 5Z" />
-            </svg></button>
-        </div>
-        <svg class="hero-edge" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-          <path class="led-track" fill="none" />
-          <g class="led-bulbs"></g>
-        </svg>
-        <button type="button" class="lights-toggle" aria-label="Pause border lights" title="Pause border lights"><svg
-            viewBox="0 0 16 16" aria-hidden="true">
-            <path class="pause-symbol" d="M5 4v8M11 4v8" />
-            <path class="play-symbol" d="m5 3 7 5-7 5Z" />
-          </svg></button>
       </section>
       <section class="activities" id="activities" aria-labelledby="activities-title">
         <div class="section-heading">
@@ -633,13 +502,11 @@
         <a class="game-poster playable-poster poster-solvent-master" href="assets/solvent-master-game-scripts/solvent-master.html" aria-label="Open Solvent Master">
           <div class="poster-card-wrap">
             <img src="assets/solvent-master-game-assets/page-1/page-1-bg.webp" alt="Solvent Master" class="poster-card-image" loading="lazy">
-            <span class="poster-version-title">Solvent Master</span>
           </div>
         </a>
         <a class="game-poster poster-ab-express playable-poster" href="assets/ab-express-scripts/ab-express.html?v=27" aria-label="Play AB Express">
           <div class="poster-card-wrap">
             <img src="assets/ab-express-assets/page-1/page-1-bg.webp" alt="AB Express" class="poster-card-image" loading="lazy">
-            <span class="poster-version-title">AB Express</span>
           </div>
         </a>
       </section>
@@ -726,13 +593,11 @@
         <a class="game-poster playable-poster poster-solvent-master" href="assets/solvent-master-game-scripts/solvent-master.html" aria-label="Open Solvent Master">
           <div class="poster-card-wrap">
             <img src="assets/solvent-master-game-assets/page-1/page-1-bg.webp" alt="Solvent Master" class="poster-card-image" loading="lazy">
-            <span class="poster-version-title">Solvent Master</span>
           </div>
         </a>
         <a class="game-poster poster-ab-express playable-poster" href="assets/ab-express-scripts/ab-express.html?v=27" aria-label="Play AB Express">
           <div class="poster-card-wrap">
             <img src="assets/ab-express-assets/page-1/page-1-bg.webp" alt="AB Express" class="poster-card-image" loading="lazy">
-            <span class="poster-version-title">AB Express</span>
           </div>
         </a>
       </section>
