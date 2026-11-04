@@ -14,7 +14,6 @@ body{height:100dvh}
 #screen[aria-busy="true"] *,#game[data-transitioning="true"] #particles *{animation-play-state:paused!important}
 .check-mark.success-mark{left:40%;top:27%;width:20%;height:12%}
 .check-mark{transition:left .4s ease,top .4s ease,width .4s ease}
-.learn-instruction{position:absolute;left:0;top:11.5%;width:100%;height:3.3%;display:flex;align-items:center;justify-content:center;background:linear-gradient(90deg,#3b86b0,#4189b1);font:bold 15px Georgia;letter-spacing:1px;color:#fff}
 .bottom-next,.bottom-back,.nav-home.image-button{min-height:50px}
 #game.edge-to-edge{background-size:cover;background-position:center}
 .step{background:none;padding:5px 30px 6px 23px;isolation:isolate;gap:7px}

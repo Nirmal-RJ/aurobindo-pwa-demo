@@ -201,3 +201,8 @@
 
 - Media URLs now include the scoped release version, preventing an older unversioned page-2 background from being reused by browser, game or parent-site caches. Scoped service worker uses network-first HTML navigation with cached offline fallback. Gallery launch includes the release query to bypass older cached HTML immediately. Artwork unchanged.
 - Bumped config, HTML URLs and scoped cache to v26. Added a browser regression that seeds stale unversioned image data, verifies the current background SHA-256, poisons cached HTML to test online refresh, and checks offline demo replay. Edge passed including offline replay; WebKit passed image/shell checks but its desktop runner returned an internal error on offline navigation, which remains unverified there. Syntax and five core tests passed. Physical devices remain unverified.
+
+## 4 November 2026 - Remove duplicate learning headings
+
+- Removed injected white during/after-weighing headings from the second and third learning pages and their unused CSS. Supplied artwork already contains both instructions. Images and navigation retained.
+- Bumped scoped runtime/cache and gallery launch to v27. Syntax/five core tests passed; Edge navigation and 390x844 screenshots visually verified both pages without duplicate overlays. Physical-device review remains pending.

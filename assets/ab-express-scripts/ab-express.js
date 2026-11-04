@@ -193,11 +193,6 @@
   function learn(index) {
     learnIndex = index;
     background('learn', `page-18/page-18-${['a','b','c'][index]}.webp`);
-    if (index > 0) {
-      const instruction = document.createElement('div'); instruction.className = 'learn-instruction';
-      instruction.textContent = `Follow these steps ${index === 1 ? 'during' : 'after'} weighing`;
-      screen.append(instruction);
-    }
     if (index) back(() => learn(index - 1));
     if (index < 2) next(() => learn(index + 1));
     homeControl();
