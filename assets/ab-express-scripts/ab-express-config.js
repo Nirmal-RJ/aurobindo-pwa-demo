@@ -1,7 +1,7 @@
 (function (root) {
   'use strict';
   const config = {
-    version: '25', storageKey: 'ab-express-progress-v1',
+    version: '26', storageKey: 'ab-express-progress-v1',
     audio: { menu: 'audio/menu-bgm.aac', game: 'audio/gameplay-bgm.aac', wrong: 'audio/wrong-answer.aac', trainEntry: 'audio/train-entry.aac', correct: 'audio/correct-compartment.aac', whoosh: 'audio/rearrange.wav', trainEntryVolume: .95, correctVolume: .7, whooshVolume: .16, explosion: 'audio/explosion.mp3', explosionVolume: .65, menuVolume: .28, gameVolume: .28, wrongVolume: .55, buttonVolume: .5, tick: 'audio/timer-tick.wav', tickVolume: .32, crossfade: .85 },
     challengeRoundSeconds: 60,
     timing: { intro: 1300, trainEntry: 2000, compartment: 950, feedback: 1300, answerReveal: 650, answerRead: 1600, streak: 1400, reward: 1600 },
@@ -26,7 +26,7 @@
       "Throw other waste and sample residue in the bin."
 ],
     stepIcons: [1,2,3,4,5,6,8,9,10,11,12,13,16,17,19,21,22],
-    asset(path) { return '../ab-express-assets/' + path.split('/').map(encodeURIComponent).join('/'); }
+    asset(path) { return '../ab-express-assets/' + path.split('/').map(encodeURIComponent).join('/') + '?v=' + config.version; }
   };
   root.ABConfig = config;
   if (typeof module !== 'undefined') module.exports = config;
