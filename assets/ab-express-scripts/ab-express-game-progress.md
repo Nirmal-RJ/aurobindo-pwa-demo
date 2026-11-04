@@ -206,3 +206,8 @@
 
 - Removed injected white during/after-weighing headings from the second and third learning pages and their unused CSS. Supplied artwork already contains both instructions. Images and navigation retained.
 - Bumped scoped runtime/cache and gallery launch to v27. Syntax/five core tests passed; Edge navigation and 390x844 screenshots visually verified both pages without duplicate overlays. Physical-device review remains pending.
+
+## 4 November 2026 - Main games gallery card
+
+- Added AB Express as the last card on the main games page, matching the existing RC gallery banner and v27 game link. No runtime or artwork change. User explicitly requested local changes only until they say to push.
+- Verified in Edge at 390x844: main-gallery card visible and last, banner image loaded, link matches RC and successfully opens the game. No push performed.
