@@ -283,3 +283,58 @@
 - Increased visible particle sizes, added star shapes and long ribbons. Each correct compartment now bursts 90 pieces; the finale has 240 across four waves with a simultaneous full-width overhead shower, warm pulsing light and subtle backdrop dimming. Title and footer remain above effects.
 - Finale particles last roughly four seconds per wave; configurable celebrationRead (3600ms) gives the result a deliberate celebration hold before Next. Earlier compartment particles are cleared at the finale to bound overlap.
 - Edge/WebKit browser flow checks passed, including particle counts and continuation. Edge screenshot visually reviewed; full phone performance review remains pending. Source checks and core tests passed. Cache v36; not pushed.
+
+## 5 November 2026 - Three-round challenge, visible Start and responsive pages
+
+- Added challengeRounds=3 and practiceRounds=5; challenge generation, streak progress and star award use the target. Migrates valid five-round saves without losing earned progress/stars. Core tests cover three successes, one-time migration and five-round practice.
+- Intro instructions and three tunnel nodes now match the logic. Failure panel keeps the supplied frame and replaces baked five-tunnel content with three tunnels and 0/3. Clipped extraneous tunnel-image shadows; removed full-rectangle star brightness modulation while preserving the star halo/twinkles to avoid the dark-looking horizontal panel.
+- Fixed the invisible challenge Start artwork: its face was sized at zero while hidden when the timer triggered footer fitting. Refit immediately after revealing it. Regression checks actual image dimensions without resizing first.
+- All portrait viewport sizes now fill available safe-area width/height, including tablets previously limited by the 600px threshold. Wide screens keep undistorted portrait composition and use a full-viewport scene backdrop.
+- Scoped cache/shell/gallery v37. Syntax and six core tests passed. Three-round success/reward and failed three-tunnel panel passed in Edge and WebKit. Edge all-page audit passed 161 checks across seven sizes with no text overflow/control overlaps. Physical-phone review remains pending; local only, not pushed.
+
+- WebKit all-page audit also passed 161 viewport checks after updating the practice test helper to wait for the entry gate before keyboard input. Both browser-engine audits completed without layout faults.
+
+## 5 November 2026 - Identical sequences on failure investigation
+
+- Tester screenshot corresponds to IDs 2,5,6,7,8,11,14,15; exact evaluation returns correct=true and checks all eight. Verified the hosted runtime still lacks the pending visible-Start refit. A correct unsubmitted order can time out, after which the old comparison screen showed identical columns without retaining the reason. Screenshot alone cannot prove the tester's timer state.
+- Preserve explicit result reason and order correctness on timeout. Comparison now says Time expired and, when appropriate, Your sequence was correct, but not submitted in time. Incorrect-order comparisons retain existing presentation. No change to approved timer rules or scoring.
+- Added exact screenshot regression. Seven core tests and the browser timer regression passed, including correct-but-timed-out comparison, pause, retry and successful submission before expiry. Screenshot reviewed. Cache v38; not pushed.
+
+## 5 November 2026 - Blend challenge timer copy into artwork
+
+- Replaced the mismatched yellow timer rectangle with a smaller softly blended cream gradient sampled to match the supplied panel. Kept the clock/divider clear and centred the unchanged 90-second text in dark blue. Cache/shell/gallery v39.
+- Edge challenge animation/bounds checks passed across phone and tablet sizes; screenshot visually reviewed. Physical-device review remains pending. Not pushed.
+
+## 5 November 2026 - Correct-order-only timeout review
+
+- Timeout review now shows only the eight correct steps in one larger centred column, headed Correct Sequence. Removed the unsubmitted player order and mismatch markers from this path. Submitted incorrect answers retain the side-by-side comparison. Copy reads Time expired / Review the correct order below.
+- Refit footer artwork after scene reveal to prevent zero-sized button faces during transitions.
+- Seven core tests and browser timer regression passed, including exact correct-list contents, no player comparison cells, no scrolling/text overflow at 320x568, 390x844 and 768x1024, timeout/retry and successful submission. Screenshot reviewed. Physical-device review remains pending. Cache v40; not pushed.
+
+## 5 November 2026 - iPhone bottom artwork duplication
+
+- Supplied iPhone screenshots show scene artwork and baked demo buttons repeated below the game. Removed scene imagery from the body/safe-area gutters; artwork now renders only inside the clipped game. Safe-area gutters use the matching plain navy color. Disabled background tiling for screen/outgoing/demo footer and page overscroll. This supersedes the earlier wide-screen scene backdrop.
+- Edge and WebKit checked all five demo pages at 402x874, 390x740 and 430x932 with simulated 62px top/34px bottom safe areas: scene fits available height exactly, footer artwork remains visible above the bottom inset, and the body has no duplicate background. Screenshots reviewed, including demo 5. Physical iPhone verification remains pending. Cache v41; not pushed.
+
+
+### 2026-11-05 ? Six supplied artwork replacements (v42)
+- Replaced page-2-bg, page-3-bg, page-4-bg and page-18-a/b/c with the exact supplied Downloads files; SHA-256 verified all six copies. No added text or gameplay changes.
+- Regenerated the 86-item preload manifest and advanced config, HTML dependencies, scoped service worker and gallery entry URLs to v42. New image URLs bypass previously cached artwork; the updated worker removes old AB Express caches.
+- Expanded cache regression coverage to check all six cached image hashes. Syntax and seven core checks passed; Edge and WebKit cache checks passed, including stale shell refresh (Edge also verified offline replay).
+- Existing devices receive this update after deployment and an online load; physical-device verification remains pending. Not pushed.
+
+
+### 2026-11-05 - Supplied Time's Up artwork (v43)
+- Copied times-up.webp unchanged into page-12. Timeout failure uses this image as its heading instead of Train Crashed plus the text badge; ordinary wrong answers retain Train Crashed. Timeout review also uses the supplied image instead of Time expired. Preserved image proportions and existing review guidance/flow.
+- Regenerated the 87-asset manifest; config, shell, scoped worker and gallery URLs advanced to v43.
+- Syntax checks, seven core tests and browser timer regression passed (expiry, retry, responsive review, pause, timely success). Reviewed the timeout review screenshot. Physical-device review pending; not pushed.
+
+
+### 2026-11-05 - Demo page 4 replacement (v44)
+- Copied supplied demo-page-4.png unchanged into page-5 and switched only demo slide 4 to it. Removed its old footer masking strip because the new image has no baked buttons; live Back/Home/Next controls remain. Exact source/destination hashes match.
+- Regenerated preload manifest and advanced scoped cache, shell and gallery URLs to v44. Syntax checks passed; Edge and WebKit verified all five demo pages at three simulated iPhone safe-area sizes. Physical-device verification pending. Not pushed.
+
+
+### 2026-11-05 - Timeout banner blend and release (v45)
+- Matched the timeout heading mask to the surrounding cream/gold panel with a soft gradient and feathered edges. Kept supplied artwork and layout unchanged.
+- Syntax, seven core tests and browser timeout regression passed; screenshot reviewed. Cache advanced to v45. User authorized pushing all pending AB Express changes including v37-v44 fixes and supplied artwork.

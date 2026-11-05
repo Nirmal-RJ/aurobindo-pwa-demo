@@ -24,3 +24,11 @@ These standards carry forward the user's Rocketier, My Carz and Solvent Master e
 ## Shared step pool - 4 November 2026 (supersedes fixed buckets)
 
 The approved revised 17-step list in config.steps replaces the fixed bucket definitions for gameplay. Each round selects eight unique steps, exactly one from the first three and seven from the remaining fourteen. Correct order follows the master list; presentation is shuffled. Five distinct selections form a practice/challenge run; individual steps may repeat between rounds. Practice retries the same selection until success, then Next advances, returning Home after five. Challenge retains 90 seconds, five consecutive successes, failure reset with a different selection, and saved streaks. Existing saved bucket-based runs migrate to fresh selections while retaining completed streaks, stars and demo status. Learning artwork remains unchanged by this runtime update.
+
+## 5 November 2026 - Three-round challenge (supersedes five-round challenge)
+
+Challenge requires three consecutive successful rounds to earn one star. Intro and failure displays show three tunnels; failure shows 0/3. Each round remains 90 seconds, with unchanged shared-pool selection, first-error failure and retry rules. Practice remains five rounds. Existing saved challenge streaks of zero through two retain progress; older streaks of three or four convert to one star and clear the completed run, persisted on load.
+
+Start artwork must be measured after its delayed reveal, never while display:none. Portrait phones and tablets fill the available safe-area viewport on every page. Wide displays retain the portrait composition without distortion, with the scene filling the surrounding backdrop. The tunnel row has no dark rectangular overlay.
+
+Timeout review shows only the correct sequence; an unsubmitted arrangement is not displayed as Your Sequence. Side-by-side comparison is reserved for submitted incorrect answers.

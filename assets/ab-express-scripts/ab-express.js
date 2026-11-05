@@ -6,6 +6,7 @@
   let screen = document.getElementById('screen');
   let progress;
   try { progress = Core.clean(JSON.parse(localStorage.getItem(C.storageKey))); } catch { progress = Core.clean(null); }
+  try { localStorage.setItem(C.storageKey, JSON.stringify(progress)); } catch {}
   let page = '', mode = 'practice', bucket = 0, practiceRun = null, roundSteps = [], order = [], submitted = [], demoIndex = 0, learnIndex = 0;
   let generation = 0, elapsed = 0, lastFrame = performance.now(), paused = false, selected = -1, drag = null;
   let roundTick = null, lastUrgentTick = -1, arrangementReady = false;
@@ -17,7 +18,7 @@
     const padding = getComputedStyle(document.body);
     const width = Math.min(document.body.clientWidth, window.visualViewport?.width || innerWidth) - parseFloat(padding.paddingLeft) - parseFloat(padding.paddingRight);
     const height = Math.min(document.body.clientHeight, window.visualViewport?.height || innerHeight) - parseFloat(padding.paddingTop) - parseFloat(padding.paddingBottom);
-    const edgeToEdge = width <= 600 && height > width;
+    const edgeToEdge = height > width;
     // Match Rocketier: every portrait phone scene uses the viewport height.
     const flexible = edgeToEdge;
     const scale = flexible ? width / 360 : Math.min(width / 360, height / 640);
@@ -114,7 +115,7 @@
     queueMicrotask(async () => {
       const bg = new Image(); bg.src = asset(path);
       await Promise.allSettled([bg.decode(), ...Array.from(incoming.querySelectorAll('img'), image => image.decode())]);
-      requestAnimationFrame(() => { if (token !== generation) return; incoming.style.visibility = ''; incoming.inert = false; incoming.removeAttribute('aria-busy'); delete game.dataset.transitioning; outgoing.remove(); });
+      requestAnimationFrame(() => { if (token !== generation) return; incoming.style.visibility = ''; fitFooter(); incoming.inert = false; incoming.removeAttribute('aria-busy'); delete game.dataset.transitioning; outgoing.remove(); });
     });
   }
   function img(path, cls, alt = '') { const e = new Image(); e.src = asset(path); e.alt = alt; e.draggable = false; e.className = cls; screen.append(e); return e; }
@@ -256,10 +257,10 @@
   }
   function demo(index) {
     demoIndex = index;
-    background('demo', `page-${index + 2}/page-${index + 2}-${index < 3 ? 'bg' : 'reference'}.webp`);
+    background('demo', index === 3 ? 'page-5/demo-page-4.png' : `page-${index + 2}/page-${index + 2}-${index < 3 ? 'bg' : 'reference'}.webp`);
     // Reference-only slides contain baked navigation. Replace that strip with
     // the supplied scene background so there is exactly one live set of buttons.
-    if (index >= 3) {
+    if (index === 4) {
       const footer = document.createElement('div'); footer.className = 'demo-footer';
       footer.style.backgroundImage = `url("${asset(index === 3 ? 'page-9/page-9-bg-with-text.webp' : 'page-10/page-10-bg.webp')}")`;
       screen.append(footer);
@@ -276,12 +277,12 @@
     homeControl();
   }
   function practiceIntro() {
-    background('practiceIntro', 'page-8/page-8-bg.webp'); mode = 'practice'; bucket = 0; practiceRun = Core.newRun();
+    background('practiceIntro', 'page-8/page-8-bg.webp'); mode = 'practice'; bucket = 0; practiceRun = Core.newRun(null, Math.random, C.practiceRounds);
     button('page-8/start-practising-button.webp', 'Start Practising', 'primary', arrange); homeControl();
   }
   function drawStreak(count, celebrate) {
     const row = document.createElement('div'); row.className = 'streaks';
-    for (let i = 0; i < 5; i++) { const node = document.createElement('div'); node.className = `streak-node ${i < count ? 'completed' : i === count ? 'current' : ''}${celebrate && i === count - 1 ? ' gained' : ''}`; const tunnel = new Image(); tunnel.src = asset('page-15/streak-tunnel.webp'); tunnel.alt = `Round ${i + 1}: ${i < count ? 'complete' : 'pending'}`; node.append(tunnel); const num = document.createElement('span'); num.textContent = String(i + 1); node.append(num); if (i < count) { const tick = new Image(); tick.src = asset('common-ui-buttons/correct.webp'); tick.alt = ''; tick.className = 'tick'; node.append(tick); } row.append(node); }
+    for (let i = 0; i < C.challengeRounds; i++) { const node = document.createElement('div'); node.className = `streak-node ${i < count ? 'completed' : i === count ? 'current' : ''}${celebrate && i === count - 1 ? ' gained' : ''}`; const tunnel = new Image(); tunnel.src = asset('page-15/streak-tunnel.webp'); tunnel.alt = `Round ${i + 1}: ${i < count ? 'complete' : 'pending'}`; node.append(tunnel); const num = document.createElement('span'); num.textContent = String(i + 1); node.append(num); if (i < count) { const tick = new Image(); tick.src = asset('common-ui-buttons/correct.webp'); tick.alt = ''; tick.className = 'tick'; node.append(tick); } row.append(node); }
     screen.append(row);
   }
   function challengeIntro(celebrate = false) {
@@ -296,6 +297,7 @@
     const halo = document.createElement('div'); halo.className = 'challenge-star-halo'; halo.setAttribute('aria-hidden','true'); screen.append(halo);
     const sparkles = document.createElement('div'); sparkles.className = 'challenge-sparkles'; sparkles.setAttribute('aria-hidden','true');
     [[35,49],[65,51],[38,59],[61,58]].forEach(([x,y],i)=>{const spark=document.createElement('i');spark.style.left=`${x}%`;spark.style.top=`${y}%`;spark.style.animationDelay=`${1+i*.45}s`;sparkles.append(spark);});screen.append(sparkles);
+    const instruction=document.createElement('div');instruction.className='challenge-instructions';instruction.innerHTML=`Get the train through <b>${C.challengeRounds}</b><br>tunnels in a row to win a star`;screen.append(instruction);
     drawStreak(progress.run?.index || 0, celebrate);
     for (const [index,node] of Array.from(screen.querySelectorAll('.streak-node')).entries()) {
       const slot = document.createElement('div'); slot.className = 'streak-slot'; slot.style.setProperty('--reveal-delay',`${.3+index*.09}s`); node.replaceWith(slot); slot.append(node);
@@ -339,7 +341,7 @@
     })) return;
     rows.forEach(row => { row.style.removeProperty('transform'); row.style.removeProperty('opacity'); });
     if (!await tween(C.timing.startReadHold)) return;
-    start.hidden = false; start.disabled = false; list.inert = false; arrangementReady = true;
+    start.hidden = false; fitFooter(); start.disabled = false; list.inert = false; arrangementReady = true;
     if (mode === 'challenge') roundTick = performance.now();
     start.animate([{opacity:0,transform:'translateY(10px)'},{opacity:1,transform:'translateY(0)'}], {duration:400,easing:'ease-out'});
   }
@@ -408,7 +410,8 @@
     if (drag && !expired) return;
     arrangementReady = false; roundTick = null;
     submitted = order.slice();
-    result = expired ? { correct: false, firstWrong: -1, checked: 0 } : Core.evaluate(roundSteps, submitted);
+    const evaluated = Core.evaluate(roundSteps, submitted);
+    result = expired ? { correct: false, firstWrong: -1, checked: 0, reason: 'timeout', orderCorrect: evaluated.correct } : { ...evaluated, reason: evaluated.correct ? 'correct' : 'order' };
     if (!expired && !await departArrangement()) return;
     background('checking', 'page-10/page-10-bg.webp');
     img('page-10/lets-check-your-sequence-pop-up.webp', 'art train-title');
@@ -442,27 +445,35 @@
       page = 'success'; screen.querySelector('.train-title')?.remove(); const answer = img('page-13/congratulations-pop-up.webp', 'art train-title'); victoryConfetti();
       screen.querySelector('.check-mark')?.classList.add('success-mark');
       if (mode === 'challenge') { finishedStreak = progress.run.index + 1; await save(Core.pass(progress)); }
-      await answer.decode().catch(() => {});
+      if (answer.decode) await answer.decode().catch(() => {});
       if (!await tween(Math.max(C.timing.celebrationRead, C.timing.feedback, C.timing.answerReveal + C.timing.answerRead))) return;
-      next(mode === 'practice' ? () => { if (bucket < 4) { bucket++; arrange(); } else home(); } : () => finishedStreak === 5 ? reward() : challengeIntro(true));
+      next(mode === 'practice' ? () => { if (bucket < C.practiceRounds - 1) { bucket++; arrange(); } else home(); } : () => finishedStreak === C.challengeRounds ? reward() : challengeIntro(true));
     } else {
       page = 'failure'; ABAudio.wrong(); screen.classList.add('crashed'); screen.querySelector('.train-title')?.remove();
       if (mode === 'challenge') await save({ ...progress, run: Core.newRun(roundSteps) });
       const impact = ABEffects.crash({ screen, train, failedIndex: result.firstWrong, tween, asset, settings: C.crash });
       if (!await tween(C.crash.titleDelay)) return;
-      img('page-12/train-crashed.webp', 'art train-title');
-      if (expired) { const note = document.createElement('div'); note.className = 'timeout-note'; note.setAttribute('role', 'status'); note.textContent = "Time's up! 0:00"; screen.append(note); }
+      img(expired ? 'page-12/times-up.webp' : 'page-12/train-crashed.webp', 'art train-title' + (expired ? ' timeout-note' : ''), expired ? "Time's up!" : '');
       if (!await tween(C.timing.feedback) || !await impact) return;
       // The supplied failure panel already contains its own wrong marker.
       screen.querySelector('.check-mark')?.remove();
-      const answer = img(mode === 'practice' ? 'page-12/wrong-pop-up.webp' : 'page-16/streak-lost-panel.webp', 'art feedback-panel');
+      const answer = mode === 'practice' ? img('page-12/wrong-pop-up.webp', 'art feedback-panel') : failurePanel();
       answer.style.visibility = 'hidden';
-      await answer.decode().catch(() => {});
+      if (answer.decode) await answer.decode().catch(() => {});
       answer.style.visibility = ''; answer.style.animation = `pop ${C.timing.answerReveal}ms both`;
       if (!await tween(C.timing.answerReveal + C.timing.answerRead)) return;
       if (mode === 'practice') next(compare);
       else button('page-16/check-right-order-button.webp', 'Check Right Order', 'primary', compare);
     }
+  }
+  function failurePanel() {
+    const panel=document.createElement('div');panel.className='feedback-panel dynamic-failure';
+    panel.style.backgroundImage=`url("${asset('page-16/streak-lost-panel.webp')}")`;
+    const content=document.createElement('div');content.className='failure-content';
+    const count=document.createElement('strong');count.textContent=`0/${C.challengeRounds}`;content.append(count);
+    const row=document.createElement('div');row.className='failed-tunnels';
+    for(let i=0;i<C.challengeRounds;i++){const slot=document.createElement('div');const tunnel=new Image();tunnel.src=asset('page-15/streak-tunnel.webp');tunnel.alt='Failed round';const cross=new Image();cross.src=asset('common-ui-buttons/wrong.webp');cross.alt='';cross.className='failed-cross';slot.append(tunnel,cross);row.append(slot);}
+    const message=document.createElement('div');message.textContent='Your streak resets to 0';const encouragement=document.createElement('div');encouragement.textContent='You can build it again!';content.append(row,message,encouragement);panel.append(content);screen.append(panel);return panel;
   }
   function fitComparisonCopy() {
     for (const text of screen.querySelectorAll('.compare-cell>span')) {
@@ -476,6 +487,21 @@
   window.addEventListener('resize', fitComparisonCopy);
   function compare() {
     background('compare', 'page-14/page-14-bg.webp');
+    if (result.reason === 'timeout') {
+      const explanation = document.createElement('div'); explanation.className = 'comparison-timeout-title'; explanation.setAttribute('role','status');
+      const title = new Image(); title.src = asset('page-12/times-up.webp'); title.alt = "Time's up!"; title.className = 'timeout-review-art';
+      const detail = document.createElement('span'); detail.textContent = 'Review the correct order below.';
+      explanation.append(title, detail); screen.append(explanation);
+      const panel=document.createElement('section');panel.className='timeout-order-panel';panel.setAttribute('aria-label','Correct sequence');
+      const heading=document.createElement('h2');heading.textContent='Correct Sequence';panel.append(heading);
+      const list=document.createElement('ol');list.className='timeout-correct-list';
+      roundSteps.forEach((id,index)=>{
+        const row=document.createElement('li');row.className='step';row.setAttribute('aria-label',`Step ${index+1}: ${C.steps[id-1]}`);
+        const frame=document.createElement('div');frame.className='compartment-frame';const art=new Image();art.src=asset('page-9/question panel.webp');art.alt='';frame.append(art);
+        const icon=new Image();icon.src=asset(`common-ui-buttons/${String(C.stepIcons[id-1]).padStart(2,'0')}.webp`);icon.alt='';const text=document.createElement('span');text.textContent=C.steps[id-1];row.append(frame,icon,text);list.append(row);
+      });panel.append(list);screen.append(panel);
+      button('common-ui-buttons/play-again-button.webp','Play Again','primary',()=>{bucket=0;arrange();});homeControl();return;
+    }
     const grid = document.createElement('div'); grid.className = 'comparison';
     grid.setAttribute('role', 'region'); grid.setAttribute('aria-label', 'Your sequence and correct sequence');
     for (let i = 0; i < 8; i++) {

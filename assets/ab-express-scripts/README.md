@@ -25,3 +25,5 @@ Demo slides 4 and 5 temporarily use the supplied references, as approved. Each c
 Additional verification: `npm run test:ab-express:audit` runs the seven-size layout matrix; `test:ab-express:resilience` covers touch/offline/retry, and `test:ab-express:timer` covers the countdown. Set `AB_AUDIT_VIEWPORTS=1` for result-screen viewport checks in the full flow; `AB_REDUCED_MOTION=1` verifies preserved effects under that preference. Audit evidence is recorded in the progress document.
 
 Crash/comparison verification: `node tests/ab-express-impact.browser.cjs` (supports `AB_PLAYWRIGHT`, `AB_WEBKIT`, `AB_URL`; default test server port 4174).
+
+Current challenge target: three consecutive rounds per star, 90 seconds each. Practice remains five rounds.

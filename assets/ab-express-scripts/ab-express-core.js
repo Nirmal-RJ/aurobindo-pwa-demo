@@ -22,9 +22,9 @@
     }
     return steps;
   }
-  function newRun(exclude = null, random = Math.random) {
+  function newRun(exclude = null, random = Math.random, count = C.challengeRounds) {
     const order = [];
-    for (let i=0;i<5;i++) order.push(drawRound([...order, ...(validRound(exclude) ? [exclude] : [])], random));
+    for (let i=0;i<count;i++) order.push(drawRound([...order, ...(validRound(exclude) ? [exclude] : [])], random));
     return { order, index: 0 };
   }
   function evaluate(correct, answer) {
@@ -35,9 +35,14 @@
   function clean(value) {
     const p = { demoComplete: value?.demoComplete === true, stars: Number.isSafeInteger(value?.stars) && value.stars >= 0 ? value.stars : 0, run: null };
     const r = value?.run;
-    if (r && Array.isArray(r.order) && r.order.length === 5 && Number.isInteger(r.index) && r.index >= 0 && r.index < 5) {
-      if (r.order.every(validRound) && new Set(r.order.map(key)).size === 5) p.run = {order:r.order.map(steps => steps.slice()),index:r.index};
-      else if (r.order.every(v => Number.isInteger(v) && v >= 0 && v < 5) && new Set(r.order).size === 5) p.run = {...newRun(),index:r.index};
+    if (r && Array.isArray(r.order) && [C.challengeRounds,5].includes(r.order.length) && Number.isInteger(r.index) && r.index >= 0 && r.index < r.order.length) {
+      const valid = r.order.every(validRound) && new Set(r.order.map(key)).size === r.order.length;
+      const legacy = r.order.length === 5 && r.order.every(v => Number.isInteger(v) && v >= 0 && v < 5) && new Set(r.order).size === 5;
+      if (valid || legacy) {
+        // Preserve earned progress when migrating a five-round challenge.
+        if (r.index >= C.challengeRounds) p.stars++;
+        else p.run = {order:valid ? r.order.slice(0,C.challengeRounds).map(steps=>steps.slice()) : newRun().order,index:r.index};
+      }
     }
     return p;
   }
@@ -45,7 +50,7 @@
     const next = clean(progress);
     if (!next.run) throw new Error('No active challenge');
     next.run.index++;
-    if (next.run.index === 5) { next.stars++; next.run = null; }
+    if (next.run.index === C.challengeRounds) { next.stars++; next.run = null; }
     return next;
   }
   root.ABCore = { shuffle, drawRound, validRound, newRun, evaluate, clean, pass };

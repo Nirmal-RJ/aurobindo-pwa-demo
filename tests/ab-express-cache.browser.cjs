@@ -2,11 +2,12 @@ const {chromium,webkit}=require(process.env.AB_PLAYWRIGHT||'playwright');
 const assert=require('node:assert/strict');
 const crypto=require('node:crypto');
 const fs=require('node:fs');
+const replacedAssets=['page-2/page-2-bg.webp','page-3/page-3-bg.webp','page-4/page-4-bg.webp','page-18/page-18-a.webp','page-18/page-18-b.webp','page-18/page-18-c.webp'];
 (async()=>{
  const browser=process.env.AB_WEBKIT?await webkit.launch({headless:true,executablePath:process.env.AB_WEBKIT}):await chromium.launch({channel:'msedge',headless:true});
  try{
   const context=await browser.newContext({viewport:{width:390,height:844}}), page=await context.newPage();
-  const url=process.env.AB_URL||'http://localhost:4174/assets/ab-express-scripts/ab-express.html?v=26';
+  const url=process.env.AB_URL||'http://localhost:4174/assets/ab-express-scripts/ab-express.html?v=42';
   await page.goto(new URL('/favicon.ico',url).href);
   await page.evaluate(async url=>{
    const old=await caches.open('ab-express-v25');
@@ -14,11 +15,13 @@ const fs=require('node:fs');
   },url);
   await page.goto(url);await page.getByRole('button',{name:'Next',exact:true}).waitFor();
   await page.evaluate(()=>navigator.serviceWorker.ready);await page.waitForFunction(()=>navigator.serviceWorker.controller);
-  const expected=crypto.createHash('sha256').update(fs.readFileSync('assets/ab-express-assets/page-2/page-2-bg.webp')).digest('hex');
-  const actual=await page.evaluate(async()=>{
-   const cache=await caches.open('ab-express-v'+ABConfig.version),response=await cache.match(ABConfig.asset('page-2/page-2-bg.webp'));
-   const hash=await crypto.subtle.digest('SHA-256',await response.arrayBuffer());return [...new Uint8Array(hash)].map(v=>v.toString(16).padStart(2,'0')).join('');
-  });assert.equal(actual,expected,'Versioned cache must contain the current image bytes');
+  for(const asset of replacedAssets){
+   const expected=crypto.createHash('sha256').update(fs.readFileSync('assets/ab-express-assets/'+asset)).digest('hex');
+   const actual=await page.evaluate(async asset=>{
+    const cache=await caches.open('ab-express-v'+ABConfig.version),response=await cache.match(ABConfig.asset(asset));
+    const hash=await crypto.subtle.digest('SHA-256',await response.arrayBuffer());return [...new Uint8Array(hash)].map(v=>v.toString(16).padStart(2,'0')).join('');
+   },asset);assert.equal(actual,expected,'Versioned cache must contain current bytes: '+asset);
+  }
   await page.getByRole('button',{name:'Next',exact:true}).click();await page.locator('#outgoing').waitFor({state:'detached'});
   assert.match(await page.locator('#screen').getAttribute('style'),/blob:/);
   await page.evaluate(async()=>{

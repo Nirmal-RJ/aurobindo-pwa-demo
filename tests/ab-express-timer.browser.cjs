@@ -28,8 +28,15 @@ const assert = require('node:assert/strict');
     await page.evaluate(()=>{delete document.hidden;document.dispatchEvent(new Event('visibilitychange'));});
     // Simulate a stalled foreground frame: do not cap timer accounting to animation dt.
     await page.clock.fastForward(91000);
-    await page.getByText("Time's up! 0:00",{exact:true}).waitFor();
+    await page.getByAltText("Time's up!",{exact:true}).waitFor();
     await page.clock.runFor(1500);await click('Check Right Order');
+    await page.getByText('Review the correct order below.',{exact:true}).waitFor();
+    assert.equal(await page.locator('.compare-cell').count(),0);
+    assert.equal(await page.locator('.timeout-correct-list .step').count(),8);
+    const labels=await page.locator('.timeout-correct-list .step>span').allTextContents();
+    assert.deepEqual(labels,await page.evaluate(ids=>ids.map(id=>ABConfig.steps[id-1]),failedSelection));
+    for(const [width,height] of [[320,568],[390,844],[768,1024]]){await page.setViewportSize({width,height});await page.clock.runFor(100);assert(await page.locator('.timeout-correct-list').evaluate(e=>e.scrollHeight<=e.clientHeight+1));assert(await page.locator('.timeout-correct-list .step>span').evaluateAll(es=>es.every(e=>e.scrollWidth<=e.clientWidth+1&&e.getBoundingClientRect().height<e.parentElement.getBoundingClientRect().height*.8)));}
+    await page.setViewportSize({width:390,height:844});await page.clock.runFor(100);await page.screenshot({path:'artifacts/ab-timeout-correct.png'});
     assert.equal((await saved()).run.index,0);assert.notDeepEqual((await saved()).run.order[0],failedSelection);assert.equal((await saved()).stars,2);
     await click('Play Again');await page.locator('#screen[data-page="arrange"]').waitFor({state:'visible'});
     assert.match(await page.locator('.timer').textContent(),/Time 1:30|Time 1:29/);

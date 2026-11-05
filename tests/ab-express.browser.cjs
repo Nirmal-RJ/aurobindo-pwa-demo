@@ -58,12 +58,12 @@ const url = process.env.AB_URL || 'http://localhost:4173/assets/ab-express-scrip
     await click('Check Right Order');await shot('comparison');await click('Play Again');
     // Speed only the QA run after visually checking the real train timing above.
     await page.evaluate(()=>{ABConfig.timing.intro=1;ABConfig.timing.compartment=1;ABConfig.timing.feedback=1;});
-    for(let round=0;round<5;round++) {await solve();await click('Start the Train');await page.getByRole('button',{name:'Next',exact:true}).waitFor();await click('Next');if(round<4)await click('Play Challenge');}
+    for(let round=0;round<3;round++) {await solve();await click('Start the Train');await page.getByRole('button',{name:'Next',exact:true}).waitFor();await click('Next');if(round<2)await click('Play Challenge');}
     assert.equal((await saved()).stars,1);assert.equal((await saved()).run,null);await shot('reward');
     const starTransform=await page.locator('.reward-star').evaluate(e=>getComputedStyle(e).transform);await page.waitForTimeout(200);assert.notEqual(await page.locator('.reward-star').evaluate(e=>getComputedStyle(e).transform),starTransform);
     assert.equal(await page.locator('.rays').evaluate(e=>getComputedStyle(e).animationDuration),'15s');
     await click('Home');await click('Learn the Sequence');await shot('learn');await click('Next');await click('Next');await click('Home');
     for(const size of [{width:320,height:568},{width:768,height:1024},{width:1440,height:900}]) {await page.setViewportSize(size);await page.waitForFunction(({width,height})=>{const b=document.querySelector('#game').getBoundingClientRect();return b.x>=-1&&b.y>=-1&&b.right<=width+1&&b.bottom<=height+1;},size);await shot(`home-${size.width}`);}
-    assert.deepEqual(errors,[]);console.log('AB Express browser flow passed: onboarding, input, train, retry, checkpoint, five-round reward, responsive layout.');
+    assert.deepEqual(errors,[]);console.log('AB Express browser flow passed: onboarding, input, train, retry, checkpoint, three-round reward, responsive layout.');
   } catch(error) {await page.screenshot({path:'artifacts/ab-express/test-failure.png'});console.error(await page.evaluate(()=>({screen:document.querySelector('#screen').dataset.page,progress:localStorage.getItem(ABConfig.storageKey)})));throw error;} finally { await browser.close(); }
 })().catch(e=>{console.error(e);process.exit(1);});

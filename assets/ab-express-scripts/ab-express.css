@@ -2,12 +2,12 @@
 @keyframes enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}@keyframes pop{0%{opacity:0;transform:scale(.6)}65%{opacity:1;transform:scale(1.1)}100%{transform:scale(1)}}@keyframes star{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-9px) rotate(5deg)}}@keyframes spin{to{transform:rotate(360deg)}}@keyframes glow{50%{filter:drop-shadow(0 0 9px #fff157)}}@keyframes shake{20%,60%{translate:-5px 0;rotate:-3deg}40%,80%{translate:5px 0;rotate:3deg}}@keyframes smoke{from{transform:scale(.3);opacity:1}to{transform:translateY(-100px) scale(2);opacity:0}}@keyframes fall{0%{opacity:0;transform:translateY(-20px) rotate(0)}10%{opacity:1}100%{transform:translateY(300px) rotate(540deg);opacity:0}}
 .landing-next{left:25%;top:84%;width:50%;height:12%}.train-window{position:absolute;inset:0;clip-path:inset(25% 0 0);-webkit-clip-path:inset(25% 0 0)}
 #outgoing{position:absolute;width:360px;height:640px;transform:scale(var(--scale,1));transform-origin:top left;background-size:100% 100%;overflow:hidden}.nav-home{top:auto;bottom:4px;left:5px;right:auto}[data-page="learn"] .nav-home,[data-page="demo"] .nav-home{left:42%}.step{padding-left:29px;padding-right:39px}.step span{font-size:10.5px}.compare-cell:nth-child(even){color:#23491c}
-.timer{top:10.8%;left:12%;font-size:10px;padding:1px 5px}.timer-copy{left:37%;top:65.5%;width:51%;height:11%;border:0;border-radius:0;background:#fff0cb;font-size:16px}.timer-copy small{font-size:13px}
+.timer{top:10.8%;left:12%;font-size:10px;padding:1px 5px}.timer-copy{left:43%;top:66.8%;width:44%;height:8.3%;border:0;border-radius:10px;background:linear-gradient(100deg,#fcf8e5,#faf5df 65%,#f9efd8);box-shadow:0 0 8px 5px #faf5df;color:#10374a;font-size:16px}.timer-copy small{font-size:13px}
 .reward-star{left:34%;top:24%;width:32%;height:20%}.rays{left:32%;top:24%;width:36%;height:20.25%}.reward-copy{position:absolute;left:20%;top:17.4%;width:60%;height:3.5%;background:#fff0c6;text-align:center;font:bold 19px Georgia;color:#12374a;z-index:4}.streak-node.completed{animation:none}.streak-node.gained{animation:pop .8s both}.streak-node.gained .tick{animation:pop .65s .45s both}
 .reward-copy{top:16.3%;height:4.6%;display:flex;align-items:center;justify-content:center;background:#fff3d0}
 body{height:100dvh}
 
-.timeout-note{position:absolute;left:20%;top:60%;width:60%;padding:7px;text-align:center;background:#fff0cf;border:2px solid #a52b16;border-radius:8px;color:#821c10;font:bold 18px Arial;z-index:10}
+.timeout-note{object-fit:contain}
 .demo-footer{position:absolute;left:0;right:0;bottom:0;height:10%;background-size:360px 640px;background-position:center bottom;pointer-events:none}
 .nav-home.image-button{width:64px;height:40px;bottom:0;padding:0;border:0;background:none;border-radius:0}
 [data-page="learn"] .nav-home,[data-page="demo"] .nav-home{left:39%;width:22%;height:7%;bottom:2%}
@@ -29,7 +29,7 @@ body{height:100dvh}
 
 
 .demo-footer{background-size:360px var(--scene-height,640px)}
-body.portrait-viewport{background-image:var(--scene-background);background-size:cover;background-position:center}
+body.portrait-viewport{background-image:none;background-color:#122a37}
 /* Learning footer: one aligned row, with Home as the central primary control. */
 [data-page="learn"] .nav-home.image-button{left:32.5%;top:91%;bottom:auto;width:35%;height:7%;min-height:50px}
 [data-page="learn"] .bottom-back{left:1%;width:29%}
@@ -102,7 +102,7 @@ body.portrait-viewport{background-image:var(--scene-background);background-size:
 #screen.animated-challenge{background-image:none!important;background-color:#4388a5}
 .challenge-art-section{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;pointer-events:none;animation:challenge-reveal .65s var(--reveal-delay) both}
 .challenge-art-title{animation:challenge-reveal .65s both,challenge-title-glow 4s 1.2s ease-in-out infinite}
-.challenge-art-star{animation:challenge-reveal .65s .55s both,challenge-star-glow 3s 1.2s ease-in-out infinite}
+.challenge-art-star{animation:challenge-reveal .65s .55s both}
 .animated-challenge .streaks{z-index:2}
 .streak-slot{width:20%;min-width:0;animation:challenge-tunnel-enter .65s var(--reveal-delay) both}
 .streak-slot .streak-node{width:100%}
@@ -165,3 +165,34 @@ body.portrait-viewport{background-image:var(--scene-background);background-size:
 @keyframes victory-shower{0%{opacity:0;transform:translate(0,0) rotate(0)}5%,85%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--drop)) rotate(var(--turn))}}
 .victory-glow{position:absolute;inset:0;z-index:8;pointer-events:none;background:radial-gradient(ellipse at 50% 33%,#ffe28455,transparent 55%),linear-gradient(#12203822,#12203855);animation:victory-light 5.5s ease-out both}
 @keyframes victory-light{0%{opacity:0}12%{opacity:1}30%{opacity:.65}50%{opacity:1}80%{opacity:.7}100%{opacity:0}}
+
+/* Three-round challenge: generated copy and tunnels match the challenge target. */
+.challenge-instructions{position:absolute;left:13%;top:20.5%;width:74%;height:7.5%;z-index:3;background:#fff7df;display:flex;flex-direction:column;justify-content:center;text-align:center;font:700 17px/1.12 Arial;color:#07374b;display:block;padding-top:.4%;border-radius:7px}
+.challenge-instructions b{color:#9b1022}
+.animated-challenge .streaks{left:17%;width:66%;gap:12px;background:none;box-shadow:none;justify-content:center}
+.animated-challenge .streak-slot{width:30%;flex:0 1 30%}
+.streak-node>img,.failed-tunnels div>img:first-child{clip-path:polygon(2% 97%,2% 70%,9% 65%,11% 49%,17% 35%,25% 23%,36% 14%,39% 3%,60% 3%,64% 14%,75% 23%,83% 35%,89% 49%,91% 65%,98% 70%,98% 97%)}
+.dynamic-failure{position:absolute;background-size:100% 100%;pointer-events:none}
+.failure-content{position:absolute;inset:11% 5% 7%;background:radial-gradient(ellipse,#fff3d0,#f6dfaa);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#351408;font:bold 15px/1.08 Georgia;text-align:center}
+.failure-content>strong{font-size:17px}
+.failed-tunnels{display:flex;justify-content:center;gap:12px;width:72%;height:44%;margin:2px 0 3px}
+.failed-tunnels>div{position:relative;height:100%;width:27%}
+.failed-tunnels img{width:100%;height:100%;object-fit:contain}
+.failed-tunnels .failed-cross{position:absolute;left:28%;top:52%;width:44%;height:50%}
+body{background-image:none;background-color:#122a37;overscroll-behavior:none}
+
+.comparison-timeout-title{position:absolute;left:20%;top:5.3%;width:60%;height:8%;background:linear-gradient(180deg,#fee9c5,#feedd0 65%,#fff3d7);box-shadow:0 0 5px 4px #feedd0;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:2px;color:#103c51;font:bold 12px/1.12 Arial;padding:1px;z-index:5}.comparison-timeout-title strong{font-size:19px;color:#981f19}
+
+.timeout-order-panel{position:absolute;left:1%;top:16%;width:98%;height:73%;background:linear-gradient(#fff8e7,#ffefce);border:3px solid #bd801c;border-radius:18px;box-shadow:inset 0 0 0 2px #ffe19a;overflow:hidden}
+.timeout-order-panel h2{position:absolute;left:12%;top:1%;width:76%;height:6%;margin:0;display:grid;place-items:center;border:2px solid #e8b94b;border-radius:14px;background:linear-gradient(#b62017,#780700);color:#fff8df;font:bold 17px Arial}
+.timeout-correct-list{position:absolute;left:3%;top:8%;width:94%;height:91%;display:flex;flex-direction:column;gap:2px;list-style:none;margin:0;padding:0}
+.timeout-correct-list .step{flex:1;min-height:0;padding:0 30px 7px 29px;gap:7px;cursor:default;touch-action:auto}
+.timeout-correct-list .step>img{width:27px;height:27px;flex:0 0 27px}
+.timeout-correct-list .step>span{font:700 12px/1.1 Arial;color:#27180e}
+
+/* Safe-area gutters must never render a second copy of demo artwork/buttons. */
+html{overscroll-behavior:none;background:#122a37}
+#screen,#outgoing,.demo-footer{background-repeat:no-repeat}
+#game{overflow:hidden}
+
+.comparison-timeout-title .timeout-review-art{display:block;width:100%;height:72%;min-height:0;object-fit:contain}

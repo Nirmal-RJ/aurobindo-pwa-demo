@@ -149,3 +149,9 @@ The approved revised 17-step list in config.steps replaces the fixed bucket defi
 ## 4 November 2026 - Current timer and mobile presentation
 
 The challenge limit is now 90 seconds per round, superseding all earlier 60-second references. It starts after card entry and the two-second reading hold. Final-ten-second urgency and failure/retry rules are unchanged. Arrangement clouds use the three supplied Cloud WebP images copied into AB Express assets. Effects remain enabled on mobile and under reduced-motion settings, with interruption pause/resume. Audio unlock now confirms the running context, retries in touch-end/keyboard gestures, primes playback, and recovers after interruptions. Supported Safari versions request the playback audio session.
+
+## 5 November 2026 - Three-round challenge (supersedes five-round challenge)
+
+Challenge requires three consecutive successful rounds to earn one star. Intro and failure displays show three tunnels; failure shows 0/3. Each round remains 90 seconds, with unchanged shared-pool selection, first-error failure and retry rules. Practice remains five rounds. Existing saved challenge streaks of zero through two retain progress; older streaks of three or four convert to one star and clear the completed run, persisted on load.
+
+Start artwork must be measured after its delayed reveal, never while display:none. Portrait phones and tablets fill the available safe-area viewport on every page. Wide displays retain the portrait composition without distortion, with the scene filling the surrounding backdrop. The tunnel row has no dark rectangular overlay.

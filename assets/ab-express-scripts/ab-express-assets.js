@@ -220,6 +220,10 @@ window.ABAssets = [
     "bytes": 38294
   },
   {
+    "path": "page-12/times-up.webp",
+    "bytes": 91286
+  },
+  {
     "path": "page-12/train-crashed.webp",
     "bytes": 152548
   },
@@ -273,27 +277,31 @@ window.ABAssets = [
   },
   {
     "path": "page-18/page-18-a.webp",
-    "bytes": 108070
+    "bytes": 125188
   },
   {
     "path": "page-18/page-18-b.webp",
-    "bytes": 107882
+    "bytes": 124860
   },
   {
     "path": "page-18/page-18-c.webp",
-    "bytes": 107108
+    "bytes": 125114
   },
   {
     "path": "page-2/page-2-bg.webp",
-    "bytes": 189126
+    "bytes": 210282
   },
   {
     "path": "page-3/page-3-bg.webp",
-    "bytes": 214804
+    "bytes": 185220
   },
   {
     "path": "page-4/page-4-bg.webp",
-    "bytes": 240972
+    "bytes": 236546
+  },
+  {
+    "path": "page-5/demo-page-4.png",
+    "bytes": 1488932
   },
   {
     "path": "page-5/page-5-reference.webp",
