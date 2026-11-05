@@ -241,7 +241,7 @@ window.ABAssets = [
   },
   {
     "path": "page-15/page-15-bg.webp",
-    "bytes": 106064
+    "bytes": 75528
   },
   {
     "path": "page-15/play-button.webp",
@@ -265,7 +265,7 @@ window.ABAssets = [
   },
   {
     "path": "page-17/page-17-bg.webp",
-    "bytes": 119208
+    "bytes": 78554
   },
   {
     "path": "page-17/star.webp",

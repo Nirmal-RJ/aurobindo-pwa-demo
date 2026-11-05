@@ -167,8 +167,6 @@ body.portrait-viewport{background-image:none;background-color:#122a37}
 @keyframes victory-light{0%{opacity:0}12%{opacity:1}30%{opacity:.65}50%{opacity:1}80%{opacity:.7}100%{opacity:0}}
 
 /* Three-round challenge: generated copy and tunnels match the challenge target. */
-.challenge-instructions{position:absolute;left:13%;top:20.5%;width:74%;height:7.5%;z-index:3;background:#fff7df;display:flex;flex-direction:column;justify-content:center;text-align:center;font:700 17px/1.12 Arial;color:#07374b;display:block;padding-top:.4%;border-radius:7px}
-.challenge-instructions b{color:#9b1022}
 .animated-challenge .streaks{left:17%;width:66%;gap:12px;background:none;box-shadow:none;justify-content:center}
 .animated-challenge .streak-slot{width:30%;flex:0 1 30%}
 .streak-node>img,.failed-tunnels div>img:first-child{clip-path:polygon(2% 97%,2% 70%,9% 65%,11% 49%,17% 35%,25% 23%,36% 14%,39% 3%,60% 3%,64% 14%,75% 23%,83% 35%,89% 49%,91% 65%,98% 70%,98% 97%)}

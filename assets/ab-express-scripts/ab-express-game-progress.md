@@ -338,3 +338,19 @@
 ### 2026-11-05 - Timeout banner blend and release (v45)
 - Matched the timeout heading mask to the surrounding cream/gold panel with a soft gradient and feathered edges. Kept supplied artwork and layout unchanged.
 - Syntax, seven core tests and browser timeout regression passed; screenshot reviewed. Cache advanced to v45. User authorized pushing all pending AB Express changes including v37-v44 fixes and supplied artwork.
+
+
+### 2026-11-05 - Three-tunnel supplied backgrounds (v46)
+- Compared old/new artwork before replacing: both remain 1080x1920. Page 15 changes the instruction from five to three; page 17 replaces five tunnels with three centred tunnels and changes the completion sentence to three trains/three sequences.
+- Copied both supplied WebPs unchanged, verified hashes, and removed the obsolete challenge instruction text mask so the supplied lettering is visible. Preserved progress tunnel animation, 90-second timer, reward effects and existing three-win logic.
+- Regenerated preload manifest and advanced config, shell, scoped worker and gallery URLs to v46. Added both image hashes to the cache regression. Syntax/seven core tests passed; Edge and WebKit completed three-round award and failure flows; screenshots reviewed. WebKit verified exact new cached bytes and stale-shell refresh. Physical-device review pending. Not pushed.
+
+
+### 2026-11-05 - Follow-up completeness audit
+- Rechecked challenge configuration, third-win award/navigation, three-node intro and failure display, legacy-save migration, reward backgrounds and aligned v46 cache URLs. No additional five-round challenge behavior found; practice intentionally retains five rounds.
+- Edge all-page audit passed 161 page/viewport checks across seven sizes with no detected control overlaps, text overflow or runtime errors. Reviewed updated demo 4 screenshot. WebKit challenge animation/pause/resume and viewport checks passed, as did exact-image cache and stale-shell refresh checks. Physical phones remain unverified. Latest v46 backgrounds and RC Match It, Blast It banner remain unpushed.
+
+
+### 2026-11-05 - v46 release verification
+- User confirmed practice stays at five sets and authorized push. Challenge remains three consecutive wins per star.
+- Expanded cache regression to SHA-256 verify all 88 manifest assets against local files; Edge and WebKit passed. Edge also passed offline replay; both refreshed stale HTML. All game asset URLs use v46 and old scoped caches are removed on activation. Root shell v478/CSS v54 refresh the pending RC banner. Seven core tests and syntax checks passed.

@@ -297,7 +297,6 @@
     const halo = document.createElement('div'); halo.className = 'challenge-star-halo'; halo.setAttribute('aria-hidden','true'); screen.append(halo);
     const sparkles = document.createElement('div'); sparkles.className = 'challenge-sparkles'; sparkles.setAttribute('aria-hidden','true');
     [[35,49],[65,51],[38,59],[61,58]].forEach(([x,y],i)=>{const spark=document.createElement('i');spark.style.left=`${x}%`;spark.style.top=`${y}%`;spark.style.animationDelay=`${1+i*.45}s`;sparkles.append(spark);});screen.append(sparkles);
-    const instruction=document.createElement('div');instruction.className='challenge-instructions';instruction.innerHTML=`Get the train through <b>${C.challengeRounds}</b><br>tunnels in a row to win a star`;screen.append(instruction);
     drawStreak(progress.run?.index || 0, celebrate);
     for (const [index,node] of Array.from(screen.querySelectorAll('.streak-node')).entries()) {
       const slot = document.createElement('div'); slot.className = 'streak-slot'; slot.style.setProperty('--reveal-delay',`${.3+index*.09}s`); node.replaceWith(slot); slot.append(node);

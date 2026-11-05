@@ -1567,3 +1567,15 @@ button:focus-visible,a:focus-visible{outline-color:#a35cee}
 .activities-divider::before,.activities-divider::after{content:"";height:1px;flex:1;background:linear-gradient(90deg,transparent,#b78ce45c)}
 .activities-divider::after{transform:scaleX(-1)}
 .activities-divider span{width:5px;height:5px;border:1px solid #c7a6ea99;transform:rotate(45deg)}
+
+/* RC preview: Match It, Blast It. */
+.match-blast-banner{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;padding:24px 16px;text-align:center;border:2px solid #c6a2ff;background:radial-gradient(ellipse at 50% 38%,#8b3dd2 0%,#3d176a 48%,#17112f 100%);color:#fff4d3}
+.match-blast-banner::before{content:"";position:absolute;inset:12px;border:1px solid #e0b8ff40;border-radius:12px;pointer-events:none}
+.match-blast-banner h2{margin:0;font-family:Arial,sans-serif;font-weight:900;font-size:clamp(26px,3vw,38px);line-height:1.12;text-shadow:0 3px 0 #37105d,0 5px 14px #130822}
+.match-blast-banner h2 span,.match-blast-banner h2 strong{display:block}
+.match-blast-banner h2 strong{color:#ffd357;font-size:1.2em;margin-top:6px}
+.match-blast-tiles{display:flex;align-items:center;gap:8px}
+.match-blast-tiles span{display:grid;place-items:center;width:36px;height:44px;border:2px solid #b3fbff;border-radius:12px;background:linear-gradient(#56e5ee,#1177b8);box-shadow:0 5px 0 #102e70;font:900 32px Arial;color:#e0ffff;transform:rotate(-9deg)}
+.match-blast-tiles span:nth-child(2){transform:translateY(-8px) rotate(6deg)}
+.match-blast-tiles span:last-child{color:#fff2aa;border-color:#ffe6a0;background:linear-gradient(#ffbd40,#eb5427);transform:rotate(12deg);box-shadow:0 5px 0 #9a285e}
+.match-blast-status{padding:8px 12px;border:1px solid #d4b2fb70;border-radius:30px;background:#1b123d80;color:#e6d4fa;font:700 11px Arial;letter-spacing:1px;white-space:nowrap;text-transform:uppercase}
