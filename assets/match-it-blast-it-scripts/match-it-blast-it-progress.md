@@ -224,3 +224,18 @@ Copied all 31 supplied assets from Downloads into `assets/match-it-blast-it-asse
 - Local WebM source is assigned only after an API/player error or 15-second initialization timeout. Autoplay blocking shows Tap to play without fallback. Existing WebMs are retained and still excluded from preloading/service-worker media caching.
 - Leaving feedback destroys the iframe/player and releases any fallback video. Hidden pages pause playback. Large portrait feedback layout and menu music behavior preserved.
 - Cache/shell/entry advanced to v27. Controlled Edge/WebKit tests cover ID mapping, zero startup/healthy-player local requests, autoplay blocking, error fallback and cleanup; live hosted YouTube playback and physical devices still require verification. Not pushed.
+
+## 2026-11-06 - Replacement menu and gameplay music
+
+- Replaced game-bgm.mp3 and menu-bgm.mp3 with the newly supplied Match It Blast It - Game BGM.mp3 and Match It Blast It - Menu BGM.mp3. Source/destination SHA-256 hashes match.
+- Kept existing volume levels, looping, audio ducking and 1.1-second crossfade unchanged.
+- Advanced scoped shell/config/audio URLs and RC entry to v28; root shell cache advanced to v480 so the gallery refreshes too. Existing scoped caches are removed by service-worker activation; replacement audio uses new query URLs.
+- Syntax/diff checks passed. Not pushed; existing devices receive the update after deployment and online reload. Physical-device audibility remains unverified.
+- Edge audio checks passed: decoding, gesture unlock, crossfade ramps, fuse lifecycle, urgency and pause/resume. WebKit HTML-audio fallback/startup passed; this WebKit build lacks Web Audio, so physical playback remains unverified.
+
+## 2026-11-06 - Gallery-aware Close and public Games banner
+
+- Added Match It, Blast It as the last banner in the public Games gallery, matching the RC banner. Each link passes an explicit from=games or from=rc-games route.
+- Close now stops active game work/media and navigates to that gallery. Only the two known gallery routes are allowed; direct links default to Games. Internal Home/replay navigation remains unchanged. Supersedes earlier Close-to-game-Home behavior.
+- Scoped cache/shell/entry updated to v29; root shell cache to v481. Updated gallery return regression checks. Not pushed.
+- Edge and WebKit passed both gallery banner entry and Close return from gameplay at 390x844. Syntax/diff checks passed. Physical-device verification remains pending.

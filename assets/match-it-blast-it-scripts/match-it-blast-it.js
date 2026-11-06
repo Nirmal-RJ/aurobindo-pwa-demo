@@ -52,7 +52,7 @@
   navigating=!!old;
   if(old)tween(C.timing.transition,t=>{scene.style.opacity=String(ease(t));old.style.opacity=String(1-ease(t));},()=>{old.remove();scene.style.removeProperty('opacity');navigating=false;});
  }
- document.querySelector('#game-exit').onclick=()=>{if(phase==='loading')return;unlockAudio();scene.querySelectorAll('video').forEach(v=>v.pause());BlastAudio.stopEffects();introduction();};
+ document.querySelector('#game-exit').onclick=()=>{if(phase==='loading')return;phase='exiting';token++;jobs.length=0;tweens.length=0;cancelDrag();disposeVideo?.();disposeVideo=null;scene.querySelectorAll('video').forEach(v=>v.pause());BlastAudio.stopEffects();BlastAudio.setPaused(true);const gallery=new URLSearchParams(location.search).get('from')==='rc-games'?'rc-games':'games';location.assign(new URL(`../../index.html#/${gallery}`,location.href).href);};
  function revealControl(ms,create){later(navigating?Math.max(ms,C.timing.transition+30):ms,()=>{const el=create();el.classList.add('control-reveal');});}
  function fullscreen(){const fn=document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen;if(fn&&!document.fullscreenElement){try{Promise.resolve(fn.call(document.documentElement)).catch(()=>{});}catch{}}}
  function landing(){document.querySelector('#game-exit').disabled=false;phase='landing';view(`page-1/page-1${C.theme==='diwali'?'':'-non-diwali'}-bg.webp`);const glow=document.createElement('div');glow.className='landing-glow';scene.append(glow);revealControl(350,()=>button('next-button.webp','Next','landing-next',()=>{fullscreen();progress.demoComplete?introduction():demoPage(0);}));revealControl(550,()=>button('page-1/demo-button.webp','Demo','demo-button',()=>demoPage(0)));}

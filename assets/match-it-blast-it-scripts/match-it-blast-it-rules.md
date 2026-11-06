@@ -5,7 +5,7 @@
 This supersedes the earlier temporary replay-only flow and deferred streak implementation. Source: Match_It_Blast_It_Developer_Handoff-2.docx and the user's five confirmed answers.
 
 - Title Next opens three demo steps on first visit; completed demos are remembered. Later Next opens Home (page 2). Demo always remains available. Final demo Next opens page 2.
-- Home is the Diya Streak landing page. Start Challenge opens a fresh 60-second round. A persistent top-right Exit control returns to this game Home from every screen, per the latest user instruction.
+- Home is the Diya Streak landing page. Start Challenge opens a fresh 60-second round. A persistent top-right Close control returns to the originating Games or RC Games gallery from every screen. Direct entry defaults to Games.
 - Match all five meanings before Light becomes available. Dragging, tap placement/swapping and keyboard return remain supported. Parameter crackers and meanings shuffle independently on each new board. Consecutive boards must not repeat the same order. Matching and feedback remain tied to stable pair IDs, with checking following the displayed bottom-to-top order.
 - Active elapsed time starts once the board becomes interactive and stops on the Light press. Entry and checking animations do not count. Hidden/landscape pause remains.
 - Ignite from the bottom. Correct pairs burst bottom-to-top with the supplied Blast 2 MP3, flame, light smoke and falling artwork fragments. The first wrong pair emits black smoke and stops further bursts.
@@ -52,6 +52,6 @@ This supersedes the earlier temporary replay-only flow and deferred streak imple
 
 - Wrong-pair feedback waits for a focused failure sequence: previous blast settles, camera centers/zooms, fuse struggles, flame extinguishes with supplied wrong sound/failure GIF and black smoke, then camera returns. Unchecked pairs dim and do not burst.
 
-- Exit cancels active input, timers, animation callbacks, particles, fuse/effect audio and feedback video playback. Existing recorded results and saved progression are retained; abandoning an unsubmitted board does not record a new result. Music transitions back to menu BGM.
+- Exit cancels active input, timers, animation callbacks, particles, fuse/effect audio and feedback video playback. Existing recorded results and saved progression are retained; abandoning an unsubmitted board does not record a new result. Audio stops when leaving the game.
 
 - Feedback videos use the supplied YouTube videos first. Request the matching local WebM only if the YouTube API/player fails or initialization times out. Autoplay blocking alone is not a failure; show Tap to play. Never preload fallback videos.

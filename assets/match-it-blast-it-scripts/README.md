@@ -2,7 +2,7 @@
 
 Portrait game, isolated in this folder. Supplied artwork lives in `../match-it-blast-it-assets/`, with the original page folders and filenames preserved.
 
-Open `match-it-blast-it.html` or the last card in the RC games gallery.
+Open `match-it-blast-it.html` or the last card in either Games or RC Games.
 
 - `match-it-blast-it-config.js`: asset version, theme, pair mapping, timer and animation timings.
 - `match-it-blast-it.js`: preload, input, demo, timer, checking, feedback and effects.
@@ -14,7 +14,7 @@ Syntax: `node --check assets/match-it-blast-it-scripts/match-it-blast-it.js`
 
 Browser tests: `node tests/match-it-blast-it.browser.cjs`, with `AB_PLAYWRIGHT` pointing to Playwright and `AB_WEBKIT` to the installed WebKit executable. Test server uses port 4174.
 
-The approved developer handoff is now connected, including three demos, saved three-diya streaks, adaptive best-average targets, Gold Stars and wrong-pair feedback routing. The round remains 60 seconds; the initial qualifying target is strictly under 20 seconds. The three supplied demo slides are connected in numerical order. All five supplied feedback WebM videos are mapped by pair and loaded only on demand. Correct cracker bursts use the supplied Blast 2 MP3. Supplied menu/game music and looping sparkle audio are integrated, with the AB Express timer tick copied into this game. A persistent top-right Exit returns to game Home and cancels active playback/round activity.
+The approved developer handoff is now connected, including three demos, saved three-diya streaks, adaptive best-average targets, Gold Stars and wrong-pair feedback routing. The round remains 60 seconds; the initial qualifying target is strictly under 20 seconds. The three supplied demo slides are connected in numerical order. All five supplied feedback WebM videos are mapped by pair and loaded only on demand. Correct cracker bursts use the supplied Blast 2 MP3. Supplied menu/game music and looping sparkle audio are integrated, with the AB Express timer tick copied into this game. A persistent top-right Close returns to the originating Games or RC Games gallery and cancels active playback/round activity.
 
 `match-it-blast-it-logic.js` owns pure progression rules and storage validation. Run `node tests/match-it-blast-it.logic.cjs` for strict boundary, reset and award tests. Persistence uses the local browser key `match-it-blast-it-progress-v1` and is independent of asset cache versions. Future pair video paths can be supplied as `video` on the corresponding config pair, relative to the game's asset folder.
 
