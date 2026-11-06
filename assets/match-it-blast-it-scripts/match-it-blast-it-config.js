@@ -1,5 +1,5 @@
 window.BlastConfig = {
-  version: '29', roundSeconds: 60,
+  version: '30', roundSeconds: 60,
   theme: 'diwali',
   audio: {menu:'audio/menu-bgm.mp3',game:'audio/game-bgm.mp3',sparkle:'audio/sparkle.mp3',tick:'audio/timer-tick.wav',blast:'audio/blast-2.mp3',wrong:'audio/wrong-answer.mp3',wrongVolume:1.7,struggle:'audio/fuse-sputter.wav',struggleVolume:.7,blastVolume:1.6,blastDuck:.2,blastDuckSeconds:.45,menuVolume:.25,gameVolume:.25,sparkleVolume:.42,tickVolume:.32,crossfade:1.1},
   timing: { transition: 420, entrance: 1250, placement: 300, assemble: 850, sparklerApproach: 700, contact: 250, ignition: 900, burstGap: 600, correctHold: 1800, failSettle: 450, failZoom: 700, failStruggle: 1500, failSmoke: 1500, failReturn: 500, feedback: 1400, timeoutHold: 750, diyaLead: 500, diyaLight: 1300, diyaHold: 1400, resetHold: 1700, goldHold: 2200 },

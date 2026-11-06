@@ -239,3 +239,9 @@ Copied all 31 supplied assets from Downloads into `assets/match-it-blast-it-asse
 - Close now stops active game work/media and navigates to that gallery. Only the two known gallery routes are allowed; direct links default to Games. Internal Home/replay navigation remains unchanged. Supersedes earlier Close-to-game-Home behavior.
 - Scoped cache/shell/entry updated to v29; root shell cache to v481. Updated gallery return regression checks. Not pushed.
 - Edge and WebKit passed both gallery banner entry and Close return from gameplay at 390x844. Syntax/diff checks passed. Physical-device verification remains pending.
+
+## 2026-11-06 - Supplied Meaning panel replacement
+
+- Replaced page-3/meaning-panel.webp with the supplied purple/gold artwork; SHA-256 matches the source. Preserved placement and gameplay.
+- Scoped asset/shell/cache URLs updated to v30, both gallery entries updated, root shell cache bumped to v482. Old scoped caches are removed on activation.
+- Edge and WebKit loaded the new v30 panel at 320x568; reviewed screenshot. Diff checks passed. User authorized push; physical-device review remains pending.

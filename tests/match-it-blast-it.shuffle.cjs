@@ -7,7 +7,7 @@ const assert=require('node:assert/strict');
   await p.addInitScript(()=>{sessionStorage.setItem('rc-games-unlocked','1');localStorage.setItem('match-it-blast-it-progress-v1',JSON.stringify({demoComplete:true,streak:[]}));Element.prototype.requestFullscreen=()=>Promise.resolve();});
   await p.goto('http://localhost:4174/#/rc-games');
   await p.locator('.poster-match-blast').click();
-  await p.waitForURL('**/match-it-blast-it.html?v=29&from=rc-games');
+  await p.waitForURL('**/match-it-blast-it.html?v=30&from=rc-games');
   await p.getByRole('button',{name:'Next',exact:true}).click();
   await p.clock.install();await p.clock.runFor(800);
   await p.getByRole('button',{name:'Start Challenge',exact:true}).click();await p.clock.runFor(1400);
