@@ -21,3 +21,5 @@ The approved developer handoff is now connected, including three demos, saved th
 `match-it-blast-it-audio.js` preloads/decodes audio, unlocks on user gestures, crossfades menu/game loops, synchronizes the sparkle loop and pauses with the game. Audio paths, volumes and crossfade duration are in config. Run `node tests/match-it-blast-it.audio.cjs` with the same browser environment variables for audio lifecycle checks.
 
 Animation pacing is centralized in `BlastConfig.timing`. Scene crossfades and geometric motion use the same pause-aware clock as game sequencing. Run `node tests/match-it-blast-it.sequence.cjs` for DOM continuity, ignition ordering, pause/resume and frozen submission time checks.
+
+Feedback uses the configured YouTube ID through the lazily loaded IFrame API. Local WebM files are fallback-only: no local video element or source is created until YouTube fails or initialization times out. Autoplay restrictions show Tap to play instead of downloading a fallback. `match-it-blast-it-video.js` owns player cleanup.

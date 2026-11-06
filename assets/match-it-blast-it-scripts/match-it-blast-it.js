@@ -42,7 +42,9 @@
   const moves=items.map(({el,rect})=>{const id=(motionIds.get(el)||0)+1;motionIds.set(el,id);el.style.removeProperty('transform');const end=visualRect(el),base=getComputedStyle(el).transform;return {el,id,base:base==='none'?'':base,dx:rect.x+rect.width/2-end.x-end.width/2,dy:rect.y+rect.height/2-end.y-end.height/2,sx:rect.width/end.width,sy:rect.height/end.height};});
   tween(duration,t=>{const u=1-ease(t);for(const m of moves){if(motionIds.get(m.el)!==m.id)continue;m.el.style.transformOrigin='center';m.el.style.transform=`${m.base} translate(${m.dx*u}px,${m.dy*u}px) scale(${1+(m.sx-1)*u},${1+(m.sy-1)*u})`;}},()=>{for(const m of moves){if(motionIds.get(m.el)!==m.id)continue;m.el.style.removeProperty('transform');m.el.style.removeProperty('transform-origin');}done?.();});
  }
+ let disposeVideo=null;
  function view(bg){
+  disposeVideo?.();disposeVideo=null;
   document.querySelector('.scene-outgoing')?.remove();
   const old=scene.childElementCount&&phase!=='loading'?scene.cloneNode(true):null;
   if(old){old.removeAttribute('id');old.classList.add('scene-outgoing');old.setAttribute('aria-hidden','true');old.inert=true;old.querySelectorAll('video').forEach(v=>v.remove());game.append(old);}
@@ -212,8 +214,7 @@
   for(let i=0;i<9;i++)later(i*200,()=>burst(.1+Math.random()*.8,.15+Math.random()*.45,80));
  }
  function feedbackVideo(){phase='video';view('page-3/page-3-bg.webp');scene.classList.add('video-page');const pair=C.pairs[wrongPair];copy(pair.term,'video-heading');
-  if(pair.video){const video=document.createElement('video');video.className='feedback-video';video.controls=true;video.playsInline=true;video.preload='metadata';video.autoplay=true;video.src=/^https:\/\//.test(pair.video)?pair.video:asset(pair.video);scene.append(video);video.play().catch(()=>{if(!video.isConnected)return;const tap=document.createElement('button');tap.className='video-tap';tap.textContent='Tap to play';tap.onclick=()=>video.play().then(()=>tap.remove()).catch(()=>{});scene.append(tap);video.addEventListener('playing',()=>tap.remove(),{once:true});});}
-  else{const panel=copy('','video-placeholder');copy('Feedback video coming soon','',panel);copy(`${pair.term} = ${pair.meaning}`,'video-answer',panel);}
+  disposeVideo=BlastVideo.mount(scene,pair,asset);
   button('page-8/play-again-button.webp','Play Again','outcome-action',()=>{scene.querySelector('video')?.pause();board(false);});
  }
  const required=['demo/page-1-demo.webp','demo/page-2-demo.webp','demo/page-3-demo.webp','effects/cracker-sparkle.gif','effects/diya-flame.gif','effects/cracker-fail.gif','effects/cracker-blast.gif','page-8/page-8-bg.webp','page-8/diya.webp','page-8/diya-lit.webp','page-8/play-again-button.webp','page-9/page-9-bg.webp','page-9/try-again-button.webp','page-10/page-10-bg.webp','page-10/star.webp','page-10/home-button.webp','page-2/page-2-bg.webp','page-2/start-challenge-button.webp','next-button.webp','page-1/demo-button.webp','page-1/page-1-bg.webp','page-1/page-1-non-diwali-bg.webp','page-3/page-3-bg.webp','page-3/thread.webp','page-3/time-panel.webp','page-3/meaning-panel.webp','page-3/light-button.webp','page-3/sparkler.webp','page-5/correct-panel.webp','page-6/wrong-panel.webp',...C.pairs.flatMap(p=>[`page-3/${p.left}`,`page-3/${p.right}`])];

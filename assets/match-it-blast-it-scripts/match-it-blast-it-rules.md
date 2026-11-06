@@ -53,3 +53,5 @@ This supersedes the earlier temporary replay-only flow and deferred streak imple
 - Wrong-pair feedback waits for a focused failure sequence: previous blast settles, camera centers/zooms, fuse struggles, flame extinguishes with supplied wrong sound/failure GIF and black smoke, then camera returns. Unchecked pairs dim and do not burst.
 
 - Exit cancels active input, timers, animation callbacks, particles, fuse/effect audio and feedback video playback. Existing recorded results and saved progression are retained; abandoning an unsubmitted board does not record a new result. Music transitions back to menu BGM.
+
+- Feedback videos use the supplied YouTube videos first. Request the matching local WebM only if the YouTube API/player fails or initialization times out. Autoplay blocking alone is not a failure; show Tap to play. Never preload fallback videos.

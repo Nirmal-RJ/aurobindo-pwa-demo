@@ -217,3 +217,10 @@ Copied all 31 supplied assets from Downloads into `assets/match-it-blast-it-asse
 - Added a gold Previous button to slides 2 and 3, aligned bottom-left opposite Next. Slide 1 has no Previous. Returning to an earlier slide retains the supplied artwork and does not mark completion.
 - Cache/shell/RC entry advanced to v26. Updated demo regression coverage for backward/forward navigation. Not pushed.
 - Edge and WebKit passed backward/forward demo navigation, first-slide exclusion, responsive slide bounds and final completion. Syntax/diff checks passed; physical-device verification pending.
+
+## 2026-11-06 - YouTube primary feedback videos
+
+- Mapped all five supplied Shorts IDs to their respective SST pairs. Added isolated player module, loaded with shell, with the external YouTube API requested only when feedback is opened.
+- Local WebM source is assigned only after an API/player error or 15-second initialization timeout. Autoplay blocking shows Tap to play without fallback. Existing WebMs are retained and still excluded from preloading/service-worker media caching.
+- Leaving feedback destroys the iframe/player and releases any fallback video. Hidden pages pause playback. Large portrait feedback layout and menu music behavior preserved.
+- Cache/shell/entry advanced to v27. Controlled Edge/WebKit tests cover ID mapping, zero startup/healthy-player local requests, autoplay blocking, error fallback and cleanup; live hosted YouTube playback and physical devices still require verification. Not pushed.
