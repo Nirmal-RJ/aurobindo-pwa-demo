@@ -7,14 +7,18 @@ const replacedAssets=JSON.parse(fs.readFileSync('assets/ab-express-scripts/ab-ex
  const browser=process.env.AB_WEBKIT?await webkit.launch({headless:true,executablePath:process.env.AB_WEBKIT}):await chromium.launch({channel:'msedge',headless:true});
  try{
   const context=await browser.newContext({viewport:{width:390,height:844}}), page=await context.newPage();
-  const url=process.env.AB_URL||'http://localhost:4174/assets/ab-express-scripts/ab-express.html?v=46';
+  const url=process.env.AB_URL||'http://localhost:4174/assets/ab-express-scripts/ab-express.html?v=48';
   await page.goto(new URL('/favicon.ico',url).href);
   await page.evaluate(async url=>{
    const old=await caches.open('ab-express-v25');
    await old.put(new URL('../ab-express-assets/page-2/page-2-bg.webp',url).href,new Response('stale background'));
+   const previous=await caches.open('ab-express-v46');
+   await previous.put(new URL('../ab-express-assets/page-18/page-18-b.webp?v=46',url).href,new Response('stale weighing hint'));
   },url);
   await page.goto(url);await page.getByRole('button',{name:'Next',exact:true}).waitFor();
   await page.evaluate(()=>navigator.serviceWorker.ready);await page.waitForFunction(()=>navigator.serviceWorker.controller);
+  await page.waitForFunction(async()=>!(await caches.keys()).includes('ab-express-v46'));
+  assert.match(await page.evaluate(()=>ABConfig.asset('page-18/page-18-b.webp')),/\?v=48$/);
   for(const asset of replacedAssets){
    const expected=crypto.createHash('sha256').update(fs.readFileSync('assets/ab-express-assets/'+asset)).digest('hex');
    const actual=await page.evaluate(async asset=>{

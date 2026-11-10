@@ -1,6 +1,6 @@
 /* Only AB Express resources are owned by this worker. */
-const CACHE = 'ab-express-v46';
-const SHELL = ['ab-express.html','ab-express.css?v=46','ab-express-config.js?v=46','ab-express-core.js?v=46','ab-express-assets.js?v=46','ab-express-effects.js?v=46','ab-express-audio.js?v=46','ab-express.js?v=46'];
+const CACHE = 'ab-express-v48';
+const SHELL = ['ab-express.html','ab-express.css?v=48','ab-express-config.js?v=48','ab-express-core.js?v=48','ab-express-assets.js?v=48','ab-express-effects.js?v=48','ab-express-audio.js?v=48','ab-express.js?v=48'];
 self.addEventListener('install', event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting())));
 self.addEventListener('activate', event => event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith('ab-express-') && key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim())));
 self.addEventListener('fetch', event => {

@@ -1,0 +1,34 @@
+const {chromium,webkit}=require(process.env.AB_PLAYWRIGHT),assert=require('node:assert/strict');
+(async()=>{for(const engine of ['edge','webkit']){
+ const browser=engine==='edge'?await chromium.launch({channel:'msedge',headless:true}):await webkit.launch({executablePath:process.env.AB_WEBKIT,headless:true});
+ try{const page=await browser.newPage();await page.route('**/review/login.js',r=>r.fulfill({contentType:'text/javascript',body:''}));await page.goto('http://localhost:4174/review/login.html');
+  const checks=await page.evaluate(async()=>{
+   const results=[],key='qsl-review-session-v1',account={id:'fixture-ghost',employeeId:'100016',name:'Anand',role:'ghost',identityMethod:'employee-id-only'},expiresAt='2099-01-01T00:00:00Z';let serial=0;
+   const expect=(ok,label)=>{if(!ok)throw Error(label);results.push(label);};
+   const response=(data,status=200)=>new Response(status===204?null:JSON.stringify(data),{status,headers:{'Content-Type':'application/json'}});
+   const module=async()=>{localStorage.clear();return (await import('/review/session.js?test='+ ++serial)).reviewSession;};
+   const rejected=async fn=>{try{await fn();throw Error('Expected rejection');}catch(error){if(error.message==='Expected rejection')throw error;return error;}};
+   let session=await module(),calls=[];
+   window.fetch=async(url,options)=>{calls.push({url,options});return response({account,expiresAt});};
+   await session.me();expect(calls.length===1&&calls[0].url==='/review-api/me'&&calls[0].options.credentials==='same-origin'&&calls[0].options.cache==='no-store'&&!calls[0].options.headers.Authorization,'Cookie-only restore uses same-origin/no-store and no invented host');
+   expect(localStorage.getItem(key)===null&&session.current().account.id===account.id,'Cookie-only account is accepted without inventing a recovery token');
+   window.fetch=async(url,options)=>{calls.push({url,options});return response(url.endsWith('/login')?{account,expiresAt,recoveryToken:'fixture-token-a'}:{account,expiresAt});};
+   const logged=await session.login(' 100016 ');expect(localStorage.getItem(key)==='fixture-token-a'&&!('recoveryToken' in logged)&&JSON.parse(calls.at(-1).options.body).employeeId==='100016','Login trims Employee ID, stores review-only token and never returns it to UI');
+   await session.me();expect(calls.at(-1).options.headers.Authorization==='Bearer fixture-token-a','Restore sends the saved recovery token');
+   let release;window.fetch=async(url,options)=>{calls.push({url,options});return new Promise(resolve=>release=()=>resolve(response(null,204)));};
+   const logout=session.logout();await Promise.resolve();expect(localStorage.getItem(key)==='fixture-token-a','Logout retains credentials until the server succeeds');release();await logout;expect(localStorage.getItem(key)===null&&session.current()===null&&calls.at(-1).options.method==='POST'&&calls.at(-1).options.body==='{}','204 logout clears the review session without parsing a body');
+   for(const status of [429,503]){session=await module();localStorage.setItem(key,'fixture-preserve');window.fetch=async()=>response({message:'Fixture service error'},status);const error=await rejected(()=>session.me());expect(error.status===status&&localStorage.getItem(key)==='fixture-preserve','HTTP '+status+' preserves credentials');}
+   session=await module();localStorage.setItem(key,'fixture-preserve');window.fetch=async()=>{throw new TypeError('offline');};await rejected(()=>session.me());expect(localStorage.getItem(key)==='fixture-preserve','Network failure preserves credentials');
+   session=await module();localStorage.setItem(key,'fixture-preserve');const timeout=window.setTimeout;window.setTimeout=(fn,ms,...args)=>timeout(fn,ms===12000?5:ms,...args);window.fetch=(url,{signal})=>new Promise((resolve,reject)=>signal.addEventListener('abort',()=>reject(new DOMException('timeout','AbortError'))));let error;try{error=await rejected(()=>session.me());}finally{window.setTimeout=timeout;}expect(error.timeout&&localStorage.getItem(key)==='fixture-preserve','Timeout aborts the request but preserves credentials');
+   for(const status of [401,403]){session=await module();localStorage.setItem(key,'fixture-rejected');window.fetch=async()=>new Response('not JSON',{status});const error=await rejected(()=>session.me());expect(error.status===status&&localStorage.getItem(key)===null,'Protected HTTP '+status+' clears rejected credentials even for non-JSON errors');}
+   session=await module();localStorage.setItem(key,'fixture-existing');window.fetch=async()=>response({message:'Employee not approved'},403);error=await rejected(()=>session.login('100999'));expect(error.message==='Employee not approved'&&localStorage.getItem(key)==='fixture-existing','Denied login reports server message without discarding a previous session');
+   session=await module();let first;window.fetch=async(url,options)=>JSON.parse(options.body).employeeId==='old'?new Promise(resolve=>first=()=>resolve(response({account:{...account,id:'old'},expiresAt,recoveryToken:'fixture-old'}))):response({account:{...account,id:'new'},expiresAt,recoveryToken:'fixture-new'});
+   const old=session.login('old').catch(error=>error);await session.login('new');first();error=await old;expect(error.stale&&session.current().account.id==='new'&&localStorage.getItem(key)==='fixture-new','Delayed older login cannot replace a newer login');
+   session=await module();localStorage.setItem(key,'fixture-old');let delayed;window.fetch=async url=>url.endsWith('/me')?new Promise(resolve=>delayed=()=>resolve(response({message:'Expired'},403))):response({account:{...account,id:'new'},expiresAt,recoveryToken:'fixture-new'});
+   const restoring=session.me().catch(error=>error);await session.login('new');delayed();error=await restoring;expect(error.stale&&session.current().account.id==='new'&&localStorage.getItem(key)==='fixture-new','Delayed old restore rejection cannot clear a newer session');
+   let oldLogout;window.fetch=async url=>url.endsWith('/logout')?new Promise(resolve=>oldLogout=()=>resolve(response(null,204))):response({account:{...account,id:'newest'},expiresAt,recoveryToken:'fixture-newest'});const leaving=session.logout().catch(error=>error);await session.login('newest');oldLogout();error=await leaving;expect(error.stale&&localStorage.getItem(key)==='fixture-newest','Delayed old logout cannot clear a newer login');
+   session=await module();localStorage.setItem(key,'fixture-current');window.fetch=async()=>response({account:{...account,role:'core'},expiresAt});await rejected(()=>session.me());expect(session.current()===null&&localStorage.getItem(key)==='fixture-current','Unexpected server role cannot mount the review UI');
+   return results;
+  });assert(checks.length>=15);console.log(engine+': '+checks.length+' session contract/error/race checks passed (intercepted responses only)');
+ }finally{await browser.close();}
+}})().catch(e=>{console.error(e);process.exit(1)});

@@ -11,7 +11,7 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <title>Aurobindo Pharma · The Celebration Hub</title>
+  <title>QC Core</title>
   <link rel="icon" href="./icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./icons/icon-192.png">
   <link rel="manifest" href="./manifest.webmanifest?v=2">
@@ -21,10 +21,11 @@
       if (l === 'te' || l === 'hi' || l === 'en') document.documentElement.lang = l;
     } catch (_) { }
   </script>
-  <link rel="stylesheet" href="./styles.css?v=54">
+  <link rel="stylesheet" href="./styles.css?v=55">
   <script src="./tile-match.js?v=23" defer></script>
-  <script src="./app.js?v=31" defer></script>
+  <script src="./app.js?v=32" defer></script>
   <link rel="stylesheet" href="./leaderboard.css?v=5">
+  <script type="module" src="./review/home-entry.js"></script>
 </head>
 
 <body>
@@ -86,13 +87,8 @@
   </svg>
   <header class="site-header">
     <div class="header-inner">
-      <div class="brand" aria-label="Aurobindo Pharma">
-        <div class="brand-demo">
-          <div class="brand-logo"><img src="./logo.png" alt="Aurobindo — Committed to healthier life!" width="618"
-              height="350"></div><span class="demo-label">DEMO APP</span>
-        </div>
-        <div class="brand-copy"><strong data-i18n="pharmacy">PHARMA</strong><span data-i18n="community">Our people.
-            Our stage.</span></div>
+      <div class="brand qc-core-brand" aria-label="QC Core">
+        <span class="qc-core-mark" aria-hidden="true">✦</span><strong>QC Core</strong>
       </div>
       <div class="header-controls">
         <div class="language-control">
@@ -332,6 +328,16 @@
             <span class="activity-labels"><span class="card-title">Coming Soon</span><span class="card-description">A preview of what's on the way.</span></span>
             <span class="activity-arrow" aria-hidden="true">&#8594;</span>
           </button>
+          <a class="activity-card mint review-entry" href="./review/index.html">
+            <span class="card-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 4h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-6 4V6a2 2 0 0 1 2-2Z"/><path d="M7 9h10M7 13h7"/></svg></span>
+            <span class="activity-labels"><span class="card-title">Priority/Approval</span><span class="card-description">Discuss feedback and review game builds.</span></span>
+            <span class="activity-arrow" aria-hidden="true">&#8594;</span>
+          </a>
+          <a class="activity-card rose rc-chat-entry" href="./review/index.html?room=rc" hidden>
+            <span class="card-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 4h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H8l-6 4V6a2 2 0 0 1 2-2Z"/><path d="M7 8h7M7 12h4M19 8h1a2 2 0 0 1 2 2v12l-4-3h-6"/></svg></span>
+            <span class="activity-labels"><span class="card-title">RC Chat</span><span class="card-description">Ghost tester discussion.</span></span>
+            <span class="activity-arrow" aria-hidden="true">&#8594;</span>
+          </a>
         </div>
       </section>
     </div>
@@ -477,7 +483,7 @@
             <img src="assets/solvent-master-game-assets/page-1/page-1-bg.webp" alt="Solvent Master" class="poster-card-image" loading="lazy">
           </div>
         </a>
-        <a class="game-poster poster-ab-express playable-poster" href="assets/ab-express-scripts/ab-express.html?v=46" aria-label="Play AB Express">
+        <a class="game-poster poster-ab-express playable-poster" href="assets/ab-express-scripts/ab-express.html?v=48" aria-label="Play AB Express">
           <div class="poster-card-wrap">
             <img src="assets/ab-express-assets/page-1/page-1-bg.webp" alt="AB Express" class="poster-card-image" loading="lazy">
           </div>
@@ -571,13 +577,16 @@
             <img src="assets/solvent-master-game-assets/page-1/page-1-bg.webp" alt="Solvent Master" class="poster-card-image" loading="lazy">
           </div>
         </a>
-        <a class="game-poster poster-ab-express playable-poster" href="assets/ab-express-scripts/ab-express.html?v=46" aria-label="Play AB Express">
+        <a class="game-poster poster-ab-express playable-poster" href="assets/ab-express-scripts/ab-express.html?v=48" aria-label="Play AB Express">
           <div class="poster-card-wrap">
             <img src="assets/ab-express-assets/page-1/page-1-bg.webp" alt="AB Express" class="poster-card-image" loading="lazy">
           </div>
         </a>
         <a class="game-poster poster-match-blast playable-poster" href="assets/match-it-blast-it-scripts/match-it-blast-it.html?v=30&amp;from=rc-games" aria-label="Play Match It, Blast It">
           <div class="poster-card-wrap"><img src="assets/match-it-blast-it-assets/page-1/page-1-bg.webp?v=1" alt="Match It, Blast It" class="poster-card-image" loading="lazy"></div>
+        </a>
+        <a class="game-poster poster-wave-rider playable-poster" href="assets/wave-rider-scripts/wave-rider.html?v=4&amp;from=rc-games" aria-label="Play Wave Rider">
+          <div class="poster-card-wrap"><img src="assets/wave-rider-assets/page-1/page-1-bg.webp" alt="Wave Rider" class="poster-card-image" loading="lazy"></div>
         </a>
       </section>
       <section id="sample-preparation-gallery" class="sample-preparation-gallery" aria-label="Sample Preparation games"

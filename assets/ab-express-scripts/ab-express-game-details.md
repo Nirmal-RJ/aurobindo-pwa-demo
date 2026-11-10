@@ -137,7 +137,7 @@ The approved revised 17-step list in config.steps replaces the fixed bucket defi
 7. Use a clean & dry butter paper boat.
 8. Centre the boat on the balance pan.
 9. Tare the empty paper boat to zero.
-10. Discard excess sample in the bin.
+10. Pour the sample onto the paper boat without spilling
 11. Close the door for a stable reading.
 12. Wait for a stable reading before recording.
 13. Transfer the weighed sample to a dry preparation vessel.

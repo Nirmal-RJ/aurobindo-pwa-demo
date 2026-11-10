@@ -354,3 +354,15 @@
 ### 2026-11-05 - v46 release verification
 - User confirmed practice stays at five sets and authorized push. Challenge remains three consecutive wins per star.
 - Expanded cache regression to SHA-256 verify all 88 manifest assets against local files; Edge and WebKit passed. Edge also passed offline replay; both refreshed stale HTML. All game asset URLs use v46 and old scoped caches are removed on activation. Root shell v478/CSS v54 refresh the pending RC banner. Seven core tests and syntax checks passed.
+
+
+### 2026-11-09 - Replacement weighing hint artwork
+- Replaced page-18/page-18-b.webp byte-for-byte with the supplied Desktop image (SHA-256 9c199fdfb9d83a836a61fedc482e3b2e72f9e2b83c0b588e9126c40e1ede162f). Step 10 in the artwork now reads "Pour the sample onto the paper boat without spilling"; gameplay step text was not changed by this image-only request.
+- Regenerated the 88-asset preload manifest with the updated byte count. Aligned AB Express config, HTML dependencies, scoped worker and both gallery URLs at v47; root shell advanced to v483 so updated entry links refresh. Old scoped caches are deleted on worker activation, and the image uses a new versioned URL.
+- Edge and WebKit cache regressions seeded stale v46 weighing art, verified removal of that cache and exact current SHA-256 bytes for all 88 assets, and refreshed stale HTML. Edge offline replay also passed. All seven core tests, syntax and whitespace checks passed. Reviewed the updated middle learning page at 390x844. Physical phones were not tested; offline devices need an online update before receiving new media. Local changes only; no push/deployment.
+
+
+### 2026-11-09 - Approved gameplay step 10 replacement
+- User explicitly replaced "Discard excess sample in the bin." with "Pour the sample onto the paper boat without spilling". Updated canonical config.steps[9] and the current master-sequence documentation, preserving the supplied text without adding punctuation. Practice, challenge, comparison, timeout review and train accessibility descriptions all consume this shared value. Step ID/order/icon, selections, saved progress and animations are unchanged.
+- Aligned config, scoped worker, HTML dependencies and both gallery URLs at v48; root shell v484 refreshes the entry URLs. No media changes for this text update.
+- Syntax and seven core tests passed. Edge at 320x568 verified exact wording in the live practice compartment and no old phrase on screen. Physical-device verification pending; local changes only, no push/deployment.

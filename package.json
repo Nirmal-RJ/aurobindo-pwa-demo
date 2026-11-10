@@ -4,6 +4,8 @@
   "private": true,
   "description": "Aurobindo Pharma multilingual community PWA prototype",
   "scripts": {
+    "prepare:qc-core": "node scripts/prepare-qc-core.mjs",
+    "check:qc-core": "node scripts/verify-qc-core.mjs",
     "start": "node server.mjs",
     "check:audit": "node --check audit-game.js",
     "dev": "node server.mjs",

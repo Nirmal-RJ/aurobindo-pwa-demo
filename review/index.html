@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content"><meta name="theme-color" content="#171127"><title>Game review · QC Core</title><link rel="icon" href="../icon.svg"><link rel="stylesheet" href="./review.css"><link rel="stylesheet" href="./session-status.css"><script type="module" src="./entry.js"></script></head>
+<body>
+ <div class="review-app" hidden>
+  <header class="topbar"><a href="../index.html#/" class="brand"><span class="brand-symbol">✦</span><span>QC Core <small>Game review</small></span></a><div id="space-badge" class="space-badge" aria-live="polite"></div><div class="account-control"><label for="account">Demo participant</label><select id="account" aria-label="Demo participant"></select><a id="profile-link" href="./profile.html">Profile</a></div></header>
+  <div class="demo-banner"><span class="preview-label">DEV PREVIEW</span><span>Local chat demo &middot; Not shared conversations</span><button id="controls-help" type="button" aria-label="Keyboard and touch controls" title="Keyboard and touch controls">Controls <span aria-hidden="true">?</span></button></div>
+  <main class="workspace" data-view="directory">
+   <aside class="navigation" aria-label="Review navigation"><div class="nav-caption">REVIEW SPACE</div><h1>Better games,<br>together.</h1><button id="all-discussions" type="button" class="all-discussions" hidden>All discussions</button><nav id="rooms" aria-label="Chat rooms"></nav><p class="nav-note">Choose a space, then a game or General Discussion.</p><details id="dev-tools" hidden><summary>Demo tools</summary><div class="dev-controls"><button id="incoming" type="button">Simulate incoming message</button><label><input id="fail-send" type="checkbox"> Fail next send</label><button id="new-build" type="button">Add empty demo build</button><button id="reset" type="button" class="danger">Reset local demo</button></div></details></aside>
+   <section id="discussion-directory" class="discussion-directory" aria-labelledby="directory-title">
+    <header class="directory-header"><div><p id="directory-kicker" class="eyebrow">GLOBAL</p><h2 id="directory-title" tabindex="-1">Global discussions</h2><p id="directory-description">Choose a game, or join General Discussion.</p></div><span id="directory-count" class="directory-count">6 discussions</span></header>
+    <div id="discussion-grid" class="discussion-grid"></div>
+    <p class="directory-footnote">Choose a banner to open the conversation.</p>
+   </section>
+   <section class="conversation" aria-label="Group chat" hidden>
+    <header class="chat-header"><button id="back-to-discussions" class="back-to-discussions" type="button" aria-label="Back to discussions"><span aria-hidden="true">&#8592;</span></button><div id="chat-topic-art" class="chat-topic-art" aria-hidden="true"></div><div class="chat-heading"><div class="chat-space-line"><p id="chat-room" class="space-chip">Global</p><span id="chat-space-note"></span></div><h2 id="room-title">Chat</h2><p id="room-description"></p></div><button id="review-toggle" type="button" aria-expanded="false" aria-controls="review-panel" aria-haspopup="dialog" title="View feedback and vote on this game"><span>Review &amp; votes</span></button></header>
+    <div class="message-area"><div id="messages" class="messages" tabindex="0" aria-label="Messages"></div><button id="new-messages" class="new-messages" hidden type="button">New messages ↓</button></div>
+    <div class="composer-region"><div id="drop-hint" class="drop-hint" hidden>Drop screenshots to attach</div><div id="draft-context"></div><div id="draft-attachments" class="draft-attachments"></div><form id="composer"><label for="message" class="sr-only">Message</label><textarea id="message" placeholder="Share feedback with the group…" rows="1" maxlength="6000"></textarea><div class="composer-controls"><label class="attach-button" title="Attach screenshots"><span aria-hidden="true">＋</span><span class="sr-only">Attach screenshots</span><input id="attachments" type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple></label><span id="attachment-status" role="status" aria-live="polite"></span><span id="character-count">0 / 6000</span><button id="send" class="primary" type="submit" disabled>Send <span aria-hidden="true">↑</span></button></div></form><div class="composer-foot"><p id="composer-hint" class="composer-hint">Enter to send &middot; Shift + Enter for a new line</p><span id="draft-saved" hidden>Draft saved</span></div></div>
+   </section>
+   <aside id="review-panel" hidden class="review-panel" aria-label="Build review"><button id="review-close" class="mobile-close" type="button" aria-label="Close review">×</button><div id="review-content"></div></aside>
+  </main>
+ </div>
+ <div id="chat-status" class="sr-only" role="status" aria-live="polite"></div>
+ <div id="toast" role="status" aria-live="polite" hidden></div>
+ <dialog id="modal"><div id="modal-content"></div><form method="dialog"><button class="modal-close" aria-label="Close dialog">×</button></form></dialog>
+ <noscript>This local review demo requires JavaScript.</noscript>
+</body></html>

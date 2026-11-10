@@ -111,13 +111,12 @@ function setLanguage(next) {
   language = next;
   const dictionary = translations[language];
   document.documentElement.lang = language;
-  document.title = dictionary.title;
+  document.title = 'QC Core';
   document.querySelector('#language-current').textContent = { en: 'English', te: 'తెలుగు', hi: 'हिन्दी' }[language];
   document.querySelectorAll('[data-language]').forEach(button => button.setAttribute('aria-checked', String(button.dataset.language === language)));
   document.querySelectorAll('[data-i18n]').forEach(node => { node.textContent = dictionary[node.dataset.i18n]; });
   document.querySelectorAll('[data-i18n-aria]').forEach(node => { node.setAttribute('aria-label', dictionary[node.dataset.i18nAria]); });
-  document.querySelector('.brand').setAttribute('aria-label', dictionary.footerBrand);
-  document.querySelector('.brand-logo img').alt = dictionary.footerBrand;
+  document.querySelector('.brand').setAttribute('aria-label', 'QC Core');
   if (activeToast) toast(dictionary.soon.replace('{name}', dictionary[`${activeToast}Title`]), activeToast);
   else { document.querySelector('#toast').classList.remove('visible'); clearTimeout(toastTimer); }
   savePreference('aurobindo-language', language);
@@ -232,7 +231,7 @@ function updatePageContent() {
   if (!activePage) return;
   if (activePage === 'games/tile-match') return;
   if (activePage === 'scores') {
-    document.title = `${translations[language].scoresTitle} · ${translations[language].footerBrand}`;
+    document.title = `${translations[language].scoresTitle} · QC Core`;
     return;
   }
   const dictionary = translations[language];
@@ -245,7 +244,7 @@ function updatePageContent() {
     link.querySelector('[data-i18n="backHome"]').textContent = backText;
   });
   document.querySelectorAll('[data-page]').forEach(node => { node.textContent = copy[node.dataset.page]; });
-  document.title = `${copy.title} · ${dictionary.footerBrand}`;
+  document.title = `${copy.title} · QC Core`;
 }
 function renderRoute(focus = true) {
   // Hash routes work on static hosting, in subdirectories, and offline.
@@ -321,7 +320,7 @@ function renderRoute(focus = true) {
     updatePageContent();
     if (focus) { window.scrollTo(0, 0); document.querySelector('#page-title').focus({ preventScroll: true }); }
   } else {
-    document.title = translations[language].title;
+    document.title = 'QC Core';
     if (focus) {
       window.scrollTo(0, previous && previous !== 'games/tile-match' ? homeScroll : 0);
       const target = (previous && previous !== 'games/tile-match') ? document.querySelector(`[data-activity="${previous}"]`) : document.querySelector('#main-content');

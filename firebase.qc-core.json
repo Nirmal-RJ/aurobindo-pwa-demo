@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "site": "apl-qc-core-app-f5a3e",
+    "public": "dist/qc-core",
+    "ignore": ["**/.*", "**/node_modules/**", "**/review-backend/**", "**/*.map"],
+    "headers": [
+      {"source": "/", "headers": [{"key": "Cache-Control", "value": "no-cache"}]},
+      {"source": "/review/**", "headers": [{"key": "Cache-Control", "value": "no-cache"}]},
+      {"source": "**/*.@(html|js|css|webmanifest)", "headers": [{"key": "Cache-Control", "value": "no-cache"}]},
+      {"source": "/review-api/**", "headers": [{"key": "Cache-Control", "value": "private, no-store"}]}
+    ],
+    "rewrites": [
+      {"source": "/review-api/**", "run": {"serviceId": "aurobindo-review-api", "region": "asia-south1"}}
+    ]
+  }
+}

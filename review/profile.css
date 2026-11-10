@@ -1,0 +1,18 @@
+.profile-heading{display:flex;align-items:center;gap:18px;margin:22px 0 28px}.profile-heading img{border-radius:20px;flex-shrink:0}.profile-heading h1{margin:0}.profile-details{margin:0 0 28px}.profile-details>div{padding:18px 0;border-bottom:1px solid #e7e2ee}.profile-details dt{font-size:12px;color:#746c81;margin-bottom:8px}.profile-details dd{margin:0;font-size:18px;font-weight:700;line-height:1.5;overflow-wrap:anywhere}.profile-back{display:flex;align-items:center;justify-content:center;min-height:48px;border:1px solid #d7e5e1;border-radius:12px;text-decoration:none;color:#205f53;font-size:14px;font-weight:bold;padding:12px}.profile-back:hover{background:#edf7f3}#profile-logout{background:#fff;color:#a32c3c;border-color:#e8cbd1;margin-top:12px}#profile-logout:hover{background:#fff3f4}.profile-back:focus-visible{outline:3px solid #ac83e4;outline-offset:3px}
+.profile-page .login-shell{width:min(100%,420px);padding:24px 18px calc(16px + env(safe-area-inset-bottom));padding-top:calc(18px + env(safe-area-inset-top))}
+.profile-page .brand{font-size:19px;gap:8px;margin-bottom:20px}.profile-page .brand span{font-size:27px}
+.profile-page .login-card{padding:22px;border-radius:20px}
+.profile-page .eyebrow{font-size:9px;letter-spacing:1.5px;margin-bottom:12px}
+.profile-page .profile-heading{gap:12px;margin:0 0 16px}
+.profile-page .profile-heading img{width:46px;height:46px;border-radius:15px}
+.profile-page .profile-heading h1{font-size:24px;letter-spacing:-.6px}
+.profile-page .profile-details{margin:0 0 18px}
+.profile-page .profile-details>div{padding:12px 0}
+.profile-page .profile-details dt{font-size:11px;margin-bottom:5px}
+.profile-page .profile-details dd{font-size:16px;line-height:1.4}
+.profile-page .profile-back{min-height:44px;padding:10px;font-size:13px;border-radius:10px}
+.profile-page #profile-logout{min-height:44px;margin-top:9px;padding:10px 14px;font-size:13px;border-radius:10px}
+.profile-page .demo-note{font-size:10px;line-height:1.5;margin:14px 6px 0}
+@media(max-height:520px){.profile-page .login-shell{padding-top:calc(10px + env(safe-area-inset-top));padding-bottom:10px}.profile-page .brand{margin-bottom:10px}.profile-page .login-card{padding:16px 20px}.profile-page .profile-heading{margin-bottom:8px}.profile-page .eyebrow{margin-bottom:9px}.profile-page .profile-details>div{padding:8px 0}.profile-page .profile-details{margin-bottom:12px}.profile-page .demo-note{margin-top:10px}}
+
+.profile-error{font-size:12px;line-height:1.5;color:#a32c3c;margin:12px 0 0}#profile-logout:disabled{cursor:wait}

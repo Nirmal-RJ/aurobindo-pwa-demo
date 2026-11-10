@@ -32,3 +32,8 @@ Challenge requires three consecutive successful rounds to earn one star. Intro a
 Start artwork must be measured after its delayed reveal, never while display:none. Portrait phones and tablets fill the available safe-area viewport on every page. Wide displays retain the portrait composition without distortion, with the scene filling the surrounding backdrop. The tunnel row has no dark rectangular overlay.
 
 Timeout review shows only the correct sequence; an unsubmitted arrangement is not displayed as Your Sequence. Side-by-side comparison is reserved for submitted incorrect answers.
+
+
+## 9 November 2026 - Approved step 10 copy
+
+The canonical step 10 is now "Pour the sample onto the paper boat without spilling", replacing "Discard excess sample in the bin." in all runtime displays. This explicit replacement supersedes prior step 10 wording.

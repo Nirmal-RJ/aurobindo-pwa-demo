@@ -281,7 +281,7 @@ window.ABAssets = [
   },
   {
     "path": "page-18/page-18-b.webp",
-    "bytes": 124860
+    "bytes": 127630
   },
   {
     "path": "page-18/page-18-c.webp",
