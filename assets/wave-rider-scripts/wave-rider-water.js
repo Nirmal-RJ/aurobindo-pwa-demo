@@ -3,17 +3,24 @@
 const game=document.querySelector('#game');
 const canvas=document.createElement('canvas');canvas.id='ocean';canvas.setAttribute('aria-hidden','true');game.prepend(canvas);
 const spray=document.createElement('canvas');spray.id='water-effects';spray.setAttribute('aria-hidden','true');game.append(spray);
-const ctx=canvas.getContext('2d',{alpha:false}),fx=spray.getContext('2d');
+const wake=document.createElement('canvas');wake.id='boat-wake';wake.setAttribute('aria-hidden','true');game.insertBefore(wake,document.querySelector('#scene'));
+const ctx=canvas.getContext('2d',{alpha:false}),fx=spray.getContext('2d'),wakeCtx=wake.getContext('2d');
 const tau=Math.PI*2;
-let width=1,height=1,dpr=1,last=0,emitted=0,particles=[],event=null,previous=null,flowTime=0,boostAt=-Infinity,saluteAt=-Infinity,effectEmitted=0,saluteSpray=[];
-function resize(){const r=game.getBoundingClientRect();width=r.width;height=r.height;dpr=Math.min(devicePixelRatio,1.5);for(const c of [canvas,spray]){c.width=Math.round(width*dpr);c.height=Math.round(height*dpr);}ctx.setTransform(dpr,0,0,dpr,0,0);fx.setTransform(dpr,0,0,dpr,0,0);}
+let boatPose=null;
+let width=1,height=1,dpr=1,last=0,emitted=0,particles=[],event=null,previous=null,saluteAt=-Infinity,effectEmitted=0,saluteSpray=[];
+function resize(){const r=game.getBoundingClientRect();width=r.width;height=r.height;dpr=Math.min(devicePixelRatio,1.5);for(const c of [canvas,spray,wake]){c.width=Math.round(width*dpr);c.height=Math.round(height*dpr);}ctx.setTransform(dpr,0,0,dpr,0,0);fx.setTransform(dpr,0,0,dpr,0,0);wakeCtx.setTransform(dpr,0,0,dpr,0,0);}
 new ResizeObserver(resize).observe(game);resize();
 const random=(a,b)=>a+Math.random()*(b-a);
 function add(p){if(particles.length<320)particles.push(p);}
 window.WaveWater={
- reset(){event=null;particles=[];previous=null;boostAt=saluteAt=-Infinity;saluteSpray=[];game.style.removeProperty('--splash-blur');},
- bob(x,y,t){return swells.slice(0,2).reduce((h,w)=>h+Math.sin((x/100*w[0]+(y/100-flowTime*.000025)*w[1])*tau-t*.001*w[2])*w[3]*1.5,0);},
- boost(){boostAt=performance.now();},
+ pose(x,y,heading,bob,w,h,boat){boatPose={x,y,heading,bob,w,h,boat};},
+ clearPose(){boatPose=null;},
+ reset(){boatPose=null;event=null;particles=[];previous=null;saluteAt=-Infinity;saluteSpray=[];game.style.removeProperty('--splash-blur');},
+ bob(x,y,t){
+  // Slow heave is continuous across lane changes and current-speed boosts.
+  const seconds=t*.001;
+  return Math.sin(seconds*tau/3.4)*2+Math.sin(seconds*tau/5.7+.8)*.65;
+ },
  salute(delay=0){
   saluteAt=performance.now()+delay;
   // Sample once: coherent trajectories, never frame-to-frame random flicker.
@@ -44,7 +51,6 @@ window.WaveWater={
   }
  }
 };
-function boostStrength(t){const phase=(t-boostAt)/1000;return phase>=0&&phase<1?Math.sin(phase*Math.PI)**2:0;}
 // Low-resolution, continuously shaded wave surface; browser interpolates to the stage.
 // Separable phases avoid trigonometry per pixel and keep mobile rendering bounded.
 const surface=document.createElement('canvas');surface.width=192;surface.height=320;
@@ -57,10 +63,12 @@ for(let n=0;n<swells.length;n++)for(let x=0;x<192;x++){
  const u=x/192;const phase=u*swells[n][0]*tau+Math.sin(u*9.13+n*2.3)*.7+Math.sin(u*21.7+n)*.18;
  waveCols[n][x*2]=Math.sin(phase);waveCols[n][x*2+1]=Math.cos(phase);
 }
-function surfaceWave(t,flowing){
- const seconds=t*.001,advance=flowing?flowTime*.000025:Math.sin(seconds*.22)*.008;
+function surfaceWave(t){
+ // The same bounded, gentle surface motion on menus and while sailing.
+ const seconds=t*.001,advance=Math.sin(seconds*.22)*.008;
  for(let n=0;n<swells.length;n++)for(let y=0;y<320;y++){
-  const v=y/320;const phase=(v-advance)*swells[n][1]*tau-seconds*swells[n][2]+Math.sin(v*7.31+n)*.8;
+  const drift=advance;
+  const v=y/320;const phase=(v-drift)*swells[n][1]*tau-seconds*swells[n][2]+Math.sin(v*7.31+n)*.8;
   waveRows[n][y*2]=Math.sin(phase);waveRows[n][y*2+1]=Math.cos(phase);
  }
  const data=surfacePixels.data;
@@ -75,7 +83,10 @@ function surfaceWave(t,flowing){
   const normal=1/Math.sqrt(nx*nx+ny*ny+1);
   const light=Math.max(0,(-nx*.12-ny*.48+.86)*normal);
   // Sky reflected across narrow wave faces, not closed caustic-cell outlines.
-  const glint=Math.pow(Math.max(0,(-nx*.08-ny*.3+.95)*normal),54);
+  // Exact integer power through six multiplications instead of per-pixel pow.
+  const reflect=Math.max(0,(-nx*.08-ny*.3+.95)*normal);
+  const r2=reflect*reflect,r4=r2*r2,r8=r4*r4,r16=r8*r8,r32=r16*r16;
+  const glint=r32*r16*r4*r2;
   const depth=(h+1.3)/2.6,p=(y*192+x)*4;
   data[p]=2+light*6+glint*24;
   data[p+1]=117+light*36+depth*17+glint*36;
@@ -85,10 +96,8 @@ function surfaceWave(t,flowing){
  surfaceCtx.putImageData(surfacePixels,0,0);
 }
 function ocean(t,flowing){
- const boost=flowing?boostStrength(t):0;
- surfaceWave(t,flowing);
+ surfaceWave(t);
  ctx.save();
- const zoom=1+boost*.055;ctx.translate(width/2,height*.38);ctx.scale(zoom,zoom);ctx.translate(-width/2,-height*.38);
  ctx.drawImage(surface,0,0,width,height);
  // No tiled caustics: the entire visible surface is shaded once in stage coordinates.
  const gradient=ctx.createLinearGradient(0,0,width,0);gradient.addColorStop(0,'#00588b24');gradient.addColorStop(.5,'#08b6cb00');gradient.addColorStop(1,'#00588b24');ctx.fillStyle=gradient;ctx.fillRect(0,0,width,height);
@@ -112,19 +121,30 @@ const foamStamp=document.createElement('canvas');foamStamp.width=foamStamp.heigh
 const foamCtx=foamStamp.getContext('2d'),foamGlow=foamCtx.createRadialGradient(16,16,1,16,16,16);
 foamGlow.addColorStop(0,'#edffffcc');foamGlow.addColorStop(.4,'#c8ffff88');foamGlow.addColorStop(1,'#b8ffff00');foamCtx.fillStyle=foamGlow;foamCtx.fillRect(0,0,32,32);
 function emitBoat(t){
+ if(t-emitted<24)return;
  const ship=document.querySelector('.play .ship:not(.arrived),.play .ship.pass');
  if(!ship||(ship.classList.contains('pass')&&t-saluteAt>1450)){previous=null;return;}
+ let x,y,angle,bw,bh,boat;
+ if(boatPose&&!ship.classList.contains('arrived')){
+  const p=boatPose;boat=p.boat;angle=p.heading*Math.PI/180;
+  const img=ship.querySelector('img'),scale=Math.min(p.w/img.naturalWidth,p.h/img.naturalHeight);
+  bw=img.naturalWidth*scale;bh=img.naturalHeight*scale;
+  // Same 50% / 60% transform origin and rotate-then-heave as the hull.
+  x=p.x+Math.sin(angle)*(p.h*.1-p.bob);
+  y=p.y+p.h*.1+Math.cos(angle)*(p.bob-p.h*.1);
+ }else{
  const r=ship.getBoundingClientRect(),g=game.getBoundingClientRect(),img=ship.querySelector('img');
- const scale=Math.min(r.width/img.naturalWidth,r.height/img.naturalHeight),bw=img.naturalWidth*scale,bh=img.naturalHeight*scale;
- const boat=WaveConfig.boats.find(b=>img.getAttribute('src').split('?')[0].endsWith(b.front));
+ const scale=Math.min(r.width/img.naturalWidth,r.height/img.naturalHeight);bw=img.naturalWidth*scale;bh=img.naturalHeight*scale;
+ boat=WaveConfig.boats.find(b=>img.getAttribute('src').split('?')[0].endsWith(b.front));
  if(!boat?.waterline)return;
  const style=getComputedStyle(img),matrix=new DOMMatrixReadOnly(style.transform==='none'?undefined:style.transform);
  const origin=style.transformOrigin.split(' ').map(parseFloat),ox=origin[0],oy=origin[1];
  const localX=r.width/2,localY=r.height/2;
- const x=r.left-g.left+ox+matrix.a*(localX-ox)+matrix.c*(localY-oy)+matrix.e;
- const y=r.top-g.top+oy+matrix.b*(localX-ox)+matrix.d*(localY-oy)+matrix.f;
- const angle=Math.atan2(matrix.b,matrix.a);
- if(t-emitted<24)return;
+ x=r.left-g.left+ox+matrix.a*(localX-ox)+matrix.c*(localY-oy)+matrix.e;
+ y=r.top-g.top+oy+matrix.b*(localX-ox)+matrix.d*(localY-oy)+matrix.f;
+ angle=Math.atan2(matrix.b,matrix.a);
+ }
+ if(!boat?.waterline)return;
  const old=previous||{x,y,angle},distance=Math.hypot(x-old.x,y-old.y),steps=Math.min(5,Math.max(1,Math.ceil(distance/5)));
  emitted=t;
  // Deposit foam along the travelled arc, then let it spread independently in the water.
@@ -135,9 +155,17 @@ function emitBoat(t){
    const line=boat.waterline,along=random(line[0][0],line[line.length-1][0]);
    let index=1;while(index<line.length-1&&line[index][0]<along)index++;
    const a=line[index-1],b=line[index],blend=(along-a[0])/(b[0]-a[0]),edge=side<0?1:2;
-   const radius=Math.max(.8,Math.min(bw,bh)*random(.013,.023));
+   const radius=Math.max(.8,Math.min(bw,bh)*random(.021,.034));
    const hx=(a[edge]+(b[edge]-a[edge])*blend-.5)*bw+side*radius*.85,hy=(along-.5)*bh;
-   add({kind:'hullfoam',x:cx+hx*c-hy*sn,y:cy+hx*sn+hy*c,vx:side*random(5,13)*c-sn*12,vy:random(12,24)+side*8*sn,life:random(.32,.6),age:0,r:radius});
+   add({kind:'hullfoam',x:cx+hx*c-hy*sn,y:cy+hx*sn+hy*c,vx:side*random(5,13)*c-sn*12,vy:random(12,24)+side*8*sn,life:random(.48,.8),age:0,r:radius});
+  }
+  // A separate stern wake follows each hull's own rear waterline, then disperses.
+  const stern=boat.waterline[boat.waterline.length-1],rear=(stern[0]-.5)*bh;
+  for(const side of [-1,1]){
+   const hx=((stern[1]+stern[2])*.5-.5)*bw+side*bw*.055,hy=rear+bh*.025;
+   add({kind:'hullfoam',x:cx+hx*c-hy*sn,y:cy+hx*sn+hy*c,
+    vx:side*random(8,16)*c-sn*26,vy:random(24,38)*c+side*10*sn,
+    life:random(.9,1.25),age:0,r:Math.max(1.2,Math.min(bw,bh)*random(.028,.042))});
   }
  }
  previous={x,y,angle};
@@ -186,9 +214,9 @@ function drawWaterSalute(age){
  fx.restore();
 }
 function drawEffects(t,dt){
- fx.clearRect(0,0,width,height);emitBoat(t);
+ fx.clearRect(0,0,width,height);wakeCtx.clearRect(0,0,width,height);emitBoat(t);
  const emitNow=t-effectEmitted>=32;if(emitNow)effectEmitted=t;
- const saluteAge=(t-saluteAt)/1000;
+ const saluteAge=(t-saluteAt)/(1000*window.WaveConfig.timings.celebrationScale);
  if(saluteAge>=0&&saluteAge<3.4){
   drawWaterSalute(saluteAge);
 
@@ -210,8 +238,8 @@ function drawEffects(t,dt){
   p.age+=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;const k=Math.min(1,p.age/p.life),alpha=(1-k);
   fx.globalAlpha=alpha;
   if(p.kind==='hullfoam'){
-   const fade=Math.min(1,p.age/.065)*(1-k);fx.globalAlpha=fade*.8;
-   p.vx*=Math.exp(-dt*2);const radius=p.r*(1+k*.8);fx.drawImage(foamStamp,p.x-radius,p.y-radius*.55,radius*2,radius*1.1);
+   const fade=Math.min(1,p.age/.065)*(1-k);wakeCtx.globalAlpha=fade*.98;
+   p.vx*=Math.exp(-dt*2);const radius=p.r*(1+k*.8);wakeCtx.drawImage(foamStamp,p.x-radius,p.y-radius*.55,radius*2,radius*1.1);
   }else if(p.kind==='smoke'){
    const r=p.r*(.6+k*2.8),g=fx.createRadialGradient(p.x,p.y,0,p.x,p.y,r);
    g.addColorStop(0,'#14262bea');g.addColorStop(.4,'#26383bc9');g.addColorStop(.75,'#34464a65');g.addColorStop(1,'#34464a00');fx.fillStyle=g;fx.fillRect(p.x-r,p.y-r,r*2,r*2);
@@ -230,7 +258,7 @@ function tick(t){
  requestAnimationFrame(tick);if(document.hidden)return;
  const dt=Math.min(.05,(t-last)/1000);last=t;
  if(['landing','demo'].includes(game.dataset.screen))return;
- const flowing=game.dataset.screen==='play';if(flowing)flowTime+=dt*1000*(1+boostStrength(t)*3);
+ const flowing=game.dataset.screen==='play';
  // Keep the texture at 30fps, but follow hull motion at the display refresh rate.
  if(t-oceanFrame>=32){ocean(t,flowing);oceanFrame=t;}
  drawEffects(t,dt);

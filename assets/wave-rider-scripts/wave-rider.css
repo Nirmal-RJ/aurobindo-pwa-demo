@@ -17,12 +17,16 @@ button img{width:100%;height:100%}
 .close{position:absolute;left:2.5%;top:max(1%,env(safe-area-inset-top));z-index:7;border:2px solid #ffdb68;border-radius:50%;background:#c33118;color:#fff;font-weight:900;font-size:5cqw;width:8cqw;height:8cqw;line-height:1}
 .landing-bg,.full-demo{width:100%;height:100%;object-fit:fill}
 .landing-next{left:28%;top:82%;width:44%;height:10%}
-.loading{position:absolute;left:20%;top:86%;width:60%;height:4%;border:2px solid #ffdd68;border-radius:30px;background:#075a91;overflow:hidden;color:#fff;text-align:center;font-size:3.3cqw}
-.loading span{position:relative;z-index:1}
-.loading i{position:absolute;inset:0 auto 0 0;width:0;background:#13cbd8;transition:width .15s}
+.loading{position:absolute;left:13%;top:82%;width:74%;padding:3cqw 4cqw;border:2px solid #ffe28a;border-radius:5cqw;background:linear-gradient(160deg,#086ca0f5,#023958f5);box-shadow:0 0 0 2px #b77616,inset 0 1px 0 #ffffff65,0 5px 12px #00283880;color:#fff}
+.loading-heading{display:flex;align-items:center;justify-content:space-between;gap:3cqw;margin-bottom:2cqw;font-size:clamp(13px,4cqw,20px);line-height:1.2;font-weight:800;text-shadow:0 1px 2px #002940}
+.loading-percent{color:#ffe279;font-variant-numeric:tabular-nums;min-width:4ch;text-align:right}
+.loading-track{height:clamp(10px,3cqw,16px);border:1px solid #75e4f3;border-radius:999px;background:#022b47;overflow:hidden;box-shadow:inset 0 2px 3px #001b3699}
+.loading-track i{display:block;width:100%;height:100%;border-radius:inherit;background:linear-gradient(180deg,#c3fcff,#3ce6ef 45%,#0aabd5);transform:scaleX(0);transform-origin:left;transition:transform .16s ease-out;box-shadow:inset 0 1px 0 #fff9}
+.loading button{display:block;width:100%;border:1px solid #ffe28a;border-radius:3cqw;padding:2cqw;background:#ffdc4b;color:#603000;font-size:3.5cqw;font-weight:800}
 .demo-nav{position:absolute;bottom:max(1%,env(safe-area-inset-bottom));left:5%;right:5%;height:10%;display:flex;justify-content:space-between;align-items:center}
-.demo-nav .art-button{position:static;width:42%;height:100%}
-.previous{background:#fff0ca;border:2px solid #c98c27;border-radius:20px;padding:2cqw 3cqw;font-weight:700;color:#653318;font-size:3.7cqw}
+.demo-button{width:46%;height:auto;min-height:44px;aspect-ratio:3.25;border:2px solid #fff6a0;border-radius:999px;background:linear-gradient(#fff99b 0%,#fff02d 27%,#ffdf00 65%,#ffc100 100%);box-shadow:0 0 0 2px #eaa019,inset 0 -3px 0 #ffad00,0 4px 0 #b66308,0 6px 5px #0005;color:#642300;font-size:5cqw;font-weight:900;font-style:italic;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:1.4cqw;line-height:1;padding:1cqw 2cqw;transition:transform .15s,filter .15s}
+.demo-button .demo-chevron{display:block;flex:0 0 auto;width:.46em;height:.46em;border-top:.15em solid currentColor;border-right:.15em solid currentColor;transform:rotate(45deg);margin-inline:.15em}.demo-button .demo-chevron-left{transform:rotate(-135deg)}
+.demo-button:active{transform:translateY(2px);filter:brightness(1.08)}
 
 .home-boat{position:absolute;left:2%;top:28%;width:57%;height:33%;display:grid;place-items:center}
 .home-boat img{width:100%;height:100%}
@@ -51,7 +55,7 @@ button img{width:100%;height:100%}
 .time i{display:block;width:100%;height:100%;background:#ffdf63;transform-origin:left}
 .time.urgent{color:#ffdf63;animation:urgency .5s ease-in-out infinite}
 .time.urgent i{background:#ff583d}
-.ship{position:absolute;width:23%;height:18%;left:50%;top:85%;transform:translate(-50%,-50%);z-index:2;touch-action:none;will-change:left,top}
+.ship{position:absolute;width:23%;height:18%;left:50%;top:85%;transform:translate(-50%,-50%);z-index:2;touch-action:none;will-change:translate}
 .ship>img{position:relative;z-index:2;width:100%;height:100%;filter:drop-shadow(0 5px 4px #00516a66);animation:ship-bob 1.5s ease-in-out infinite}
 .wake{position:absolute;top:70%;left:20%;width:60%;height:80%;background:linear-gradient(#efffff99,transparent);clip-path:polygon(30% 0,70% 0,100% 100%,0 100%);filter:blur(2px);animation:wake .5s alternate infinite}
 .play{touch-action:pan-y}
@@ -135,7 +139,7 @@ to{opacity:1;transform:none}
 
 
 #ocean{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
-#game[data-screen=play] #ocean,#scene.play.success{filter:blur(var(--splash-blur,0px))}
+/* No inactive full-stage blur pass: success lens blur was removed. */
 #game[data-screen=landing] #ocean,#game[data-screen=demo] #ocean{visibility:hidden}
 .hud-flag{display:block;width:3cqw;height:3.7cqw;border-left:1px solid #f5e1a0;position:relative;margin-right:1cqw}
 .hud-flag::after{content:"";position:absolute;left:0;top:0;width:2.5cqw;height:1.7cqw;border:1px solid #e7ce90;clip-path:polygon(0 0,100% 35%,0 100%)}
@@ -229,7 +233,7 @@ to{opacity:1;transform:none}
 .ship.wreck{animation:wreck .45s ease-out,submerge 2.65s .45s ease-in forwards;transform-origin:50% 65%}
 .crash-rim{position:absolute;inset:0;box-shadow:inset 0 0 12cqw 4cqw #a80c06;animation:danger-rim 3.2s ease-out both}
 .sinking::after{opacity:.2}
-.success::after{background:#001b30;opacity:0;z-index:3;animation:victory-light 6.2s ease-in-out both}
+.success::after{background:#001b30;opacity:0;z-index:3;animation:victory-light var(--victory-duration,3410ms) ease-in-out both}
 @keyframes victory-light{0%,100%{opacity:0}25%,65%{opacity:.28}85%{opacity:.12}}
 .crash::after{opacity:.18;animation:flash .65s ease-out}
 @keyframes bank-left{25%{transform:rotate(-13deg) translateX(-2%)}70%{transform:rotate(3deg)}100%{transform:none}}
@@ -279,3 +283,7 @@ to{opacity:1;transform:none}
 .flag-rays{position:absolute;left:50%;top:51%;width:62%;aspect-ratio:1;transform:translate(-50%,-50%);pointer-events:none}
 .flag-rays i{display:block;width:100%;height:100%;border-radius:50%;background:repeating-conic-gradient(from 0deg,#fff1a7b3 0deg 8deg,transparent 8deg 24deg);mask-image:radial-gradient(circle,#000 8%,transparent 69%);-webkit-mask-image:radial-gradient(circle,#000 8%,transparent 69%);animation:flag-ray-turn 8s linear infinite}
 @keyframes flag-ray-turn{to{transform:rotate(360deg)}}
+
+/* Hull foam lives above the ocean but below the complete boat scene. */
+#boat-wake{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+#game[data-screen=landing] #boat-wake,#game[data-screen=demo] #boat-wake{visibility:hidden}
