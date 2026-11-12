@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#0a2558">
   <title>See Saw</title>
+  <link rel="preconnect" href="https://www.youtube.com">
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
   <link rel="icon" href="../../icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="see-saw.css?v=26">
+  <link rel="stylesheet" href="see-saw.css?v=32">
   <style>
     /* Critical alignment enforcement for Page 12 ("Too slow!") */
     .ss-p12-row { position: absolute; left: 0; width: 100%; pointer-events: none; }
@@ -280,6 +282,9 @@
         </button>
 
         <div id="p13-video-modal" class="ss-modal-p9-backdrop" role="dialog" aria-label="Symptom Video Player" hidden>
+          <div id="p13-complete-transition" class="ss-video-complete-transition" aria-label="Video completed" hidden>
+            <div class="ss-video-complete-tick" aria-hidden="true">&#10003;</div>
+          </div>
           <div class="ss-modal-p9-card">
             <div id="p13-modal-title" class="ss-modal-p9-header">High Pressure</div>
             <div class="ss-modal-p9-video-box">
@@ -295,11 +300,11 @@
     </div>
   </main>
 
-  <script src="see-saw-config.js?v=26"></script>
-  <script src="see-saw-core.js?v=26"></script>
-  <script src="see-saw-audio.js?v=26"></script>
-  <script src="see-saw-video.js?v=26"></script>
-  <script src="see-saw.js?v=26"></script>
+  <script src="see-saw-config.js?v=32"></script>
+  <script src="see-saw-core.js?v=32"></script>
+  <script src="see-saw-audio.js?v=32"></script>
+  <script src="see-saw-video.js?v=32"></script>
+  <script src="see-saw.js?v=32"></script>
 </body>
 </html>
 

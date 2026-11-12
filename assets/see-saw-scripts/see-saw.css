@@ -1656,3 +1656,47 @@ body {
 }
 .ss-p13-item-play.is-watched { background: linear-gradient(#39cf68, #058529); }
 .ss-p13-home-btn:disabled { opacity: .45; cursor: default; filter: grayscale(.55); }
+
+.ss-video-tap {
+  position: absolute; left: 25%; top: 43%; width: 50%; z-index: 12;
+  padding: 14px 8px; border: 2px solid #ffe082; border-radius: 14px;
+  background: #ffca28; color: #0b2d78; font: inherit; font-weight: 900;
+  cursor: pointer; box-shadow: 0 4px 14px #0008;
+}
+
+.ss-video-complete-transition {
+  position: absolute; inset: 0; z-index: 90; display: flex;
+  align-items: center; justify-content: center;
+  background: rgba(0, 15, 8, .65); transition: background .35s ease;
+}
+.ss-video-complete-transition.is-black { background: #000; }
+.ss-video-complete-tick {
+  width: 42%; aspect-ratio: 1; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  border: 5px solid #d6ffe0; background: linear-gradient(#4ce67b, #07953a);
+  color: white; font-size: calc(var(--u) * 27); font-weight: 900;
+  box-shadow: 0 0 30px #2dfa77aa, 0 8px 20px #0005;
+  animation: ssVideoTickIn .75s cubic-bezier(.2,.8,.2,1) both;
+  transition: opacity .25s ease;
+}
+.ss-video-complete-transition.is-black .ss-video-complete-tick { opacity: 0; }
+@keyframes ssVideoTickIn {
+  0% { transform: scale(.35); opacity: 0; }
+  55% { transform: scale(1.12); opacity: 1; }
+  78% { transform: scale(.96); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.ss-video-complete-transition.is-revealing { background: transparent; }
+.ss-video-complete-transition.is-revealing .ss-video-complete-tick { opacity: 0; }
+
+.ss-video-loading {
+  position: absolute; width: 38px; height: 38px; z-index: 11;
+  border: 4px solid #ffffff40; border-top-color: #ffca28;
+  border-radius: 50%; pointer-events: none;
+  animation: ssVideoLoadingSpin .8s linear infinite;
+}
+@keyframes ssVideoLoadingSpin { to { transform: rotate(360deg); } }
+
+.ss-prepared-video { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ss-prepared-video iframe { width: 100%; height: 100%; border: 0; }

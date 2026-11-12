@@ -16,9 +16,13 @@
     if (root.YT && root.YT.Player) return Promise.resolve(root.YT);
     if (ytApiPromise) return ytApiPromise;
     ytApiPromise = new Promise(function (resolve, reject) {
-      var timeout = setTimeout(function () {
-        reject(new Error('YouTube API timeout'));
-      }, 6500);
+      function fail() {
+        clearTimeout(timeout);
+        script.remove();
+        ytApiPromise = null;
+        reject(new Error('YouTube unavailable'));
+      }
+      var timeout = setTimeout(fail, 15000);
       var prev = root.onYouTubeIframeAPIReady;
       root.onYouTubeIframeAPIReady = function () {
         clearTimeout(timeout);
@@ -28,13 +32,62 @@
       var script = document.createElement('script');
       script.src = 'https://www.youtube.com/iframe_api';
       script.async = true;
-      script.onerror = function () {
-        clearTimeout(timeout);
-        reject(new Error('YouTube script error'));
-      };
+      script.onerror = fail;
       document.head.appendChild(script);
     });
     return ytApiPromise;
+  }
+
+  // Keep onboarding players in their original DOM nodes: moving an iframe reloads it.
+  var preparedPlayers = Object.create(null);
+  function preparePlayers(pairs, container) {
+    if (!container) return loadYouTubeApi().catch(function () {});
+    return loadYouTubeApi().then(function (YT) {
+      (pairs || []).forEach(function (pair) {
+        var id = extractYouTubeId(pair.youtube);
+        if (!id || preparedPlayers[id]) return;
+        var wrap = document.createElement('div');
+        wrap.className = 'ss-prepared-video';
+        wrap.style.visibility = 'hidden';
+        wrap.style.pointerEvents = 'none';
+        var host = document.createElement('div');
+        host.className = 'ss-yt-host';
+        wrap.appendChild(host);
+        container.appendChild(wrap);
+        var slot = {container: container, wrap: wrap, player: null, ready: false, events: null, failed: false};
+        preparedPlayers[id] = slot;
+        slot.player = new YT.Player(host, {
+          videoId: id,
+          playerVars: {autoplay: 0, loop: 0, controls: 1, playsinline: 1, rel: 0, origin: root.location.origin},
+          events: {
+            onReady: function (ev) {
+              slot.ready = true;
+              if (slot.events) slot.events.onReady(ev);
+            },
+            onStateChange: function (ev) {
+              if (!slot.events) {
+                if (ev.data === 1 && slot.player) slot.player.pauseVideo();
+                return;
+              }
+              slot.events.onStateChange(ev);
+            },
+            onAutoplayBlocked: function (ev) { if (slot.events) slot.events.onAutoplayBlocked(ev); },
+            onError: function () { slot.failed = true; if (slot.events) slot.events.onError(); }
+          }
+        });
+      });
+    }).catch(function () {});
+  }
+
+  function clearPreparedContainer(container) {
+    Object.keys(preparedPlayers).forEach(function (id) {
+      var slot = preparedPlayers[id];
+      if (slot.container !== container) return;
+      slot.events = null;
+      try { slot.player.destroy(); } catch (_) {}
+      slot.wrap.remove();
+      delete preparedPlayers[id];
+    });
   }
 
   function stopActiveVideo() {
@@ -260,6 +313,8 @@
     container.innerHTML = '';
     var video = document.createElement('video');
     video.className = 'ss-video-element';
+    video.preload = 'none';
+    video.loop = false;
     video.src = pair.video;
     video.controls = Boolean(opts.allowControls);
     video.playsInline = true;
@@ -267,8 +322,9 @@
     video.autoplay = true;
 
     var completed = false;
+    var disposed = false;
     function markComplete() {
-      if (completed) return;
+      if (completed || disposed) return;
       completed = true;
       if (typeof opts.onComplete === 'function') {
         opts.onComplete();
@@ -277,6 +333,8 @@
 
     video.addEventListener('ended', markComplete);
     video.addEventListener('error', function () {
+      if (disposed) return;
+      stopActiveVideo();
       mountPlaceholderPlayer(container, pair, opts);
     });
 
@@ -284,11 +342,13 @@
     var p = video.play();
     if (p && typeof p.catch === 'function') {
       p.catch(function () {
+        if (disposed) return;
         video.controls = true;
       });
     }
 
     activeCleanup = function () {
+      disposed = true;
       try {
         video.pause();
         video.removeAttribute('src');
@@ -306,18 +366,59 @@
     var ytId = pair && pair.youtube ? extractYouTubeId(pair.youtube) : '';
 
     if (ytId) {
-      container.innerHTML = '';
+      var prepared = preparedPlayers[ytId];
+      if (prepared && (prepared.container !== container || !prepared.wrap.isConnected || prepared.failed)) prepared = null;
+      if (!prepared) container.innerHTML = '';
       var playerHost = document.createElement('div');
       playerHost.className = 'ss-yt-host';
-      container.appendChild(playerHost);
+      if (!prepared) container.appendChild(playerHost);
+      else { prepared.wrap.style.visibility = 'visible'; prepared.wrap.style.pointerEvents = 'auto'; }
       var destroyed = false;
       var ytPlayer = null;
       var completed = false;
       var completionTimer = null;
+      var readyTimer = null;
+      var tapButton = null;
+      var startupTimer = null;
+      var loading = document.createElement('div');
+      loading.className = 'ss-video-loading';
+      loading.setAttribute('role', 'status');
+      loading.setAttribute('aria-label', 'Loading video');
+      container.appendChild(loading);
+      function removeLoading() {
+        if (loading) loading.remove();
+        loading = null;
+      }
+      function removeTap() {
+        if (tapButton) tapButton.remove();
+        tapButton = null;
+      }
+      function showTap(player) {
+        if (destroyed || completed || tapButton) return;
+        removeLoading();
+        tapButton = document.createElement('button');
+        tapButton.type = 'button';
+        tapButton.className = 'ss-video-tap';
+        tapButton.textContent = 'Tap to play';
+        tapButton.addEventListener('click', function () {
+          if (!destroyed && player && typeof player.playVideo === 'function') player.playVideo();
+        });
+        container.appendChild(tapButton);
+      }
+      function useFallback() {
+        if (destroyed) return;
+        stopActiveVideo();
+        clearPreparedContainer(container);
+        if (pair && pair.video) mountLocalVideo(container, pair, opts);
+        else mountPlaceholderPlayer(container, pair, opts);
+      }
 
       function finishYouTubeVideo() {
         if (destroyed || completed) return;
         completed = true;
+        clearTimeout(startupTimer);
+        removeLoading();
+        removeTap();
         if (completionTimer) clearInterval(completionTimer);
         completionTimer = null;
         if (ytPlayer && typeof ytPlayer.pauseVideo === 'function') ytPlayer.pauseVideo();
@@ -335,8 +436,19 @@
 
       activeCleanup = function () {
         destroyed = true;
+        clearTimeout(readyTimer);
+        clearTimeout(startupTimer);
+        removeLoading();
+        removeTap();
         if (completionTimer) clearInterval(completionTimer);
         completionTimer = null;
+        if (prepared) {
+          prepared.events = null;
+          prepared.wrap.style.visibility = 'hidden';
+          prepared.wrap.style.pointerEvents = 'none';
+          try { prepared.player.pauseVideo(); } catch (_) {}
+          return;
+        }
         if (ytPlayer && typeof ytPlayer.destroy === 'function') {
           try {
             ytPlayer.destroy();
@@ -349,7 +461,8 @@
       loadYouTubeApi()
         .then(function (YT) {
           if (destroyed) return;
-          ytPlayer = new YT.Player(playerHost, {
+          readyTimer = setTimeout(useFallback, 15000);
+          var playerOptions = {
             videoId: ytId,
             playerVars: {
               autoplay: 1,
@@ -357,41 +470,56 @@
               controls: 1,
               disablekb: 0,
               rel: 0,
-              playsinline: 1
+              playsinline: 1,
+              origin: root.location.origin
             },
             events: {
-              onReady: function () {
+              onReady: function (ev) {
                 if (destroyed) return;
+                clearTimeout(readyTimer);
                 completionTimer = setInterval(checkYouTubeCompletion, 200);
+                var player = ev && ev.target ? ev.target : ytPlayer;
+                if (player && typeof player.playVideo === 'function') player.playVideo();
+                startupTimer = setTimeout(function () {
+                  if (destroyed || completed) return;
+                  if (player && typeof player.getPlayerState === 'function' && player.getPlayerState() === YT.PlayerState.PLAYING) {
+                    removeLoading();
+                    return;
+                  }
+                  showTap(player);
+                }, 1500);
+              },
+              onAutoplayBlocked: function (ev) {
+                if (destroyed || completed) return;
+                clearTimeout(readyTimer);
+                showTap(ev && ev.target ? ev.target : ytPlayer);
               },
               onStateChange: function (ev) {
                 if (destroyed) return;
+                if (ev.data === YT.PlayerState.PLAYING) {
+                  clearTimeout(startupTimer);
+                  removeLoading();
+                  removeTap();
+                }
                 if (completed) {
                   if (ev.data === YT.PlayerState.PLAYING && ytPlayer) ytPlayer.pauseVideo();
                   return;
                 }
                 if (ev.data === YT.PlayerState.ENDED) finishYouTubeVideo();
               },
-              onError: function () {
-                if (destroyed) return;
-                stopActiveVideo();
-                if (pair && pair.video) {
-                  mountLocalVideo(container, pair, opts);
-                } else {
-                  mountPlaceholderPlayer(container, pair, opts);
-                }
-              }
+              onError: useFallback
             }
-          });
-        })
-        .catch(function () {
-          if (destroyed) return;
-          if (pair && pair.video) {
-            mountLocalVideo(container, pair, opts);
+          };
+          if (prepared) {
+            ytPlayer = prepared.player;
+            if (typeof ytPlayer.seekTo === 'function') ytPlayer.seekTo(0, true);
+            prepared.events = playerOptions.events;
+            if (prepared.ready) playerOptions.events.onReady({target: ytPlayer});
           } else {
-            mountPlaceholderPlayer(container, pair, opts);
+            ytPlayer = new YT.Player(playerHost, playerOptions);
           }
-        });
+        })
+        .catch(useFallback);
       return;
     }
 
@@ -404,6 +532,7 @@
   }
 
   root.SeeSawVideo = {
+    prepare: preparePlayers,
     mountVideo: mountVideo,
     stopActiveVideo: stopActiveVideo,
     extractYouTubeId: extractYouTubeId

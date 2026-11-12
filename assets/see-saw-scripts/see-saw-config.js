@@ -18,7 +18,7 @@
       symptomImg: ASSET_BASE + '/page-5/1-high-pressure.webp',
       causeImg: ASSET_BASE + '/page-5/11-column-blockage.webp',
       youtube: 'https://youtube.com/shorts/qp7AV0sm9IY?feature=share',
-      video: ''
+      video: ASSET_BASE + '/videos/high-pressure-v1.mp4'
     },
     {
       id: 'pressure-fluctuation',
@@ -28,7 +28,7 @@
       symptomImg: ASSET_BASE + '/page-5/22-pressure-fluctuation.webp',
       causeImg: ASSET_BASE + '/page-5/22-air-bubble.webp',
       youtube: 'https://youtube.com/shorts/BSuYdW8Rctk?feature=share',
-      video: ''
+      video: ASSET_BASE + '/videos/pressure-fluctuation-v1.mp4'
     },
     {
       id: 'peak-tailing',
@@ -38,7 +38,7 @@
       symptomImg: ASSET_BASE + '/page-5/33-peak-tailing.webp',
       causeImg: ASSET_BASE + '/page-5/33-column-deterioration.webp',
       youtube: 'https://youtube.com/shorts/Lzsot0zqUWA?feature=share',
-      video: ''
+      video: ASSET_BASE + '/videos/peak-tailing-v1.mp4'
     },
     {
       id: 'low-pressure',
@@ -48,7 +48,7 @@
       symptomImg: ASSET_BASE + '/page-5/44-low-pressure.webp',
       causeImg: ASSET_BASE + '/page-5/44-leakage.webp',
       youtube: 'https://youtube.com/shorts/dZSrWQI4M-Q?feature=share',
-      video: ''
+      video: ASSET_BASE + '/videos/low-pressure-v1.mp4'
     },
     {
       id: 'retention-time-shift',
@@ -58,7 +58,7 @@
       symptomImg: ASSET_BASE + '/page-5/55-retention-time-shift.webp',
       causeImg: ASSET_BASE + '/page-5/55-mobile-phase-variation.webp',
       youtube: 'https://youtube.com/shorts/TtUwfHJX4b4?feature=share',
-      video: ''
+      video: ASSET_BASE + '/videos/retention-time-shift-v1.mp4'
     }
   ];
 

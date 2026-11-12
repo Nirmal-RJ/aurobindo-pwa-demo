@@ -1,14 +1,14 @@
 const CACHE_PREFIX = 'see-saw-cache-';
-const CACHE_NAME = `${CACHE_PREFIX}v26`;
+const CACHE_NAME = `${CACHE_PREFIX}v32`;
 
 const SHELL_ASSETS = [
   './see-saw.html',
-  './see-saw.css?v=26',
-  './see-saw-config.js?v=26',
-  './see-saw-core.js?v=26',
-  './see-saw-audio.js?v=26',
-  './see-saw-video.js?v=26',
-  './see-saw.js?v=26',
+  './see-saw.css?v=32',
+  './see-saw-config.js?v=32',
+  './see-saw-core.js?v=32',
+  './see-saw-audio.js?v=32',
+  './see-saw-video.js?v=32',
+  './see-saw.js?v=32',
   '../see-saw-assets/next-button.webp',
   '../see-saw-assets/play-again-button.webp',
   '../see-saw-assets/star.webp',

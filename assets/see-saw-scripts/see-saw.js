@@ -122,6 +122,56 @@
   var lastOnboardingVideoKey = '';
   var lastRemediationVideoKey = '';
   var lastWatchModalPairId = null;
+  var videoTransitionPairId = null;
+  var videoTransitionTimers = [];
+  var videoTransitionVersion = 0;
+  var videoTransition = document.getElementById('p13-complete-transition');
+
+  function cancelVideoTransition() {
+    videoTransitionVersion += 1;
+    videoTransitionTimers.forEach(clearTimeout);
+    videoTransitionTimers = [];
+    videoTransitionPairId = null;
+    videoTransition.hidden = true;
+    videoTransition.classList.remove('is-black', 'is-revealing');
+  }
+
+  function celebrateVideoCompletion(pairId) {
+    cancelVideoTransition();
+    videoTransitionPairId = pairId;
+    var version = videoTransitionVersion;
+    videoTransition.hidden = false;
+    function later(delay, action) {
+      videoTransitionTimers.push(setTimeout(function () {
+        if (version === videoTransitionVersion) action();
+      }, delay));
+    }
+    later(900, function () { videoTransition.classList.add('is-black'); });
+    later(1250, function () {
+      var snap = controller.getSnapshot();
+      if (snap.page !== 'page-13' || snap.watchVideosActivePairId !== pairId) return cancelVideoTransition();
+      var currentIndex = Config.pairs.findIndex(function (pair) { return pair.id === pairId; });
+      var next = null;
+      for (var i = 1; i <= Config.pairs.length; i += 1) {
+        var pair = Config.pairs[(currentIndex + i) % Config.pairs.length];
+        if (snap.progress.watchedVideoIds.indexOf(pair.id) === -1) { next = pair; break; }
+      }
+      if (!next) {
+        render(controller.closeWatchVideoModal());
+        return;
+      }
+      videoTransitionPairId = next.id;
+      render(controller.selectWatchVideoPair(next.id));
+      // Reveal the next player's own startup UI; never wait on a network response to clear black.
+      videoTransitionTimers.push(setTimeout(function () {
+        if (version !== videoTransitionVersion) return;
+        videoTransition.classList.add('is-revealing');
+        videoTransitionTimers.push(setTimeout(function () {
+          if (version === videoTransitionVersion) cancelVideoTransition();
+        }, 350));
+      }, 300));
+    });
+  }
 
   function setupCloseLink() {
     try {
@@ -571,6 +621,7 @@
   }
 
   function render(snap) {
+    if (videoTransitionPairId && (snap.page !== 'page-13' || snap.watchVideosActivePairId !== videoTransitionPairId)) cancelVideoTransition();
     clearAutoAdvance();
     stageEl.setAttribute('data-page', snap.page);
     syncAudioForPage(snap);
@@ -820,7 +871,9 @@
             allowControls: !unlocking,
             onComplete: function () {
               if (controller.getSnapshot().page !== 'page-13') return;
+              if (controller.getSnapshot().watchVideosActivePairId !== activePair.id) return;
               render(controller.completeWatchVideo(activePair.id));
+              if (unlocking) celebrateVideoCompletion(activePair.id);
             }
           });
         }
@@ -932,6 +985,7 @@
   }
 
   function init() {
+    VideoCtrl.prepare(Config.pairs, p13VideoHost);
     setupCloseLink();
     buildTrayOptions();
     buildWatchVideosList();
