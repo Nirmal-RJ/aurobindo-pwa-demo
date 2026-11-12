@@ -6,7 +6,8 @@ export const publicGames = [
  {id:'rocket',image:'../assets/rocket-game-assets/page-1/page-1-bg.webp',name:"Rocket'ier",defaultBuildId:'rocket-review'},
  {id:'solvent-master',image:'../assets/solvent-master-game-assets/page-1/page-1-bg.webp',name:'Solvent Master',defaultBuildId:'solvent-master-review'},
  {id:'ab-express',image:'../assets/ab-express-assets/page-1/page-1-bg.webp',name:'AB Express',defaultBuildId:'ab-express-review'},
- {id:'blast',image:'../assets/match-it-blast-it-assets/page-1/page-1-bg.webp',name:'Match It, Blast It',defaultBuildId:'blast-30'}
+ {id:'blast',image:'../assets/match-it-blast-it-assets/page-1/page-1-bg.webp',name:'Match It, Blast It',defaultBuildId:'blast-30'},
+ {id:'see-saw',image:'../assets/see-saw-assets/page-1/page-1-bg.webp',name:'See Saw',defaultBuildId:'see-saw-review'}
 ];
 
 export const generalDiscussionId='general-discussion';

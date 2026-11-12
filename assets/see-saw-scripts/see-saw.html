@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0a2558">
+  <title>See Saw</title>
+  <link rel="icon" href="../../icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="see-saw.css?v=18">
+  <style>
+    /* Critical alignment enforcement for Page 12 ("Too slow!") */
+    .ss-p12-row { position: absolute; left: 0; width: 100%; pointer-events: none; }
+    .ss-p12-row-1 { top: 38.8% !important; height: 11.0% !important; }
+    .ss-p12-row-2 { top: 53.2% !important; height: 11.2% !important; }
+    .ss-p12-sep { position: absolute; left: 47.9% !important; top: 50% !important; transform: translate(-50%, -50%) !important; width: calc(var(--u) * 0.45); min-width: 2px; height: 52% !important; background-color: #062089 !important; border-radius: 999px; opacity: 0.95; }
+    .ss-p12-val { position: absolute; left: 51.0% !important; top: 50% !important; transform: translateY(-50%) !important; display: inline-flex !important; align-items: center !important; font-size: calc(var(--u) * 4.6) !important; font-weight: 900 !important; line-height: 1 !important; letter-spacing: 0.02em !important; white-space: nowrap !important; }
+    .ss-p12-val-red, #p12-your-time { color: #c62828 !important; }
+    .ss-p12-val-blue, #p12-target-time { color: #14366b !important; }
+    /* Legacy fallback if old un-nested elements exist */
+    .ss-p12-your-time { position: absolute !important; left: 51.0% !important; top: 40.0% !important; height: 8.5% !important; display: flex !important; align-items: center !important; font-size: calc(var(--u) * 4.6) !important; font-weight: 900 !important; line-height: 1 !important; color: #c62828 !important; }
+    .ss-p12-target-time { position: absolute !important; left: 51.0% !important; top: 54.5% !important; height: 8.5% !important; display: flex !important; align-items: center !important; font-size: calc(var(--u) * 4.6) !important; font-weight: 900 !important; line-height: 1 !important; color: #14366b !important; }
+    /* Close button icon centering */
+    .ss-close-btn { display: flex !important; align-items: center !important; justify-content: center !important; padding: 0 !important; line-height: 0 !important; }
+    .ss-close-icon { width: 58% !important; height: 58% !important; display: block !important; pointer-events: none !important; stroke: #ffffff !important; }
+  </style>
+</head>
+<body>
+  <div id="rotate-overlay" class="ss-rotate-overlay" aria-hidden="true">
+    <div class="ss-rotate-card">
+      <div class="ss-rotate-icon" aria-hidden="true">📱</div>
+      <h2 class="ss-rotate-title">Rotate Your Device</h2>
+      <p class="ss-rotate-text">See Saw is designed for portrait mode. Please rotate your device upright to continue.</p>
+    </div>
+  </div>
+
+  <main id="app-shell" class="ss-shell" aria-label="See Saw Game">
+    <div id="stage" class="ss-stage" data-page="page-1">
+      <!-- Persistent Top Close Button on Every Page -->
+      <a id="close-btn" class="ss-close-btn" href="../../index.html#/rc-games" aria-label="Close game">
+        <svg class="ss-close-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round">
+          <line x1="5.5" y1="5.5" x2="18.5" y2="18.5"></line>
+          <line x1="18.5" y1="5.5" x2="5.5" y2="18.5"></line>
+        </svg>
+      </a>
+
+      <!-- PAGE 1: Landing & Preload Gate -->
+      <section id="page-1" class="ss-page is-active" aria-label="Landing Page">
+        <img class="ss-bg-img" src="../see-saw-assets/page-1/page-1-bg.webp" alt="See Saw" draggable="false">
+
+        <div id="preload-panel" class="ss-preload-panel" role="status" aria-live="polite">
+          <div class="ss-preload-track">
+            <div id="preload-fill" class="ss-preload-fill"></div>
+          </div>
+          <div id="preload-text" class="ss-preload-text">Loading assets... 0%</div>
+          <button id="preload-retry-btn" type="button" class="ss-preload-retry" hidden>Retry Loading</button>
+        </div>
+
+        <button id="page1-next-btn" type="button" class="ss-img-btn ss-page1-next-btn" aria-label="Next" hidden>
+          <img src="../see-saw-assets/next-button.webp" alt="Next" draggable="false">
+        </button>
+      </section>
+
+      <!-- PAGE 2: Demo (2.1, 2.2, 2.3) -->
+      <section id="page-2" class="ss-page" aria-label="How to Play Demo" hidden>
+        <img id="demo-gif-img" class="ss-bg-img" src="../see-saw-assets/demo/1.gif" alt="How to Play Demo" draggable="false">
+        <button id="demo-next-btn" type="button" class="ss-img-btn ss-demo-next-btn" aria-label="Next">
+          <img src="../see-saw-assets/next-button.webp" alt="Next" draggable="false">
+        </button>
+      </section>
+
+      <!-- PAGE 3: First-Time 5 Videos -->
+      <section id="page-3" class="ss-page" aria-label="Training Videos" hidden>
+        <img class="ss-bg-img" src="../see-saw-assets/page-5/page-5-bg.webp" alt="" draggable="false">
+
+        <div class="ss-p3-title-wrap">
+          <img class="ss-fill-img" src="../see-saw-assets/title-and-question-panel.webp" alt="" draggable="false">
+          <div id="p3-symptom-title" class="ss-p3-symptom-title">Low Pressure</div>
+        </div>
+
+        <div class="ss-p3-video-no-wrap">
+          <img class="ss-fill-img" src="../see-saw-assets/page-3/video-no-panel.webp" alt="" draggable="false">
+          <div id="p3-video-counter" class="ss-p3-video-counter">Video 1 of 5</div>
+        </div>
+
+        <div class="ss-p3-video-frame">
+          <div id="p3-video-host" class="ss-video-host"></div>
+        </div>
+
+        <button id="p3-next-btn" type="button" class="ss-img-btn ss-p3-next-btn" aria-label="Next video" disabled>
+          <img src="../see-saw-assets/next-button.webp" alt="Next" draggable="false">
+        </button>
+      </section>
+
+      <!-- PAGE 4: Home Page (Timed Challenge) -->
+      <section id="page-4" class="ss-page" aria-label="Home Page" hidden>
+        <img class="ss-bg-img" src="../see-saw-assets/page-4/page-4-bg.webp" alt="Timed Challenge" draggable="false">
+
+        <div id="p4-rule-line1" class="ss-p4-rule-line1">
+          <span>5 questions ·</span>
+          <span id="p4-seconds-text">10 seconds each</span>
+        </div>
+
+        <button id="p4-start-btn" type="button" class="ss-img-btn ss-p4-start-btn" aria-label="Start Challenge">
+          <img src="../see-saw-assets/page-4/start-challenge-button.webp" alt="Start Challenge" draggable="false">
+        </button>
+
+        <button id="p4-watch-videos-btn" type="button" class="ss-img-btn ss-p4-watch-btn" aria-label="Watch Videos">
+          <img src="../see-saw-assets/page-4/watch-videos-button.webp" alt="Watch Videos" draggable="false">
+        </button>
+
+        <button id="p4-demo-btn" type="button" class="ss-img-btn ss-p4-demo-btn" aria-label="Demo">
+          <img src="../see-saw-assets/page-4/demo-button.webp" alt="Demo" draggable="false">
+        </button>
+      </section>
+
+      <!-- PAGE 5 (+ Pop-ups 6, 7, 8, 12 + Modal 9): Main Gameplay Stage -->
+      <section id="page-5" class="ss-page" aria-label="Gameplay Stage" hidden>
+        <img class="ss-bg-img" src="../see-saw-assets/page-5/page-5-bg.webp" alt="" draggable="false">
+
+        <!-- Hanging Question Sign -->
+        <div class="ss-p5-header-board">
+          <img class="ss-fill-img" src="../see-saw-assets/title-and-question-panel.webp" alt="" draggable="false">
+          <div id="p5-q-badge" class="ss-p5-q-badge">1/5</div>
+          <div class="ss-p5-prompt-text">Match the Symptom<br>with its Probable Cause</div>
+        </div>
+
+        <!-- Timer Panel -->
+        <div class="ss-p5-timer-wrap">
+          <img class="ss-fill-img" src="../see-saw-assets/page-5/timer-panel.webp" alt="" draggable="false">
+          <div id="p5-timer-text" class="ss-p5-timer-text" role="timer" aria-live="off">00:10</div>
+        </div>
+
+        <!-- See Saw Assembly -->
+        <div id="seesaw-assembly" class="ss-seesaw-assembly">
+          <div id="seesaw-beam" class="ss-seesaw-beam" data-tilt="left">
+            <!-- Left Seat: Symptom Rock -->
+            <div class="ss-seat-left">
+              <img id="p5-symptom-rock" class="ss-rock-img" src="../see-saw-assets/page-5/1-high-pressure.webp" alt="Symptom" draggable="false">
+            </div>
+
+            <!-- Right Seat: Target Slot / Placed Cause Rock -->
+            <div id="p5-drop-zone" class="ss-seat-right" role="group" aria-label="Probable Cause Drop Target">
+              <div id="p5-drop-placeholder" class="ss-drop-placeholder">
+                <span class="ss-drop-qmark">?</span>
+              </div>
+              <img id="p5-placed-rock" class="ss-rock-img ss-placed-rock" src="" alt="" draggable="false" hidden>
+            </div>
+
+        <!-- Mascot GIF -->
+        <div id="p5-mascot-wrap" class="ss-mascot-wrap">
+          <img id="p5-mascot-img" class="ss-mascot-img" src="../see-saw-assets/mascot/idle.gif" alt="Mascot" draggable="false">
+        </div>
+
+            <!-- Plank -->
+            <div class="ss-plank-wrap">
+              <img class="ss-fill-img" src="../see-saw-assets/page-5/see-saw-panel.webp" alt="" draggable="false">
+            </div>
+          </div>
+
+          <!-- Base / Fulcrum -->
+          <div class="ss-base-wrap">
+            <img class="ss-fill-img" src="../see-saw-assets/page-5/see-saw-base.webp" alt="" draggable="false">
+          </div>
+        </div>
+
+        <!-- Answers Tray (Active on Page 5) -->
+        <div id="p5-tray-area" class="ss-tray-area">
+          <img class="ss-tray-bg" src="../see-saw-assets/page-5/answers-tray.webp" alt="" draggable="false">
+          <div id="p5-options-container" class="ss-options-container" role="list" aria-label="Probable Causes"></div>
+        </div>
+
+        <!-- Celebration & Confetti Layer -->
+        <div id="celebration-layer" class="ss-celebration-layer" aria-hidden="true"></div>
+
+        <!-- PAGE 6 POP-UP: Correct! -->
+        <div id="popup-correct" class="ss-outcome-layer ss-popup-correct" role="dialog" aria-label="Correct Answer" hidden>
+          <img class="ss-fill-img" src="../see-saw-assets/page-6/correct-pop-up.webp" alt="Correct!" draggable="false">
+          <div id="p6-time-value" class="ss-p6-time-value">5.2 s</div>
+          <div id="p6-streak-row" class="ss-p6-streak-row" aria-label="Streak progress">
+            <span class="ss-streak-dot" data-slot="1"></span>
+            <span class="ss-streak-dot" data-slot="2"></span>
+            <span class="ss-streak-dot" data-slot="3"></span>
+            <span class="ss-streak-dot" data-slot="4"></span>
+            <span class="ss-streak-dot" data-slot="5"></span>
+          </div>
+        </div>
+
+        <!-- PAGE 7 POP-UP: Wrong! -->
+        <div id="popup-wrong" class="ss-outcome-layer ss-popup-wrong" role="dialog" aria-label="Wrong Answer" hidden>
+          <img class="ss-fill-img" src="../see-saw-assets/page-7/wrong-answer-pop-up.webp" alt="Wrong! Streak reset" draggable="false">
+          <button id="p7-watch-btn" type="button" class="ss-img-btn ss-p7-watch-btn" aria-label="Watch video and try again">
+            <img src="../see-saw-assets/watch-video-and-try-again-button.webp" alt="Watch video | try again" draggable="false">
+          </button>
+        </div>
+
+        <!-- PAGE 8 POP-UP: Time Up! -->
+        <div id="popup-timeup" class="ss-outcome-layer ss-popup-timeup" role="dialog" aria-label="Time Up" hidden>
+          <img class="ss-fill-img" src="../see-saw-assets/page-8/time-up-pop-up.webp" alt="Time Up! Streak reset" draggable="false">
+          <button id="p8-watch-btn" type="button" class="ss-img-btn ss-p8-watch-btn" aria-label="Watch video and try again">
+            <img src="../see-saw-assets/watch-video-and-try-again-button.webp" alt="Watch video | try again" draggable="false">
+          </button>
+        </div>
+
+        <!-- PAGE 12 POP-UP: Too Slow! -->
+        <div id="popup-tooslow" class="ss-outcome-layer ss-popup-tooslow" role="dialog" aria-label="Too Slow" hidden>
+          <div class="ss-p12-card-wrap">
+            <img class="ss-fill-img" src="../see-saw-assets/page-12/too-slow-pop-up.webp" alt="Too slow! Streak reset" draggable="false">
+            <div class="ss-p12-row ss-p12-row-1">
+              <span class="ss-p12-sep" aria-hidden="true"></span>
+              <span id="p12-your-time" class="ss-p12-val ss-p12-val-red">5.8 s</span>
+            </div>
+            <div class="ss-p12-row ss-p12-row-2">
+              <span class="ss-p12-sep" aria-hidden="true"></span>
+              <span id="p12-target-time" class="ss-p12-val ss-p12-val-blue">5.2 s</span>
+            </div>
+          </div>
+          <button id="p12-watch-btn" type="button" class="ss-img-btn ss-p12-watch-btn" aria-label="Watch video and try again">
+            <img src="../see-saw-assets/watch-video-and-try-again-button.webp" alt="Watch video | try again" draggable="false">
+          </button>
+        </div>
+
+        <!-- PAGE 9 MODAL: Watch and try again -->
+        <div id="modal-page-9" class="ss-modal-p9-backdrop" role="dialog" aria-label="Watch and try again" hidden>
+          <div class="ss-modal-p9-card">
+            <div class="ss-modal-p9-header">Watch and try again</div>
+            <div class="ss-modal-p9-video-box">
+              <div id="p9-video-host" class="ss-video-host"></div>
+              <div id="p9-symptom-pill" class="ss-p9-symptom-pill">Low Pressure</div>
+            </div>
+            <button id="p9-try-again-btn" type="button" class="ss-img-btn ss-p9-try-again-btn" aria-label="Try again" disabled>
+              <img src="../see-saw-assets/page-9/try-again-button.webp" alt="Try again" draggable="false">
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGE 10: New Star! -->
+      <section id="page-10" class="ss-page" aria-label="New Star Earned" hidden>
+        <img class="ss-bg-img" src="../see-saw-assets/page-10/page-10-bg.webp" alt="New Star!" draggable="false">
+        <img id="p10-well-played" class="ss-p10-well-played" src="../see-saw-assets/page-10/well-played-v1.webp" alt="Well Played!" hidden>
+        <div class="ss-p10-star-wrap">
+          <img class="ss-fill-img ss-star-pop" src="../see-saw-assets/star.webp" alt="Star" draggable="false">
+        </div>
+        <div id="p10-this-round" class="ss-p10-stat ss-p10-this-round">3.4 s</div>
+        <div id="p10-prev-best" class="ss-p10-stat ss-p10-prev-best">--</div>
+        <button id="p10-continue-btn" type="button" class="ss-img-btn ss-p10-continue-btn" aria-label="Continue">
+          <img src="../see-saw-assets/play-again-button.webp" alt="Continue" draggable="false">
+        </button>
+      </section>
+
+      <!-- PAGE 11: Star Earned Summary -->
+      <section id="page-11" class="ss-page" aria-label="Stars Earned" hidden>
+        <img class="ss-bg-img" src="../see-saw-assets/page-11/page-11-bg.webp" alt="Star Earned" draggable="false">
+        <div id="p11-stars-row" class="ss-p11-stars-row" aria-label="Stars earned">
+          <img class="ss-p11-star" data-star="1" src="../see-saw-assets/star.webp" alt="Star 1" draggable="false">
+          <img class="ss-p11-star" data-star="2" src="../see-saw-assets/star.webp" alt="Star 2" draggable="false">
+          <img class="ss-p11-star" data-star="3" src="../see-saw-assets/star.webp" alt="Star 3" draggable="false">
+          <img class="ss-p11-star" data-star="4" src="../see-saw-assets/star.webp" alt="Star 4" draggable="false">
+          <img class="ss-p11-star" data-star="5" src="../see-saw-assets/star.webp" alt="Star 5" draggable="false">
+        </div>
+        <div id="p11-stars-text" class="ss-p11-stars-text">1 of 3 stars earned</div>
+        <button id="p11-play-again-btn" type="button" class="ss-img-btn ss-p11-play-again-btn" aria-label="Play Again">
+          <img src="../see-saw-assets/play-again-button.webp" alt="Play Again" draggable="false">
+        </button>
+      </section>
+
+      <!-- PAGE 13: Watch Videos Page (from Home Page) -->
+      <section id="page-13" class="ss-page" aria-label="Watch Videos" hidden>
+        <img class="ss-bg-img" src="../see-saw-assets/page-5/page-5-bg.webp" alt="" draggable="false">
+
+        <div class="ss-p3-title-wrap">
+          <img class="ss-fill-img" src="../see-saw-assets/title-and-question-panel.webp" alt="" draggable="false">
+          <div class="ss-p3-symptom-title">Watch Videos</div>
+        </div>
+
+        <div id="p13-video-list" class="ss-p13-list" role="list"></div>
+
+        <button id="p13-home-btn" type="button" class="ss-p13-home-btn" aria-label="Back to Home">
+          Home
+        </button>
+
+        <div id="p13-video-modal" class="ss-modal-p9-backdrop" role="dialog" aria-label="Symptom Video Player" hidden>
+          <div class="ss-modal-p9-card">
+            <div id="p13-modal-title" class="ss-modal-p9-header">High Pressure</div>
+            <div class="ss-modal-p9-video-box">
+              <div id="p13-video-host" class="ss-video-host"></div>
+              <div id="p13-symptom-pill" class="ss-p9-symptom-pill">High Pressure → Column Blockage</div>
+            </div>
+            <button id="p13-close-modal-btn" type="button" class="ss-p13-back-btn" aria-label="Close Video">
+              Back to Videos
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="see-saw-config.js?v=18"></script>
+  <script src="see-saw-core.js?v=18"></script>
+  <script src="see-saw-audio.js?v=18"></script>
+  <script src="see-saw-video.js?v=18"></script>
+  <script src="see-saw.js?v=18"></script>
+</body>
+</html>
+

@@ -13,3 +13,7 @@ Keep animations smooth and well sequenced. Update the progress document after ev
 
 Rocketier has additional scoped instructions in `assets/rocket-game-scripts/AGENTS.md`.
 My Carz startup/handoff instructions: `assets/my-carz-game-scripts/README.md`. Original source flow: `assets/my-carz-game-scripts/docs/Carz Game Flow.docx`; the tracking documents contain subsequent approved clarifications.
+
+## Games gallery ordering
+
+In both Games and RC Games, add new games first. Current leading order: See Saw, Wave Rider, Match It Blast It, AB Express, Solvent Master, My Carz, Rocketier. Keep remaining older entries after these in their existing relative order.
