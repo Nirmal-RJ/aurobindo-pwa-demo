@@ -235,6 +235,7 @@
     playBtn.addEventListener('click', togglePlay);
 
     progressTrack.addEventListener('click', function (ev) {
+      if (!opts.allowControls) return;
       var rect = progressTrack.getBoundingClientRect();
       var clickRatio = Math.max(0, Math.min(1, (ev.clientX - rect.left) / rect.width));
       var targetElapsed = clickRatio * durationMs;
@@ -311,9 +312,31 @@
       container.appendChild(playerHost);
       var destroyed = false;
       var ytPlayer = null;
+      var completed = false;
+      var completionTimer = null;
+
+      function finishYouTubeVideo() {
+        if (destroyed || completed) return;
+        completed = true;
+        if (completionTimer) clearInterval(completionTimer);
+        completionTimer = null;
+        if (ytPlayer && typeof ytPlayer.pauseVideo === 'function') ytPlayer.pauseVideo();
+        if (typeof opts.onComplete === 'function') opts.onComplete();
+      }
+
+      function checkYouTubeCompletion() {
+        if (destroyed || completed || !ytPlayer) return;
+        var duration = typeof ytPlayer.getDuration === 'function' ? ytPlayer.getDuration() : 0;
+        var current = typeof ytPlayer.getCurrentTime === 'function' ? ytPlayer.getCurrentTime() : 0;
+        var state = typeof ytPlayer.getPlayerState === 'function' ? ytPlayer.getPlayerState() : -1;
+        // Read the player's actual position; never unlock from a wall-clock timeout.
+        if (state === 1 && duration > 0 && current >= duration - 0.12) finishYouTubeVideo();
+      }
 
       activeCleanup = function () {
         destroyed = true;
+        if (completionTimer) clearInterval(completionTimer);
+        completionTimer = null;
         if (ytPlayer && typeof ytPlayer.destroy === 'function') {
           try {
             ytPlayer.destroy();
@@ -330,19 +353,28 @@
             videoId: ytId,
             playerVars: {
               autoplay: 1,
-              controls: 0,
-              disablekb: opts.allowControls ? 0 : 1,
+              loop: 0,
+              controls: 1,
+              disablekb: 0,
               rel: 0,
               playsinline: 1
             },
             events: {
+              onReady: function () {
+                if (destroyed) return;
+                completionTimer = setInterval(checkYouTubeCompletion, 200);
+              },
               onStateChange: function (ev) {
-                if (ev.data === YT.PlayerState.ENDED && typeof opts.onComplete === 'function') {
-                  opts.onComplete();
+                if (destroyed) return;
+                if (completed) {
+                  if (ev.data === YT.PlayerState.PLAYING && ytPlayer) ytPlayer.pauseVideo();
+                  return;
                 }
+                if (ev.data === YT.PlayerState.ENDED) finishYouTubeVideo();
               },
               onError: function () {
                 if (destroyed) return;
+                stopActiveVideo();
                 if (pair && pair.video) {
                   mountLocalVideo(container, pair, opts);
                 } else {

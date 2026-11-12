@@ -45,7 +45,7 @@
   - **Page 12**: Triggered when pursuing Star 2 or Star 3 and the player selects the correct cause rock, but `elapsedMs >= timeToBeatMs[questionId]` from the previous star-winning round (`Your time` vs `Time to beat`).
   - Clicking `Watch video | try again` (`watch-video-and-try-again-button.webp`) opens **Page 9**.
 - **Page 9 (`Watch and try again` Modal)**:
-  - Plays the failed question's video (`Try again` button `page-9/try-again-button.webp` is locked until the video finishes).
+  - Plays the failed question's video (`Try again` button `page-9/try-again-button.webp` is available immediately; watching the full video is optional).
   - Clicking `Try again` returns to **Page 5** for the **same question** until the player answers it right; once answered right, a fresh 5-question round restarts from **Question `1/5`**.
 - **Page 10 (`New Star!`) & Page 11 (`Star Earned`)**:
   - **Round Definition**: All 5 questions make one complete round. Questions within the same round are never compared against each other.
@@ -73,3 +73,7 @@ Answer selection is drag-and-drop only, with touch or mouse. Tap-to-answer and d
 Every attempt and retry counts down from configured questionSeconds (10 seconds), independently of saved average. A correct drop above the previous star-round average shows Too slow; equal/below shows Correct. No response by 10 seconds shows Time Up. This supersedes earlier benchmark-as-countdown and strict-less-than/retry-exemption descriptions.
 
 - Latest equality clarification: a correct match at or above the saved average is Too slow; only strictly faster is Correct. Fixed 10-second countdown remains unchanged.
+
+
+## 12 November - First-time video checklist (supersedes sequential Page 3)
+After the three demo slides, show the Watch Videos list with supplied watch-to-unlock.webp heading. Videos may be watched in any order. Mark each fully completed video with a green tick and save watchedVideoIds immediately. Closing/reopening retains partial ticks and returns to the list. Start Game remains disabled until all five are completed, then opens home and saves onboardingComplete. Existing fully onboarded players retain access. Ordinary Watch Videos stays available from home. Retry videos remain optional to finish.

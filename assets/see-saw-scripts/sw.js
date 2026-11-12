@@ -1,14 +1,14 @@
 const CACHE_PREFIX = 'see-saw-cache-';
-const CACHE_NAME = `${CACHE_PREFIX}v22`;
+const CACHE_NAME = `${CACHE_PREFIX}v26`;
 
 const SHELL_ASSETS = [
   './see-saw.html',
-  './see-saw.css?v=22',
-  './see-saw-config.js?v=22',
-  './see-saw-core.js?v=22',
-  './see-saw-audio.js?v=22',
-  './see-saw-video.js?v=22',
-  './see-saw.js?v=22',
+  './see-saw.css?v=26',
+  './see-saw-config.js?v=26',
+  './see-saw-core.js?v=26',
+  './see-saw-audio.js?v=26',
+  './see-saw-video.js?v=26',
+  './see-saw.js?v=26',
   '../see-saw-assets/next-button.webp',
   '../see-saw-assets/play-again-button.webp',
   '../see-saw-assets/star.webp',
@@ -19,6 +19,7 @@ const SHELL_ASSETS = [
   '../see-saw-assets/demo/2.gif',
   '../see-saw-assets/demo/3.gif',
   '../see-saw-assets/page-3/video-no-panel.webp',
+  '../see-saw-assets/page-3/watch-to-unlock.webp',
   '../see-saw-assets/page-4/page-4-bg.webp',
   '../see-saw-assets/page-4/start-challenge-button.webp',
   '../see-saw-assets/page-4/watch-videos-button.webp',

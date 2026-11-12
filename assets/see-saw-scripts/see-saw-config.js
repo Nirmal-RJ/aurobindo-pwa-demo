@@ -63,6 +63,7 @@
   ];
 
   var IMAGES = {
+    watchToUnlock: ASSET_BASE + '/page-3/watch-to-unlock.webp',
     page1Bg: ASSET_BASE + '/page-1/page-1-bg.webp',
     demo1: ASSET_BASE + '/demo/1.gif',
     demo2: ASSET_BASE + '/demo/2.gif',

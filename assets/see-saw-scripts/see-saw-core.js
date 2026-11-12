@@ -48,6 +48,7 @@
     return {
       version: 1,
       onboardingComplete: false,
+      watchedVideoIds: [],
       stars: 0,
       dailyStarsDate: today,
       dailyStarsEarned: 0,
@@ -66,6 +67,9 @@
       return base;
     }
     base.onboardingComplete = Boolean(raw.onboardingComplete);
+    base.watchedVideoIds = cfg.pairs.filter(function (pair) {
+      return base.onboardingComplete || (Array.isArray(raw.watchedVideoIds) && raw.watchedVideoIds.indexOf(pair.id) !== -1);
+    }).map(function (pair) { return pair.id; });
 
     // Stars and benchmark time are permanent - no midnight reset
     var stars = Number(raw.stars !== undefined ? raw.stars : raw.dailyStarsEarned);
@@ -216,7 +220,9 @@
     }
 
     function handlePage1Next() {
-      if (!progress.onboardingComplete) {
+      if (!progress.onboardingComplete && progress.watchedVideoIds.length) {
+        state.page = 'page-13';
+      } else if (!progress.onboardingComplete) {
         state.demoMode = 'onboarding';
         state.demoStep = 1;
         state.page = 'page-2';
@@ -242,12 +248,7 @@
         return getSnapshot();
       }
       if (state.demoMode === 'onboarding') {
-        state.onboardingVideos = shuffleQuestions
-          ? shuffleArray(config.pairs, rng)
-          : config.pairs.slice();
-        state.onboardingIndex = 0;
-        state.onboardingVideoDone = false;
-        state.page = 'page-3';
+        state.page = 'page-13';
       } else {
         state.page = 'page-4';
       }
@@ -443,7 +444,7 @@
     }
 
     function retryCurrentQuestion() {
-      if (state.page !== 'page-9' || !state.remediationVideoDone) {
+      if (state.page !== 'page-9') {
         return getSnapshot();
       }
       state.selectedCauseId = null;
@@ -483,7 +484,21 @@
       return getSnapshot();
     }
 
+    function completeWatchVideo(pairId) {
+      if (state.page !== 'page-13' || state.watchVideosActivePairId !== pairId || !getPairById(pairId)) return getSnapshot();
+      if (progress.watchedVideoIds.indexOf(pairId) === -1) {
+        progress.watchedVideoIds.push(pairId);
+        persist();
+      }
+      return getSnapshot();
+    }
+
     function goToHome() {
+      if (state.page === 'page-13' && !progress.onboardingComplete) {
+        if (!config.pairs.every(function (pair) { return progress.watchedVideoIds.indexOf(pair.id) !== -1; })) return getSnapshot();
+        progress.onboardingComplete = true;
+        persist();
+      }
       state.watchVideosActivePairId = null;
       state.outcome = null;
       state.selectedCauseId = null;
@@ -542,6 +557,7 @@
       openWatchVideosPage: openWatchVideosPage,
       selectWatchVideoPair: selectWatchVideoPair,
       closeWatchVideoModal: closeWatchVideoModal,
+      completeWatchVideo: completeWatchVideo,
       goToHome: goToHome
     };
   }

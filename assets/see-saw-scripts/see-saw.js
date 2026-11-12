@@ -756,7 +756,7 @@
 
       if (snap.page === 'page-9') {
         p9SymptomPill.textContent = q.symptom;
-        p9TryAgainBtn.disabled = !snap.remediationVideoDone;
+        p9TryAgainBtn.disabled = false;
         var remKey = q.id;
         if (lastRemediationVideoKey !== remKey) {
           lastRemediationVideoKey = remKey;
@@ -796,6 +796,19 @@
 
     // PAGE 13: Watch Videos
     if (snap.page === 'page-13') {
+      var unlocking = !snap.progress.onboardingComplete;
+      document.getElementById('p13-unlock-heading').hidden = !unlocking;
+      document.querySelector('#page-13 .ss-p3-title-wrap').hidden = unlocking;
+      p13HomeBtn.textContent = unlocking ? 'Start Game' : 'Home';
+      p13HomeBtn.setAttribute('aria-label', unlocking ? 'Start Game' : 'Back to Home');
+      p13HomeBtn.disabled = unlocking && snap.progress.watchedVideoIds.length < Config.pairs.length;
+      Array.prototype.forEach.call(p13VideoList.children, function (button) {
+        var watched = snap.progress.watchedVideoIds.indexOf(button.getAttribute('data-pair-id')) !== -1;
+        var icon = button.querySelector('.ss-p13-item-play');
+        icon.textContent = watched ? '\u2713' : '\u25b6';
+        icon.classList.toggle('is-watched', watched);
+        button.setAttribute('aria-label', button.querySelector('.ss-p13-item-symptom').textContent + (watched ? ', watched' : ', play video'));
+      });
       var activePair = snap.watchVideosActivePair;
       p13VideoModal.hidden = !activePair;
       if (activePair) {
@@ -804,7 +817,11 @@
         if (lastWatchModalPairId !== activePair.id) {
           lastWatchModalPairId = activePair.id;
           VideoCtrl.mountVideo(p13VideoHost, activePair, {
-            allowControls: true
+            allowControls: !unlocking,
+            onComplete: function () {
+              if (controller.getSnapshot().page !== 'page-13') return;
+              render(controller.completeWatchVideo(activePair.id));
+            }
           });
         }
       }
@@ -895,6 +912,7 @@
     });
 
     p13HomeBtn.addEventListener('click', function () {
+      if (p13HomeBtn.disabled) return;
       AudioCtrl.unlock();
       AudioCtrl.playClick();
       render(controller.goToHome());

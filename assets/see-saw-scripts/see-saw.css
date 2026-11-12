@@ -1649,3 +1649,10 @@ body {
   from { opacity: .4; }
   to { opacity: .85; }
 }
+
+.ss-unlock-heading {
+  position: absolute; left: 7%; top: 1%; width: 86%; height: 14%;
+  object-fit: contain; pointer-events: none; z-index: 8;
+}
+.ss-p13-item-play.is-watched { background: linear-gradient(#39cf68, #058529); }
+.ss-p13-home-btn:disabled { opacity: .45; cursor: default; filter: grayscale(.55); }

@@ -53,7 +53,7 @@ test('See Saw config defines 5 Symptom-Cause pairs and 10s question timer', () =
   assert.ok(fs.existsSync(path.join(audioDir, 'time-up.mp3')));
 });
 
-test('First-time onboarding requires Demo 2.1-2.3 and 5 unskippable videos before reaching Page 4', () => {
+test('First-time video checklist allows any order, persists ticks and requires all five before home', () => {
   const storage = createMemoryStorage();
   const ctrl = Core.createGameController({
     config: Config,
@@ -80,23 +80,22 @@ test('First-time onboarding requires Demo 2.1-2.3 and 5 unskippable videos befor
   assert.equal(snap.demoStep, 3);
 
   snap = ctrl.handleDemoNext();
-  assert.equal(snap.page, 'page-3');
-  assert.equal(snap.onboardingIndex, 0);
-  assert.equal(snap.onboardingVideoDone, false);
-
-  // Cannot advance Page 3 video before completion
-  snap = ctrl.handleOnboardingNext();
-  assert.equal(snap.page, 'page-3');
-  assert.equal(snap.onboardingIndex, 0);
-
-  // Complete all 5 videos on Page 3
-  for (let i = 0; i < 5; i += 1) {
-    assert.equal(snap.onboardingIndex, i);
-    snap = ctrl.completeOnboardingVideo();
-    assert.equal(snap.onboardingVideoDone, true);
-    snap = ctrl.handleOnboardingNext();
+  assert.equal(snap.page, 'page-13');
+  snap = ctrl.goToHome();
+  assert.equal(snap.page, 'page-13');
+  // Unselected/stale completion cannot mark a video watched.
+  ctrl.completeWatchVideo(Config.pairs[0].id);
+  assert.equal(ctrl.getSnapshot().progress.watchedVideoIds.length, 0);
+  const ids = Config.pairs.map(p => p.id).reverse();
+  for (const id of ids) {
+    ctrl.selectWatchVideoPair(id);
+    snap = ctrl.completeWatchVideo(id);
+    ctrl.completeWatchVideo(id); // duplicate completion stays idempotent
+    ctrl.closeWatchVideoModal();
+    if (snap.progress.watchedVideoIds.length < 5) assert.equal(ctrl.goToHome().page, 'page-13');
   }
-
+  assert.equal(snap.progress.watchedVideoIds.length, 5);
+  snap = ctrl.goToHome();
   assert.equal(snap.page, 'page-4');
   assert.equal(snap.progress.onboardingComplete, true);
 
@@ -167,18 +166,10 @@ test('Earning Star 1 records round average as benchmark timeToBeat and enforces 
   assert.equal(snap.outcome.elapsedMs, 5800);
   assert.equal(snap.outcome.timeToBeatMs, 5000);
 
-  // Must watch remediation video on Page 9 and retry the SAME question until right, then restart from 1/5
+  // Remediation can be left immediately; retry keeps the same question.
   snap = ctrl.openRemediationVideo();
   assert.equal(snap.page, 'page-9');
   assert.equal(snap.remediationVideoDone, false);
-
-  // Try again is blocked before video finishes
-  snap = ctrl.retryCurrentQuestion();
-  assert.equal(snap.page, 'page-9');
-
-  snap = ctrl.completeRemediationVideo();
-  assert.equal(snap.remediationVideoDone, true);
-
   snap = ctrl.retryCurrentQuestion();
   assert.equal(snap.page, 'page-5');
   assert.equal(snap.currentQuestion.id, q1.id);
@@ -486,4 +477,15 @@ test('fixed configured timeout with benchmark comparison after answer, including
  for(const [ms,page]of [[4999,'page-6'],[5000,'page-12'],[5001,'page-12'],[9000,'page-12']]){const c=make();assert.equal(c.submitAnswer(c.getSnapshot().currentQuestion.id,ms).page,page);}
  const c=make();let s=c.submitAnswer(c.getSnapshot().currentQuestion.id,6000);assert.equal(s.page,'page-12');c.openRemediationVideo();c.completeRemediationVideo();c.retryCurrentQuestion();s=c.submitAnswer(c.getSnapshot().currentQuestion.id,6000);assert.equal(s.page,'page-12');
  const timeout=make().expireQuestion();assert.equal(timeout.outcome.elapsedMs,Config.questionSeconds*1000);assert.equal(timeout.page,'page-8');
+});
+
+test('partial video checklist survives reopening without granting game access', () => {
+ const storage=createMemoryStorage();
+ const c=Core.createGameController({config:Config,storage});
+ c.handlePage1Next();c.handleDemoNext();c.handleDemoNext();c.handleDemoNext();
+ const id=Config.pairs[2].id;c.selectWatchVideoPair(id);c.completeWatchVideo(id);
+ const reopened=Core.createGameController({config:Config,storage});
+ assert.equal(reopened.handlePage1Next().page,'page-13');
+ assert.deepEqual(reopened.getSnapshot().progress.watchedVideoIds,[id]);
+ assert.equal(reopened.goToHome().page,'page-13');
 });

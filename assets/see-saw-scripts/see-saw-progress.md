@@ -201,3 +201,21 @@ Validation: inspected 390x844 Edge home screenshot; bold first row stays aligned
 
 ## 12 November — v22 publication
 User authorized deployment and push. Firebase Hosting-only release completed. Fourteen tests and 1016-file staging/hash/exclusion checks passed. Live HTML, JS, CSS and scoped worker SHA256-match local on both apl-qc-core-app-f5a3e.web.app and apl.redchariots.in. Includes strict placeholder drop, Too Slow divider fix, benchmark red timer/corners and bold home instruction. Backend/database untouched; physical-device checks remain pending.
+
+## 12 November — YouTube completion and replay guards
+User reported first-time video replay blocking entry. Live Edge test observed normal completion/Next after one video, so device-specific looping not directly reproduced. Found completion relied solely on YouTube ENDED with no replay guard. Explicitly disable looping; complete once via ENDED or actual player position within final 120ms while playing. Pause completed player and block replay; clear local completion monitor on exit/error. No wall-clock skip or shortened mandatory playlist. Shell/scoped cache v23.
+Validation: twelve tests passed. Controlled Edge/WebKit browser checks cover missing ENDED event, no early completion, replay pause, five-video Next flow to home and saved onboarding after reload. Physical phone/real YouTube loop reproduction remains pending. Local only; not deployed/pushed.
+
+## 12 November — Optional remediation video completion
+User removed mandatory full viewing before Try Again. Page 9 retry is enabled immediately and controller no longer requires remediationVideoDone. Same-question retry, streak reset and subsequent round restart remain unchanged; first-time five-video onboarding remains mandatory. Rules and regression assertion updated. Shell/scoped cache v24.
+Validation: twelve core/UI tests passed; Edge/WebKit verified Try Again before video completion returns to the same question. Video cleanup on return retained. Local only; no deploy/push.
+
+## 12 November — First-time five-video checklist
+User approved any-order list instead of sequential compulsory playback, supplied watch-to-unlock.webp, green completion ticks, Start Game opening home only after all five complete, and persisted partial progress. Reused existing Watch Videos layout/modal, preserving ordinary home video access. Each valid active-video completion saves deduplicated watchedVideoIds immediately; partial reopen returns to checklist. Existing onboardingComplete saves remain unlocked. Disabled seeking in mandatory fallback playback. Original demo flow remains before initial checklist. Shell/scoped cache v25; heading copied unchanged and included in preloader/worker.
+Validation: thirteen tests passed, including any-order completion, duplicate/stale completion guards and partial reload. Edge/WebKit controlled-player tests verify unfinished gate, reverse-order videos, partial reload tick preservation, all-five unlock, home navigation and completed reload. Inspected 390x844 and 320x568 screenshots; no panel/button overlap. Real phone YouTube completion remains pending. Local only; not deployed/pushed.
+
+## 12 November — Enable YouTube controls
+User requested YouTube controls. Enabled native embedded controls and keyboard controls across See Saw videos. Completion/checklist flow remains in place; YouTube controls include seeking. Shell/scoped cache v26. JS syntax passed. Local only; no deployment/push.
+
+## 12 November — v26 video-flow release
+User authorized deploy/push. Hosting-only deployment completed; fifteen tests and 1017-file staging verification passed. Eight live runtime/heading files SHA256-match local on Firebase and apl.redchariots.in. Includes any-order persisted five-video checklist, Start Game unlock, optional retry-video completion, YouTube completion/replay safeguards and native controls. Scoped cache v26. Backend/database unchanged; physical-phone playback verification pending.
