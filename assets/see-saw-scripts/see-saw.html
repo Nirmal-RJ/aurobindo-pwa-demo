@@ -6,14 +6,14 @@
   <meta name="theme-color" content="#0a2558">
   <title>See Saw</title>
   <link rel="icon" href="../../icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="see-saw.css?v=18">
+  <link rel="stylesheet" href="see-saw.css?v=22">
   <style>
     /* Critical alignment enforcement for Page 12 ("Too slow!") */
     .ss-p12-row { position: absolute; left: 0; width: 100%; pointer-events: none; }
     .ss-p12-row-1 { top: 38.8% !important; height: 11.0% !important; }
     .ss-p12-row-2 { top: 53.2% !important; height: 11.2% !important; }
     .ss-p12-sep { position: absolute; left: 47.9% !important; top: 50% !important; transform: translate(-50%, -50%) !important; width: calc(var(--u) * 0.45); min-width: 2px; height: 52% !important; background-color: #062089 !important; border-radius: 999px; opacity: 0.95; }
-    .ss-p12-val { position: absolute; left: 51.0% !important; top: 50% !important; transform: translateY(-50%) !important; display: inline-flex !important; align-items: center !important; font-size: calc(var(--u) * 4.6) !important; font-weight: 900 !important; line-height: 1 !important; letter-spacing: 0.02em !important; white-space: nowrap !important; }
+    .ss-p12-val { position: absolute; left: 58.0% !important; top: 50% !important; transform: translateY(-50%) !important; display: inline-flex !important; align-items: center !important; font-size: calc(var(--u) * 4.6) !important; font-weight: 900 !important; line-height: 1 !important; letter-spacing: 0.02em !important; white-space: nowrap !important; }
     .ss-p12-val-red, #p12-your-time { color: #c62828 !important; }
     .ss-p12-val-blue, #p12-target-time { color: #14366b !important; }
     /* Legacy fallback if old un-nested elements exist */
@@ -206,11 +206,9 @@
           <div class="ss-p12-card-wrap">
             <img class="ss-fill-img" src="../see-saw-assets/page-12/too-slow-pop-up.webp" alt="Too slow! Streak reset" draggable="false">
             <div class="ss-p12-row ss-p12-row-1">
-              <span class="ss-p12-sep" aria-hidden="true"></span>
               <span id="p12-your-time" class="ss-p12-val ss-p12-val-red">5.8 s</span>
             </div>
             <div class="ss-p12-row ss-p12-row-2">
-              <span class="ss-p12-sep" aria-hidden="true"></span>
               <span id="p12-target-time" class="ss-p12-val ss-p12-val-blue">5.2 s</span>
             </div>
           </div>
@@ -295,11 +293,11 @@
     </div>
   </main>
 
-  <script src="see-saw-config.js?v=18"></script>
-  <script src="see-saw-core.js?v=18"></script>
-  <script src="see-saw-audio.js?v=18"></script>
-  <script src="see-saw-video.js?v=18"></script>
-  <script src="see-saw.js?v=18"></script>
+  <script src="see-saw-config.js?v=22"></script>
+  <script src="see-saw-core.js?v=22"></script>
+  <script src="see-saw-audio.js?v=22"></script>
+  <script src="see-saw-video.js?v=22"></script>
+  <script src="see-saw.js?v=22"></script>
 </body>
 </html>
 

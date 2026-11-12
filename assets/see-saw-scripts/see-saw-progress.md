@@ -183,3 +183,21 @@ Both Games and RC Games now start See Saw, Wave Rider, Match It Blast It, AB Exp
 
 ## 12 November — v18 release and gallery ordering publication
 User authorized Firebase deployment and Git push. Hosting release 2dce030a7ee97750 completed to apl-qc-core-app-f5a3e. Fourteen See Saw/service-worker tests passed; 1016 staged files passed inventory/hash/private exclusion verification. Live index, root worker, review catalog and four See Saw runtime files SHA256-match local. Includes drag-only placement, fixed 10s timer, equality Too slow, gallery order and discussion entry. Root cache v491. Backend/database untouched. Physical-phone verification remains pending. Git publication scoped to See Saw and gallery/catalog/contributor convention files; unrelated local edits excluded.
+
+## 12 November — Strict placeholder release target
+User requested drag-and-drop release inside the answer placeholder only. Removed expanded drop margins and entire-beam fallback. Hover highlight and submission now use the visible placeholder bounds; outside drops return without answering. Drag threshold and pointer-release submission retained. Shell/scoped cache v19.
+Validation: twelve tests and JS syntax passed. Edge/WebKit verified taps and releases just outside the placeholder do not submit, while mouse and simulated touch-pointer drops inside do. Physical-phone verification pending. Local only; no deployment/push.
+
+## 12 November — Too Slow time-divider overlap
+The popup artwork contains red dividers at 52.8% width; generated values at 51% overlapped them. Removed duplicate generated blue dividers and moved both time values to 58%, preserving supplied artwork. Shell/scoped worker v20 (also synchronizes pending strict-drop runtime cache references). Twelve tests passed. Edge/WebKit checked time bounds and captured popup screenshots; inspected Edge image, both values now clear of divider. Local only; not deployed/pushed.
+
+## 12 November — Average-time warning during play
+At elapsed time greater than or equal to the saved benchmark, timer text pulses red and a non-interactive red four-corner splash pulses around the stage. Uses existing Too Slow equality rule. No benchmark means no average warning. Clears on answer, timeout or leaving gameplay; full configured countdown remains unchanged. Benchmark captured once per attempt, no per-frame storage reads. Shell/scoped cache v21.
+Validation: twelve tests and JS syntax passed; Edge/WebKit checked warning absent initially, active above benchmark, timer red, and cleared after drop. Inspected phone-sized Edge screenshot. Physical devices pending. Local only; no deploy/push.
+
+## 12 November — Home first instruction bold styling
+User requested first instruction match the heavier artwork rows. Replaced Trebuchet fallback with Arial Black/Arial bold and added a subtle 0.25px same-color text stroke for consistent weight on mobile font fallbacks. Content, sizing and position retained. Shell/scoped cache v22. Browser verification recorded below. Local only.
+Validation: inspected 390x844 Edge home screenshot; bold first row stays aligned within instruction panel. Physical iPhone/Android font rendering pending. Not deployed/pushed.
+
+## 12 November — v22 publication
+User authorized deployment and push. Firebase Hosting-only release completed. Fourteen tests and 1016-file staging/hash/exclusion checks passed. Live HTML, JS, CSS and scoped worker SHA256-match local on both apl-qc-core-app-f5a3e.web.app and apl.redchariots.in. Includes strict placeholder drop, Too Slow divider fix, benchmark red timer/corners and bold home instruction. Backend/database untouched; physical-device checks remain pending.

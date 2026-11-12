@@ -597,11 +597,12 @@ body {
   flex-direction: column;
   justify-content: center;
   color: #0b2d78;
-  font-family: 'Arial Rounded MT Bold', 'Trebuchet MS', Arial, sans-serif;
+  font-family: 'Arial Rounded MT Bold', 'Arial Black', Arial, sans-serif;
   font-size: calc(var(--u) * 6.7);
   font-weight: 900;
   line-height: 1.08;
   letter-spacing: 0;
+  -webkit-text-stroke: 0.25px currentColor;
 }
 
 .ss-p4-start-btn {
@@ -1248,7 +1249,7 @@ body {
 
 .ss-p12-val {
   position: absolute;
-  left: 51.0%;
+  left: 58.0%;
   top: 50%;
   transform: translateY(-50%);
   display: inline-flex;
@@ -1624,3 +1625,27 @@ body {
 
 .ss-p10-well-played{position:absolute;left:10%;top:22%;width:80%;height:26%;object-fit:contain;z-index:8;pointer-events:none;animation:ssStarBounce .55s ease-out both}
 .is-practice-result .ss-p10-continue-btn img{opacity:0}
+
+/* Benchmark warning stays at the edges so the answer stones remain readable. */
+.ss-stage.is-over-average::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+  border-radius: inherit;
+  background: radial-gradient(ellipse at top left, rgba(225, 12, 25, .78), transparent 35%),
+    radial-gradient(ellipse at top right, rgba(225, 12, 25, .78), transparent 35%),
+    radial-gradient(ellipse at bottom left, rgba(225, 12, 25, .68), transparent 32%),
+    radial-gradient(ellipse at bottom right, rgba(225, 12, 25, .68), transparent 32%);
+  animation: ssBenchmarkCorners .65s ease-in-out infinite alternate;
+}
+.ss-stage.is-over-average .ss-p5-timer-text {
+  color: #ff3535;
+  text-shadow: 0 1px 2px #490000, 0 0 8px rgba(255, 40, 40, .75);
+  animation: ssPulseUrgent .45s infinite alternate;
+}
+@keyframes ssBenchmarkCorners {
+  from { opacity: .4; }
+  to { opacity: .85; }
+}

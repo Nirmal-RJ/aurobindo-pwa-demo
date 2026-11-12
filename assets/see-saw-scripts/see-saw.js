@@ -111,6 +111,7 @@
   // Question timer state
   var questionDurationMs = (Config.questionSeconds || 10) * 1000;
   var questionElapsedMs = 0;
+  var questionBenchmarkMs = null;
   var questionLastTick = 0;
   var questionTimerRaf = null;
   var questionTimerRunning = false;
@@ -174,6 +175,7 @@
 
   function stopQuestionTimer() {
     questionTimerRunning = false;
+    stageEl.classList.remove('is-over-average');
     if (questionTimerRaf) {
       cancelAnimationFrame(questionTimerRaf);
       questionTimerRaf = null;
@@ -187,6 +189,7 @@
     stopQuestionTimer();
     questionDurationMs = (Config.questionSeconds || 10) * 1000;
     questionElapsedMs = 0;
+    questionBenchmarkMs = controller.getSnapshot().currentTimeToBeatMs;
     questionTimerRunning = true;
     updateTimerDisplay(questionDurationMs);
     if (!isLandscapeLocked && !isDocumentHidden) {
@@ -198,6 +201,7 @@
   function updateTimerDisplay(remainingMs) {
     if (!p5TimerText) return;
     p5TimerText.textContent = Core.formatTimerMMSS(remainingMs);
+    stageEl.classList.toggle('is-over-average', questionTimerRunning && questionBenchmarkMs !== null && questionElapsedMs >= questionBenchmarkMs);
     if (p5TimerWrap) {
       p5TimerWrap.classList.toggle('is-urgent', remainingMs > 0 && remainingMs <= 3000);
     }
@@ -422,23 +426,12 @@
     }
 
     function isOverDropTarget(clientX, clientY) {
-      var dropRect = p5DropZone.getBoundingClientRect();
-      var marginX = dropRect.width * 0.35;
-      var marginY = dropRect.height * 0.45;
-      if (
-        clientX >= dropRect.left - marginX &&
-        clientX <= dropRect.right + marginX &&
-        clientY >= dropRect.top - marginY &&
-        clientY <= dropRect.bottom + marginY
-      ) {
-        return true;
-      }
-      var beamRect = seesawBeam.getBoundingClientRect();
+      var dropRect = p5DropPlaceholder.getBoundingClientRect();
       return (
-        clientX >= beamRect.left + beamRect.width * 0.42 &&
-        clientX <= beamRect.right &&
-        clientY >= beamRect.top - marginY &&
-        clientY <= beamRect.bottom + marginY
+        clientX >= dropRect.left &&
+        clientX <= dropRect.right &&
+        clientY >= dropRect.top &&
+        clientY <= dropRect.bottom
       );
     }
 
