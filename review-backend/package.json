@@ -1,0 +1,26 @@
+{
+  "name": "@aurobindo/review-api",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/main.mjs",
+    "test": "node --test --test-isolation=none test/firestore.test.mjs test/disconnected.test.mjs test/local-proxy.test.mjs",
+    "test:proxy": "node --test --test-isolation=none test/local-proxy.test.mjs",
+    "legacy:migrate": "node scripts/migrate.mjs",
+    "legacy:test:sql:isolated": "node scripts/test-local-sql.mjs",
+    "legacy:test:browser": "node scripts/browser-smoke.mjs",
+    "legacy:test:actual-ui": "node scripts/actual-ui-e2e.mjs",
+    "legacy:dev:fixture": "node scripts/local-preview.mjs",
+    "provision:firestore": "node scripts/provision-firestore.mjs",
+    "test:firestore:ui": "firebase emulators:exec --only firestore --project demo-qc-core-review --config firebase.firestore.json \"node scripts/firestore-actual-ui.mjs\""
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "pg": "^8.23.1"
+  },
+  "dependencies": {
+    "@google-cloud/firestore": "^9.4.0"
+  }
+}

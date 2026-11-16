@@ -16,7 +16,7 @@ export function referenceCard(ref,context){const build=context.builds.find(b=>b.
 export function messageCard(message,context){
  const author=context.accounts.find(a=>a.id===message.authorId),own=message.authorId===context.account.id;
  const article=el('article',`message ${own?'own':''} ${message.reference?'referenced':''}`);article.id=`message-${message.id}`;article.dataset.messageId=message.id;article.dataset.delivery=message.delivery;article.tabIndex=-1;article.setAttribute('aria-label',`${author.name}, ${time(message.createdAt)}${own?', your message':''}`);
- article.append(avatar(author));const bubble=el('div','message-body');const head=el('header','message-meta');head.append(el('strong','',author.name),el('span','role-label',author.role==='ghost'?'Tester':author.role==='core'?'Core team':'Director'),timestamp(message.createdAt));bubble.append(head);
+ article.append(avatar(author));const bubble=el('div','message-body');const head=el('header','message-meta');head.append(el('strong','',author.name),timestamp(message.createdAt));bubble.append(head);
  if(message.replyTo){const parent=context.loaded.find(m=>m.id===message.replyTo);const reply=button('',()=>context.jump(message.replyTo),'reply-preview');reply.append(el('strong','',parent?context.accounts.find(a=>a.id===parent.authorId).name:'Reply to earlier message'),el('span','',parent?.text.slice(0,140)||'View message'));bubble.append(reply);}
  if(message.reference)bubble.append(referenceCard(message.reference,context));
  if(message.text)bubble.append(el('p','message-text',message.text));

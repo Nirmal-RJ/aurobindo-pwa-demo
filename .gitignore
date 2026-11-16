@@ -3,3 +3,7 @@ node_modules/
 *.log
 dist/
 deployment/qc-core/publish-manifest.json
+artifacts/
+.firebase/
+.~lock.*#
+~$*

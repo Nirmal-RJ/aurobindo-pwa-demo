@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#140c06">
+  <title>Back to School</title>
+  <link rel="icon" href="../../icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="back-to-school.css?v=8">
+</head>
+<body>
+  <div id="rotate-overlay" class="bts-rotate-overlay" aria-hidden="true">
+    <div class="bts-rotate-card">
+      <div class="bts-rotate-icon" aria-hidden="true">📱</div>
+      <h2 class="bts-rotate-title">Rotate Your Device</h2>
+      <p class="bts-rotate-text">Back to School is designed for portrait mode. Please rotate your device upright to continue.</p>
+    </div>
+  </div>
+
+  <main class="bts-viewport">
+    <div id="bts-stage" class="bts-stage">
+      <!-- FX Layer for Confetti / Flashes -->
+      <div id="bts-fx-layer" class="bts-fx-layer" aria-hidden="true"></div>
+
+      <!-- Corner Controls -->
+      <div class="bts-hud">
+        <button id="bts-mute-btn" class="bts-icon-btn" type="button" aria-label="Toggle sound" title="Toggle sound">
+          <svg id="bts-mute-icon" viewBox="0 0 24 24">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          </svg>
+        </button>
+        <button id="bts-exit-btn" class="bts-icon-btn" type="button" aria-label="Exit to games" title="Exit to games">
+          <svg viewBox="0 0 24 24">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Page 1: Landing -->
+      <section id="screen-1" class="bts-screen active" aria-label="Landing">
+        <img class="bts-bg" src="../back-to-school-assets/page-1/page1-bg.webp" alt="Back to School">
+        <div id="p1-loading" class="bts-loading-wrap">
+          <div id="p1-loading-label" class="bts-loading-label">Loading... 0%</div>
+          <div class="bts-loading-track"><div id="p1-loading-fill" class="bts-loading-fill"></div></div>
+        </div>
+        <button id="p1-start-btn" class="bts-img-btn bts-p1-start bts-pulse-btn" type="button" hidden>
+          <img src="../back-to-school-assets/page-1/page1-start-button.webp" alt="Start">
+        </button>
+      </section>
+
+      <!-- Page 2: Demo Walkthrough (2.1 - 2.3) -->
+      <section id="screen-2" class="bts-screen" aria-label="How to play demo">
+        <img id="p2-demo-img" class="bts-demo-img" src="../back-to-school-assets/page-2/demo-2.1.gif" alt="Game demo">
+        <div id="p2-step" class="bts-demo-step">Step 1 / 3</div>
+        <button id="p2-next-btn" class="bts-img-btn bts-p2-next bts-pulse-btn" type="button">
+          <img src="../back-to-school-assets/page-8/page8-next-button.webp" alt="Next">
+        </button>
+      </section>
+
+      <!-- Page 3: Home -->
+      <section id="screen-3" class="bts-screen" aria-label="Home">
+        <img class="bts-bg" src="../back-to-school-assets/page-3/page3-bg.webp" alt="Match 5 pairs in 90 seconds">
+        <div id="p3-seconds-heading" class="bts-p3-seconds">90 seconds.</div>
+        <div id="p3-streak-boxes" class="bts-p3-streak-boxes"></div>
+        <button id="p3-play-btn" class="bts-img-btn bts-p3-play bts-pulse-btn" type="button">
+          <img src="../back-to-school-assets/page-3/page3-play-challenge-button.webp" alt="Play Challenge">
+        </button>
+        <button id="p3-demo-btn" class="bts-img-btn bts-p3-demo" type="button">
+          <img src="../back-to-school-assets/page-3/page3-demo-button.webp" alt="Demo">
+        </button>
+      </section>
+
+      <!-- Page 4: Main Game Board -->
+      <section id="screen-4" class="bts-screen" aria-label="Main game board">
+        <img class="bts-bg" src="../back-to-school-assets/page-4/page4-bg.webp" alt="Game board">
+        <div id="p4-timer" class="bts-timer">01:30</div>
+
+        <div class="bts-slots-grid">
+          <div id="p4-left-slots" class="bts-slot-col"></div>
+          <div id="p4-right-slots" class="bts-slot-col"></div>
+        </div>
+
+        <div class="bts-bank">
+          <div id="p4-left-bank" class="bts-bank-col"></div>
+          <div id="p4-right-bank" class="bts-bank-col"></div>
+        </div>
+
+        <button id="p4-check-btn" class="bts-img-btn bts-p4-check bts-pulse-btn" type="button" disabled>
+          <img id="p4-check-img" src="../back-to-school-assets/page-4/page4-check-my-board-button.webp" alt="Check My Board">
+        </button>
+
+        <!-- Page 10: Time's Up Popup -->
+        <div id="modal-10" class="bts-modal-backdrop" hidden>
+          <div class="bts-modal-card fail-anim">
+            <img class="bts-modal-bg" src="../back-to-school-assets/page-10/page10-bg.webp" alt="Time's Up">
+            <div class="bts-streak-boxes p10">
+              <img class="bts-streak-icon" src="../back-to-school-assets/page-7/wrong.webp" alt="">
+              <span></span><span></span>
+            </div>
+            <div class="bts-streak-text p10">0/3</div>
+            <button id="p10-play-btn" class="bts-img-btn bts-p10-play bts-pulse-btn" type="button">
+              <img src="../back-to-school-assets/page-9/page9-play-button.webp" alt="Play Again">
+            </button>
+            <button id="p10-home-btn" class="bts-img-btn bts-p10-home" type="button">
+              <img src="../back-to-school-assets/page-9/page9-home-button.webp" alt="Home">
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Page 5: Checking Answers + Popups (6, 7, 9) -->
+      <section id="screen-5" class="bts-screen" aria-label="Checking board">
+        <img class="bts-bg" src="../back-to-school-assets/page-5/page5-bg.webp" alt="Checking answers">
+        <div id="p5-rows" class="bts-check-rows"></div>
+        <button id="p5-checking-btn" class="bts-img-btn bts-p5-checking" type="button" disabled>
+          <img src="../back-to-school-assets/page-5/checking-button.webp" alt="Checking...">
+        </button>
+
+        <!-- Page 6: 5/5 Correct -->
+        <div id="modal-6" class="bts-modal-backdrop" hidden>
+          <div class="bts-modal-card win-anim">
+            <img class="bts-modal-bg" src="../back-to-school-assets/page-6/page6-bg.webp" alt="5/5 Correct">
+            <div id="p6-time" class="bts-modal-time">01:08</div>
+            <div id="p6-target" class="bts-modal-target">01:30</div>
+            <div id="p6-streak-boxes" class="bts-streak-boxes"></div>
+            <div id="p6-streak-text" class="bts-streak-text">1/3</div>
+            <button id="p6-next-btn" class="bts-img-btn bts-p6-next bts-pulse-btn" type="button">
+              <img src="../back-to-school-assets/page-6/page6-next-button.webp" alt="Next Board">
+            </button>
+          </div>
+        </div>
+
+        <!-- Page 7: Wrong Pairs -->
+        <div id="modal-7" class="bts-modal-backdrop" hidden>
+          <div class="bts-modal-card fail-anim">
+            <img class="bts-modal-bg" src="../back-to-school-assets/page-7/page7-bg.webp" alt="Pairs Wrong">
+            <div id="p7-wrong-count" class="bts-wrong-count-badge" hidden>2</div>
+            <div class="bts-streak-boxes p7">
+              <img class="bts-streak-icon" src="../back-to-school-assets/page-7/wrong.webp" alt="">
+              <span></span><span></span>
+            </div>
+            <div class="bts-streak-text p7">0/3</div>
+            <button id="p7-next-btn" class="bts-img-btn bts-p7-next bts-pulse-btn" type="button">
+              <img src="../back-to-school-assets/page-7/page7-play-again-button.webp" alt="Review Wrong Answers">
+            </button>
+            <button id="p7-home-btn" class="bts-img-btn bts-p7-home" type="button">
+              <img src="../back-to-school-assets/page-7/page7-button.webp" alt="Home">
+            </button>
+          </div>
+        </div>
+
+        <!-- Page 9: 5/5 Correct But Over Target -->
+        <div id="modal-9" class="bts-modal-backdrop" hidden>
+          <div class="bts-modal-card fail-anim">
+            <img class="bts-modal-bg" src="../back-to-school-assets/page-9/page9-bg.webp" alt="Too Slow">
+            <div id="p9-time" class="bts-p9-your-time">01:40</div>
+            <div id="p9-target" class="bts-p9-target">01:06</div>
+            <div class="bts-streak-boxes p9">
+              <img class="bts-streak-icon" src="../back-to-school-assets/page-7/wrong.webp" alt="">
+              <span></span><span></span>
+            </div>
+            <div class="bts-streak-text p9">0/3</div>
+            <button id="p9-play-btn" class="bts-img-btn bts-p9-play bts-pulse-btn" type="button">
+              <img src="../back-to-school-assets/page-9/page9-play-button.webp" alt="Play Again">
+            </button>
+            <button id="p9-home-btn" class="bts-img-btn bts-p9-home" type="button">
+              <img src="../back-to-school-assets/page-9/page9-home-button.webp" alt="Home">
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Page 8: Correct Response Walkthrough -->
+      <section id="screen-8" class="bts-screen" aria-label="Correct response">
+        <img class="bts-bg" src="../back-to-school-assets/page-8/page8-bg.webp" alt="Correct response">
+        <div id="p8-sit" class="bts-p8-sit"></div>
+        <div id="p8-resp" class="bts-p8-resp"></div>
+        <div id="p8-exp" class="bts-p8-exp"></div>
+        <button id="p8-next-btn" class="bts-img-btn bts-p8-next" type="button">
+          <img src="../back-to-school-assets/page-8/page8-next-button.webp" alt="Next">
+        </button>
+        <button id="p8-play-btn" class="bts-img-btn bts-p8-play" type="button" hidden>
+          <img src="../back-to-school-assets/page-7/page7-play-again-button.webp" alt="Play Again">
+        </button>
+        <button id="p8-home-btn" class="bts-img-btn bts-p8-home" type="button" hidden>
+          <img src="../back-to-school-assets/page-9/page9-home-button.webp" alt="Home">
+        </button>
+      </section>
+
+      <!-- Page 11: Star Earned -->
+      <section id="screen-11" class="bts-screen" aria-label="Star Earned">
+        <img class="bts-bg" src="../back-to-school-assets/page-3/page3-bg.webp" alt="">
+        <img class="bts-p11-board" src="../back-to-school-assets/page-11/page11-bg.webp" alt="Star Earned">
+        <div id="p11-avg" class="bts-p11-avg">01:06</div>
+        <div id="p11-next-target" class="bts-p11-next-target">01:06.</div>
+        <button id="p11-play-btn" class="bts-img-btn bts-p11-play bts-pulse-btn" type="button">
+          <img src="../back-to-school-assets/page-11/page11-play-again-button.webp" alt="Play Again">
+        </button>
+        <button id="p11-home-btn" class="bts-img-btn bts-p11-home" type="button">
+          <img src="../back-to-school-assets/page-9/page9-home-button.webp" alt="Home">
+        </button>
+      </section>
+    </div>
+  </main>
+
+  <script type="module" src="back-to-school.js?v=7"></script></script>
+</body>
+</html>

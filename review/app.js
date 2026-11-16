@@ -6,6 +6,7 @@ import {messageGestures,messageKeys} from './interactions.js';
 import {openImageViewer} from './image-viewer.js';
 import {publicGames,generalDiscussionId} from './public-games.js';
 import {discussionCard} from './directory.js';
+import {initPushNotifications} from './push.js';
 import {createReviewAPI} from './api.js';
 import {development} from './config.js';
 import {el,button,avatar,time,date,messageCard,referenceCard,attachment} from './components.js';
@@ -37,7 +38,6 @@ function renderNav(){
  const spaceLabel=internal?'RC / Ghost testers':'Global / Shared team review';if($('#space-badge').textContent!==spaceLabel)$('#space-badge').textContent=spaceLabel;
  $('#chat-space-note').textContent=internal?'Ghost testers only':'Shared team review';
  $('#chat-room').setAttribute('aria-label',internal?'RC, ghost testers only':'Global, shared team review');
- const accountSelect=$('#account');if(!accountSelect.options.length)for(const a of accounts.filter(a=>a.role===signedInAccount.role)){const option=el('option','',`${a.name} (${a.role})`);option.value=a.id;accountSelect.append(option);}accountSelect.value=account.id;
  const rooms=$('#rooms'),available=api.rooms();
  if([...rooms.children].map(b=>b.dataset.room).join()!==available.map(r=>r.id).join()){
   rooms.replaceChildren();for(const item of available){const b=button('',()=>showDirectory(item.id),'room-button');b.dataset.room=item.id;b.append(el('span','room-symbol',item.id==='global'?'\u25ce':'\u25c8'),el('span','room-name',item.name),el('span','unread'));rooms.append(b);}
@@ -45,8 +45,6 @@ function renderNav(){
  for(const b of rooms.children){const active=b.dataset.room===room;b.classList.toggle('selected',active);b.setAttribute('aria-current',active?'page':'false');const count=roomUnread(b.dataset.room),badge=b.querySelector('.unread');badge.textContent=String(count);badge.hidden=!count;}
 
  $('#all-discussions').hidden=screen!=='chat';
- $('#new-build').disabled=screen!=='chat'||buildId===generalDiscussionId;
- $('#incoming').disabled=screen!=='chat';$('#fail-send').disabled=screen!=='chat';
  const selected=api.rooms().find(r=>r.id===room),topic=selectedTopic(),art=$('#chat-topic-art'),artKey=buildId===generalDiscussionId?'general':topic.gameId;
  if(art.dataset.topic!==artKey){art.replaceChildren();art.dataset.topic=artKey;const game=publicGames.find(g=>g.id===artKey);if(game){const image=el('img');image.src=game.image;image.alt='';art.append(image);}else art.append(el('span','general-topic-icon','...'));}
  $('#chat-room').textContent=selected.name;$('#room-title').textContent=topic.gameName;
@@ -115,7 +113,7 @@ function captureChatRequest(){return {accountId:account.id,roomId:room,buildId,v
 function isCurrentChatRequest(request){const authenticated=reviewSession.current()?.account;return authenticated?.id===signedInAccount.id&&authenticated?.role===signedInAccount.role&&screen==='chat'&&request.accountId===account.id&&request.accountId===api.currentAccount().id&&request.roomId===room&&request.buildId===buildId&&request.version===loadToken;}
 async function switchChat(nextRoom,nextBuild,record=true){
  persistDraft();draftReady=false;attachmentJob++;submitJob++;busyFiles=false;isSubmitting=false;
- if(!api.rooms().some(r=>r.id===nextRoom))nextRoom='global';document.querySelectorAll('dialog[open]').forEach(d=>d.close());room=nextRoom;buildId=nextBuild;screen='chat';$('.workspace').dataset.view='chat';$('.workspace').dataset.general=String(buildId===generalDiscussionId);$('#discussion-directory').hidden=true;$('.conversation').hidden=false;$('#review-panel').hidden=buildId===generalDiscussionId;$('#review-panel').classList.remove('open');$('#review-toggle').setAttribute('aria-expanded','false');if(record)recordRoute(room,buildId);const current=++loadToken;replyTo=null;pending=[];$('#message').value='';renderDraft();renderNav();scroller.replaceChildren(el('p','empty-state','Loading local messages…'));newCount=0;$('#new-messages').hidden=true;
+ if(!api.rooms().some(r=>r.id===nextRoom))nextRoom='global';document.querySelectorAll('dialog[open]').forEach(d=>d.close());room=nextRoom;buildId=nextBuild;screen='chat';$('.workspace').dataset.view='chat';$('.workspace').dataset.general=String(buildId===generalDiscussionId);$('#discussion-directory').hidden=true;$('.conversation').hidden=false;$('#review-panel').hidden=buildId===generalDiscussionId;$('#review-panel').classList.remove('open');$('#review-toggle').setAttribute('aria-expanded','false');if(record)recordRoute(room,buildId);const current=++loadToken;replyTo=null;pending=[];$('#message').value='';renderDraft();renderNav();scroller.replaceChildren(el('p','empty-state','Loading messages…'));newCount=0;$('#new-messages').hidden=true;
  loaded=[];hasOlder=false;const request=captureChatRequest();
  const page=await api.listMessages(request.roomId,request.buildId);if(!isCurrentChatRequest(request))return;loaded=page.messages;hasOlder=page.hasOlder;renderMessages();await restoreDraft(current);if(isCurrentChatRequest(request))requestAnimationFrame(()=>{if(isCurrentChatRequest(request))bottom();});
 }
@@ -141,16 +139,15 @@ api.subscribe(event=>{refreshQueue=refreshQueue.then(()=>refresh(event)).catch(e
 scroller.addEventListener('scroll',()=>{pinnedToBottom=nearBottom();if(pinnedToBottom)markRead();},{passive:true});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)markRead();});
 $('#new-messages').onclick=bottom;
-$('#account').onchange=()=>{persistDraft();draftReady=false;api.switchAccount($('#account').value);account=api.currentAccount();modal.close();showDirectory('global');};
 $('#profile-link').onclick=event=>{persistDraft();const url=new URL('./profile.html',location.href);url.searchParams.set('return',location.pathname+location.search+location.hash);event.currentTarget.href=url;};
 
 function draftKey(){return `${account.id}:${room}:${buildId}`;}
 function persistDraft(){clearTimeout(draftTimer);if(screen!=='chat'||!draftReady)return;try{drafts.save(draftKey(),{text:$('#message').value,attachments:pending,replyTo:replyTo?.id||null});$('#draft-saved').hidden=!($('#message').value.trim()||pending.length||replyTo);}catch{$('#draft-saved').hidden=true;}}
 function queueDraft(){clearTimeout(draftTimer);$('#draft-saved').hidden=true;draftTimer=setTimeout(persistDraft,200);}
 async function restoreDraft(token){const saved=drafts.load(draftKey());if(saved){$('#message').value=saved.text||'';pending=(saved.attachments||[]).slice(0,4);if(saved.replyTo){try{const parent=await api.getMessage(saved.replyTo);if(token!==loadToken)return;if(parent.roomId===room&&parent.buildId===buildId)replyTo=parent;}catch{}}}if(token!==loadToken)return;draftReady=true;renderDraft();$('#draft-saved').hidden=!saved;}
-function reply(message){replyTo=message;renderDraft();queueDraft();$('#message').focus();$('#chat-status').textContent=`Replying to ${accounts.find(a=>a.id===message.authorId).name}`;}
+function reply(message){replyTo=message;renderDraft();queueDraft();$('#message').focus();$('#chat-status').textContent=`Replying to ${accounts.find(a=>a.id===message.authorId)?.name||'Reviewer'}`;}
 function renderDraft(){
- const root=$('#draft-context');root.replaceChildren();if(replyTo){const label=el('div','draft-reply'),cancel=button('',()=>{replyTo=null;renderDraft();queueDraft();$('#message').focus();},'icon-button');cancel.setAttribute('aria-label','Cancel reply');cancel.append(icon('close'));label.append(el('span','',`Replying to ${accounts.find(a=>a.id===replyTo.authorId).name}: ${replyTo.text.slice(0,100)||'Screenshot'}`),cancel);root.append(label);}
+ const root=$('#draft-context');root.replaceChildren();if(replyTo){const label=el('div','draft-reply'),cancel=button('',()=>{replyTo=null;renderDraft();queueDraft();$('#message').focus();},'icon-button');cancel.setAttribute('aria-label','Cancel reply');cancel.append(icon('close'));label.append(el('span','',`Replying to ${accounts.find(a=>a.id===replyTo.authorId)?.name||'Reviewer'}: ${replyTo.text.slice(0,100)||'Screenshot'}`),cancel);root.append(label);}
  const images=$('#draft-attachments');images.replaceChildren();for(const item of pending){const card=el('div','draft-file'),remove=button('Remove',()=>{pending=pending.filter(a=>a.id!==item.id);renderDraft();queueDraft();});remove.setAttribute('aria-label',`Remove screenshot ${item.name}`);card.append(attachment(item,context(),pending),remove);images.append(card);}resizeInput();
 }
 function syncComposer(){const text=$('#message').value;$('#send').disabled=busyFiles||isSubmitting||(!text.trim()&&!pending.length);$('#attachments').disabled=busyFiles;$('#attachment-status').textContent=busyFiles?'Preparing screenshots...':'';$('#character-count').textContent=`${text.length} / 6000`;$('#character-count').hidden=text.length<5400;}
@@ -160,7 +157,7 @@ function updateComposerHint(){$('#composer-hint').textContent=touchInput()?'Retu
 updateComposerHint();matchMedia('(pointer: coarse)').addEventListener('change',updateComposerHint);
 $('#message').addEventListener('input',()=>{resizeInput();queueDraft();});
 $('#message').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing&&!e.shiftKey&&(!touchInput()||e.ctrlKey||e.metaKey)){e.preventDefault();$('#composer').requestSubmit();}});
-async function attachFiles(files){if(!files.length||screen!=='chat')return;if(pending.length+files.length>4){toast('Attach up to four screenshots per message.');return;}if(busyFiles)return;const job=++attachmentJob,token=loadToken;busyFiles=true;syncComposer();for(const file of files){try{const item=await api.attach(file);if(job!==attachmentJob||token!==loadToken)return;pending.push(item);}catch(e){toast(e.message);}}if(job===attachmentJob&&token===loadToken){busyFiles=false;renderDraft();queueDraft();}}
+async function attachFiles(files){if(!files.length||screen!=='chat')return;if(pending.length+files.length>4){toast('Attach up to four screenshots per message.');return;}if(busyFiles)return;const job=++attachmentJob,token=loadToken;busyFiles=true;syncComposer();for(const file of files){try{const item=await api.attach(file,{roomId:room,buildId});if(job!==attachmentJob||token!==loadToken)return;pending.push(item);}catch(e){toast(e.message);}}if(job===attachmentJob&&token===loadToken){busyFiles=false;renderDraft();queueDraft();}}
 $('#attachments').onchange=e=>{const files=[...e.target.files];e.target.value='';attachFiles(files);};
 $('#message').addEventListener('paste',e=>{const files=[...(e.clipboardData?.files||[])];if(files.length){e.preventDefault();attachFiles(files);}});
 let dragDepth=0;const conversation=$('.conversation');
@@ -168,10 +165,10 @@ conversation.addEventListener('dragenter',e=>{if([...e.dataTransfer.types].inclu
 conversation.addEventListener('dragover',e=>{if([...e.dataTransfer.types].includes('Files')){e.preventDefault();e.dataTransfer.dropEffect='copy';}});
 conversation.addEventListener('dragleave',()=>{if(--dragDepth<=0){dragDepth=0;$('#drop-hint').hidden=true;}});
 conversation.addEventListener('drop',e=>{if([...e.dataTransfer.types].includes('Files')){e.preventDefault();dragDepth=0;$('#drop-hint').hidden=true;attachFiles([...e.dataTransfer.files]);}});
-$('#composer').onsubmit=async e=>{e.preventDefault();if(busyFiles||isSubmitting)return;const text=$('#message').value;if(!text.trim()&&!pending.length)return;const key=draftKey(),job=++submitJob,input={roomId:room,buildId,text,attachments:[...pending],...(replyTo?{replyTo:replyTo.id}:{})};isSubmitting=true;syncComposer();await run(async()=>{if($('#fail-send').checked){api.failNext();$('#fail-send').checked=false;}await api.send(input);drafts.remove(key);if(draftKey()===key&&job===submitJob){if($('#message').value===text)$('#message').value='';const sent=new Set(input.attachments.map(a=>a.id));pending=pending.filter(a=>!sent.has(a.id));if(replyTo?.id===input.replyTo)replyTo=null;renderDraft();persistDraft();}});if(job===submitJob){isSubmitting=false;syncComposer();}};
+$('#composer').onsubmit=async e=>{e.preventDefault();if(busyFiles||isSubmitting)return;const text=$('#message').value;if(!text.trim()&&!pending.length)return;const key=draftKey(),job=++submitJob,input={roomId:room,buildId,text,attachments:[...pending],...(replyTo?{replyTo:replyTo.id}:{})};isSubmitting=true;syncComposer();await run(async()=>{await api.send(input);drafts.remove(key);if(draftKey()===key&&job===submitJob){if($('#message').value===text)$('#message').value='';const sent=new Set(input.attachments.map(a=>a.id));pending=pending.filter(a=>!sent.has(a.id));if(replyTo?.id===input.replyTo)replyTo=null;renderDraft();persistDraft();}});if(job===submitJob){isSubmitting=false;syncComposer();}};
 async function copyMessage(message){try{await navigator.clipboard.writeText(message.text);toast('Message copied');}catch{const panel=el('div'),text=el('textarea');panel.append(el('h2','','Copy message'),el('p','muted','Select the text below and use Copy.'));text.value=message.text;text.readOnly=true;text.rows=6;panel.append(text);showModal(panel);text.focus();text.select();}}
 function messageActions(message,reactionsOnly=false){
- const panel=el('div','actions-panel');let chosen=false;panel.append(el('h2','',reactionsOnly?'React to message':'Message actions'),el('p','action-excerpt',`${accounts.find(a=>a.id===message.authorId).name}: ${message.text.slice(0,160)||'Screenshot'}`));
+ const panel=el('div','actions-panel');let chosen=false;panel.append(el('h2','',reactionsOnly?'React to message':'Message actions'),el('p','action-excerpt',`${accounts.find(a=>a.id===message.authorId)?.name||'Reviewer'}: ${message.text.slice(0,160)||'Screenshot'}`));
  function choose(fn){chosen=true;modal.close();fn();}
  const reactions=el('div','action-reactions');for(const emoji of reactionEmojis){const b=button(emoji,()=>choose(()=>run(()=>api.react(message.id,emoji))));b.setAttribute('aria-label',emoji);b.title=reactionLabels[emoji];b.setAttribute('aria-pressed',String((message.reactions[emoji]||[]).includes(account.id)));reactions.append(b);}panel.append(reactions);
  if(reactionEmojis.some(emoji=>message.reactions[emoji]?.length))panel.append(button('See who reacted',()=>{chosen=true;reactionDetails(message);},'see-reactions'));
@@ -195,7 +192,7 @@ messageKeys(scroller,{reply:id=>{const m=messageById(id);if(m)reply(m);},actions
 
 function discuss(message){
  if(account.role!=='ghost')return;const panel=el('div','discuss-panel');panel.append(el('span','eyebrow','INTERNAL DISCUSSION'),el('h2','','Discuss in RC'),el('p','muted','Share a reference with ghost testers. Nothing is posted back to Global.'));
- const ref={roomId:'global',messageId:message.id,buildId:message.buildId,author:accounts.find(a=>a.id===message.authorId),createdAt:message.createdAt,text:message.text,attachments:message.attachments};panel.append(referenceCard(ref,context()));
+ const ref={roomId:'global',messageId:message.id,buildId:message.buildId,author:accounts.find(a=>a.id===message.authorId)||{id:message.authorId,name:'Reviewer',role:'director'},createdAt:message.createdAt,text:message.text,attachments:message.attachments};panel.append(referenceCard(ref,context()));
  const label=el('label','field-label','Your comment'),input=el('textarea');input.id='rc-comment';input.maxLength=6000;input.rows=3;label.htmlFor=input.id;panel.append(label,input);const submit=button('Post to RC',()=>run(async()=>{if(!input.value.trim()){input.focus();toast('Add a comment for the RC discussion.');return;}submit.disabled=true;try{await api.send({roomId:'rc',buildId:message.buildId,text:input.value,attachments:[],reference:ref});modal.close();await switchChat('rc',message.buildId);}finally{submit.disabled=false;}}),'primary');panel.append(submit);showModal(panel);input.focus();
 }
 async function original(ref){await run(async()=>{const message=await api.getMessage(ref.messageId);modal.close();await switchChat('global',message.buildId);await jump(message.id);});}
@@ -206,18 +203,11 @@ $('#review-toggle').onclick=()=>{reviewDrawer.append(reviewPanel);reviewPanel.cl
 $('#review-close').onclick=()=>reviewDrawer.close();
 reviewDrawer.addEventListener('click',e=>{if(e.target===reviewDrawer)reviewDrawer.close();});
 matchMedia('(min-width:1101px)').addEventListener('change',e=>{if(e.matches&&reviewDrawer.open)reviewDrawer.close();});
-function controlsHelp(){const panel=el('div','controls-panel');panel.append(el('h2','','Keyboard & touch controls'),el('p','muted','Chat is a local frontend preview. Login uses the separate review service; messages are not shared conversations.'));const rows=[['Desktop composer','Enter sends \u00b7 Shift + Enter adds a line \u00b7 Ctrl/Cmd + Enter also sends'],['Message navigation','Focus Messages, then use arrow keys. R replies; E reacts; Shift + F10 opens actions.'],['Touch messages','Swipe a message right to reply. More opens all actions; hold the message background for the same actions. Text selection and vertical scrolling remain available.'],['Screenshots','Paste or drop images into the chat, or use Attach. In the viewer, use Fit / zoom, arrow buttons or swipe between images while fitted. Pan when zoomed; browser pinch zoom remains available.'],['Escape','Closes a dialog or cancels the reply context. Message text is preserved.'],['Drafts','Unsent text and attachment references are saved per demo account, space and topic on this browser.'],['Open controls','Ctrl/Cmd + /']];for(const [title,description] of rows){const row=el('div','control-row');row.append(el('strong','',title),el('p','',description));panel.append(row);}showModal(panel);}
-$('#controls-help').onclick=controlsHelp;
-$('.navigation').append($('#controls-help'));$('.brand small').textContent='Chat demo \u00b7 local only';
-
-document.addEventListener('keydown',e=>{if(e.isComposing||e.defaultPrevented)return;if((e.ctrlKey||e.metaKey)&&e.key==='/'){e.preventDefault();if(!document.querySelector('dialog[open]'))controlsHelp();return;}if(e.key==='Escape'&&!document.querySelector('dialog[open]')&&replyTo){replyTo=null;renderDraft();queueDraft();$('#message').focus();}});
+document.addEventListener('keydown',e=>{if(e.isComposing||e.defaultPrevented)return;if(e.key==='Escape'&&!document.querySelector('dialog[open]')&&replyTo){replyTo=null;renderDraft();queueDraft();$('#message').focus();}});
 $('#back-to-discussions').replaceChildren(icon('back'));$('.attach-button>span[aria-hidden]').replaceChildren(icon('attach'));$('#send span').replaceChildren(icon('send'));$('#review-toggle').prepend(icon('review'));
-
-$('#dev-tools').hidden=!development;
-$('#incoming').onclick=()=>run(()=>api.simulateIncoming(room,buildId));
-$('#new-build').onclick=()=>{if(screen!=='chat'||buildId===generalDiscussionId)return;const panel=el('div'),label=el('label','field-label','Build/version'),input=el('input');input.id='build-version';input.maxLength=40;label.htmlFor=input.id;panel.append(el('h2','','Add an empty demo build'),el('p','muted','A new build starts with no messages or votes.'),label,input,button('Create build',()=>run(async()=>{const selected=api.builds().find(b=>b.id===buildId),item=await api.addBuild(selected.gameId,input.value);modal.close();await switchChat(room,item.id);}),'primary'));showModal(panel);input.focus();};
-$('#reset').onclick=()=>{const panel=el('div');panel.append(el('h2','','Reset this local demo?'),el('p','','This removes review messages, screenshots and votes from this browser. Game progress is not affected.'),button('Reset review demo',()=>run(()=>{draftReady=false;clearTimeout(draftTimer);return api.reset();}),'danger'));showModal(panel);};
 window.addEventListener('pagehide',()=>{persistDraft();stopObservers();api.releaseURLs();});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)persistDraft();});
 const imageResize=new ResizeObserver(()=>{if(nearBottom())markRead();});imageResize.observe(scroller);
+try{await api.ready?.();}catch(e){toast(e.message);}
+initPushNotifications($('#push-toggle'),{onToast:toast});
 applyRoute();

@@ -1,4 +1,4 @@
-# Game review frontend handoff — 2026-11-08
+# Game review frontend handoff â€” 2026-11-08
 
 ## Delivered locally
 
@@ -255,7 +255,29 @@ Real sign-in, server-enforced memberships and RC privacy, cross-device chat/unre
 - Migrated local SQL/restricted-role/preview/browser fixtures to own roster schema. Actual SQL/production entrypoint/Edge/WebKit E2E passed, plus five isolated SQL/disconnected/proxy tests covering blocked default, role mismatch and schema idempotency. Game/UI files unchanged; staging hash checks pass.
 - Built standalone image and deployed revision aurobindo-review-api-00002-grb while retaining explicit disabled-login mode, no database credential/secret references and no Cloud SQL attachment. Same-origin health still reports loginReady=false/databaseConnected=false. Independent live schema/roster/runtime setup remains pending; no other project's database is used.
 
-## 10 November 2026 � Empty chat start
+## 10 November 2026 — Empty chat start
 
 Removed seeded Global/RC messages and seeded votes from fresh demo state. Existing browser saves remove only known shipped global-0..37 / rc-0..6 sample message IDs once; user-created messages remain intact. Browser verified fresh empty lists, migration preservation and repeat-load persistence. Prepared/verified all 853 Hosting files; deploy uploads only the two changed JS files. No authentication, backend or game changes; chats remain local simulations.
 
+
+## 12 November 2026 — Removed debug checkbox blocked Send
+User supplied iPhone error: null is not an object evaluating fail-send.checked. The developer failure-simulation checkbox had been removed from HTML while composer submit still read it, throwing before api.send. Removed that obsolete branch entirely, leaving mock API delivery/retry behavior intact. Searched remaining review JS for removed controls; no other fail-send references remain.
+Validation: syntax passed; Edge/WebKit tested sending and clearing composer in ghost Global/RC and director Global using test-only auth fixtures. No toast/error. Chats remain local simulations; no backend, login or game changes. Local fix only, not deployed/pushed.
+
+## 12 November 2026 — Send fix Hosting deployment
+User authorized deployment. Firebase Hosting-only release completed; staged 1027 files passed verification. Live review/app.js SHA256-match local on custom and Firebase domains and removed checkbox reference absent. Prior Edge/WebKit Global/RC send tests passed. Backend/database untouched; no Git push.
+
+## 12 November 2026 — Chat author matches authenticated profile
+User reported profile Nirmal but chat Maya. Root cause: review adapter passed only viewerRole to mock API, which selected a same-role seeded persona. Adapter now passes server-returned account. Mock API uses its ID/name/employeeId/role for new messages, reactions and votes and stores only participant display metadata for stable old-message rendering. Missing photo uses an initial avatar. Signed-in account cannot switch to a demo persona. Existing ambiguous demo-authored messages are preserved without relabeling. Chats remain local simulations; no backend chat integration or credentials stored.
+Validation: syntax passed. Edge/WebKit verified Nirmal author in Global/RC, reload preservation, another signed-in director author, prior author preservation, director RC exclusion, reaction/vote IDs matching server identity. Test-only auth fixture data; no production writes. Local only; not deployed/pushed.
+
+## 12 November 2026 — Authenticated chat identity deployment
+User authorized deployment. Firebase Hosting-only release complete; staging verified 1027 files. Live review/api.js and review/mock-api.js SHA256-match local on Firebase and apl.redchariots.in. Prior Edge/WebKit author/reaction/vote/account-switch checks passed. Backend/database unchanged; no Git push. Refresh required for already-open chat tabs to load the new modules.
+
+
+## 13 November 2026 — Connected Global & RC chat to standalone Firestore backend
+Connected Global and RC chat (messages, replies, "Discuss in RC" references, emoji reactions, build votes, per-account read/unread tracking, and chunked screenshot attachments up to 5 MB) to `/review-api/chat/*` backed by `FirestoreReviewStore`:
+- `review-backend/src/firestore-store.mjs`: Added `listAccounts`, `listVotes`, `computeUnread`, `getBootstrapState`, `listMessages`, `getMessage`, `sendMessage`, `toggleReaction`, `castVote`, `markRead`, `syncState`, `saveAttachment`, and `getAttachment` (splitting attachments into 700 KB chunks under `reviewAttachmentChunks`). Messages are stored in `reviewScopes/{roomId}__{buildId}/messages` with single-field `sequence` ordering (no composite indexes required).
+- `review-backend/src/server.mjs`: Added authenticated `/review-api/chat/*` endpoints (`bootstrap`, `sync`, `messages`, `messages/:id`, `messages/:id/react`, `votes`, `read`, `attachments`, `attachments/:id`), enforcing `ghost` role for all RC messages, attachments, and "Discuss in RC" references (`403` for `director`).
+- `review/api.js` & `review/app.js`: Replaced the local `mock-api.js` adapter with the real `/review-api/chat/*` HTTP client (preserving `credentials: 'same-origin'`, `cache: 'no-store'`, Bearer recovery token, initial `api.ready()` bootstrap, 3.5s foreground sync polling, and room/build attachment scoping).
+- Validation: `node --check` passed on `review/api.js`, `review/app.js`, `review-backend/src/firestore-store.mjs`, `review-backend/src/server.mjs`, and `review-backend/test/chat.test.mjs`. `node --test --test-isolation=none review-backend/test/firestore.test.mjs review-backend/test/disconnected.test.mjs review-backend/test/local-proxy.test.mjs review-backend/test/chat.test.mjs` passed 7/7 tests (using the synthetic Firestore double). Local changes only; not deployed to Cloud Run/Hosting or pushed to Git.

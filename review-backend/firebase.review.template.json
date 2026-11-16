@@ -1,0 +1,32 @@
+{
+  "hosting": {
+    "site": "REPLACE_WITH_SEPARATE_REVIEW_SITE_ID",
+    "public": "REPLACE_WITH_STAGED_REVIEW_FRONTEND",
+    "ignore": [
+      "firebase.review.template.json",
+      "**/.*",
+      "**/node_modules/**",
+      "**/review-backend/**"
+    ],
+    "headers": [
+      {
+        "source": "/review-api/**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "private, no-store"
+          }
+        ]
+      }
+    ],
+    "rewrites": [
+      {
+        "source": "/review-api/**",
+        "run": {
+          "serviceId": "aurobindo-review-api",
+          "region": "asia-south1"
+        }
+      }
+    ]
+  }
+}
