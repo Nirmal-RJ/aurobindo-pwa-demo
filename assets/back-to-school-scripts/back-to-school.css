@@ -706,9 +706,9 @@ html, body {
 
 .bts-modal-time {
   position: absolute;
-  top: 43.2%;
+  top: 44.4%;
   left: 50.8%;
-  height: 7.2%;
+  height: 4.8%;
   display: flex;
   align-items: center;
   color: #ffe24a;
@@ -965,10 +965,10 @@ html, body {
   transform: scale(0.95);
 }
 
-/* Page 11: Star Earned (measured: 01:06 at x=67.1%..84.2%, y=50.1%..52.7%) */
+/* Page 11: Star Earned (measured in page11-reference.webp: board at top:0, 01:06 at y=50.05..52.66%, 01:06. at y=59.74..61.56%) */
 .bts-p11-board {
   position: absolute;
-  top: 3.8%;
+  top: 0;
   left: 0;
   width: 100%;
   height: auto;
@@ -983,7 +983,7 @@ html, body {
   position: absolute;
   top: 49.4%;
   left: 67.1%;
-  height: 4.2%;
+  height: 4.0%;
   display: flex;
   align-items: center;
   color: #ffe24a;
@@ -994,8 +994,8 @@ html, body {
 
 .bts-p11-next-target {
   position: absolute;
-  top: 62.6%;
-  left: 74.5%;
+  top: 58.8%;
+  left: 75.5%;
   height: 3.6%;
   display: flex;
   align-items: center;
@@ -1006,11 +1006,11 @@ html, body {
 }
 
 .bts-p11-play {
-  top: 69.2%;
-  width: 72%;
+  top: 66.8%;
+  width: 78%;
 }
 
 .bts-p11-home {
-  top: 81.2%;
-  width: 40%;
+  top: 80.2%;
+  width: 39%;
 }
