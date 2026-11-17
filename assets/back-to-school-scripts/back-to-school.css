@@ -1,4 +1,6 @@
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
   user-select: none;
@@ -9,7 +11,8 @@
   display: none !important;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   width: 100%;
@@ -41,59 +44,168 @@ html, body {
   box-shadow: 0 18px 60px rgba(0, 0, 0, 0.75);
 }
 
+@media (orientation: portrait) and (max-width: 600px) {
+  .bts-stage {
+    width: 100vw;
+    height: 100dvh;
+    box-shadow: none;
+  }
+
+  .bts-bg,
+  .bts-demo-img {
+    object-fit: fill;
+  }
+}
+
 /* Keyframe Animations */
 @keyframes btsPopIn {
-  0% { opacity: 0; transform: scale(0.84); }
-  70% { opacity: 1; transform: scale(1.03); }
-  100% { opacity: 1; transform: scale(1); }
+  0% {
+    opacity: 0;
+    transform: scale(0.84);
+  }
+
+  70% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes btsWipeDraw {
-  0% { opacity: 0.3; clip-path: inset(0 100% 0 0); }
-  100% { opacity: 1; clip-path: inset(0 0 0 0); }
+  0% {
+    opacity: 0.3;
+    clip-path: inset(0 100% 0 0);
+  }
+
+  100% {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
 }
 
 @keyframes btsModalWin {
-  0% { opacity: 0; transform: scale(0.68) translateY(8%); }
-  68% { opacity: 1; transform: scale(1.04) translateY(-1%); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
+  0% {
+    opacity: 0;
+    transform: scale(0.68) translateY(8%);
+  }
+
+  68% {
+    opacity: 1;
+    transform: scale(1.04) translateY(-1%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 @keyframes btsModalShake {
-  0% { opacity: 0; transform: scale(0.82); }
-  30% { opacity: 1; transform: scale(1.02) translateX(-3%); }
-  50% { transform: translateX(3%); }
-  70% { transform: translateX(-2%); }
-  85% { transform: translateX(1.5%); }
-  100% { opacity: 1; transform: scale(1) translateX(0); }
+  0% {
+    opacity: 0;
+    transform: scale(0.82);
+  }
+
+  30% {
+    opacity: 1;
+    transform: scale(1.02) translateX(-3%);
+  }
+
+  50% {
+    transform: translateX(3%);
+  }
+
+  70% {
+    transform: translateX(-2%);
+  }
+
+  85% {
+    transform: translateX(1.5%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+  }
 }
 
 @keyframes btsStampX {
-  0% { opacity: 0; transform: scale(2.1) rotate(-14deg); }
-  70% { opacity: 1; transform: scale(0.9) rotate(4deg); }
-  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  0% {
+    opacity: 0;
+    transform: scale(2.1) rotate(-14deg);
+  }
+
+  70% {
+    opacity: 1;
+    transform: scale(0.9) rotate(4deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
 }
 
 @keyframes btsPulseBtn {
-  0%, 100% { transform: translateX(-50%) scale(1); }
-  50% { transform: translateX(-50%) scale(1.035); }
+
+  0%,
+  100% {
+    transform: translateX(-50%) scale(1);
+  }
+
+  50% {
+    transform: translateX(-50%) scale(1.035);
+  }
 }
 
 @keyframes btsPulseRightBtn {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.035); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.035);
+  }
 }
 
 @keyframes btsUrgentTimer {
-  0%, 100% { transform: translateX(-50%) scale(1); color: #ff4d4d; }
-  50% { transform: translateX(-50%) scale(1.08); color: #ffd0d0; }
+
+  0%,
+  100% {
+    transform: translateX(-50%) scale(1);
+    color: #ff4d4d;
+  }
+
+  50% {
+    transform: translateX(-50%) scale(1.08);
+    color: #ffd0d0;
+  }
 }
 
 @keyframes btsRowWrongShake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-2.2%); }
-  50% { transform: translateX(2.2%); }
-  75% { transform: translateX(-1.4%); }
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-2.2%);
+  }
+
+  50% {
+    transform: translateX(2.2%);
+  }
+
+  75% {
+    transform: translateX(-1.4%);
+  }
 }
 
 @keyframes btsConfettiFall {
@@ -101,6 +213,7 @@ html, body {
     opacity: 1;
     transform: translate3d(0, -10%, 0) rotate(0deg);
   }
+
   100% {
     opacity: 0;
     transform: translate3d(var(--dx, 20px), 115dvh, 0) rotate(var(--rot, 540deg));
@@ -108,8 +221,13 @@ html, body {
 }
 
 @keyframes btsFlashVignette {
-  0% { opacity: 0.75; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 0.75;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
 
 /* FX Overlay Layer */
@@ -698,7 +816,7 @@ html, body {
   animation: btsModalShake 0.44s ease-out;
 }
 
-.bts-modal-card > img.bts-modal-bg {
+.bts-modal-card>img.bts-modal-bg {
   display: block;
   width: 100%;
   height: auto;
@@ -706,7 +824,7 @@ html, body {
 
 .bts-modal-time {
   position: absolute;
-  top: 44.4%;
+  top: 45.4%;
   left: 50.8%;
   height: 4.8%;
   display: flex;
@@ -719,7 +837,7 @@ html, body {
 
 .bts-modal-target {
   position: absolute;
-  top: 53.0%;
+  top: 53.75%;
   left: 59.5%;
   height: 5.0%;
   display: flex;
@@ -773,7 +891,7 @@ html, body {
 
 .bts-streak-text {
   position: absolute;
-  top: 71.5%;
+  top: 72.5%;
   left: 62.5%;
   height: 5.2%;
   display: flex;
@@ -981,7 +1099,7 @@ html, body {
 
 .bts-p11-avg {
   position: absolute;
-  top: 49.4%;
+  top: 42.6%;
   left: 67.1%;
   height: 4.0%;
   display: flex;
@@ -994,8 +1112,8 @@ html, body {
 
 .bts-p11-next-target {
   position: absolute;
-  top: 58.8%;
-  left: 75.5%;
+  top: 52.05%;
+  left: 76%;
   height: 3.6%;
   display: flex;
   align-items: center;
